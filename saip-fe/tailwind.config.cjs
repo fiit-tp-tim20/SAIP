@@ -9,14 +9,14 @@ module.exports = {
 		themes: [
 			{
 				mytheme: {
-					primary: "#cdadf4",
-					secondary: "#ffdfcc",
+					primary: "#ADEFD1",
+					secondary: "#00203F",
 					accent: "#b0fcae",
 					neutral: "#9333ea",
 					"base-100": "#f3f4f6",
 					info: "#2FAFF4",
-					success: "#0F7157",
-					warning: "#B96913",
+					success: "#4BB543",
+					warning: "#f97316",
 					error: "#F22E1C",
 				},
 			},
