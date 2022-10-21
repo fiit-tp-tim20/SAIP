@@ -21,7 +21,7 @@ function Devtools() {
 				Click
 			</label>
 			<div tabIndex={0} className="dropdown-content menu p-5 shadow bg-base-100 rounded-box w-max">
-				<h2 className="text-left text-2xl font-bold">Devtools</h2>
+				<h2 className="text-left font-bold">Devtools</h2>
 				<div className="flex flex-row">
 					<div className="flex flex-col">
 						<h3 className="text-left">Language</h3>
