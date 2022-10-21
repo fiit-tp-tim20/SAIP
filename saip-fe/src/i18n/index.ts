@@ -23,7 +23,7 @@ i18n.use(Backend)
 	.init({
 		fallbackLng,
 		resources,
-		lng: "en",
+		lng: "sk",
 		// ns: ["locales"],
 		// whitelist: availableLanguages,
 		// detection: {
