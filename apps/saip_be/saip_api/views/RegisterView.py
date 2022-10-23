@@ -13,5 +13,5 @@ class RegisterView(APIView):
         user = serializer.save()
 
         return Response({
-            "userID": user.username
+            "user_id": user.username
         }, status=201)

@@ -20,7 +20,7 @@ from saip_api.views.RegisterView import RegisterView
 from saip_api.views.TestView import TestView
 from saip_api.views.ChangePasswordView import ChangePasswordView
 from saip_api.views.LoginView import LoginView
-# from knox.views import LoginView
+from knox.views import LogoutView
 
 
 urlpatterns = [
@@ -29,4 +29,5 @@ urlpatterns = [
     path('test/', TestView.as_view(), name="test"),
     path('change_password/', ChangePasswordView.as_view(), name="change_password"),
     path('login/', LoginView.as_view(), name="login"),
+    path('logout/', LogoutView.as_view(), name='knox_logout'),
 ]
