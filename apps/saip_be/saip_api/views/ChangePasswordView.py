@@ -7,6 +7,9 @@ from ..functions.Logouts import logoutAll
 class ChangePasswordView(APIView):
 
     def put(self, request) -> Response:
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
         password = request.data.get('password')
 
         if not password:
