@@ -18,4 +18,4 @@ Use ```[FE] - {commit name}``` if committing for Frontend, ```[BE] - {commit nam
 
 ## API
 
-Documentation can be found on [SwaggerHub]()
+Documentation can be found on [SwaggerHub](https://app.swaggerhub.com/apis-docs/y3man/SAIP/1.0.0)
