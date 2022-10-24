@@ -18,7 +18,7 @@
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-text-size-adjust: 100%;
 
-	--color-primary: #ff6f00;
+	--bg-container-dark: #242424;
 }
 
 a {
@@ -98,4 +98,31 @@ button:focus-visible {
 	button {
 		background-color: #f9f9f9;
 	}
+}
+
+@media (prefers-color-scheme: dark) {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6,
+	p,
+	a,
+	button,
+	blockquote {
+		color: #ffffff;
+	}
+
+	.background-container {
+		background-color: var(--bg-container-dark);
+	}
+}
+
+.background-container {
+	@apply bg-gray-100 dark:bg-[#363636];
+}
+
+.select {
+	@apply dark:bg-[#242424];
 }

@@ -3,7 +3,7 @@ import React from "react";
 function Sandbox() {
 	return (
 		<div className="flex flex-col">
-			<div className="flex flex-row bg-gray-100 rounded-2xl p-5">
+			<div className="flex flex-row background-container rounded-2xl p-5">
 				<div className="flex flex-col">
 					<button type="button" className="btn btn-primary mt-2">
 						Button Primary
@@ -47,7 +47,7 @@ function Sandbox() {
 					<input type="radio" name="radio-3" className="radio radio-secondary mt-2" placeholder="0" />
 				</div>
 			</div>
-			<div className="flex flex-row mt-2 bg-gray-100 rounded-2xl p-5">
+			<div className="flex flex-row mt-2 background-container rounded-2xl p-5">
 				<div className="flex flex-col text-black text-left">
 					<h1>Heading 1</h1>
 					{/* TODO add stylings to h2-h6 */}
