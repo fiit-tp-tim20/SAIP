@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Sandbox from "./screens/Sandbox";
 import "./i18n";
 import Plan from "./screens/Plan";
+import Product from "./screens/Product";
 
 function App() {
 	return (
@@ -12,6 +13,7 @@ function App() {
 				<Routes>
 					<Route path="/plan" element={<Plan />} />
 					<Route path="/news" element={<p>Novinky</p>} />
+					<Route path="/product" element={<Product />} />
 					<Route path="/sandbox" element={<Sandbox />} />
 					<Route path="/" element={<Navigate to="/plan" replace />} />
 					<Route path="*" element={<p>404</p>} />
