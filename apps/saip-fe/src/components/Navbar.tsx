@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { X } from "react-feather";
-import LinkTab from "./LinkTab";
 import { useLocation } from "react-router";
+import LinkTab from "./LinkTab";
 
 function Navbar() {
 	const { t, i18n } = useTranslation();
@@ -24,8 +23,8 @@ function Navbar() {
 	]);
 
 	useEffect(() => {
-		setTabs((tabs) =>
-			tabs.map((tab) => ({
+		setTabs((_tabs) =>
+			_tabs.map((tab) => ({
 				...tab,
 				title: t(`${tab.name}.title`) as string,
 			})),
@@ -33,8 +32,8 @@ function Navbar() {
 	}, [i18n.language]);
 
 	useEffect(() => {
-		setTabs((tabs) =>
-			tabs.map((tab) => ({
+		setTabs((_tabs) =>
+			_tabs.map((tab) => ({
 				...tab,
 				isActive: tab.path === location.pathname,
 			})),
@@ -48,13 +47,7 @@ function Navbar() {
 			</a>
 			<ul className="menu menu-horizontal p-0 m-0">
 				{tabs.map((tab) => (
-					<LinkTab
-						key={tab.title}
-						title={tab.title}
-						path={tab.path}
-						isActive={tab.isActive}
-						icon={<X size={16} />}
-					/>
+					<LinkTab key={tab.title} title={tab.title} path={tab.path} isActive={tab.isActive} />
 				))}
 			</ul>
 		</div>
