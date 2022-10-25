@@ -138,6 +138,7 @@ button:focus-visible {
 
 .navbar .active {
 	@apply bg-white dark:bg-[#242424] rounded-lg;
+	transition: 0.5s ease-in-out all;
 }
 
 .navbar .divider {

@@ -1,23 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { X } from "react-feather";
 import LinkTab from "./LinkTab";
+import { useLocation } from "react-router";
 
 function Navbar() {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
+	const location = useLocation();
 
-	const tabs = [
+	const [tabs, setTabs] = useState([
 		{
+			name: "plan",
 			title: t("plan.title") as string,
 			path: "/plan",
 			isActive: false,
 		},
 		{
+			name: "product",
 			title: t("product.title") as string,
 			path: "/product",
 			isActive: false,
 		},
-	];
+	]);
+
+	useEffect(() => {
+		setTabs((tabs) =>
+			tabs.map((tab) => ({
+				...tab,
+				title: t(`${tab.name}.title`) as string,
+			})),
+		);
+	}, [i18n.language]);
+
+	useEffect(() => {
+		setTabs((tabs) =>
+			tabs.map((tab) => ({
+				...tab,
+				isActive: tab.path === location.pathname,
+			})),
+		);
+	}, [location]);
 
 	return (
 		<div className="navbar bg-gray-100 top-0 w-screen fixed left-0">
