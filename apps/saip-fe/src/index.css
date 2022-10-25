@@ -128,3 +128,22 @@ button:focus-visible {
 .select {
 	@apply dark:bg-[#242424];
 }
+
+.navbar {
+	@apply bg-gray-100 dark:bg-[#000];
+}
+
+/* .navbar > ul > li {
+} */
+
+.navbar .active {
+	@apply bg-white dark:bg-[#242424] rounded-lg;
+}
+
+.navbar .divider {
+	@apply dark:before:bg-[#242424] dark:after:bg-[#242424];
+}
+
+.navbar .divider:last-child {
+	display: none;
+}
