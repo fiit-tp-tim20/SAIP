@@ -1,3 +1,11 @@
 {
-	"plan": { "title": "Plán" }
+	"plan": { "title": "Plán" },
+	"product": {
+		"title": "Produkt",
+		"description": {
+			"title": "Popis",
+			"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+		},
+		"features": { "title": "Dokončené vylepšenia" }
+	}
 }
