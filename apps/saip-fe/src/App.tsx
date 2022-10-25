@@ -8,6 +8,7 @@ import Sandbox from "./screens/Sandbox";
 import Plan from "./screens/Plan";
 import Devtools from "./dev/Devtools";
 import Product from "./screens/Product";
+import Navbar from "./components/Navbar"
 
 const queryClient = new QueryClient();
 
@@ -15,6 +16,7 @@ function App() {
 	return (
 		<QueryClientProvider client={queryClient}>
 			<Suspense>
+				<Navbar />
 				<BrowserRouter>
 					<Routes>
 						<Route path="/plan" element={<Plan />} />
