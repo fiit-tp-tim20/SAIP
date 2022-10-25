@@ -1,8 +1,18 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "react-query";
+import { getResearchedUpgrades } from "../mock/product";
 
 function Product() {
 	const { t } = useTranslation();
+
+	const {
+		isLoading: isLoadingResearched,
+		error: errorResearched,
+		data: dataResearched,
+	} = useQuery("researched", () => {
+		return getResearchedUpgrades();
+	});
 
 	return (
 		<div className="max-w-7xl">
@@ -16,6 +26,16 @@ function Product() {
 
 					<div className="py-4">
 						<h2>{t("product.features.title") as string}</h2>
+						{isLoadingResearched ? (
+							<p>Loading...</p>
+						) : (
+							<ul className="pt-1">
+								{dataResearched &&
+									dataResearched.map((feature) => (
+										<li key={feature.id}>{t(`product.features.${feature.id}.title`) as string}</li>
+									))}
+							</ul>
+						)}
 					</div>
 				</div>
 				<div className="flex flex-col">

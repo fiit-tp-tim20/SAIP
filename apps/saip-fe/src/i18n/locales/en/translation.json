@@ -6,6 +6,32 @@
 			"title": "Description",
 			"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
 		},
-		"features": { "title": "Finished Research" }
+		"features": {
+			"title": "Finished Research",
+			"1": {
+				"title": "Feature 1",
+				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			},
+			"2": {
+				"title": "Feature 2",
+				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			},
+			"3": {
+				"title": "Feature 3",
+				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			},
+			"4": {
+				"title": "Feature 4",
+				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			},
+			"5": {
+				"title": "Feature 5",
+				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			},
+			"6": {
+				"title": "Feature 6",
+				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			}
+		}
 	}
 }
