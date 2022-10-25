@@ -6,13 +6,9 @@ import { getResearchedUpgrades } from "../mock/product";
 function Product() {
 	const { t } = useTranslation();
 
-	const {
-		isLoading: isLoadingResearched,
-		error: errorResearched,
-		data: dataResearched,
-	} = useQuery("researched", () => {
-		return getResearchedUpgrades();
-	});
+	const { isLoading: isLoadingResearched, data: dataResearched } = useQuery("researched", () =>
+		getResearchedUpgrades(),
+	);
 
 	return (
 		<div className="max-w-7xl">

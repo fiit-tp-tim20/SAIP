@@ -1,15 +1,13 @@
-export const getResearchedUpgrades = () => {
-	return [
-		{
-			id: 1,
-			players: [2],
-		},
-		{
-			id: 2,
-			players: [],
-		},
-	];
-};
+export const getResearchedUpgrades = () => [
+	{
+		id: 1,
+		players: [2],
+	},
+	{
+		id: 2,
+		players: [],
+	},
+];
 
 export const getPendingUpgrades = () => [
 	{

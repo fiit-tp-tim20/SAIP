@@ -8,7 +8,7 @@ import Sandbox from "./screens/Sandbox";
 import Plan from "./screens/Plan";
 import Devtools from "./dev/Devtools";
 import Product from "./screens/Product";
-import Navbar from "./components/Navbar"
+import Navbar from "./components/Navbar";
 
 const queryClient = new QueryClient();
 
