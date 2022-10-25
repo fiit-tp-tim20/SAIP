@@ -1,3 +1,37 @@
 {
-	"plan": { "title": "Plán" }
+	"plan": { "title": "Plán" },
+	"product": {
+		"title": "Produkt",
+		"description": {
+			"title": "Popis",
+			"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+		},
+		"features": {
+			"title": "Dokončené vylepšenia",
+			"1": {
+				"title": "Vylepšenie 1",
+				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			},
+			"2": {
+				"title": "Vylepšenie 2",
+				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			},
+			"3": {
+				"title": "Vylepšenie 3",
+				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			},
+			"4": {
+				"title": "Vylepšenie 4",
+				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			},
+			"5": {
+				"title": "Vylepšenie 5",
+				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			},
+			"6": {
+				"title": "Vylepšenie 6",
+				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			}
+		}
+	}
 }
