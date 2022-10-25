@@ -133,12 +133,16 @@ button:focus-visible {
 	@apply bg-gray-100 dark:bg-[#000];
 }
 
-/* .navbar > ul > li {
-} */
+.navbar > ul > li:hover {
+	transition: 0.5s ease-in-out all;
+}
+
+.navbar > ul > li:hover {
+	@apply bg-gray-200 dark:bg-[#121212] rounded-lg;
+}
 
 .navbar .active {
 	@apply bg-white dark:bg-[#242424] rounded-lg;
-	transition: 0.5s ease-in-out all;
 }
 
 .navbar .divider {

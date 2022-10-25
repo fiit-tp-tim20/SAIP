@@ -42,9 +42,7 @@ function Navbar() {
 
 	return (
 		<div className="navbar bg-gray-100 top-0 w-screen fixed left-0">
-			<a href="/" className="btn btn-primary btn-ghost normal-case text-xl">
-				SAIP
-			</a>
+			<p className="px-8 normal-case text-xl">SAIP</p>
 			<ul className="menu menu-horizontal p-0 m-0">
 				{tabs.map((tab) => (
 					<LinkTab key={tab.title} title={tab.title} path={tab.path} isActive={tab.isActive} />
