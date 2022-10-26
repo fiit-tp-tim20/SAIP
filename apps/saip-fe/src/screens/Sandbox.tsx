@@ -48,7 +48,7 @@ function Sandbox() {
 				</div>
 			</div>
 			<div className="flex flex-row mt-2 background-container rounded-2xl p-5">
-				<div className="flex flex-col text-black text-left">
+				<div className="flex flex-col text-left">
 					<h1>Heading 1</h1>
 					{/* TODO add stylings to h2-h6 */}
 					<h2>Heading 2</h2>
