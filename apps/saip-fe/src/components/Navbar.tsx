@@ -20,6 +20,12 @@ function Navbar() {
 			path: "/product",
 			isActive: false,
 		},
+		{
+			name: "sandbox",
+			title: t("sandbox.title") as string,
+			path: "/sandbox",
+			isActive: false,
+		},
 	]);
 
 	useEffect(() => {
