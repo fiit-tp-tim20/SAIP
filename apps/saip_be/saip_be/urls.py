@@ -16,10 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from saip_api.views.RegisterView import RegisterView
-from saip_api.views.TestView import TestView
-from saip_api.views.ChangePasswordView import ChangePasswordView
-from saip_api.views.LoginView import LoginView
+from saip_api.views.UserManagement import RegisterView, LoginView, TestView, ChangePasswordView
 from knox.views import LogoutView
 
 

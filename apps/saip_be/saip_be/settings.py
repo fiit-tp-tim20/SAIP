@@ -131,6 +131,6 @@ REST_FRAMEWORK = {
 
 REST_KNOX = {"TOKEN_TTL": timedelta(hours=4),
              "AUTO_REFRESH": True,
-             "TOKEN_LIMIT_PER_USER": 1,
+             "TOKEN_LIMIT_PER_USER": 5,
              "MIN_REFRESH_INTERVAL": 60,
              "AUTH_HEADER_PREFIX": "Bearer"}
