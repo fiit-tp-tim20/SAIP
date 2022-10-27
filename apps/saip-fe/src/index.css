@@ -21,22 +21,11 @@
 	--bg-container-dark: #242424;
 }
 
-a {
-	font-weight: 500;
-	color: #646cff;
-	text-decoration: inherit;
-}
-a:hover {
-	color: #535bf2;
-}
-
 body {
 	margin: 0;
 	display: flex;
-	/* place-items: center; */
 	justify-content: center;
 	min-width: 320px;
-	/* max-width: 1280px; */
 	min-height: 100vh;
 }
 
@@ -81,21 +70,11 @@ button {
 	cursor: pointer;
 	transition: border-color 0.25s;
 }
-button:hover {
-	border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-	outline: 4px auto -webkit-focus-ring-color;
-}
 
 @media (prefers-color-scheme: light) {
 	:root {
 		color: #213547;
 		background-color: #ffffff;
-	}
-	a:hover {
-		color: #747bff;
 	}
 	button {
 		background-color: #f9f9f9;
@@ -103,16 +82,7 @@ button:focus-visible {
 }
 
 @media (prefers-color-scheme: dark) {
-	h1,
-	h2,
-	h3,
-	h4,
-	h5,
-	h6,
-	p,
-	a,
-	button,
-	blockquote {
+	:root {
 		color: #ffffff;
 	}
 
@@ -127,4 +97,39 @@ button:focus-visible {
 
 .select {
 	@apply dark:bg-[#242424];
+}
+
+/* Navbar */
+
+.navbar {
+	@apply bg-gray-200 dark:bg-[#000];
+}
+
+.navbar > ul > li:hover {
+	transition: 0.5s ease-in-out all;
+}
+
+.navbar > ul > li:hover {
+	@apply bg-gray-200 dark:bg-[#121212] rounded-lg;
+}
+
+.navbar .active {
+	@apply bg-white dark:bg-[#242424] rounded-lg;
+}
+
+.navbar .divider {
+	@apply dark:before:bg-[#242424] dark:after:bg-[#242424];
+}
+
+.navbar .divider:last-child {
+	display: none;
+}
+
+.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):focus),
+.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):hover),
+.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):focus),
+.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):hover) {
+	/* background-color: hsl(var(--bc) / var(--tw-bg-opacity)); */
+	@apply bg-white dark:bg-[#242424] bg-opacity-100;
+	transition: 0.5s ease-in-out all;
 }

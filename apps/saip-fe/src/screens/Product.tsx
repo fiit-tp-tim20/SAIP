@@ -6,7 +6,7 @@ import { getResearchedUpgrades } from "../mock/product";
 function Product() {
 	const { t } = useTranslation();
 
-	const { isLoading: isLoadingResearched, data: dataResearched } = useQuery("researched", () =>
+	const { isLoading: isLoadingResearched, data: dataResearched } = useQuery(["researched"], () =>
 		getResearchedUpgrades(),
 	);
 
@@ -19,7 +19,6 @@ function Product() {
 						<h2>{t("product.description.title") as string}</h2>
 						<p className="pt-1">{t("product.description.text") as string}</p>
 					</div>
-
 					<div className="py-4">
 						<h2>{t("product.features.title") as string}</h2>
 						{isLoadingResearched ? (
