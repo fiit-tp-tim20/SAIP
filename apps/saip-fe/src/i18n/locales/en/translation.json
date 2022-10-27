@@ -9,9 +9,20 @@
 		"description": {
 			"title": "Description",
 			"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+		}
+	},
+	"research": {
+		"title": "Research",
+		"pending": {
+			"title": "Pending Research"
+		},
+		"available": {
+			"title": "Available Research"
+		},
+		"finished": {
+			"title": "Finished Research"
 		},
 		"features": {
-			"title": "Finished Research",
 			"1": {
 				"title": "Better Battery",
 				"text": "This battery is better than the other one!"

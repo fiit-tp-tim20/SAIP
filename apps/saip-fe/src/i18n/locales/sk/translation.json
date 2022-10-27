@@ -9,9 +9,20 @@
 		"description": {
 			"title": "Popis",
 			"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+		}
+	},
+	"research": {
+		"title": "Výskum",
+		"pending": {
+			"title": "Prebiejúci výskum"
+		},
+		"available": {
+			"title": "Dostupné výskumy"
+		},
+		"finished": {
+			"title": "Dokončené vylepšenia"
 		},
 		"features": {
-			"title": "Dokončené vylepšenia",
 			"1": {
 				"title": "Lepšia batéria",
 				"text": "Táto batéria je lepšia ako predchádzajúca!"
@@ -36,9 +47,9 @@
 				"title": "Vylepšenie 6",
 				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
 			}
+		},
+		"sandbox": {
+			"title": "Sandbox"
 		}
-	},
-	"sandbox": {
-		"title": "Sandbox"
 	}
 }
