@@ -24,11 +24,19 @@ export const getResearchedUpgrades = () => [
 export const getPendingUpgrades = () => [
 	{
 		id: 3,
-		players: [] as Player[],
+		players: [
+			{ image: "3", name: "Jane Doe" },
+			{ image: "4", name: "John Doe" },
+			{ image: "5", name: "Jane Deer" },
+		] as Player[],
+		progressMax: 12000,
+		progressValue: 10000,
 	},
 	{
 		id: 5,
 		players: [] as Player[],
+		progressMax: 17000,
+		progressValue: 7000,
 	},
 ];
 

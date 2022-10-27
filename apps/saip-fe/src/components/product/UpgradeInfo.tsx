@@ -3,14 +3,30 @@ import React from "react";
 type Props = {
 	name: string;
 	researchedAvatars: string[];
+	progressMax?: number;
+	progressValue?: number;
 };
 
 function UpgradeInfo(props: Props) {
-	const { name, researchedAvatars } = props;
+	const { name, researchedAvatars, progressMax, progressValue } = props;
 
 	return (
 		<li className="w-full bg-gray-200 dark:bg-[#242424] py-2 px-4 my-2 rounded-xl flex flex-row justify-between align-middle h-16">
-			<p className="font-bold my-auto">{name}</p>
+			<div className="flex flex-row align-middle justify-center">
+				<p className="font-bold my-auto min-w-[180px]">{name}</p>
+				{progressMax && (
+					<div className="flex flex-row items-center justify-center text-center">
+						<progress
+							className="progress progress-primary w-56"
+							value={progressValue}
+							max={progressMax}
+						></progress>
+						<p className="my-auto ml-2">
+							{progressValue}/{progressMax}
+						</p>
+					</div>
+				)}
+			</div>
 			<div className="avatar-group -space-x-6">
 				{researchedAvatars
 					.filter((_el, index) => index < 3)

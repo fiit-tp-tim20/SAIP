@@ -68,6 +68,8 @@ function Product() {
 										key={feature.id}
 										name={t(`research.features.${feature.id}.title`) as string}
 										researchedAvatars={feature.players.map((player) => player.image)}
+										progressMax={feature.progressMax}
+										progressValue={feature.progressValue}
 									/>
 								))}
 						</ul>
