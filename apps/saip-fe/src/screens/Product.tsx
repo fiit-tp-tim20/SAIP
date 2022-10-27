@@ -1,7 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
-import ModelViewer from "../components/babylon/ModelViewer";
 import { getResearchedUpgrades } from "../mock/product";
 
 function Product() {
@@ -39,7 +38,7 @@ function Product() {
 					</div>
 				</div>
 				<div className="flex flex-col">
-					<ModelViewer id="main-canvas" />
+					<img src="https://via.placeholder.com/1280" alt="placeholder" className=" rounded-2xl" />
 				</div>
 			</div>
 		</div>
