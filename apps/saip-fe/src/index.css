@@ -102,7 +102,7 @@ button {
 /* Navbar */
 
 .navbar {
-	@apply bg-gray-100 dark:bg-[#000];
+	@apply bg-gray-200 dark:bg-[#000];
 }
 
 .navbar > ul > li:hover {
@@ -123,4 +123,13 @@ button {
 
 .navbar .divider:last-child {
 	display: none;
+}
+
+.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):focus),
+.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):hover),
+.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):focus),
+.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):hover) {
+	/* background-color: hsl(var(--bc) / var(--tw-bg-opacity)); */
+	@apply bg-white dark:bg-[#242424] bg-opacity-100;
+	transition: 0.5s ease-in-out all;
 }

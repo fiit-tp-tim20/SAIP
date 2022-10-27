@@ -6,7 +6,7 @@ import { getResearchedUpgrades } from "../mock/product";
 function Product() {
 	const { t } = useTranslation();
 
-	const { isLoading: isLoadingResearched, data: dataResearched } = useQuery("researched", () =>
+	const { isLoading: isLoadingResearched, data: dataResearched } = useQuery(["researched"], () =>
 		getResearchedUpgrades(),
 	);
 

@@ -47,7 +47,7 @@ function Navbar() {
 	}, [location]);
 
 	return (
-		<div className="navbar bg-gray-100 top-0 w-screen fixed left-0">
+		<div className="navbar top-0 w-screen fixed left-0 z-50">
 			<p className="px-8 normal-case text-xl">SAIP</p>
 			<ul className="menu menu-horizontal p-0 m-0">
 				{tabs.map((tab) => (
