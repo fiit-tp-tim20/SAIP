@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import usePreferredMode from "../hooks/usePreferredMode";
 
 function Devtools() {
 	const languages = [
@@ -20,10 +21,13 @@ function Devtools() {
 			<label tabIndex={0} className="btn btn-primary m-1">
 				Click
 			</label>
-			<div tabIndex={0} className="dropdown-content menu p-5 shadow background-container rounded-box w-max">
+			<div
+				tabIndex={0}
+				className="dropdown-content menu p-5 shadow background-container rounded-box w-max w-auto"
+			>
 				<h2 className="text-left font-bold">Devtools</h2>
 				<div className="flex flex-row">
-					<div className="flex flex-col">
+					<div className="flex flex-col mx-3">
 						<h3 className="text-left">Language</h3>
 						<select
 							className="select w-full max-w-xs"
