@@ -47,9 +47,9 @@
 				"title": "Vylepšenie 6",
 				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
 			}
-		},
-		"sandbox": {
-			"title": "Sandbox"
 		}
+	},
+	"sandbox": {
+		"title": "Sandbox"
 	}
 }
