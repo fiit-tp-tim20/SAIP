@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 function usePreferredMode() {
 	const [mode, setMode] = useState<"light" | "dark">("light");
