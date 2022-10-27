@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
+import ModelViewer from "../components/babylon/ModelViewer";
 import { getResearchedUpgrades } from "../mock/product";
 
 function Product() {
@@ -15,6 +16,10 @@ function Product() {
 			<h1 className="p-6 pl-12">{t("product.title") as string}</h1>
 			<div className="grid grid-cols-2 gap-6 px-6">
 				<div className="flex flex-col background-container p-6 rounded-2xl">
+					<div className="py-4">
+						<h2>{t("product.name.title") as string}</h2>
+						<p className="pt-1">{t("product.name.ebike") as string}</p>
+					</div>
 					<div className="py-4">
 						<h2>{t("product.description.title") as string}</h2>
 						<p className="pt-1">{t("product.description.text") as string}</p>
@@ -34,7 +39,7 @@ function Product() {
 					</div>
 				</div>
 				<div className="flex flex-col">
-					<img src="https://via.placeholder.com/1280" alt="placeholder" className=" rounded-2xl" />
+					<ModelViewer id="main-canvas" />
 				</div>
 			</div>
 		</div>

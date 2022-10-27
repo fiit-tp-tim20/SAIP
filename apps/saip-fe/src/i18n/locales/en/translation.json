@@ -2,6 +2,10 @@
 	"plan": { "title": "Plan" },
 	"product": {
 		"title": "Product",
+		"name": {
+			"title": "Name",
+			"ebike": "E-Bike"
+		},
 		"description": {
 			"title": "Description",
 			"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"

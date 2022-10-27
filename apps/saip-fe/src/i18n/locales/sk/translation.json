@@ -2,6 +2,10 @@
 	"plan": { "title": "Plán" },
 	"product": {
 		"title": "Produkt",
+		"name": {
+			"title": "Názov",
+			"ebike": "E-bike"
+		},
 		"description": {
 			"title": "Popis",
 			"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
