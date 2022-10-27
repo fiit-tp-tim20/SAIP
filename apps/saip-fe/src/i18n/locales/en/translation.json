@@ -13,11 +13,11 @@
 		"features": {
 			"title": "Finished Research",
 			"1": {
-				"title": "Feature 1",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+				"title": "Better Battery",
+				"text": "This battery is better than the other one!"
 			},
 			"2": {
-				"title": "Feature 2",
+				"title": "OLED Display",
 				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
 			},
 			"3": {

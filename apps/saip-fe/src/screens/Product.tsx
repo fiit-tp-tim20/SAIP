@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
 import { getResearchedUpgrades } from "../mock/product";
+import UpgradeInfo from "../components/product/UpgradeInfo";
 
 function Product() {
 	const { t } = useTranslation();
@@ -31,7 +32,11 @@ function Product() {
 							<ul className="pt-1">
 								{dataResearched &&
 									dataResearched.map((feature) => (
-										<li key={feature.id}>{t(`product.features.${feature.id}.title`) as string}</li>
+										<UpgradeInfo
+											key={feature.id}
+											name={t(`product.features.${feature.id}.title`) as string}
+											researchedAvatars={feature.players}
+										/>
 									))}
 							</ul>
 						)}

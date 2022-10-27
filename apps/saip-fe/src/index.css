@@ -133,3 +133,7 @@ button {
 	@apply bg-white dark:bg-[#242424] bg-opacity-100;
 	transition: 0.5s ease-in-out all;
 }
+
+canvas:focus {
+	outline: none;
+}
