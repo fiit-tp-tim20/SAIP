@@ -36,5 +36,9 @@
 	},
 	"sandbox": {
 		"title": "Sandbox"
+	},
+
+	"news": {
+		"title": "Novinky"
 	}
 }
