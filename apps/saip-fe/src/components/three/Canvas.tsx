@@ -8,6 +8,7 @@ export default function Test() {
 		<Canvas flat dpr={[1, 2]} camera={{ fov: 25, position: [0, 0, 8] }} className="rounded-2xl">
 			<color attach="background" args={["#c9f0de"]} />
 			<ambientLight />
+			<pointLight position={[1, 1, 1]} />
 			<PresentationControls
 				global
 				zoom={0.8}

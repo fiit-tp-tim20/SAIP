@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
 import { getAvailableUpgrades, getPendingUpgrades, getResearchedUpgrades } from "../mock/product";
 import UpgradeInfo from "../components/product/UpgradeInfo";
-import Test from "../components/three/Test";
+import Canvas from "../components/three/Canvas";
 
 function Product() {
 	const { t } = useTranslation();
@@ -51,29 +51,7 @@ function Product() {
 						)}
 					</div>
 				</div>
-				<div>
-					<Test />
-					{/* <Canvas
-						// flat
-						// linear
-						dpr={[1, 2]}
-						camera={{ fov: 25, position: [0, 0, 8], aspect: 10000 }}
-					>
-						<PresentationControls
-							global
-							zoom={0.8}
-							rotation={[0, -Math.PI / 4, 0]}
-							polar={[0, Math.PI / 4]}
-							azimuth={[-Math.PI / 4, Math.PI / 4]}
-						>
-							{/* <color attach="background" args={["#F3F4F6"]} /> 
-							<color attach="background" args={["#00ffff"]} />
-							<ambientLight />
-							<Bike position={[0, 0, 0]} />
-						</PresentationControls>
-					</Canvas> */}
-					{/* <img src="https://via.placeholder.com/1280" alt="placeholder" className=" rounded-2xl" /> */}
-				</div>
+				<Canvas />
 			</div>
 			<h1 className="p-6 pl-12">{t("research.title") as string}</h1>
 			<div className="flex flex-col background-container p-6 rounded-2xl mx-6 max-w-7xl">

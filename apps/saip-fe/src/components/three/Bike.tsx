@@ -12,7 +12,7 @@ function Bike(props: Props) {
 
 	return (
 		<mesh position={position} scale={[2, 2, 2]} geometry={nodes.Bike.geometry}>
-			<meshStandardMaterial attach="material" color="gray" />
+			<meshToonMaterial attach="material" color="gray" />
 		</mesh>
 	);
 }
