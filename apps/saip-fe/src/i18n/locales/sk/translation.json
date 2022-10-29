@@ -2,30 +2,45 @@
 	"plan": { "title": "Plán" },
 	"product": {
 		"title": "Produkt",
+		"name": {
+			"title": "Názov",
+			"ebike": "E-bike"
+		},
 		"description": {
 			"title": "Popis",
 			"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+		}
+	},
+	"research": {
+		"title": "Výskum",
+		"pending": {
+			"title": "Prebiejúci výskum"
+		},
+		"available": {
+			"title": "Dostupné výskumy"
+		},
+		"finished": {
+			"title": "Dokončené vylepšenia"
 		},
 		"features": {
-			"title": "Dokončené vylepšenia",
 			"1": {
-				"title": "Vylepšenie 1",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+				"title": "Lepšia batéria",
+				"text": "Táto batéria je lepšia ako predchádzajúca!"
 			},
 			"2": {
-				"title": "Vylepšenie 2",
+				"title": "OLED displej",
 				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
 			},
 			"3": {
-				"title": "Vylepšenie 3",
+				"title": "Lepšie brzdy",
 				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
 			},
 			"4": {
-				"title": "Vylepšenie 4",
+				"title": "Držiak na fľašu",
 				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
 			},
 			"5": {
-				"title": "Vylepšenie 5",
+				"title": "Tempomat",
 				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
 			},
 			"6": {
