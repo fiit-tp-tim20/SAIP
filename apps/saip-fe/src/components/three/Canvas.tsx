@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { Canvas } from "@react-three/fiber";
 import { PresentationControls } from "@react-three/drei";
-import Bike from "./Bike";
 import { Vector3 } from "three";
+import Bike from "./Bike";
 
 export default function Test() {
 	return (

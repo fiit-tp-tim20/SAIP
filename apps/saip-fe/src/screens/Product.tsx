@@ -51,7 +51,10 @@ function Product() {
 						)}
 					</div>
 				</div>
-				<Canvas />
+				{/* <div className="max-h-[50vh]"> */}
+				<div className="h-auto">
+					<Canvas />
+				</div>
 			</div>
 			<h1 className="p-6 pl-12">{t("research.title") as string}</h1>
 			<div className="flex flex-col background-container p-6 rounded-2xl mx-6 max-w-7xl">
