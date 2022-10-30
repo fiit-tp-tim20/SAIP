@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import usePreferredMode from "../hooks/usePreferredMode";
 
 function Devtools() {
 	const languages = [

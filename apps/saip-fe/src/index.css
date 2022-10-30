@@ -137,3 +137,7 @@ button {
 canvas:focus {
 	outline: none;
 }
+
+canvas {
+	touch-action: none;
+}

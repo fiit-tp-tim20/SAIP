@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
 import { getAvailableUpgrades, getPendingUpgrades, getResearchedUpgrades } from "../mock/product";
 import UpgradeInfo from "../components/product/UpgradeInfo";
+import Canvas from "../components/three/Canvas";
 
 function Product() {
 	const { t } = useTranslation();
@@ -50,8 +51,9 @@ function Product() {
 						)}
 					</div>
 				</div>
-				<div className="flex flex-col">
-					<img src="https://via.placeholder.com/1280" alt="placeholder" className=" rounded-2xl" />
+				{/* <div className="max-h-[50vh]"> */}
+				<div className="h-auto">
+					<Canvas />
 				</div>
 			</div>
 			<h1 className="p-6 pl-12">{t("research.title") as string}</h1>

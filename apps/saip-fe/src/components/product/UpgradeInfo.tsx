@@ -16,11 +16,7 @@ function UpgradeInfo(props: Props) {
 				<p className="font-bold my-auto min-w-[180px]">{name}</p>
 				{progressMax && (
 					<div className="flex flex-row items-center justify-center text-center">
-						<progress
-							className="progress progress-primary w-56"
-							value={progressValue}
-							max={progressMax}
-						></progress>
+						<progress className="progress progress-primary w-56" value={progressValue} max={progressMax} />
 						<p className="my-auto ml-2">
 							{progressValue}/{progressMax}
 						</p>
