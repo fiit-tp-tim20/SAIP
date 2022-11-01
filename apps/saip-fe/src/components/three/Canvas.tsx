@@ -21,9 +21,7 @@ export default function Test(props: Props) {
 				polar={[0, Math.PI / 4]}
 				azimuth={[-Math.PI / 4, Math.PI / 4]}
 			>
-				<group dispose={null} position={new Vector3(0, -1, 0)}>
-					<Bike path={props.path} />
-				</group>
+				<Bike position={new Vector3(0, -1, 0)} />
 			</PresentationControls>
 		</Canvas>
 	);
