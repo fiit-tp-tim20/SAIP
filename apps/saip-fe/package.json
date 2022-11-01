@@ -12,6 +12,7 @@
 		"lint:fix": "eslint --ext .js,.jsx,.ts,.tsx src --fix"
 	},
 	"dependencies": {
+		"@react-spring/three": "^9.5.5",
 		"@react-three/drei": "^9.38.1",
 		"@react-three/fiber": "^8.8.10",
 		"@vitejs/plugin-react": "^2.1.0",
