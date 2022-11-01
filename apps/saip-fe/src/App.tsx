@@ -9,7 +9,7 @@ import Plan from "./screens/Plan";
 import News from "./screens/News";
 import Devtools from "./dev/Devtools";
 import Product from "./screens/Product";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/navbar/Navbar";
 
 
 const queryClient = new QueryClient();

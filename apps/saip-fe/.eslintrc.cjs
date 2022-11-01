@@ -15,5 +15,8 @@ module.exports = {
 		"prettier/prettier": "error",
 		"jsx-a11y/label-has-associated-control": "off",
 		"jsx-a11y/no-noninteractive-tabindex": "off",
+		"react/no-unknown-property": "off",
+		"react/require-default-props": "off",
+		"react/jsx-props-no-spreading": "off",
 	},
 };
