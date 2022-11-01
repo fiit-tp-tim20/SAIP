@@ -53,7 +53,7 @@ function Product() {
 				</div>
 				{/* <div className="max-h-[50vh]"> */}
 				<div className="h-auto">
-					<Canvas path={"/bike_v8_test.glb"} />
+					<Canvas path="/bike_v8_test.glb" />
 				</div>
 			</div>
 			<h1 className="p-6 pl-12">{t("research.title") as string}</h1>

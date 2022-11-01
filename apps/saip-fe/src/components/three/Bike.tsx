@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import React, { useEffect, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
 import { useSpring, a } from "@react-spring/three";
 
 function Bike(props: JSX.IntrinsicElements["group"]) {
@@ -17,7 +16,7 @@ function Bike(props: JSX.IntrinsicElements["group"]) {
 			timeout = setTimeout(rotate, (0.5 + Math.random() * 2) * 1000);
 		};
 		rotate();
-		return () => void clearTimeout(timeout);
+		return () => clearTimeout(timeout);
 	}, []);
 
 	return (

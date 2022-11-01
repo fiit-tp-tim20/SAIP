@@ -4,11 +4,7 @@ import { PresentationControls } from "@react-three/drei";
 import { Vector3 } from "three";
 import Bike from "./Bike";
 
-type Props = {
-	path: string;
-};
-
-export default function Test(props: Props) {
+export default function Test() {
 	return (
 		<Canvas flat dpr={[1, 2]} camera={{ fov: 25, position: [0, 0, 12] }} className="rounded-2xl">
 			<color attach="background" args={["#c9f0de"]} />

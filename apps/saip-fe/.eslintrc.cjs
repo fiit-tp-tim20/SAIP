@@ -17,5 +17,6 @@ module.exports = {
 		"jsx-a11y/no-noninteractive-tabindex": "off",
 		"react/no-unknown-property": "off",
 		"react/require-default-props": "off",
+		"react/jsx-props-no-spreading": "off",
 	},
 };
