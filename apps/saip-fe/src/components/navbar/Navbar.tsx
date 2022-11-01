@@ -26,6 +26,12 @@ function Navbar() {
 			path: "/sandbox",
 			isActive: false,
 		},
+		{
+			name: "news",
+			title: t("news.title") as string,
+			path: "/news",
+			isActive: false,
+		},
 	]);
 
 	useEffect(() => {
