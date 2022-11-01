@@ -1,246 +1,177 @@
-import React, { useEffect, useRef } from "react";
+import * as THREE from "three";
+import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
-import { Color, Euler, Mesh, Vector3 } from "three";
-import { useFrame } from "@react-three/fiber";
 
-// TODO remove after model completion
-type Props = {
-	path: string;
-};
-
-function Bike(props: Props) {
-	const { nodes } = useGLTF("/bike_test.glb");
-	const { nodes: nodes2 } = useGLTF(props.path);
-
-	// console.log(props.path, nodes2);
-
-	const spokeRef1 = useRef<Mesh>(null!);
-	const spokeRef2 = useRef<Mesh>(null!);
-
+function Bike(props: JSX.IntrinsicElements["group"]) {
+	const { nodes, materials } = useGLTF("/bike_v8_test.glb");
 	return (
-		<>
+		<group {...props} dispose={null}>
+			<mesh name="Top_Seat_tube" geometry={nodes.Top_Seat_tube.geometry} material={materials.Main} />
+			<mesh name="Fort_Seat_stay" geometry={nodes.Fort_Seat_stay.geometry} material={materials.Main} />
 			<mesh
-				scale={nodes2.Battery.scale}
-				geometry={nodes2.Battery.geometry}
-				position={nodes2.Battery.position}
-				rotation={nodes2.Battery.rotation}
-				material={nodes2.Battery.material}
-				name={nodes2.Battery.name}
+				name="Hub_back"
+				geometry={nodes.Hub_back.geometry}
+				material={materials["Material.002"]}
+				position={[0, 0.87, -1.48]}
+				scale={[1.47, 1, 1]}
 			/>
 			<mesh
-				scale={nodes2.Bottom_bracket.scale}
-				geometry={nodes2.Bottom_bracket.geometry}
-				position={nodes2.Bottom_bracket.position}
-				rotation={nodes2.Bottom_bracket.rotation}
-				material={nodes2.Bottom_bracket.material}
-				name={nodes2.Bottom_bracket.name}
+				name="Hub_front"
+				geometry={nodes.Hub_front.geometry}
+				material={materials["Material.002"]}
+				position={[0, 0.87, 1.44]}
+				scale={[1.54, 1, 1]}
 			/>
 			<mesh
-				scale={nodes2.Cassette.scale}
-				geometry={nodes2.Cassette.geometry}
-				position={nodes2.Cassette.position}
-				rotation={nodes2.Cassette.rotation}
-				material={nodes2.Cassette.material}
-				name={nodes2.Cassette.name}
+				name="Spoke_2"
+				geometry={nodes.Spoke_2.geometry}
+				material={materials["Material.002"]}
+				position={[0, 0.87, -1.48]}
+				rotation={[-Math.PI, 0, 0]}
+				scale={[-0.48, -1, -1]}
 			/>
 			<mesh
-				scale={nodes2.Chain.scale}
-				geometry={nodes2.Chain.geometry}
-				position={nodes2.Chain.position}
-				rotation={nodes2.Chain.rotation}
-				material={nodes2.Chain.material}
-				name={nodes2.Chain.name}
+				name="Spoke_1"
+				geometry={nodes.Spoke_1.geometry}
+				material={materials["Material.002"]}
+				position={[0, 0.87, 1.44]}
+				rotation={[-Math.PI, 0, 0]}
+				scale={[-0.9, -1, -1]}
+			/>
+			<mesh name="Stem" geometry={nodes.Stem.geometry} material={materials.Main} position={[0, 1.97, 0.74]} />
+			<mesh
+				name="Handlebars"
+				geometry={nodes.Handlebars.geometry}
+				material={materials.Main}
+				position={[0, 1.97, 0.74]}
 			/>
 			<mesh
-				scale={nodes2.Crank_arm_1.scale}
-				geometry={nodes2.Crank_arm_1.geometry}
-				position={nodes2.Crank_arm_1.position}
-				rotation={nodes2.Crank_arm_1.rotation}
-				material={nodes2.Crank_arm_1.material}
-				name={nodes2.Crank_arm_1.name}
+				name="Seat_post"
+				geometry={nodes.Seat_post.geometry}
+				material={materials.Main}
+				position={[0, 1.85, -0.64]}
 			/>
 			<mesh
-				scale={nodes2.Crank_arm_2.scale}
-				geometry={nodes2.Crank_arm_2.geometry}
-				position={nodes2.Crank_arm_2.position}
-				rotation={nodes2.Crank_arm_2.rotation}
-				material={nodes2.Crank_arm_2.material}
-				name={nodes2.Crank_arm_2.name}
+				name="Saddle"
+				geometry={nodes.Saddle.geometry}
+				material={materials.Material}
+				position={[0, 2.12, -0.66]}
+				scale={[0.13, 0.13, 0.15]}
 			/>
 			<mesh
-				scale={nodes2.Cylinder002.scale}
-				geometry={nodes2.Cylinder002.geometry}
-				position={nodes2.Cylinder002.position}
-				rotation={nodes2.Cylinder002.rotation}
-				material={nodes2.Cylinder002.material}
-				name={nodes2.Cylinder002.name}
+				name="Handles"
+				geometry={nodes.Handles.geometry}
+				material={materials.Saddle}
+				position={[0, 1.97, 0.74]}
 			/>
 			<mesh
-				scale={nodes2.Fort_Seat_stay.scale}
-				geometry={nodes2.Fort_Seat_stay.geometry}
-				position={nodes2.Fort_Seat_stay.position}
-				rotation={nodes2.Fort_Seat_stay.rotation}
-				material={nodes2.Fort_Seat_stay.material}
-				name={nodes2.Fort_Seat_stay.name}
+				name="Bottom_bracket"
+				geometry={nodes.Bottom_bracket.geometry}
+				material={materials["Material.002"]}
+				position={[-0.11, 0.77, -0.31]}
+				rotation={[0, 0, -Math.PI / 2]}
+				scale={0.23}
 			/>
 			<mesh
-				scale={nodes2.Fort_Seat_stay001.scale}
-				geometry={nodes2.Fort_Seat_stay001.geometry}
-				position={nodes2.Fort_Seat_stay001.position}
-				rotation={nodes2.Fort_Seat_stay001.rotation}
-				material={nodes2.Fort_Seat_stay001.material}
-				name={nodes2.Fort_Seat_stay001.name}
+				name="Cassette"
+				geometry={nodes.Cassette.geometry}
+				material={materials["Material.002"]}
+				position={[-0.07, 0.87, -1.48]}
+				rotation={[0, 0, -Math.PI / 2]}
+				scale={0.15}
 			/>
 			<mesh
-				scale={nodes2.Handlebars.scale}
-				geometry={nodes2.Handlebars.geometry}
-				position={nodes2.Handlebars.position}
-				rotation={nodes2.Handlebars.rotation}
-				material={nodes2.Handlebars.material}
-				name={nodes2.Handlebars.name}
+				name="Cylinder002"
+				geometry={nodes.Cylinder002.geometry}
+				material={materials["Material.002"]}
+				position={[0, 0.77, -0.31]}
+				rotation={[0, 0, -Math.PI / 2]}
+				scale={0.06}
 			/>
 			<mesh
-				scale={nodes2.Handles.scale}
-				geometry={nodes2.Handles.geometry}
-				position={nodes2.Handles.position}
-				rotation={nodes2.Handles.rotation}
-				material={nodes2.Handles.material}
-				name={nodes2.Handles.name}
+				name="Crank_arm_2"
+				geometry={nodes.Crank_arm_2.geometry}
+				material={materials["Material.002"]}
+				position={[0, 0.77, -0.31]}
+				rotation={[0.29, 0, -1.54]}
+				scale={0.06}
 			/>
 			<mesh
-				scale={nodes2.Head_tube.scale}
-				geometry={nodes2.Head_tube.geometry}
-				position={nodes2.Head_tube.position}
-				rotation={nodes2.Head_tube.rotation}
-				material={nodes2.Head_tube.material}
-				name={nodes2.Head_tube.name}
+				name="Crank_arm_1"
+				geometry={nodes.Crank_arm_1.geometry}
+				material={materials["Material.002"]}
+				position={[0, 0.77, -0.31]}
+				rotation={[0.29, 0, 1.6]}
+				scale={0.06}
 			/>
 			<mesh
-				scale={nodes2.Hub_back.scale}
-				geometry={nodes2.Hub_back.geometry}
-				position={nodes2.Hub_back.position}
-				rotation={nodes2.Hub_back.rotation}
-				material={nodes2.Hub_back.material}
-				name={nodes2.Hub_back.name}
+				name="Paddle_1"
+				geometry={nodes.Paddle_1.geometry}
+				material={materials.Saddle}
+				position={[0.33, 0.45, -0.41]}
+				rotation={[0, 0, 0.03]}
+				scale={[0.09, 0.11, 0.07]}
 			/>
 			<mesh
-				scale={nodes2.Hub_front.scale}
-				geometry={nodes2.Hub_front.geometry}
-				position={nodes2.Hub_front.position}
-				rotation={nodes2.Hub_front.rotation}
-				material={nodes2.Hub_front.material}
-				name={nodes2.Hub_front.name}
+				name="Paddle_2"
+				geometry={nodes.Paddle_2.geometry}
+				material={materials.Saddle}
+				position={[-0.33, 1.06, -0.22]}
+				rotation={[-3.1, 0, -0.03]}
+				scale={[-0.09, -0.11, -0.07]}
 			/>
 			<mesh
-				scale={nodes2.Paddle_1.scale}
-				geometry={nodes2.Paddle_1.geometry}
-				position={nodes2.Paddle_1.position}
-				rotation={nodes2.Paddle_1.rotation}
-				material={nodes2.Paddle_1.material}
-				name={nodes2.Paddle_1.name}
+				name="Chain"
+				geometry={nodes.Chain.geometry}
+				material={materials["Material.002"]}
+				position={[-0.08, 0.87, -1.48]}
+				rotation={[0, 0, -Math.PI / 2]}
+				scale={0.14}
 			/>
 			<mesh
-				scale={nodes2.Paddle_2.scale}
-				geometry={nodes2.Paddle_2.geometry}
-				position={nodes2.Paddle_2.position}
-				rotation={nodes2.Paddle_2.rotation}
-				material={nodes2.Paddle_2.material}
-				name={nodes2.Paddle_2.name}
+				name="Battery"
+				geometry={nodes.Battery.geometry}
+				material={materials.Main}
+				position={[0, 1.79, 0.74]}
+				rotation={[-2.14, 0, 0]}
+				scale={0.06}
+			/>
+			<mesh name="Head_tube" geometry={nodes.Head_tube.geometry} material={materials.Main} />
+			<mesh
+				name="Torus001"
+				geometry={nodes.Torus001.geometry}
+				material={materials.Saddle}
+				position={[0, 0.87, 1.44]}
+				rotation={[0, 0, -Math.PI / 2]}
 			/>
 			<mesh
-				scale={nodes2.Saddle.scale}
-				geometry={nodes2.Saddle.geometry}
-				position={nodes2.Saddle.position}
-				rotation={nodes2.Saddle.rotation}
-				material={nodes2.Saddle.material}
-				name={nodes2.Saddle.name}
+				name="Torus002"
+				geometry={nodes.Torus002.geometry}
+				material={materials.Saddle}
+				position={[0, 0.87, -1.48]}
+				rotation={[0, 0, -Math.PI / 2]}
+			/>
+			<mesh name="Fort_Seat_stay001" geometry={nodes.Fort_Seat_stay001.geometry} material={materials.Main} />
+			<mesh
+				name="Screen_body"
+				geometry={nodes.Screen_body.geometry}
+				material={materials["Material.001"]}
+				position={[-0.23, 2.32, 0.89]}
+				rotation={[-0.6, 0, 0]}
+				scale={[0.06, 0.09, 0.09]}
 			/>
 			<mesh
-				scale={nodes2.Screen_body.scale}
-				geometry={nodes2.Screen_body.geometry}
-				position={nodes2.Screen_body.position}
-				rotation={nodes2.Screen_body.rotation}
-				material={nodes2.Screen_body.material}
-				name={nodes2.Screen_body.name}
+				name="Screen_display"
+				geometry={nodes.Screen_display.geometry}
+				material={materials.Screen}
+				position={[-0.23, 2.32, 0.89]}
+				rotation={[-0.6, 0, 0]}
+				scale={[0.06, 0.09, 0.09]}
 			/>
-			<mesh
-				scale={nodes2.Screen_display.scale}
-				geometry={nodes2.Screen_display.geometry}
-				position={nodes2.Screen_display.position}
-				rotation={nodes2.Screen_display.rotation}
-				material={nodes2.Screen_display.material}
-				name={nodes2.Screen_display.name}
-			/>
-			<mesh
-				scale={nodes2.Seat_post.scale}
-				geometry={nodes2.Seat_post.geometry}
-				position={nodes2.Seat_post.position}
-				rotation={nodes2.Seat_post.rotation}
-				material={nodes2.Seat_post.material}
-				name={nodes2.Seat_post.name}
-			/>
-			<mesh
-				ref={spokeRef1}
-				scale={nodes2.Spoke_1.scale}
-				geometry={nodes2.Spoke_1.geometry}
-				position={nodes2.Spoke_1.position}
-				rotation={nodes2.Spoke_1.rotation}
-				material={nodes2.Spoke_1.material}
-				name={nodes2.Spoke_1.name}
-			/>
-			<mesh
-				ref={spokeRef2}
-				scale={nodes2.Spoke_2.scale}
-				geometry={nodes2.Spoke_2.geometry}
-				position={nodes2.Spoke_2.position}
-				rotation={nodes2.Spoke_2.rotation}
-				material={nodes2.Spoke_2.material}
-				name={nodes2.Spoke_2.name}
-			/>
-			<mesh
-				scale={nodes2.Stem.scale}
-				geometry={nodes2.Stem.geometry}
-				position={nodes2.Stem.position}
-				rotation={nodes2.Stem.rotation}
-				material={nodes2.Stem.material}
-				name={nodes2.Stem.name}
-			/>
-			<mesh
-				scale={nodes2.Top_Seat_tube.scale}
-				geometry={nodes2.Top_Seat_tube.geometry}
-				position={nodes2.Top_Seat_tube.position}
-				rotation={nodes2.Top_Seat_tube.rotation}
-				material={nodes2.Top_Seat_tube.material}
-				name={nodes2.Top_Seat_tube.name}
-			/>
-			<mesh
-				scale={nodes2.Torus001.scale}
-				geometry={nodes2.Torus001.geometry}
-				position={nodes2.Torus001.position}
-				rotation={new Euler(0, 0, 11)} // todo: fix this
-				material={nodes2.Torus001.material}
-				name={nodes2.Torus001.name}
-			/>
-			<mesh
-				scale={nodes2.Torus002.scale}
-				geometry={nodes2.Torus002.geometry}
-				position={nodes2.Torus002.position}
-				rotation={nodes2.Torus002.rotation}
-				material={nodes2.Torus002.material}
-				name={nodes2.Torus002.name}
-			/>
-			{/* {Object.values(nodes2).map((node) => (
-				<mesh
-					scale={node.scale}
-					geometry={node.geometry}
-					position={node.position}
-					rotation={node.rotation}
-					material={node.material}
-					name={node.name}
-				/>
-			))} */}
-		</>
+		</group>
 	);
 }
+
+useGLTF.preload("/bike_v8_test-transformed.glb");
 
 export default Bike;
