@@ -21,15 +21,15 @@ function Navbar() {
 			isActive: false,
 		},
 		{
-			name: "sandbox",
-			title: t("sandbox.title") as string,
-			path: "/sandbox",
-			isActive: false,
-		},
-		{
 			name: "news",
 			title: t("news.title") as string,
 			path: "/news",
+			isActive: false,
+		},
+		{
+			name: "sandbox",
+			title: t("sandbox.title") as string,
+			path: "/sandbox",
 			isActive: false,
 		},
 	]);
