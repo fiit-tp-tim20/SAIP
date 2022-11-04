@@ -6,6 +6,8 @@ Please install your own venv.
 
 Packages can be found in requirements.txt (remove this from PROD).
 
+```python .\manage.py makemigrations``` to create models' migrations
+
 ```python .\manage.py migrate``` to create the database.
 
 ```python .\manage.py runserver``` to run the server.
