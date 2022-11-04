@@ -5,7 +5,7 @@ from .models import Turn, Company, Production, Spending, Product, Factory, Compa
 
 @admin.register(Turn)
 class TurnsAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('number', 'start', 'end')
 
 
 @admin.register(Company)
