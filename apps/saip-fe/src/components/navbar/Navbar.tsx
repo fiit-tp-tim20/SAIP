@@ -10,7 +10,7 @@ function Navbar() {
 	const tabs = ["plan", "product", "news", "sandbox"];
 
 	return (
-		<div className="navbar top-0 w-screen fixed left-0 z-50">
+		<div className="navbar top-0 w-screen fixed left-0 z-40">
 			<p className="px-8 normal-case text-xl">SAIP</p>
 			<ul className="menu menu-horizontal p-0 m-0">
 				{tabs.map((tab) => (
