@@ -6,8 +6,6 @@ import { getTweets } from "../mock/news";
 
 function News() {
 	const { t } = useTranslation();
-	const text =
-		"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum modi earum est corporis deserunt error hic, eum praesentium rerum minima, et culpa illo, nisi quasi dicta officia consequuntur! Nesciunt, neque.";
 
 	const { isLoading, data } = useQuery(["news"], () => getTweets());
 
