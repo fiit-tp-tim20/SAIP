@@ -1,5 +1,12 @@
 import React, { useState } from "react";
 
+/**
+ *
+ * @param _element element to be rendered in the modal
+ * @returns {object} {sShowing, setIsShowing, Modal, setElement}
+ * @example
+ * const { isShowing, setIsShowing, Modal, setElement } = useModal(<div>Modal content</div>);
+ */
 export const useModal = (_element: any) => {
 	const [isShowing, setIsShowing] = useState(false);
 	const [element, setElement] = useState(_element);
