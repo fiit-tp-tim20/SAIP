@@ -16,6 +16,11 @@ class Simulation:
     #called by class lecturer user
     def commit_market_state(self):
         pass
+
+    #updates the database containing company decisions
+    #from company user
+    def commit_company_decisions(self):
+        pass
     
     #returns information about the state of the market, and new state of the company
     #returns a json with company_state information
