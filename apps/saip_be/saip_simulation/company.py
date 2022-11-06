@@ -18,6 +18,7 @@ class Company:
     profit: float  # per turn, add to either credit or debit
     max_budget: float
     remaining_budget: float
+    factory: Factory
     
     def upgrade_stored_products(self):
         pass
