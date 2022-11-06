@@ -1,4 +1,4 @@
 class Simulation:
     
-    def end_turn():
+    def end_turn(self):
         pass

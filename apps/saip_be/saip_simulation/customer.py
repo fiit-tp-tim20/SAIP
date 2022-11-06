@@ -6,7 +6,7 @@ class Customer(ABC):
     modifier: float
     
     @abstractmethod
-    def calculate_weight_for_product():
+    def calculate_weight_for_product(self):
         pass
     
     
