@@ -9,4 +9,17 @@ class Customer(ABC):
     def calculate_weight_for_product(self, average_product_price):
         pass
     
-    
+
+@dataclass
+class HighBudgetCustomer(Customer):
+    pass
+
+
+@dataclass
+class LowBudgetustomer(Customer):
+    pass
+
+
+@dataclass
+class AverageBudgetCustomer(Customer):
+    pass
