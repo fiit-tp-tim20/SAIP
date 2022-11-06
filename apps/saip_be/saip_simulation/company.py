@@ -1,6 +1,13 @@
 from dataclasses import dataclass
 
-from product import Product, DailyProduct, LongTermProduct
+from product import Product, DailyProduct, LastingProduct
+
+
+@dataclass
+class Factory:
+    capacity: int
+    upkeep: float    
+
 
 @dataclass
 class Company:

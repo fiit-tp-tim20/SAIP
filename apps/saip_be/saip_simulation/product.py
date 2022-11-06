@@ -20,13 +20,17 @@ class Product(ABC):
         return self.__upgrade_price
     
     def upgrade_product(self):
-        # ToDo add upgrade logic here
-        new_upgrade_price = 0
+        self.__perform_upgrade_logic()
+        new_upgrade_price = self.__calculate_upgrade_price
         self.__set_upgrade_price(new_upgrade_price)
         
-    def __post_init__(self):
-        if self.__class__ == Product:
-            raise TypeError("Cannot instantiate abstract class.")
+    @abstractmethod
+    def __calculate_upgrade_price(self):
+        pass
+    
+    @abstractmethod
+    def __perform_upgrade_logic(self):
+        pass
 
 
 @dataclass
@@ -35,5 +39,5 @@ class DailyProduct(Product):
 
 
 @dataclass
-class LongTermProduct(Product):
+class LastingProduct(Product):
     pass
