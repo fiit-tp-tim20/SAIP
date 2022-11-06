@@ -1,5 +1,8 @@
 from dataclasses import dataclass
+from typing import List
+
+from customer import Customer
 
 @dataclass
 class Market:
-    pass
+    customers: List[Customer]
