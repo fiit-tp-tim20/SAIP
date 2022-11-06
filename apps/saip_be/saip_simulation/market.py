@@ -11,9 +11,9 @@ class Market:
     interest_rate: int      #percentage
     tax_rate: int           #percentage
 
-    marketing_weight: int   #percentage of market that is interesed in marketing
-    rnd_weight: int         #percentage of market that is interesed in rnd
-    price_weight: int       #percentage of market that is interesed in price
+    marketing_percentage: int   #percentage of market that is interesed in marketing
+    rnd_percentage: int         #percentage of market that is interesed in rnd
+    price_percentage: int       #percentage of market that is interesed in price
 
     customer_base: int      #overall number of potential customers
 
