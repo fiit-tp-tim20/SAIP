@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 
+
 @dataclass
 class Customer(ABC):
     modifier: float
@@ -22,4 +23,9 @@ class LowBudgetustomer(Customer):
 
 @dataclass
 class AverageBudgetCustomer(Customer):
+    pass
+
+
+@dataclass
+class InovationsLover(Customer):
     pass

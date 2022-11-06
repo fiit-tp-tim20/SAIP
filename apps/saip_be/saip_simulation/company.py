@@ -6,7 +6,7 @@ from product import Product, DailyProduct, LastingProduct
 @dataclass
 class Factory:
     capacity: int
-    upkeep: float    
+    upkeep: float
 
 
 @dataclass
@@ -19,6 +19,11 @@ class Company:
     max_budget: float
     remaining_budget: float
     factory: Factory
+    costs_per_turn: dict
+    stock_price: float  # score of the company
     
     def upgrade_stored_products(self):
+        pass
+    
+    def calculate_stock_price(self):
         pass

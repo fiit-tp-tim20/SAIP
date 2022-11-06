@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 
+
 @dataclass
 class Product(ABC):
     upgrades: dict
@@ -21,7 +22,7 @@ class Product(ABC):
     
     def upgrade_product(self):
         self.__perform_upgrade_logic()
-        new_upgrade_price = self.__calculate_upgrade_price
+        new_upgrade_price = self.__calculate_upgrade_price()
         self.__set_upgrade_price(new_upgrade_price)
         
     @abstractmethod
