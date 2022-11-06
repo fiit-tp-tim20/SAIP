@@ -3,7 +3,8 @@ from abc import ABC, abstractmethod
 
 @dataclass
 class Product(ABC):
-    pass
+    upgrade_price: float
+    upgrades: dict
 
 
 @dataclass
