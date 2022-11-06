@@ -1,6 +1,13 @@
 from dataclasses import dataclass
 
-from product import Product, DailyProduct, LongTermProduct
+from product import Product, DailyProduct, LastingProduct
+
+
+@dataclass
+class Factory:
+    capacity: int
+    upkeep: float    
+
 
 @dataclass
 class Company:
@@ -11,6 +18,7 @@ class Company:
     profit: float  # per turn, add to either credit or debit
     max_budget: float
     remaining_budget: float
+    factory: Factory
     
     def upgrade_stored_products(self):
         pass
