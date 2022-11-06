@@ -10,6 +10,8 @@ class Simulation:
     current_turn: int   #the current turn being evaluated
     turn_limit: int     #maximum number of turns     
 
+    def __init__(self) -> None:
+        self.setup_simulation()
     
     def setup_simulation(self):
         #sets up the class attributes - companies, turns, etc
