@@ -1,9 +1,6 @@
-export type Player = {
-	image: string;
-	name: string;
-};
+import { Player, Upgrade } from "../types/product";
 
-export const getUpgrades = () => [
+export const getUpgrades = (): Upgrade[] => [
 	{
 		id: 1,
 		players: [

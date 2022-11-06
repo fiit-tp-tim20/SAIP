@@ -5,6 +5,8 @@ import { getUpgrades } from "../mock/product";
 import UpgradeInfo from "../components/product/UpgradeInfo";
 import Canvas from "../components/three/Canvas";
 import { useModal } from "../components/modal/useModal";
+import { Upgrade } from "../types/product";
+import ProductModal from "../components/product/ProductModal";
 
 function Product() {
 	const { t } = useTranslation();
@@ -13,15 +15,8 @@ function Product() {
 
 	const { isLoading, data } = useQuery(["upgrades"], () => getUpgrades());
 
-	const openModal = (feature: any) => {
-		setElement(
-			<UpgradeInfo
-				name={t(`research.features.${feature.id}.title`) as string}
-				researchedAvatars={feature.players.map((player: any) => player.image)}
-				progressMax={feature.progressMax}
-				progressValue={feature.progressValue}
-			/>,
-		);
+	const openModal = (feature: Upgrade) => {
+		setElement(<ProductModal upgrade={feature} onClick={() => setIsShowing(false)} />);
 		setIsShowing(true);
 	};
 
