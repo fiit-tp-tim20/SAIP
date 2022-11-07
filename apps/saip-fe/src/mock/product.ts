@@ -24,7 +24,7 @@ export const getUpgrades = (): Upgrade[] => [
 		status: "finished",
 		price: 12000,
 		camera: {
-			position: [0, 1, 2],
+			position: [1, 2, 2],
 			rotation: [0, 0, 0],
 		},
 	},

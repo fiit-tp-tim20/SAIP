@@ -16,7 +16,7 @@ function Product() {
 	const { isLoading, data } = useQuery(["upgrades"], () => getUpgrades());
 
 	const openModal = (feature: Upgrade) => {
-		setElement(<ProductModal upgrade={feature} onClick={() => setIsShowing(false)} />);
+		setElement(<ProductModal upgrade={feature} onClick={() => {}} />);
 		setIsShowing(true);
 	};
 

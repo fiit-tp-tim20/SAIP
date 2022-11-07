@@ -22,10 +22,13 @@
 		"finished": {
 			"title": "Dokončené vylepšenia"
 		},
+		"playerResearched": {
+			"title": "Hráči s už dokončeným vylepšením"
+		},
 		"features": {
 			"1": {
 				"title": "Lepšia batéria",
-				"text": "Táto batéria je lepšia ako predchádzajúca!"
+				"text": "Táto batéria je lepšia ako predchádzajúca! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vel nisl vel quam ultrices pretium quis eget erat. Maecenas at consectetur lectus, vitae laoreet mauris. Sed egestas metus sed consequat gravida. Morbi ante nunc, vehicula ut dolor ut, dapibus euismod odio. Nulla porttitor pharetra massa ac laoreet. Praesent ultricies id ligula nec tempus. Proin mollis id tellus sit amet interdum. Ut nec aliquet velit. Suspendisse viverra lacus dictum orci placerat, a efficitur ligula rutrum. Aenean hendrerit ipsum id nulla interdum congue. Donec sagittis dictum diam et lobortis. Integer consequat facilisis arcu eget lacinia. Integer rhoncus magna nibh, eu ornare est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vel nisl vel quam ultrices pretium quis eget erat. Maecenas at consectetur lectus, vitae laoreet mauris. Sed egestas metus sed consequat gravida. Morbi ante nunc, vehicula ut dolor ut, dapibus euismod odio. Nulla porttitor pharetra massa ac laoreet. Praesent ultricies id ligula nec tempus. Proin mollis id tellus sit amet interdum. Ut nec aliquet velit. Suspendisse viverra lacus dictum orci placerat, a efficitur ligula rutrum. Aenean hendrerit ipsum id nulla interdum congue. Donec sagittis dictum diam et lobortis. Integer consequat facilisis arcu eget lacinia. Integer rhoncus magna nibh, eu ornare est. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vel nisl vel quam ultrices pretium quis eget erat. Maecenas at consectetur lectus, vitae laoreet mauris. Sed egestas metus sed consequat gravida. Morbi ante nunc, vehicula ut dolor ut, dapibus euismod odio. Nulla porttitor pharetra massa ac laoreet. Praesent ultricies id ligula nec tempus. Proin mollis id tellus sit amet interdum. Ut nec aliquet velit. Suspendisse viverra lacus dictum orci placerat, a efficitur ligula rutrum. Aenean hendrerit ipsum id nulla interdum congue. Donec sagittis dictum diam et lobortis. Integer consequat facilisis arcu eget lacinia. Integer rhoncus magna nibh, eu ornare est."
 			},
 			"2": {
 				"title": "OLED displej",

@@ -2,12 +2,21 @@ import * as THREE from "three";
 import React, { useEffect, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useSpring, a } from "@react-spring/three";
+import { useThree } from "@react-three/fiber";
 
-function Bike(props: JSX.IntrinsicElements["group"]) {
+type Props = {
+	cameraPosition?: THREE.Vector3;
+	cameraRotation?: THREE.Vector3;
+};
+
+function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 	const { nodes, materials } = useGLTF("/bike_v8_test.glb");
 	const group = useRef<THREE.Group>(null!);
 
 	const [spring, api] = useSpring(() => ({ rotation: [0, 0, 0], config: { mass: 5, tension: 100 } }), []);
+
+	const { cameraPosition, cameraRotation } = props;
+	const { camera } = useThree();
 
 	useEffect(() => {
 		let timeout: any;
@@ -16,6 +25,14 @@ function Bike(props: JSX.IntrinsicElements["group"]) {
 			timeout = setTimeout(rotate, (0.5 + Math.random() * 2) * 1000);
 		};
 		rotate();
+
+		if (cameraPosition) {
+			camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
+		}
+		if (cameraRotation) {
+			camera.rotation.set(cameraRotation.x, cameraRotation.y, cameraRotation.z);
+		}
+
 		return () => clearTimeout(timeout);
 	}, []);
 

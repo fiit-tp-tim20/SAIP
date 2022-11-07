@@ -4,7 +4,14 @@ import { PresentationControls } from "@react-three/drei";
 import { Vector3 } from "three";
 import Bike from "./Bike";
 
-export default function Test() {
+type Props = {
+	cameraPosition?: Vector3;
+	cameraRotation?: Vector3;
+};
+
+export default function Test(props: Props) {
+	const { cameraPosition, cameraRotation } = props;
+
 	return (
 		<Canvas flat dpr={[1, 2]} camera={{ fov: 25, position: [0, 0, 12] }} className="rounded-2xl">
 			<color attach="background" args={["#c9f0de"]} />
@@ -17,7 +24,11 @@ export default function Test() {
 				polar={[0, Math.PI / 4]}
 				azimuth={[-Math.PI / 4, Math.PI / 4]}
 			>
-				<Bike position={new Vector3(0, -1, 0)} />
+				<Bike
+					position={new Vector3(0, -1, 0)}
+					cameraPosition={cameraPosition}
+					cameraRotation={cameraRotation}
+				/>
 			</PresentationControls>
 		</Canvas>
 	);
