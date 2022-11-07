@@ -20,17 +20,8 @@ class Simulation:
     def end_turn(self):
         #ends the turn - and runs the simulation
         pass
-
-    def commit_market_state(self, user):
-        #updates the database containing market info
-        pass
-
-    def commit_company_decisions(self):
-        #updates the database containing company decisions
-        #from company user
-        pass
     
-    def get_company_state(self, user):
+    def get_company_state(self, company):
         #returns information about the state of the market, and new state of the company
         #returns a json with company_state information
         pass
