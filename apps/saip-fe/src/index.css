@@ -141,3 +141,7 @@ canvas:focus {
 canvas {
 	touch-action: none;
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+	display: none;
+}
