@@ -16,7 +16,7 @@ function Devtools() {
 	}
 
 	return (
-		<div className="fixed bottom-5 right-5 dropdown dropdown-top dropdown-end">
+		<div className="fixed bottom-5 right-5 dropdown dropdown-top dropdown-end z-50">
 			<label tabIndex={0} className="btn btn-primary m-1">
 				Click
 			</label>
