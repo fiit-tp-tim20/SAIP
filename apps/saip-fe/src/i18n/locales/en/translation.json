@@ -22,6 +22,12 @@
 		"finished": {
 			"title": "Finished Research"
 		},
+		"price": {
+			"title": "Price"
+		},
+		"progress": {
+			"title": "Progress"
+		},
 		"features": {
 			"1": {
 				"title": "Better Battery",

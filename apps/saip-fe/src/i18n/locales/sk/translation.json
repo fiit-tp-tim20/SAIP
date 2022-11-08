@@ -22,10 +22,19 @@
 		"finished": {
 			"title": "Dokončené vylepšenia"
 		},
+		"playerResearched": {
+			"title": "Hráči s už dokončeným vylepšením"
+		},
+		"price": {
+			"title": "Cena"
+		},
+		"progress": {
+			"title": "Priebeh"
+		},
 		"features": {
 			"1": {
 				"title": "Lepšia batéria",
-				"text": "Táto batéria je lepšia ako predchádzajúca!"
+				"text": "Táto batéria je lepšia ako predchádzajúca! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vel nisl vel quam ultrices pretium quis eget erat."
 			},
 			"2": {
 				"title": "OLED displej",

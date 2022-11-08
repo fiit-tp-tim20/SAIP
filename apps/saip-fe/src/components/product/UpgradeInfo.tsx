@@ -5,13 +5,17 @@ type Props = {
 	researchedAvatars: string[];
 	progressMax?: number;
 	progressValue?: number;
+	onClick?: () => void;
 };
 
 function UpgradeInfo(props: Props) {
-	const { name, researchedAvatars, progressMax, progressValue } = props;
+	const { name, researchedAvatars, progressMax, progressValue, onClick } = props;
 
 	return (
-		<li className="w-full bg-gray-200 dark:bg-[#242424] py-2 px-4 my-2 rounded-xl flex flex-row justify-between align-middle h-16">
+		<li
+			className="w-full bg-gray-200 dark:bg-[#242424] py-2 px-4 my-2 rounded-xl flex flex-row justify-between align-middle h-16"
+			onClick={onClick}
+		>
 			<div className="flex flex-row align-middle justify-center">
 				<p className="font-bold my-auto min-w-[180px]">{name}</p>
 				{progressMax && (
