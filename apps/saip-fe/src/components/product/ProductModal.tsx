@@ -1,4 +1,5 @@
 import React from "react";
+import { X } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { Vector3 } from "three";
 import { Upgrade } from "../../types/product";
@@ -29,7 +30,7 @@ function ProductModal(props: Props) {
 					<h4>{t(`research.playerResearched.title`) as string}</h4>
 					{upgrade.players.map((player) => (
 						<div
-							key={player.name}
+							key={player.id}
 							className="flex items-center p-3 my-1 rounded-2xl bg-gray-200 dark:bg-[#242424]"
 						>
 							<div className="avatar pr-4">
@@ -65,8 +66,13 @@ function ProductModal(props: Props) {
 					</div>
 				)}
 			</div>
-			<div className="h-auto max-h-[90vh]">
-				<Canvas cameraPosition={new Vector3(...upgrade.camera.position)} />
+			<div className="">
+				<div className="flex flex-row justify-end">
+					<X className="py-2 cursor-pointer" size={48} onClick={onClick} />
+				</div>
+				<div className="h-[75vh]">
+					<Canvas cameraPosition={new Vector3(...upgrade.camera.position)} />
+				</div>
 			</div>
 		</div>
 	);
