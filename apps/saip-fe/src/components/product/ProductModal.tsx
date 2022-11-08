@@ -17,10 +17,7 @@ function ProductModal(props: Props) {
 	console.log(upgrade);
 
 	return (
-		<div
-			className="background-container rounded-2xl p-6 grid grid-cols-2 gap-6 max-w-5xl min-h-[50vh] max-h-[95vh]"
-			onClick={onClick}
-		>
+		<div className="background-container rounded-2xl p-6 grid grid-cols-2 gap-6 max-w-5xl min-h-[50vh] max-h-[95vh]">
 			<div className="flex flex-col max-h-[90vh] overflow-scroll">
 				<div className="py-2">
 					<h2 className="pb-2">{t(`research.features.${upgrade.id}.title`) as string}</h2>
