@@ -5,7 +5,7 @@ FACTORY_MAINTENANCE_RATE = 0.05
 class MarketingModifiers:
     SOCIAL_MEDIA = 0
     LOCAL_NEWSPAPER = 0
-    BUILBOARD = 0
+    BILLBOARD = 0
     CABLE_NEWS = 0
     PODCAST = 0
     
