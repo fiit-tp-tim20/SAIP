@@ -18,6 +18,8 @@ class Customer(ABC):
             return total / count
         except TypeError as e:
             raise e
+        except AttributeError as e:
+            raise e
         
     def calc_weights_for_all_products(self):
         average_price = self.calc_average_product_price(self.product_dict)
