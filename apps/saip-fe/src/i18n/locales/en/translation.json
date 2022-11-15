@@ -1,5 +1,21 @@
 {
-	"plan": { "title": "Plan" },
+	"plan": {
+		"title": "Plan",
+		"resources": {
+			"title": "Resources",
+			"available": "Available cash",
+			"credit": "Credit"
+		},
+		"expenses": {
+			"title": "Expenses",
+			"salary": "Salaries"
+		},
+		"production": {
+			"title": "Production",
+			"cpm": "Price/Piece",
+			"utilization": "Utilization"
+		}
+	},
 	"product": {
 		"title": "Product",
 		"name": {
