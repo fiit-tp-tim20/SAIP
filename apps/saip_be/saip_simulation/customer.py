@@ -76,4 +76,5 @@ class InovationsLover(Customer):
         return product_price / average_product_price
     
     def calculate_innovation_weight(self):
+        # ToDo implement some logic here
         return 0
