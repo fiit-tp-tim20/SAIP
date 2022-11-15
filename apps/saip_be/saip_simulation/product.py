@@ -4,9 +4,9 @@ from abc import ABC, abstractmethod
 
 @dataclass
 class Product(ABC):
-    upgrades: dict
-    __price: float
-    __upgrade_price: float
+    upgrades: dict = None
+    __price: float = 0
+    __upgrade_price: float = 0
     
     def set_price(self, new_price: float) -> None:
         self.__price = new_price
@@ -41,4 +41,10 @@ class DailyProduct(Product):
 
 @dataclass
 class LastingProduct(Product):
-    pass
+    # ToDo replace dummy logic (used in testing) witch actual code
+    
+    def __calculate_upgrade_price(self) -> None:
+        self.__upgrade_price = 0
+    
+    def __perform_upgrade_logic(self) -> None:
+        self.__price = self.__price
