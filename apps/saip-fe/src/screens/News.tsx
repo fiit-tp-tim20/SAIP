@@ -13,15 +13,28 @@ function News() {
 		<div className="flex flex-col max-w-7xl">
 			<h1 className="p-6">{t("news.title") as string}</h1>
 			<div className="grid grid-cols-6 gap-6 px-6 max-w-7xl">
-			<div className="dropdown dropdown-end col-start-5">
-  				<label tabIndex={0} className="btn btn-primary m-1">Filter</label>
-  				<ul tabIndex={0} className="dropdown-content menu p-2 shadow  bg-gray-200 dark:bg-[#444444] rounded-box w-52">
-   					<li><a>Item 1</a></li>
-   	 				<li><a>Item 2</a></li>
-					<li><a>Item 3</a></li>
-					<li><a>Item 4</a></li>
-  				</ul>
-			</div>
+				<div className="dropdown dropdown-end col-start-5">
+					<label tabIndex={0} className="btn btn-primary m-1">
+						Filter
+					</label>
+					<ul
+						tabIndex={0}
+						className="dropdown-content menu p-2 shadow  bg-gray-200 dark:bg-[#444444] rounded-box w-52"
+					>
+						<li>
+							<a>Item 1</a>
+						</li>
+						<li>
+							<a>Item 2</a>
+						</li>
+						<li>
+							<a>Item 3</a>
+						</li>
+						<li>
+							<a>Item 4</a>
+						</li>
+					</ul>
+				</div>
 				<ul className="menu background-container rounded-2xl w-1000 h-fit col-start-1 col-span-1">
 					<li>
 						<a>Item 1</a>
