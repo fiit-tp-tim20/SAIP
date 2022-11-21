@@ -43,13 +43,17 @@ class SocialMedia(MarketingType):
             raise MinimalInvestmentError(MarketingInvestments.SOCIAL_MEDIA_MIN)
         if investment > MarketingInvestments.SOCIAL_MEDIA_MAX:
             raise MaximalInvestmentError(MarketingInvestments.SOCIAL_MEDIA_MAX)
+        self.investment = investment
     
     def yield_value(self):
-        return self.investment * self._calculate_effectivity() * MarketingModifiers.SOCIAL_MEDIA
+        return self.investment * self._calculate_effectivity() * MarketingModifiers.SOCIAL_MEDIA_BASE * self._bonus_modifier()
     
     def _calculate_effectivity(self):
         # ToDO figure out a way to do non-linear scaling
         return 0.7 + (self.investment - MarketingInvestments.SOCIAL_MEDIA_MIN) / MarketingInvestments.SOCIAL_MEDIA_MAX
+    
+    def _bonus_modifier(self):
+        return 1 + self.investment / MarketingInvestments.SOCIAL_MEDIA_STEP * MarketingModifiers.SOCIAL_MEDIA_BONUS
 
 
 class Billboard(MarketingType):
@@ -59,6 +63,7 @@ class Billboard(MarketingType):
             raise MinimalInvestmentError(MarketingInvestments.BILLBOARD_MIN)
         if investment > MarketingInvestments.BILLBOARD_MAX:
             raise MaximalInvestmentError(MarketingInvestments.BILLBOARD_MAX)
+        self.investment = investment
     
     def yield_value(self):
         return self.investment * self._calculate_effectivity() * MarketingModifiers.BILLBOARD
@@ -75,6 +80,7 @@ class CableNews(MarketingType):
             raise MinimalInvestmentError(MarketingInvestments.CABLE_NEWS_MIN)
         if investment > MarketingInvestments.CABLE_NEWS_MAX:
             raise MaximalInvestmentError(MarketingInvestments.CABLE_NEWS_MAX)
+        self.investment = investment
     
     def yield_value(self):
         return self.investment * self._calculate_effectivity() * MarketingModifiers.CABLE_NEWS
@@ -91,6 +97,7 @@ class Podcast(MarketingType):
             raise MinimalInvestmentError(MarketingInvestments.PODCAST_MIN)
         if investment > MarketingInvestments.PODCAST_MAX:
             raise MaximalInvestmentError(MarketingInvestments.PODCAST_MAX)
+        self.investment = investment
     
     def yield_value(self):
         return self.investment * self._calculate_effectivity() * MarketingModifiers.PODCAST

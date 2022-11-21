@@ -3,7 +3,8 @@ FACTORY_MAINTENANCE_RATE = 0.05
 
 
 class MarketingModifiers:
-    SOCIAL_MEDIA = 2
+    SOCIAL_MEDIA_BASE = 1.25
+    SOCIAL_MEDIA_BONUS = 0.1
     LOCAL_NEWSPAPER = 0
     BILLBOARD = 1
     CABLE_NEWS = 1.3
@@ -12,6 +13,7 @@ class MarketingModifiers:
 class MarketingInvestments:
     SOCIAL_MEDIA_MIN = 100
     SOCIAL_MEDIA_MAX = 5000
+    SOCIAL_MEDIA_STEP = 1000
     BILLBOARD_MIN = 500
     BILLBOARD_MAX = 2500
     CABLE_NEWS_MIN = 2000
