@@ -1,6 +1,25 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class GameParameters(models.Model):
+    budget_cap = models.PositiveIntegerField(null=True)
+    depreciation = models.FloatField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'GameParameters'
+
+
+class Game(models.Model):
+    start = models.DateTimeField(null=True)
+    ende = models.DateTimeField(null=True)
+    name = models.CharField(max_length=100, null=True)
+    admin = models.ForeignKey(User, models.DO_NOTHING, null=True)
+    turns = models.PositiveIntegerField(null=True)
+    parameters = models.ForeignKey(GameParameters, models.DO_NOTHING, null=True)
+
+    class Meta:
+        db_table = 'Games'
+
 
 class Turn(models.Model):
     number = models.PositiveIntegerField(null=True)
@@ -40,12 +59,34 @@ class Spending(models.Model):
         db_table = 'Spendings'
 
 
-class Product(models.Model):
-    upgrades = models.IntegerField(null=True)
+class Upgrade(models.Model):
+    cost = models.PositiveIntegerField(null=True)
+    effect = models.FloatField(null=True)
+    name = models.CharField(max_length=100, null=True)
+    camera_pos = models.CharField(max_length=100, null=True)
+    camera_rot = models.CharField(max_length=100, null=True)
+    
+    class Meta:
+        db_table = 'Upgrades'
+
+class Companies_Upgrades(models.Model):
+    STARTED = 's'
+    NOT_STARTED = 'ns'
+    FINISHED = 'f'
+
+    CHOICES = (
+        (STARTED, 'started'),
+        (NOT_STARTED, 'not started'),
+        (FINISHED, 'finished'),
+    )
+    status = models.CharField(max_length=100, choices=CHOICES, default=NOT_STARTED)
+    company = models.ForeignKey(Company, models.DO_NOTHING, null=True)
+    upgrade = models.ForeignKey(Upgrade, models.DO_NOTHING, null=True)
+    progess = models.PositiveIntegerField(null=True)
+    game = models.ForeignKey(Game, models.DO_NOTHING, null=True)
 
     class Meta:
-        db_table = 'Products'
-
+        db_table = 'Companies_Upgrades'
 
 class Factory(models.Model):
     employees = models.PositiveIntegerField(null=True)
@@ -62,7 +103,6 @@ class CompaniesState(models.Model):
     turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
     production = models.OneToOneField(Production, models.DO_NOTHING, null=True)
     spending = models.OneToOneField(Spending, models.DO_NOTHING, null=True)
-    product = models.OneToOneField(Product, models.DO_NOTHING, null=True)
     factory = models.OneToOneField(Factory, models.DO_NOTHING, null=True)
     fan_base = models.PositiveIntegerField(null=True, blank=True)
     balance = models.FloatField(null=True, blank=True)
