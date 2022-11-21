@@ -66,8 +66,8 @@ class Company:
         self.marketing = {}
         
     def yield_agg_marketing_value(self) -> float:
-        return self.agg_market_values()
+        return self._agg_market_values()
     
-    def agg_market_values(self):
+    def _agg_market_values(self) -> float:
         # ToDO some logic
         pass
