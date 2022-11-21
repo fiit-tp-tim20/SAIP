@@ -49,7 +49,6 @@ class SocialMedia(MarketingType):
         return self.investment * self._calculate_effectivity() * MarketingModifiers.SOCIAL_MEDIA_BASE * self._bonus_modifier()
     
     def _calculate_effectivity(self):
-        # ToDO figure out a way to do non-linear scaling
         return 0.7 + (self.investment - MarketingInvestments.SOCIAL_MEDIA_MIN) / MarketingInvestments.SOCIAL_MEDIA_MAX
     
     def _bonus_modifier(self):
@@ -69,7 +68,6 @@ class Billboard(MarketingType):
         return self.investment * self._calculate_effectivity() * MarketingModifiers.BILLBOARD
     
     def _calculate_effectivity(self):
-        # ToDO figure out a way to do non-linear scaling
         return 0.7 + (self.investment - MarketingInvestments.BILLBOARD_MIN) / MarketingInvestments.BILLBOARD_MAX
 
 
@@ -86,7 +84,6 @@ class CableNews(MarketingType):
         return self.investment * self._calculate_effectivity() * MarketingModifiers.CABLE_NEWS
     
     def _calculate_effectivity(self):
-        # ToDO figure out a way to do non-linear scaling
         return 0.7 + (self.investment - MarketingInvestments.CABLE_NEWS_MIN) / MarketingInvestments.CABLE_NEWS_MAX
 
 
@@ -103,5 +100,4 @@ class Podcast(MarketingType):
         return self.investment * self._calculate_effectivity() * MarketingModifiers.PODCAST
     
     def _calculate_effectivity(self):
-        # ToDO figure out a way to do non-linear scaling
         return 0.7 + (self.investment - MarketingInvestments.PODCAST_MIN) / MarketingInvestments.PODCAST_MAX
