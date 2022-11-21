@@ -1,5 +1,21 @@
 {
-	"plan": { "title": "Plán" },
+	"plan": {
+		"title": "Plán",
+		"resources": {
+			"title": "Zdroje",
+			"available": "Dostupné zdroje",
+			"credit": "Kredit"
+		},
+		"expenses": {
+			"title": "Výdavky",
+			"salary": "Mzdy"
+		},
+		"production": {
+			"title": "Produkcia",
+			"cpm": "Cena/Výrobok",
+			"utilization": "Utilizácia"
+		}
+	},
 	"product": {
 		"title": "Produkt",
 		"name": {

@@ -65,6 +65,7 @@ class Company:
 
     def get_product(self):
         return self.product
+
     
     def load_marketing_dict(self) -> None:
         # ToDo some logic here
