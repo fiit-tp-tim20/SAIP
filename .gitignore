@@ -466,3 +466,4 @@ $RECYCLE.BIN/
 
 # VScode workspace
 SAIP.code-workspace
+.vscode.settings.json

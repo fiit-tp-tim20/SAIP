@@ -1,8 +1,10 @@
 from dataclasses import dataclass
+from typing import List
 
 from product import Product, DailyProduct, LastingProduct
 from marketing import *
 from config import TURN_LENGTH, FACTORY_MAINTENANCE_RATE
+from marketing import MarketingType
 from typing import Dict
 
 
@@ -52,7 +54,7 @@ class Company:
     remaining_budget: float
     factory: Factory
     costs_per_turn: dict
-    stock_price: float  # score of the company
+    stock_price: float  # company score
     marketing: Dict[str, MarketingType]
     
     def upgrade_stored_products(self):
@@ -60,6 +62,10 @@ class Company:
     
     def calculate_stock_price(self):
         pass
+
+    def get_product(self):
+        return self.product
+
     
     def load_marketing_dict(self) -> None:
         # ToDo some logic here
