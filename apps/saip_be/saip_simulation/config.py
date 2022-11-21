@@ -20,4 +20,3 @@ class MarketingInvestments:
     CABLE_NEWS_MAX = 3500
     PODCAST_MIN = 1000
     PODCAST_MAX = 2500
-    
