@@ -54,7 +54,7 @@ class Company:
     remaining_budget: float
     factory: Factory
     costs_per_turn: dict
-    stock_price: float  # score of the company
+    stock_price: float  # company score
     marketing: Dict[str, MarketingType]
     
     def upgrade_stored_products(self):
