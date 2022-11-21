@@ -1,6 +1,6 @@
 {
-	"plan": {
-		"title": "Plán",
+	"dashboard": {
+		"title": "Dashboard",
 		"resources": {
 			"title": "Zdroje",
 			"available": "Dostupné zdroje",
