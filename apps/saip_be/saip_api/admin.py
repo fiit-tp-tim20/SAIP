@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import Turn, Company, Production, Spending, Factory, CompaniesState, Game, GameParameters, MarketState, Parameter,\
-    EmailGroup, Upgrade, Companies_Upgrades
+from .models import Turn, Company, Production, Spending, Factory, CompaniesState, Game, GameParameters, MarketState,\
+    Parameter, EmailGroup, Upgrade, CompaniesUpgrades
 
 
 @admin.register(Turn)
@@ -47,18 +47,22 @@ class ParameterAdmin(admin.ModelAdmin):
 class EmailGroupAdmin(admin.ModelAdmin):
     list_display = ('user', 'email')
 
+
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
     pass
+
 
 @admin.register(GameParameters)
 class GameParametersAdmin(admin.ModelAdmin):
     pass
 
+
 @admin.register(Upgrade)
 class UpgradeAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(Companies_Upgrades)
-class Companies_UpgradeAdmin(admin.ModelAdmin):
+
+@admin.register(CompaniesUpgrades)
+class CompaniesUpgradeAdmin(admin.ModelAdmin):
     pass

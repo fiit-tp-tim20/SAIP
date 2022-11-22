@@ -39,7 +39,7 @@ class LoginView(APIView):
         }, status=200)
 
 
-def logoutAll(request) -> bool:
+def logout_all(request) -> bool:
     if not request.user:
         return False
     request.user.auth_token_set.all().delete()
@@ -61,7 +61,7 @@ class ChangePasswordView(APIView):
         request.user.set_password(password)
         request.user.save()
 
-        if not logoutAll(request.user):
+        if not logout_all(request.user):
             return Response({
                 "detail": "Failed to logout"
             }, status=500)

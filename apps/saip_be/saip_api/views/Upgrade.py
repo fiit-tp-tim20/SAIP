@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from saip_api.models import Company, Companies_Upgrades, Upgrade, Game
+from saip_api.models import Company, CompaniesUpgrades, Upgrade, Game
 
 
 class UpgradeView(APIView):
@@ -12,14 +12,14 @@ class UpgradeView(APIView):
             return Response({"detail": "User is not authenticated"}, status=401)
 
         company = Company.objects.get(user=request.user)
-        companies_upgrades = Companies_Upgrades.objects.filter(company=company)
+        companies_upgrades = CompaniesUpgrades.objects.filter(company=company)
 
         response = dict()
         response['upgrade'] = list()
         other_companies_list = []
 
         for upgrade in companies_upgrades:
-            other_companies = Companies_Upgrades.objects.filter(upgrade=upgrade.upgrade, status="f", game=upgrade.game)
+            other_companies = CompaniesUpgrades.objects.filter(upgrade=upgrade.upgrade, status="f", game=upgrade.game)
             for item in other_companies:
                 other_companies_list.append(item.company.name)
 

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class GameParameters(models.Model):
     budget_cap = models.PositiveIntegerField(null=True)
     depreciation = models.FloatField(null=True, blank=True)
@@ -10,8 +11,8 @@ class GameParameters(models.Model):
 
 
 class Game(models.Model):
-    start = models.DateTimeField(null=True)
-    ende = models.DateTimeField(null=True)
+    start = models.DateTimeField(null=True, auto_now_add=True)
+    end = models.DateTimeField(null=True, blank=True)
     name = models.CharField(max_length=100, null=True)
     admin = models.ForeignKey(User, models.DO_NOTHING, null=True)
     turns = models.PositiveIntegerField(null=True)
@@ -19,6 +20,7 @@ class Game(models.Model):
 
     class Meta:
         db_table = 'Games'
+        get_latest_by = 'start'
 
 
 class Turn(models.Model):
@@ -69,7 +71,8 @@ class Upgrade(models.Model):
     class Meta:
         db_table = 'Upgrades'
 
-class Companies_Upgrades(models.Model):
+
+class CompaniesUpgrades(models.Model):
     STARTED = 's'
     NOT_STARTED = 'ns'
     FINISHED = 'f'
@@ -82,11 +85,13 @@ class Companies_Upgrades(models.Model):
     status = models.CharField(max_length=100, choices=CHOICES, default=NOT_STARTED)
     company = models.ForeignKey(Company, models.DO_NOTHING, null=True)
     upgrade = models.ForeignKey(Upgrade, models.DO_NOTHING, null=True)
-    progess = models.PositiveIntegerField(null=True)
+    progress = models.PositiveIntegerField(null=True, default=0)
     game = models.ForeignKey(Game, models.DO_NOTHING, null=True)
 
     class Meta:
         db_table = 'Companies_Upgrades'
+        verbose_name_plural = 'CompaniesUpgrades'
+
 
 class Factory(models.Model):
     employees = models.PositiveIntegerField(null=True)
