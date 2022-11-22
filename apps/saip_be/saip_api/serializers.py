@@ -1,6 +1,10 @@
 from django.contrib.auth.models import User
+
 from rest_framework import serializers, validators
+
 from datetime import datetime, timezone
+
+from .models import Game
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -36,3 +40,24 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'date_joined')
 
+
+class GameSerializer(serializers.ModelSerializer):
+
+    name = serializers.CharField(required=True, allow_blank=False)
+    turns = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = Game
+        fields = ('name', 'turns')
+
+    def create(self, validated_data) -> Game:
+        name = validated_data.get('name')
+        turns = validated_data.get('turns')
+
+        game = Game.objects.create(
+            name=name,
+            turns=turns
+        )
+        game.save()
+
+        return game
