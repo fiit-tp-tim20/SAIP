@@ -15,32 +15,32 @@ class CompanyAdmin(admin.ModelAdmin):
 
 @admin.register(Production)
 class ProductionAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('man_cost', 'sell_price', 'volume')
 
 
 @admin.register(Spending)
 class SpendingAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('r_d', 'marketing', 'factory', 'run_cost')
 
 
 @admin.register(Factory)
 class FactoryAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('employees', 'capacity', 'base_cost')
 
 
 @admin.register(CompaniesState)
 class CompaniesStateAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('company', 'turn', 'production', 'spending', 'factory', 'fan_base', 'balance', 'stock_price',)
 
 
 @admin.register(MarketState)
 class MarketStateAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('turn', 'size', 'demand')
 
 
 @admin.register(Parameter)
 class ParameterAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('turn', 'market_size_diff', 'run_cost_multiplier')
 
 
 @admin.register(EmailGroup)
@@ -50,19 +50,19 @@ class EmailGroupAdmin(admin.ModelAdmin):
 
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'admin', 'start', 'end', 'turns')
 
 
 @admin.register(GameParameters)
 class GameParametersAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('budget_cap', 'depreciation')
 
 
 @admin.register(Upgrade)
 class UpgradeAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'cost', 'camera_pos', 'camera_rot')
 
 
 @admin.register(CompaniesUpgrades)
 class CompaniesUpgradeAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('company', 'upgrade', 'status', 'progress')
