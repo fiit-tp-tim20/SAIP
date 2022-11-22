@@ -3,15 +3,18 @@ from rest_framework.response import Response
 
 from saip_api.models import Game, GameParameters
 
+from django.contrib.auth.mixins import PermissionRequiredMixin
+
 from ..serializers import GameSerializer
 
-from django.core import serializers
+from datetime import timezone, datetime
 
 parameters = {"GameParameters": {"budget_cap": 10000,
                                  "depreciation": 0.1}}
 
 
-class CreateGameView(APIView):
+class CreateGameView(PermissionRequiredMixin, APIView):
+    permission_required = 'saip_api.add_game'
 
     def post(self, request) -> Response:
         if not request.user or not request.user.is_authenticated:
@@ -29,3 +32,17 @@ class CreateGameView(APIView):
         game.save()
 
         return Response({"gameID": game.id}, status=201)
+
+
+class GetRunningGamesView(APIView):
+
+    def get(self, request) -> Response:
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        games = Game.objects.filter(end__isnull=True)
+        response = {"games": [{"id": game.id,
+                               "name": game.name}
+                              for game in games]}
+
+        return Response(response)
