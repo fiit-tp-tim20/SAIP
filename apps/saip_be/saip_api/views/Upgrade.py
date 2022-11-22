@@ -14,24 +14,22 @@ class UpgradeView(APIView):
         company = Company.objects.get(user=request.user)
         companies_upgrades = CompaniesUpgrades.objects.filter(company=company)
 
-        response = dict()
-        response['upgrade'] = list()
-        other_companies_list = []
+        response = {'upgrade': list()}
 
         for upgrade in companies_upgrades:
             other_companies = CompaniesUpgrades.objects.filter(upgrade=upgrade.upgrade, status="f", game=upgrade.game)
-            for item in other_companies:
-                other_companies_list.append(item.company.name)
+            other_companies_list = [item.company.name for item in other_companies]
 
-            camera_pos = Upgrade.objects.get(pk=upgrade.id).camera_pos.split(",")
-            camera_rot = Upgrade.objects.get(pk=upgrade.id).camera_rot.split(",")
+            local_upgrade = Upgrade.objects.get(pk=upgrade.id)
+            camera_pos = local_upgrade.camera_pos.split(",")
+            camera_rot = local_upgrade.camera_rot.split(",")
 
             response['upgrade'].append({
-                'name': Upgrade.objects.get(pk=upgrade.id).name,
+                'name': local_upgrade.name,
                 'players': other_companies_list,
                 'status': upgrade.get_status_display(),
-                'price': Upgrade.objects.get(pk=upgrade.id).cost,
-                'progress': upgrade.progess,
+                'price': local_upgrade.cost,
+                'progress': upgrade.progress,
                 'camera_pos': camera_pos,
                 'camera_rot': camera_rot,
             })
