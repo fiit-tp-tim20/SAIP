@@ -4,7 +4,7 @@ from rest_framework import serializers, validators
 
 from datetime import datetime, timezone
 
-from .models import Game
+from .models import Game, Company
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -61,3 +61,25 @@ class GameSerializer(serializers.ModelSerializer):
         game.save()
 
         return game
+
+
+class CompanySerializer(serializers.ModelSerializer):
+
+    name = serializers.CharField(required=True, allow_blank=False)
+    game = serializers.PrimaryKeyRelatedField(queryset=Game.objects.filter(end__isnull=True))
+
+    class Meta:
+        model = Company
+        fields = ('game', 'name')
+
+    def create(self, validated_data) -> Company:
+        name = validated_data.get('name')
+        game = validated_data.get('game')
+
+        company = Company.objects.create(
+            name=name,
+            game=game
+        )
+        company.save()
+
+        return company

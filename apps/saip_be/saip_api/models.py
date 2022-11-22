@@ -31,9 +31,10 @@ class Turn(models.Model):
     number = models.PositiveIntegerField(null=True)
     start = models.DateTimeField(null=True, auto_now_add=True)
     end = models.DateTimeField(null=True, blank=True)
+    game = models.ForeignKey(Game, models.DO_NOTHING, null=True)
 
     def __str__(self):
-        return str(self.number)
+        return f"{self.game.__str__()} - {self.number}"
 
     class Meta:
         db_table = 'Turns'
@@ -43,9 +44,10 @@ class Turn(models.Model):
 class Company(models.Model):
     name = models.CharField(max_length=100, null=True)
     user = models.ForeignKey(User, models.DO_NOTHING, null=True, related_name='user_companies')
+    game = models.ForeignKey(Game, models.DO_NOTHING, null=True, related_name='game_companies')
 
     def __str__(self):
-        return f"{self.name} ({self.user.__str__()})"
+        return f"{self.game.__str__()} - {self.name} ({self.user.__str__()})"
 
     class Meta:
         db_table = 'Companies'
@@ -77,9 +79,10 @@ class Upgrade(models.Model):
     name = models.CharField(max_length=100, null=True)
     camera_pos = models.CharField(max_length=100, null=True)
     camera_rot = models.CharField(max_length=100, null=True)
+    game = models.ForeignKey(Game, models.DO_NOTHING, null=True, related_name='game_upgrades')
 
     def __str__(self):
-        return self.name
+        return f"{self.game.__str__()} - {self.name}"
 
     class Meta:
         db_table = 'Upgrades'

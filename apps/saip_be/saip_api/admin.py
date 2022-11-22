@@ -5,12 +5,12 @@ from .models import Turn, Company, Production, Spending, Factory, CompaniesState
 
 @admin.register(Turn)
 class TurnsAdmin(admin.ModelAdmin):
-    list_display = ('number', 'start', 'end')
+    list_display = ('number', 'game', 'start', 'end')
 
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'user')
+    list_display = ('name', 'game', 'user')
 
 
 @admin.register(Production)
@@ -65,4 +65,4 @@ class UpgradeAdmin(admin.ModelAdmin):
 
 @admin.register(CompaniesUpgrades)
 class CompaniesUpgradeAdmin(admin.ModelAdmin):
-    list_display = ('company', 'upgrade', 'status', 'progress')
+    list_display = ('company', 'game', 'upgrade', 'status', 'progress')
