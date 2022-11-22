@@ -33,7 +33,6 @@ class LoginView(APIView):
         user.save()
 
         return Response({
-            "userID": user.id,
             "token": token,
             "expiry": instance.expiry
         }, status=200)
@@ -51,6 +50,9 @@ def logout_all(request) -> bool:
 class ChangePasswordView(APIView):
 
     def put(self, request) -> Response:
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
         password = request.data.get('password')
 
         if not password:
@@ -58,13 +60,13 @@ class ChangePasswordView(APIView):
                 "detail": "Password is required"
             }, status=400)
 
-        request.user.set_password(password)
-        request.user.save()
-
-        if not logout_all(request.user):
+        if not logout_all(request):
             return Response({
                 "detail": "Failed to logout"
             }, status=500)
+
+        request.user.set_password(password)
+        request.user.save()
 
         return Response({"detail": "Password changed successfully"}, status=200)
 
@@ -75,11 +77,9 @@ class RegisterView(APIView):
         serializer = RegisterSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        user = serializer.save()
+        _ = serializer.save()
 
-        return Response({
-            "user_id": user.username
-        }, status=201)
+        return Response(status=201)
 
 
 class TestView(APIView):

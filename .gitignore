@@ -466,4 +466,8 @@ $RECYCLE.BIN/
 
 # VScode workspace
 SAIP.code-workspace
+
 /apps/saip_be/saip_api/migrations/
+
+.vscode.settings.json
+

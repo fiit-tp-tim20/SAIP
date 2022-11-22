@@ -1,13 +1,13 @@
 from django.contrib.auth.models import User
-from rest_framework import serializers
+from rest_framework import serializers, validators
 from datetime import datetime, timezone
 
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, allow_blank=False,
-                                     style={'input_type': 'password'},
-                                     trim_whitespace=False, )
-    username = serializers.CharField(required=True, allow_blank=False)
+                                     style={'input_type': 'password'}, trim_whitespace=False)
+    username = serializers.CharField(required=True, allow_blank=False,
+                                     validators=[validators.UniqueValidator(queryset=User.objects.all())])
 
     class Meta:
         model = User

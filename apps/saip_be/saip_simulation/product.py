@@ -4,9 +4,9 @@ from abc import ABC, abstractmethod
 
 @dataclass
 class Product(ABC):
-    upgrades: dict
-    __price: float
-    __upgrade_price: float
+    upgrades: dict = None
+    __price: float = 0
+    __upgrade_price: float = 0
     
     def set_price(self, new_price: float) -> None:
         self.__price = new_price
@@ -14,23 +14,23 @@ class Product(ABC):
     def get_price(self) -> float:
         return self.__price
     
-    def __set_upgrade_price(self, new_upgrade_price) -> None:
-        self.__set_upgrade_price = new_upgrade_price
+    def _set_upgrade_price(self, new_upgrade_price) -> None:
+        self._set_upgrade_price = new_upgrade_price
     
     def get_upgrade_price(self) -> float:
         return self.__upgrade_price
     
     def upgrade_product(self):
-        self.__perform_upgrade_logic()
-        new_upgrade_price = self.__calculate_upgrade_price()
-        self.__set_upgrade_price(new_upgrade_price)
+        self._perform_upgrade_logic()
+        new_upgrade_price = self._calculate_upgrade_price()
+        self._set_upgrade_price(new_upgrade_price)
         
     @abstractmethod
-    def __calculate_upgrade_price(self):
+    def _calculate_upgrade_price(self):
         pass
     
     @abstractmethod
-    def __perform_upgrade_logic(self):
+    def _perform_upgrade_logic(self):
         pass
 
 
@@ -41,4 +41,10 @@ class DailyProduct(Product):
 
 @dataclass
 class LastingProduct(Product):
-    pass
+    # ToDo replace dummy logic (used in testing) witch actual code
+    
+    def _calculate_upgrade_price(self) -> float:
+        return self.__price / 10
+    
+    def _perform_upgrade_logic(self) -> None:
+        self.__price = self.__price * 1.1
