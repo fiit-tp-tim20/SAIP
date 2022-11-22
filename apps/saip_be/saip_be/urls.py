@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 from saip_api.views.UserManagement import RegisterView, LoginView, TestView, ChangePasswordView
+from saip_api.views.Upgrade import UpgradeView
 from knox.views import LogoutView
 
 
@@ -27,4 +28,5 @@ urlpatterns = [
     path('change_password/', ChangePasswordView.as_view(), name="change_password"),
     path('login/', LoginView.as_view(), name="login"),
     path('logout/', LogoutView.as_view(), name='knox_logout'),
+    path('upgrades/', UpgradeView.as_view(), name='return_upgrades'),
 ]

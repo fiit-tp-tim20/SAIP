@@ -129,7 +129,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
 }
 
-REST_KNOX = {"TOKEN_TTL": timedelta(hours=4),
+REST_KNOX = {"TOKEN_TTL": timedelta(days=365),
              "AUTO_REFRESH": True,
              "TOKEN_LIMIT_PER_USER": 5,
              "MIN_REFRESH_INTERVAL": 60,
