@@ -43,7 +43,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 class GameSerializer(serializers.ModelSerializer):
 
-    name = serializers.CharField(required=True, allow_blank=False)
+    name = serializers.CharField(required=True, allow_blank=False,
+                                 validators=[validators.UniqueValidator(queryset=Game.objects.all())])
     turns = serializers.IntegerField(required=True)
 
     class Meta:
