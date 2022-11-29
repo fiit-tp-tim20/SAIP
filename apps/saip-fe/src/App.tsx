@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import "./i18n";
 import Sandbox from "./screens/Sandbox";
-import Plan from "./screens/Plan";
+import Dashboard from "./screens/Dashboard";
 import News from "./screens/News";
 import Devtools from "./dev/Devtools";
 import Product from "./screens/Product";
@@ -21,7 +21,7 @@ function App() {
 					<Navbar />
 					<div className="mt-16">
 						<Routes>
-							<Route path="/plan" element={<Plan />} />
+							<Route path="/dashboard" element={<Dashboard />} />
 							<Route path="/news" element={<News />} />
 							<Route path="/sandbox" element={<Sandbox />} />
 							<Route path="/product" element={<Product />} />

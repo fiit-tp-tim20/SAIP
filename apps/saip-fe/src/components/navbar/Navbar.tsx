@@ -7,7 +7,7 @@ function Navbar() {
 	const { t } = useTranslation();
 	const location = useLocation();
 
-	const tabs = ["plan", "product", "news", "sandbox"];
+	const tabs = ["dashboard", "product", "news", "sandbox"];
 
 	return (
 		<div className="navbar top-0 w-screen fixed left-0 z-40">
