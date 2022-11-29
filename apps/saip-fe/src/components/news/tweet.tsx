@@ -24,8 +24,10 @@ function Tweet(props: Props) {
 				<blockquote>{new Date(date).toLocaleDateString()}</blockquote>
 			</div>
 			<div className="divider my-1" />
+			<hr className="my-2" />
 			<p>{message}</p>
 			<div className="divider my-1" />
+			<hr className="my-2" />
 			<div className="flex flex-row justify-end">
 				<Heart />
 				<p className="pl-2">{likesCount}</p>
