@@ -1,0 +1,56 @@
+/* ! DAISY UI divider */
+.divider {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	align-self: stretch;
+	margin-top: 1rem /* 16px */;
+	margin-bottom: 1rem /* 16px */;
+	height: 1rem /* 16px */;
+	white-space: nowrap;
+}
+.divider:before,
+.divider:after {
+	content: "";
+	flex-grow: 1;
+	height: 0.125rem /* 2px */;
+	width: 100%;
+}
+.divider:before,
+.divider:after {
+	content: "";
+	flex-grow: 1;
+	height: 0.125rem /* 2px */;
+	width: 100%;
+}
+.divider:before {
+	background-color: hsl(var(--bc) / var(--tw-bg-opacity));
+	--tw-bg-opacity: 0.1;
+}
+.divider:after {
+	background-color: hsl(var(--bc) / var(--tw-bg-opacity));
+	--tw-bg-opacity: 0.1;
+}
+.divider:not(:empty) {
+	gap: 1rem /* 16px */;
+}
+
+.divider-horizontal {
+	flex-direction: column;
+}
+.divider-horizontal:before {
+	height: 100%;
+	width: 0.125rem /* 2px */;
+}
+.divider-horizontal:after {
+	height: 100%;
+	width: 0.125rem /* 2px */;
+}
+.divider-horizontal {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-left: 1rem /* 16px */;
+	margin-right: 1rem /* 16px */;
+	height: auto;
+	width: 1rem /* 16px */;
+}

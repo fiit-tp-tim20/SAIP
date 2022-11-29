@@ -23,6 +23,9 @@ function Sandbox() {
 					<button type="button" className="btn btn-success mt-2">
 						Button Success
 					</button>
+					<button type="button" className="btn bg-accent-100 mt-2">
+						Button Success
+					</button>
 				</div>
 				<div className="flex flex-col ml-2">
 					<input

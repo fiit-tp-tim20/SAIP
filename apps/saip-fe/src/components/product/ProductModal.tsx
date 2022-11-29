@@ -31,7 +31,7 @@ function ProductModal(props: Props) {
 							className="flex items-center p-3 my-1 rounded-2xl bg-gray-200 dark:bg-[#242424]"
 						>
 							<div className="avatar pr-4">
-								<div className="w-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+								<div className="w-8 rounded-full ring ring-warning-900 ring-offset-base-100 ring-offset-2">
 									<img
 										src={`https://avatars.dicebear.com/api/miniavs/${player.image}.png`}
 										alt={player.name}

@@ -99,41 +99,6 @@ button {
 	@apply dark:bg-[#242424];
 }
 
-/* Navbar */
-
-.navbar {
-	@apply bg-gray-200 dark:bg-[#000];
-}
-
-.navbar > ul > li:hover {
-	transition: 0.5s ease-in-out all;
-}
-
-.navbar > ul > li:hover {
-	@apply bg-gray-200 dark:bg-[#121212] rounded-lg;
-}
-
-.navbar .active {
-	@apply bg-white dark:bg-[#242424] rounded-lg;
-}
-
-.navbar .divider {
-	@apply dark:before:bg-[#242424] dark:after:bg-[#242424];
-}
-
-.navbar .divider:last-child {
-	display: none;
-}
-
-.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):focus),
-.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):hover),
-.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):focus),
-.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):hover) {
-	/* background-color: hsl(var(--bc) / var(--tw-bg-opacity)); */
-	@apply bg-white dark:bg-[#242424] bg-opacity-100;
-	transition: 0.5s ease-in-out all;
-}
-
 canvas:focus {
 	outline: none;
 }
@@ -144,4 +109,18 @@ canvas {
 
 .scrollbar-hide::-webkit-scrollbar {
 	display: none;
+}
+
+.link-tab {
+	/* @apply rounded-lg text-neutral-800; */
+	@apply rounded-lg  border-accent-700 min-w-[128px] flex justify-center align-middle;
+	transition: all 0.3s ease-in-out;
+}
+
+.link-tab:hover {
+	@apply text-accent-700 bg-accent-300;
+}
+
+.active {
+	@apply text-accent-900 bg-accent-500;
 }
