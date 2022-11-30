@@ -16,7 +16,6 @@
 		"@react-three/drei": "^9.38.1",
 		"@react-three/fiber": "^8.8.10",
 		"@vitejs/plugin-react": "^2.1.0",
-		"daisyui": "^2.31.0",
 		"i18next": "^22.0.1",
 		"i18next-browser-languagedetector": "^6.1.8",
 		"i18next-xhr-backend": "^3.2.2",
