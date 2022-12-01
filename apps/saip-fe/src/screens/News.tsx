@@ -10,54 +10,34 @@ function News() {
 	const { isLoading, data } = useQuery(["news"], () => getTweets());
 
 	return (
-		<div className="flex flex-col max-w-7xl">
+		<div className="max-w-7xl flex flex-col justify-center">
 			<h1 className="p-6">{t("news.title") as string}</h1>
-			<div className="grid grid-cols-6 gap-6 px-6 max-w-7xl">
-				<div className="dropdown dropdown-end col-start-5">
-					<label tabIndex={0} className="btn btn-primary m-1">
-						Filter
-					</label>
-					<ul
-						tabIndex={0}
-						className="dropdown-content menu p-2 shadow  bg-gray-200 dark:bg-[#444444] rounded-box w-52"
-					>
-						<li>
-							<a>Item 1</a>
-						</li>
-						<li>
-							<a>Item 2</a>
-						</li>
-						<li>
-							<a>Item 3</a>
-						</li>
-						<li>
-							<a>Item 4</a>
-						</li>
-					</ul>
+			<div className="flex flex-row max-w-7xl space-x-12">
+				<div className="flex flex-col space-y-2">
+					<h3>Filter</h3>
+					<div className="flex flex-row space-x-2">
+						<input type="radio" id="all" name="news" value="all" />
+						<label htmlFor="all">{t("news.all") as string}</label>
+					</div>
+					<div className="flex flex-row space-x-2">
+						<input type="radio" id="tweets" name="news" value="tweets" />
+						<label htmlFor="tweets">{t("news.tweets") as string}</label>
+					</div>
+					<div className="flex flex-row space-x-2">
+						<input type="radio" id="articles" name="news" value="articles" />
+						<label htmlFor="articles">{t("news.articles") as string}</label>
+					</div>
+
+					<h3>Sort by</h3>
+					<div className="flex flex-row space-x-2">
+						<input type="radio" id="newest" name="news" value="newest" />
+						<label htmlFor="newest">{t("news.newest") as string}</label>
+					</div>
+					<div className="flex flex-row space-x-2">
+						<input type="radio" id="oldest" name="news" value="oldest" />
+						<label htmlFor="oldest">{t("news.oldest") as string}</label>
+					</div>
 				</div>
-				<ul className="menu background-container rounded-2xl w-1000 h-fit col-start-1 col-span-1">
-					<li>
-						<a>Item 1</a>
-					</li>
-					<li>
-						<a>Item 2</a>
-					</li>
-					<li>
-						<a>Item 3</a>
-					</li>
-					<li>
-						<a>Item 4</a>
-					</li>
-					<li>
-						<a>Item 5</a>
-					</li>
-					<li>
-						<a>Item 6</a>
-					</li>
-					<li>
-						<a>Item 7</a>
-					</li>
-				</ul>
 
 				<div className="flex flex-row col-start-2 col-span-4">
 					<div className="max-w-xl">
