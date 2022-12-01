@@ -27,21 +27,21 @@ function UpgradeInfo(props: Props) {
 					</div>
 				)}
 			</div>
-			<div className="avatar-group -space-x-6">
+			<div className="flex mb-5 -space-x-4">
 				{researchedAvatars
 					.filter((_el, index) => index < 3)
-					.map((avatar) => (
-						<div className="avatar" key={avatar}>
-							<div className="w-10 h-10 rounded-full bg-gray-200">
-								<img src={`https://avatars.dicebear.com/api/miniavs/${avatar}.png`} alt="person" />
-							</div>
+					.map((avatar, index) => (
+						<div className="border-4 border-accent-400 ring-offset-base-100 ring-offset-2 w-12 h-12 rounded-full bg-gray-200">
+							<img
+								className="rounded-full"
+								src={`https://avatars.dicebear.com/api/miniavs/${avatar}.png`}
+								alt="person"
+							/>
 						</div>
 					))}
 				{researchedAvatars.length > 3 && (
-					<div className="avatar placeholder">
-						<div className="w-10 h-10 bg-primary-focus text-primary-content">
-							<span>+{researchedAvatars.length - 3}</span>
-						</div>
+					<div className="border-4 border-accent-400 ring-offset-base-100 ring-offset-2 w-12 h-12 rounded-full bg-gray-200 flex justify-center leading-10">
+						<span>+{researchedAvatars.length - 3}</span>
 					</div>
 				)}
 			</div>

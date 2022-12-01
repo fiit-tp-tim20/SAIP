@@ -11,14 +11,12 @@ function LinkTab(props: Props) {
 	const { title, path, isActive } = props;
 
 	return (
-		<>
-			<li className={`bg-transparent ${isActive ? "active" : ""}`}>
-				<Link to={path} className="min-w-[128px] flex justify-center align-middle">
-					<p>{title}</p>
-				</Link>
-			</li>
-			<div className="divider divider-horizontal m-2" />
-		</>
+		<li className="px-2">
+			<Link to={path} className="">
+				{/* <li className="border-r-2 last:border-r-0 border-r-neutral-300 px-2"> */}
+				<div className={`link-tab bg-transparent py-2 px-3 ${isActive ? "active" : ""}`}>{title}</div>
+			</Link>
+		</li>
 	);
 }
 

@@ -11,7 +11,7 @@ function Plan() {
 			<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
 				<div className="flex flex-col background-container p-6 rounded-2xl">
 					<div className="py-2 flex flex-row items-center justify-between">
-						<h2>{t("dashboard.resources.title") as string}</h2>
+						<h2 className="text-accent-700">{t("dashboard.resources.title") as string}</h2>
 						<h5 className="pt-1">37 000€</h5>
 					</div>
 					<div className="py-2 flex flex-row items-center justify-between">
@@ -26,7 +26,7 @@ function Plan() {
 
 				<div className="flex flex-col background-container p-6 rounded-2xl">
 					<div className="py-2 flex flex-row items-center justify-between">
-						<h2>{t("dashboard.expenses.title") as string}</h2>
+						<h2 className="text-accent-700">{t("dashboard.expenses.title") as string}</h2>
 						<h5 className="pt-1">19 000€</h5>
 					</div>
 					<div className="py-2 flex flex-row items-center justify-between">
@@ -37,7 +37,7 @@ function Plan() {
 
 				<div className="flex flex-col background-container p-6 rounded-2xl">
 					<div className="py-2 flex flex-row items-center justify-between">
-						<h2>{t("dashboard.production.title") as string}</h2>
+						<h2 className="text-accent-700">{t("dashboard.production.title") as string}</h2>
 					</div>
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h3>{t("dashboard.production.cpm") as string}</h3>

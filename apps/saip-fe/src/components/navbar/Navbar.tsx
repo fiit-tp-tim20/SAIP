@@ -7,12 +7,12 @@ function Navbar() {
 	const { t } = useTranslation();
 	const location = useLocation();
 
-	const tabs = ["dashboard", "product", "news", "sandbox"];
+	const tabs = ["dashboard", "product", "news"];
 
 	return (
-		<div className="navbar top-0 w-screen fixed left-0 z-40">
-			<p className="px-8 normal-case text-xl">SAIP</p>
-			<ul className="menu menu-horizontal p-0 m-0">
+		<div className="flex flex-row p-2 top-0 w-screen fixed left-0 z-40 border-b-2 border-b-accent-200 bg-white">
+			<p className="px-8 normal-case text-xl align-middle font-bold text-accent-800 leading-[40px]">SAIP</p>
+			<ul className="flex flex-row p-0 m-0">
 				{tabs.map((tab) => (
 					<LinkTab
 						key={tab}
