@@ -5,10 +5,11 @@ function Plan() {
 	const { t } = useTranslation();
 
 	return (
-		<div className="w-[1280px]">
+		// TODO - breakpoint values
+		<div className="xl:w-[1280px] md:w-[900px] w-[600px]">
 			<h1 className="p-6">{t("dashboard.title") as string}</h1>
-			<div className="grid grid-cols-3 gap-6">
-				<div className="flex flex-col grow background-container p-6 rounded-2xl">
+			<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+				<div className="flex flex-col background-container p-6 rounded-2xl">
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h2>{t("dashboard.resources.title") as string}</h2>
 						<h5 className="pt-1">37 000€</h5>
@@ -23,7 +24,7 @@ function Plan() {
 					</div>
 				</div>
 
-				<div className="flex flex-col grow background-container p-6 rounded-2xl">
+				<div className="flex flex-col background-container p-6 rounded-2xl">
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h2>{t("dashboard.expenses.title") as string}</h2>
 						<h5 className="pt-1">19 000€</h5>
@@ -34,7 +35,7 @@ function Plan() {
 					</div>
 				</div>
 
-				<div className="flex flex-col grow background-container p-6 rounded-2xl">
+				<div className="flex flex-col background-container p-6 rounded-2xl">
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h2>{t("dashboard.production.title") as string}</h2>
 					</div>
