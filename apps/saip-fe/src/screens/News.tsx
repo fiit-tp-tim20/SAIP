@@ -14,28 +14,32 @@ function News() {
 			<h1 className="p-6">{t("news.title") as string}</h1>
 			<div className="flex flex-row max-w-7xl space-x-12">
 				<div className="flex flex-col space-y-2">
-					<h3>Filter</h3>
-					<div className="flex flex-row space-x-2">
-						<input type="radio" id="all" name="news" value="all" />
-						<label htmlFor="all">{t("news.all") as string}</label>
-					</div>
-					<div className="flex flex-row space-x-2">
-						<input type="radio" id="tweets" name="news" value="tweets" />
-						<label htmlFor="tweets">{t("news.tweets") as string}</label>
-					</div>
-					<div className="flex flex-row space-x-2">
-						<input type="radio" id="articles" name="news" value="articles" />
-						<label htmlFor="articles">{t("news.articles") as string}</label>
+					<div>
+						<h3>Filter</h3>
+						<div className="flex flex-row space-x-2">
+							<input type="radio" id="all" name="news" value="all" />
+							<label htmlFor="all">{t("news.all") as string}</label>
+						</div>
+						<div className="flex flex-row space-x-2">
+							<input type="radio" id="tweets" name="news" value="tweets" />
+							<label htmlFor="tweets">{t("news.tweets") as string}</label>
+						</div>
+						<div className="flex flex-row space-x-2">
+							<input type="radio" id="articles" name="news" value="articles" />
+							<label htmlFor="articles">{t("news.articles") as string}</label>
+						</div>
 					</div>
 
-					<h3>Sort by</h3>
-					<div className="flex flex-row space-x-2">
-						<input type="radio" id="newest" name="news" value="newest" />
-						<label htmlFor="newest">{t("news.newest") as string}</label>
-					</div>
-					<div className="flex flex-row space-x-2">
-						<input type="radio" id="oldest" name="news" value="oldest" />
-						<label htmlFor="oldest">{t("news.oldest") as string}</label>
+					<div>
+						<h3>Sort by</h3>
+						<div className="flex flex-row space-x-2">
+							<input type="radio" id="newest" name="news" value="newest" />
+							<label htmlFor="newest">{t("news.newest") as string}</label>
+						</div>
+						<div className="flex flex-row space-x-2">
+							<input type="radio" id="oldest" name="news" value="oldest" />
+							<label htmlFor="oldest">{t("news.oldest") as string}</label>
+						</div>
 					</div>
 				</div>
 
