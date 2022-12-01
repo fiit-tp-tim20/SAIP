@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import "./i18n";
-import Sandbox from "./screens/Sandbox";
 import Dashboard from "./screens/Dashboard";
 import News from "./screens/News";
 import Devtools from "./dev/Devtools";
@@ -23,7 +22,6 @@ function App() {
 						<Routes>
 							<Route path="/dashboard" element={<Dashboard />} />
 							<Route path="/news" element={<News />} />
-							<Route path="/sandbox" element={<Sandbox />} />
 							<Route path="/product" element={<Product />} />
 							<Route path="/" element={<Navigate to="/plan" replace />} />
 							<Route path="*" element={<p>404</p>} />
