@@ -27,6 +27,8 @@ body {
 	justify-content: center;
 	min-width: 320px;
 	min-height: 100vh;
+
+	@apply bg-neutral-50;
 }
 
 h1 {
@@ -81,18 +83,8 @@ button {
 	}
 }
 
-@media (prefers-color-scheme: dark) {
-	:root {
-		color: #ffffff;
-	}
-
-	.background-container {
-		background-color: var(--bg-container-dark);
-	}
-}
-
 .background-container {
-	@apply bg-gray-100 dark:bg-[#363636];
+	@apply bg-white border-2 border-accent-700;
 }
 
 .select {
