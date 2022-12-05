@@ -1,7 +1,20 @@
+import sys
+from pathlib import Path
+
+file = Path(__file__).resolve()
+parent, root = file.parent, file.parents[1]
+sys.path.append(str(root))
+
+# Additionally remove the current file's directory from sys.path
+try:
+    sys.path.remove(str(parent))
+except ValueError: # Already removed
+    pass
+
+
 import pytest
-from typing import List
-from ..saip_simulation.marketing import SocialMedia, CableNews, Billboard, OOH, Podcast, MarketingError
-from ..saip_simulation.config import MarketingModifiers, MarketingInvestments
+from saip_simulation.marketing import SocialMedia, CableNews, Billboard, OOH, Podcast, MarketingError
+from saip_simulation.config import MarketingModifiers, MarketingInvestments
 
 
 class TestMarketing():
@@ -40,6 +53,6 @@ class TestMarketing():
     
     def test_efficiency_calculation(self):
         sm = SocialMedia(MarketingInvestments.SOCIAL_MEDIA_MIN)
-        assert sm._calculate_effectivity_over_minimum == 0
-        assert sm._calculate_effectivity == 0.7
-        assert sm.yield_value > 0.7 * MarketingModifiers.SOCIAL_MEDIA_BASE
+        assert sm._calculate_effectivity_over_minimum() == 0
+        assert sm._calculate_effectivity() == 0.7
+        assert sm.yield_value() > 0.7 * MarketingModifiers.SOCIAL_MEDIA_BASE

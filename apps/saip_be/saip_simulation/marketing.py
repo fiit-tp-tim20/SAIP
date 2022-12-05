@@ -1,6 +1,20 @@
+import sys
+from pathlib import Path
+
+file = Path(__file__).resolve()
+parent, root = file.parent, file.parents[1]
+sys.path.append(str(root))
+
+# Additionally remove the current file's directory from sys.path
+try:
+    sys.path.remove(str(parent))
+except ValueError: # Already removed
+    pass
+
+
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
-from config import MarketingModifiers, MarketingInvestments
+from saip_simulation.config import MarketingModifiers, MarketingInvestments
 
 
 class MarketingError(Exception):
