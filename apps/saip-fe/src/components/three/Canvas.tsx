@@ -13,8 +13,8 @@ export default function Test(props: Props) {
 	const { cameraPosition, cameraRotation } = props;
 
 	return (
-		<Canvas flat dpr={[1, 2]} camera={{ fov: 25, position: [0, 0, 12] }} className="rounded-2xl">
-			<color attach="background" args={["hsl(142, 76%, 90%)"]} />
+		<Canvas flat dpr={[1, 2]} camera={{ fov: 25, position: [0, 0, 12] }} className="rounded-2xl border-accent-700">
+			<color attach="background" args={["#8EEDC7"]} />
 			<ambientLight intensity={2} />
 			<pointLight position={[0, 0, 8]} intensity={12} />
 			<PresentationControls

@@ -9,6 +9,8 @@ import News from "./screens/News";
 import Devtools from "./dev/Devtools";
 import Product from "./screens/Product";
 import Navbar from "./components/navbar/Navbar";
+import Company from "./screens/Company";
+import Marketing from "./screens/Marketing";
 
 const queryClient = new QueryClient();
 
@@ -21,15 +23,17 @@ function App() {
 					<div className="mt-16">
 						<Routes>
 							<Route path="/dashboard" element={<Dashboard />} />
-							<Route path="/news" element={<News />} />
 							<Route path="/product" element={<Product />} />
+							<Route path="/company" element={<Company />} />
+							<Route path="/marketing" element={<Marketing />} />
+							<Route path="/news" element={<News />} />
 							<Route path="/" element={<Navigate to="/plan" replace />} />
 							<Route path="*" element={<p>404</p>} />
 						</Routes>
 					</div>
 				</BrowserRouter>
 			</Suspense>
-			<Devtools />
+			{/* <Devtools /> */}
 			<ReactQueryDevtools initialIsOpen={false} />
 		</QueryClientProvider>
 	);

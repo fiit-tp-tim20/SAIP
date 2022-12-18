@@ -7,7 +7,7 @@ function Navbar() {
 	const { t } = useTranslation();
 	const location = useLocation();
 
-	const tabs = ["dashboard", "product", "news"];
+	const tabs = ["dashboard", "product", "company", "marketing", "news"];
 
 	return (
 		<div className="flex flex-row p-2 top-0 w-screen fixed left-0 z-40 border-b-2 border-b-accent-700 bg-white">

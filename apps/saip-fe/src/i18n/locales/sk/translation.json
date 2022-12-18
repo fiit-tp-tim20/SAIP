@@ -80,5 +80,12 @@
 
 	"news": {
 		"title": "Novinky"
+	},
+
+	"company": {
+		"title": "Spoločnosť"
+	},
+	"marketing": {
+		"title": "Marketing"
 	}
 }
