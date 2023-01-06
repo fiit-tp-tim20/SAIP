@@ -11,6 +11,7 @@ import Product from "./screens/Product";
 import Navbar from "./components/navbar/Navbar";
 import Company from "./screens/Company";
 import Marketing from "./screens/Marketing";
+import BottomBar from "./components/bottombar/BottomBar";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ function App() {
 							<Route path="*" element={<p>404</p>} />
 						</Routes>
 					</div>
+					<BottomBar />
 				</BrowserRouter>
 			</Suspense>
 			{/* <Devtools /> */}
