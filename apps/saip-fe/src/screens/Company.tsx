@@ -1,4 +1,5 @@
 import React from "react";
+import Slider from "../components/slider/Slider";
 
 function Company() {
 	return (
@@ -39,8 +40,7 @@ function Company() {
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h3>Počet kusov</h3>
 						<div>
-							<input type="text" name="" id="" className="bg-neutral-200" />
-							<input type="range" min="1" max="100" value="20" className="slider" id="myRange" />
+							<Slider min={0} max={1000} step={10} />
 						</div>
 					</div>
 				</div>
@@ -58,8 +58,7 @@ function Company() {
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h3>Predajná cena</h3>
 						<div>
-							<input type="text" name="" id="" className="bg-neutral-200" />
-							<input type="range" min="1" max="100" value="20" className="slider" id="myRange" />
+							<Slider min={0} max={1000} step={10} />
 						</div>
 					</div>
 				</div>
@@ -77,8 +76,7 @@ function Company() {
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h3>Investícia</h3>
 						<div>
-							<input type="text" name="" id="" className="bg-neutral-200" />
-							<input type="range" min="1" max="100" value="20" className="slider" id="myRange" />
+							<Slider min={0} max={1000} step={10} />
 						</div>
 					</div>
 				</div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import Slider from "../components/slider/Slider";
 
 function Marketing() {
 	const { t } = useTranslation();
@@ -42,8 +43,7 @@ function Marketing() {
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h3>Investícia</h3>
 						<div>
-							<input type="text" name="" id="" className="bg-neutral-200" />
-							<input type="range" min="1" max="100" value="20" className="slider" id="myRange" />
+							<Slider min={0} max={1000} step={10} />
 						</div>
 					</div>
 				</div>
@@ -61,8 +61,7 @@ function Marketing() {
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h3>Investícia</h3>
 						<div>
-							<input type="text" name="" id="" className="bg-neutral-200" />
-							<input type="range" min="1" max="100" value="20" className="slider" id="myRange" />
+							<Slider min={0} max={1000} step={10} />
 						</div>
 					</div>
 				</div>
@@ -80,8 +79,7 @@ function Marketing() {
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h3>Investícia</h3>
 						<div>
-							<input type="text" name="" id="" className="bg-neutral-200" />
-							<input type="range" min="1" max="100" value="20" className="slider" id="myRange" />
+							<Slider min={0} max={1000} step={10} />
 						</div>
 					</div>
 				</div>
@@ -99,8 +97,7 @@ function Marketing() {
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h3>Investícia</h3>
 						<div>
-							<input type="text" name="" id="" className="bg-neutral-200" />
-							<input type="range" min="1" max="100" value="20" className="slider" id="myRange" />
+							<Slider min={0} max={1000} step={10} />
 						</div>
 					</div>
 				</div>
@@ -118,8 +115,7 @@ function Marketing() {
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h3>Investícia</h3>
 						<div>
-							<input type="text" name="" id="" className="bg-neutral-200" />
-							<input type="range" min="1" max="100" value="20" className="slider" id="myRange" />
+							<Slider min={0} max={1000} step={10} />
 						</div>
 					</div>
 				</div>
