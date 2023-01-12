@@ -17,7 +17,7 @@ class Game(models.Model):
     name = models.CharField(max_length=100, null=True)
     admin = models.ForeignKey(User, models.DO_NOTHING, null=True)
     turns = models.PositiveIntegerField(null=True)
-    parameters = models.ForeignKey(GameParameters, models.DO_NOTHING, null=True)
+    parameters = models.ForeignKey(GameParameters, models.CASCADE, null=True)
 
     def __str__(self):
         return self.name

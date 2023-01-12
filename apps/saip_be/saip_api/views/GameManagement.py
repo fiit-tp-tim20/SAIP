@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -63,3 +65,50 @@ class GetRunningGamesView(APIView):
                               for game in games]}
 
         return Response(response)
+
+class EndTurnView(PermissionRequiredMixin, APIView):
+    permission_required = 'saip_api.add_turn'
+
+    def get(self, request) -> Response:
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        try:
+            game = Game.objects.get(pk=request.GET.get("gameID"))
+        except Game.DoesNotExist:
+            return Response({"detail": "Game not found"}, status=404)
+
+        if game.end is not None:
+            return Response({"detail": "Game has already ended"}, status=400)
+
+        if game.admin != request.user:
+            return Response({"detail": "User is not admin for this game"}, status=401)
+
+        last_turn = Turn.objects.filter(game=game, end=None).order_by("-number").first()
+
+        return Response({"Number": last_turn.number, "Start": last_turn.start, "Game": game.name}, status=200)
+
+    def post(self, request) -> Response:
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        try:
+            game = Game.objects.get(pk=request.GET.get("gameID"))
+        except Game.DoesNotExist:
+            return Response({"detail": "Game not found"}, status=404)
+
+        if game.end is not None:
+            return Response({"detail": "Game has already ended"}, status=400)
+
+        if game.admin != request.user:
+            return Response({"detail": "User is not admin"}, status=403)
+
+        turn = Turn.objects.get(game=game, end=None)
+        turn.end = timezone.now()
+        turn.save()
+
+        create_turn(turn.number+1, game)
+
+        # start simulation here
+
+        return Response({"detail": "Turn ended, simulation started"}, status=200)
