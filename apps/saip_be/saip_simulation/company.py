@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import List
 
-from product import Product, DailyProduct, LastingProduct
-from marketing import *
-from config import TURN_LENGTH, FACTORY_MAINTENANCE_RATE
-from marketing import MarketingType
+from .product import Product, DailyProduct, LastingProduct
+from .marketing import *
+from .config import TURN_LENGTH, FACTORY_MAINTENANCE_RATE
+from .marketing import MarketingType
 from typing import Dict
 
 

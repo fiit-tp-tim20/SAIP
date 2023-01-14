@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from customer import Customer
+from .customer import Customer
 
 
 @dataclass

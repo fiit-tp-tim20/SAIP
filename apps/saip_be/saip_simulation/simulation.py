@@ -1,7 +1,9 @@
 from typing import Dict
 
-from company import Company
-from market import Market
+from .company import Company
+from .market import Market
+
+import saip_api.models as models
 
 
 class Simulation:
@@ -10,10 +12,11 @@ class Simulation:
     current_turn: int   #the current turn being evaluated
     turn_limit: int     #maximum number of turns     
 
-    def __init__(self) -> None:
-        self.setup_simulation()
+    def __init__(self, game, game_id, turn) -> None:
+        self.setup_simulation(game, game_id, turn)
+
     
-    def setup_simulation(self):
+    def setup_simulation(self, game, game_id, turn):
         #sets up the class attributes - companies, turns, etc
         pass
     
