@@ -18,6 +18,32 @@ class Simulation:
     
     def setup_simulation(self, game, game_id, turn):
         #sets up the class attributes - companies, turns, etc
+        companies_models = models.Company.objects.filter(game=game)
+
+        #upgrades are particular to company_upgrades
+        #upgrades_models = models.Upgrade.objects.filter(game=game)
+
+        #search all models refered to by each company and write them into classes
+        for company_model in companies_models:
+            try:
+                company_upgrades = models.CompaniesUpgrades.objects.filter(game=game, company=company_model)
+            except models.CompaniesUpgrades.DoesNotExist:
+                company_upgrades = []
+                #TODO: add error message maybe
+            try:
+                company_state = models.CompaniesState.objects.get(company=company_model, turn=turn)
+            except models.CompaniesState.DoesNotExist:
+                company_state = None
+                #TODO: add error message maybe
+        
+            for upgrade in company_upgrades:
+                #TODO: add upgrades to product class
+                pass
+            if company_state != None:
+                #TODO: add company state attributes to Company class
+                pass
+            
+
         pass
     
     def end_turn(self):

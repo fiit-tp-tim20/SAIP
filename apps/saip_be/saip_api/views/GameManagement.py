@@ -107,9 +107,11 @@ class EndTurnView(PermissionRequiredMixin, APIView):
 
         turn = Turn.objects.get(game=game, end=None)
         turn.end = timezone.now()
-        turn.save()
+        #TODO: remove comment
+        #turn.save()
 
-        create_turn(turn.number+1, game)
+        #TODO: remove comment
+        #create_turn(turn.number+1, game)
 
         # start simulation here
         sim = Simulation(game=game, game_id=request.GET.get("gameID"), turn=turn)
