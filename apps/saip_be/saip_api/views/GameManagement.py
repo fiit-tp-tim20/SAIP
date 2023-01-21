@@ -114,6 +114,6 @@ class EndTurnView(PermissionRequiredMixin, APIView):
         #create_turn(turn.number+1, game)
 
         # start simulation here
-        sim = Simulation(game=game, game_id=request.GET.get("gameID"), turn=turn)
+        sim = Simulation(game=game, turn=turn)
         
         return Response({"detail": "Turn ended, simulation started"}, status=200)
