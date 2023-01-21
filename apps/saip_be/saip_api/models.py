@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 
 
 class GameParameters(models.Model):
-    budget_cap = models.PositiveIntegerField(null=True)
-    depreciation = models.FloatField(null=True, blank=True)
+    budget_cap = models.PositiveIntegerField(default=10000)
+    depreciation = models.FloatField(default=0.1)
 
     class Meta:
         db_table = 'GameParameters'
@@ -63,14 +63,15 @@ class Production(models.Model):
         db_table = 'Productions'
 
 
-class Spending(models.Model):
-    r_d = models.FloatField(null=True)
-    marketing = models.FloatField(null=True)
-    factory = models.FloatField(null=True)
-    run_cost = models.FloatField(null=True)
+class Marketing(models.Model):
+    viral = models.PositiveIntegerField(default=0)
+    podcast = models.PositiveIntegerField(default=0)
+    ooh = models.PositiveIntegerField(default=0)
+    tv = models.PositiveIntegerField(default=0)
+    billboard = models.PositiveIntegerField(default=0)
 
     class Meta:
-        db_table = 'Spendings'
+        db_table = 'Marketings'
 
 
 class Upgrade(models.Model):
@@ -113,9 +114,12 @@ class CompaniesUpgrades(models.Model):
 
 
 class Factory(models.Model):
-    employees = models.PositiveIntegerField(null=True)
+    prod_emp = models.PositiveIntegerField(null=True)
+    cont_emp = models.PositiveIntegerField(null=True)
+    aux_emp = models.PositiveIntegerField(null=True)
     capacity = models.PositiveIntegerField(null=True)
-    base_cost = models.FloatField(null=True)
+    base_cost = models.PositiveIntegerField(null=True)
+    capital = models.PositiveIntegerField(null=True)
 
     class Meta:
         db_table = 'Factories'
@@ -126,12 +130,12 @@ class CompaniesState(models.Model):
     company = models.ForeignKey(Company, models.DO_NOTHING, null=True)
     turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
     production = models.OneToOneField(Production, models.DO_NOTHING, null=True)
-    spending = models.OneToOneField(Spending, models.DO_NOTHING, null=True)
     factory = models.OneToOneField(Factory, models.DO_NOTHING, null=True)
-    fan_base = models.PositiveIntegerField(null=True, blank=True)
     balance = models.FloatField(null=True, blank=True)
     stock_price = models.FloatField(null=True, blank=True)
     inventory = models.PositiveIntegerField(null=True, blank=True)
+    r_d = models.PositiveBigIntegerField(null=True, blank=True)
+    marketing = models.OneToOneField(Marketing, models.DO_NOTHING, null=True)
 
     def __str__(self):
         return f"{self.company.__str__()} - {self.turn.__str__()}"
@@ -154,8 +158,8 @@ class MarketState(models.Model):
 
 class Parameter(models.Model):
     turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
-    market_size_diff = models.IntegerField(null=True)
-    run_cost_multiplier = models.FloatField(null=True)
+    market_size_diff = models.IntegerField(default=0)
+    run_cost_multiplier = models.FloatField(default=1)
 
     class Meta:
         db_table = 'Parameters'
