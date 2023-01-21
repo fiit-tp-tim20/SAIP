@@ -85,9 +85,13 @@ class Simulation:
         pass
     
     def create_factory(self, factory_model : models.Factory) -> Factory:
-        employees = factory_model.employees #positive integer
-        capacity = factory_model.capacity #positive integer
-        base_cost = factory_model.base_cost #float
+        #all attributes are positive integer
+        prod_emp = models.Factory.prod_emp
+        cont_emp = models.Factory.cont_emp 
+        aux_emp = models.Factory.aux_emp
+        capacity = models.Factory.capacity
+        base_cost = models.Factory.base_cost
+        capital = models.Factory.capital
 
         #TODO finish constructor and return the object
         #new_factory = Factory()
