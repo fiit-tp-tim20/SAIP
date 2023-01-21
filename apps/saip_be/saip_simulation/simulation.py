@@ -51,13 +51,16 @@ class Simulation:
                 pass
             if company_state != None:
                 #TODO: add company state attributes to Company class
-                production = company_state.production   #model object
-                spending = company_state.spending       #model object
-                factory = company_state.factory         #model object   #TODO: change to Factory class object!!!
-                fan_base = company_state.fan_base       #integer
+                production_model = company_state.production   #model object
+                spending_model = company_state.spending       #model object
+                factory_model = company_state.factory         #model object
+
+                fan_base = company_state.fan_base       #integer    #TODO: we dont have fan base in our company class
                 remaining_budget = company_state.balance#float      #TODO: check if this is the correct attribute
                 stock_price = company_state.stock_price #float
                 storage_count = company_state.inventory #integer    #TODO: check if this is the correct attribute
+
+                #TODO: create class instances based on models (production, spending, factory)
                 pass
             
             new_company = Company(product = product,
@@ -75,7 +78,6 @@ class Simulation:
             #add the company to the companies dictionary
             self.companies[company_model.name] = new_company
             print(self.companies[company_model.name])
-            
 
         pass
     
