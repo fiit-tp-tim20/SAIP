@@ -2,6 +2,7 @@ from typing import Dict
 
 from .company import Company
 from .market import Market
+from .company import Factory
 
 import saip_api.models as models
 
@@ -83,6 +84,16 @@ class Simulation:
 
         pass
     
+    def create_factory(self, factory_model : models.Factory) -> Factory:
+        employees = factory_model.employees #positive integer
+        capacity = factory_model.capacity #positive integer
+        base_cost = factory_model.base_cost #float
+
+        #TODO finish constructor and return the object
+        #new_factory = Factory()
+        pass
+
+
     def end_turn(self):
         #ends the turn - and runs the simulation
         pass
