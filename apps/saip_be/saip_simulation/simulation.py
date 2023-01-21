@@ -23,6 +23,8 @@ class Simulation:
 
         #search all models referred to by each company and write them into classes
         for company_model in companies_models:
+            # default values - if the entries are not found in the database
+            # might be removed later to solve this in a better way TODO
             product = None
             storage_count = -1
             debit = -1
