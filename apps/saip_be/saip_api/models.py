@@ -127,15 +127,15 @@ class Factory(models.Model):
 
 
 class CompaniesState(models.Model):
-    company = models.ForeignKey(Company, models.DO_NOTHING, null=True)
-    turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
-    production = models.OneToOneField(Production, models.DO_NOTHING, null=True)
-    factory = models.OneToOneField(Factory, models.DO_NOTHING, null=True)
+    company = models.ForeignKey(Company, models.PROTECT, null=True)
+    turn = models.ForeignKey(Turn, models.PROTECT, null=True)
+    production = models.OneToOneField(Production, models.SET_NULL, null=True, blank=True)
+    factory = models.OneToOneField(Factory, models.SET_NULL, null=True, blank=True)
     balance = models.FloatField(null=True, blank=True)
     stock_price = models.FloatField(null=True, blank=True)
     inventory = models.PositiveIntegerField(null=True, blank=True)
     r_d = models.PositiveBigIntegerField(null=True, blank=True)
-    marketing = models.OneToOneField(Marketing, models.DO_NOTHING, null=True)
+    marketing = models.OneToOneField(Marketing, models.SET_NULL, null=True)
 
     def __str__(self):
         return f"{self.company.__str__()} - {self.turn.__str__()}"

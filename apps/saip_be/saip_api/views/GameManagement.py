@@ -3,7 +3,7 @@ from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from saip_api.models import Game, GameParameters, Upgrade, Turn
+from saip_api.models import Game, GameParameters, Upgrade, Turn, Company, CompaniesState
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
@@ -26,8 +26,14 @@ def create_default_upgrades(game: Game) -> None:
 
 
 def create_turn(number: int, game: Game) -> None:
-    Turn.objects.create(number=number, game=game)
+    turn = Turn.objects.create(number=number, game=game)
+    companies = Company.objects.filter(game=game)
 
+    for company in companies:
+        CompaniesState.objects.create(turn=turn, company=company)
+
+def get_last_turn(game: Game) -> Turn:
+    return Turn.objects.filter(game=game, end__isnull=True).order_by('-number').first()
 
 class CreateGameView(PermissionRequiredMixin, APIView):
     permission_required = 'saip_api.add_game'

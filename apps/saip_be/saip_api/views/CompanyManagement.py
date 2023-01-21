@@ -1,10 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade
+from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn
 
-from ..serializers import CompanySerializer
+from ..serializers import CompanySerializer, ProductionSerializer
 
+from .GameManagement import get_last_turn
+
+from django.core import serializers
 
 def create_upgrade_company_relation(game: Game, company: Company) -> None:
     for upgrade in Upgrade.objects.filter(game=game):
@@ -41,5 +44,23 @@ class PostSpendingsView(APIView):
         except Company.DoesNotExist:
             return Response({"detail": "Company for this user not found"}, status=404)
 
-        return Response({"company": company.name, 'request': request.data}, status=200)
+        last_turn = get_last_turn(company.game)
+        try:
+            company_state = CompaniesState.objects.get(turn=last_turn, company=company)
+        except CompaniesState.DoesNotExist:
+            return Response({"detail": "Company state for this turn does not exist"}, status=500)
+
+        if company_state.production:
+            company_state.production.delete()
+
+        prod_serializer = ProductionSerializer(data=request.data['Production'])
+        prod_serializer.is_valid(raise_exception=True)
+
+        production = prod_serializer.save()
+
+        company_state.production = production
+        company_state.save()
+
+        return Response({"company": company.name, 'request': request.data,
+                         'cs': serializers.serialize('json', [company_state, ])}, status=201)
 

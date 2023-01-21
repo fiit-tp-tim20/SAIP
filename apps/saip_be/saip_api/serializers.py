@@ -4,7 +4,7 @@ from rest_framework import serializers, validators
 
 from datetime import datetime, timezone
 
-from .models import Game, Company
+from .models import Game, Company, Production, Marketing, Factory
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -84,3 +84,27 @@ class CompanySerializer(serializers.ModelSerializer):
         company.save()
 
         return company
+
+
+class ProductionSerializer(serializers.ModelSerializer):
+
+    man_cost = serializers.FloatField(required=True, min_value=0)
+    sell_price = serializers.FloatField(required=True, min_value=0)
+    volume = serializers.IntegerField(required=True, min_value=0)
+    class Meta:
+        model = Production
+        fields = ('man_cost', 'sell_price', 'volume')
+
+    def create(self, validated_data) -> Production:
+        man_cost = validated_data.get('man_cost')
+        sell_price = validated_data.get('sell_price')
+        volume = validated_data.get('volume')
+
+        production = Production.objects.create(
+            man_cost = man_cost,
+            sell_price = sell_price,
+            volume = volume
+        )
+        production.save()
+
+        return production
