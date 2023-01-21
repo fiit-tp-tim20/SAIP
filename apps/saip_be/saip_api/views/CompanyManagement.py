@@ -28,3 +28,18 @@ class CreateCompanyView(APIView):
         create_upgrade_company_relation(company.game, company)
 
         return Response({"companyID": company.id}, status=201)
+
+
+class PostSpendingsView(APIView):
+
+    def post(self, request) -> Response:
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        try:
+            company = Company.objects.get(user=request.user)
+        except Company.DoesNotExist:
+            return Response({"detail": "Company for this user not found"}, status=404)
+
+        return Response({"company": company.name, 'request': request.data}, status=200)
+
