@@ -131,7 +131,6 @@ class CompaniesState(models.Model):
     turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
     production = models.OneToOneField(Production, models.DO_NOTHING, null=True)
     factory = models.OneToOneField(Factory, models.DO_NOTHING, null=True)
-    fan_base = models.PositiveIntegerField(null=True, blank=True)
     balance = models.FloatField(null=True, blank=True)
     stock_price = models.FloatField(null=True, blank=True)
     inventory = models.PositiveIntegerField(null=True, blank=True)
