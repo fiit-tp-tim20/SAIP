@@ -11,6 +11,7 @@ import Product from "./screens/Product";
 import Navbar from "./components/navbar/Navbar";
 import Company from "./screens/Company";
 import Marketing from "./screens/Marketing";
+import Login from "./screens/Login";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ function App() {
 							<Route path="/news" element={<News />} />
 							<Route path="/" element={<Navigate to="/plan" replace />} />
 							<Route path="*" element={<p>404</p>} />
+							<Route path="/loginForm" element={<Login />} />
 						</Routes>
 					</div>
 				</BrowserRouter>
