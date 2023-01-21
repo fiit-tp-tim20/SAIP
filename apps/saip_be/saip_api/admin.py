@@ -1,16 +1,16 @@
 from django.contrib import admin
-from .models import Turn, Company, Production, Spending, Factory, CompaniesState, Game, GameParameters, MarketState,\
+from .models import Turn, Company, Production, Marketing, Factory, CompaniesState, Game, GameParameters, MarketState,\
     Parameter, EmailGroup, Upgrade, CompaniesUpgrades
 
 
 @admin.register(Turn)
 class TurnsAdmin(admin.ModelAdmin):
-    list_display = ('number', 'start', 'end')
+    list_display = ('number', 'game', 'start', 'end')
 
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'user')
+    list_display = ('name', 'game', 'user')
 
 
 @admin.register(Production)
@@ -18,19 +18,20 @@ class ProductionAdmin(admin.ModelAdmin):
     list_display = ('man_cost', 'sell_price', 'volume')
 
 
-@admin.register(Spending)
+@admin.register(Marketing)
 class SpendingAdmin(admin.ModelAdmin):
-    list_display = ('r_d', 'marketing', 'factory', 'run_cost')
+    list_display = ('viral', 'podcast', 'ooh', 'tv', 'billboard')
 
 
 @admin.register(Factory)
 class FactoryAdmin(admin.ModelAdmin):
-    list_display = ('employees', 'capacity', 'base_cost')
+    list_display = ('prod_emp', 'cont_emp', 'aux_emp', 'capacity', 'base_cost', 'capital')
 
 
 @admin.register(CompaniesState)
 class CompaniesStateAdmin(admin.ModelAdmin):
-    list_display = ('company', 'turn', 'production', 'spending', 'factory', 'fan_base', 'balance', 'stock_price',)
+    list_display = ('company', 'turn', 'production', 'marketing', 'factory', 'balance', 'stock_price', 'r_d',
+                    'inventory')
 
 
 @admin.register(MarketState)
@@ -65,4 +66,4 @@ class UpgradeAdmin(admin.ModelAdmin):
 
 @admin.register(CompaniesUpgrades)
 class CompaniesUpgradeAdmin(admin.ModelAdmin):
-    list_display = ('company', 'upgrade', 'status', 'progress')
+    list_display = ('company', 'game', 'upgrade', 'status', 'progress')

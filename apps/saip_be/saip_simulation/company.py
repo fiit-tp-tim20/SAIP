@@ -77,3 +77,5 @@ class Company:
     def _agg_market_values(self) -> float:
         # ToDO some logic
         pass
+
+# ToDo STOCK PRICE!!!

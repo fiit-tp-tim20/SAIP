@@ -1,7 +1,21 @@
+import sys
+from pathlib import Path
+
+file = Path(__file__).resolve()
+parent, root = file.parent, file.parents[1]
+sys.path.append(str(root))
+    
+# Additionally remove the current file's directory from sys.path
+try:
+    sys.path.remove(str(parent))
+except ValueError: # Already removed
+    pass
+
+
 from dataclasses import dataclass
 from abc import ABC, abstractmethod
 from typing import Dict
-from ..saip_simulation.product import Product, DailyProduct, LastingProduct
+from saip_simulation.product import Product, DailyProduct, LastingProduct
 
 
 @dataclass
