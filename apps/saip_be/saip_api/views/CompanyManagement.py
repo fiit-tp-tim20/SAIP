@@ -3,7 +3,7 @@ from rest_framework.response import Response
 
 from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn
 
-from ..serializers import CompanySerializer, ProductionSerializer
+from ..serializers import CompanySerializer, ProductionSerializer, SpendingsSerializer
 
 from .GameManagement import get_last_turn
 
@@ -33,6 +33,27 @@ class CreateCompanyView(APIView):
         return Response({"companyID": company.id}, status=201)
 
 
+# {"marketing": {
+#     "viral": 1000,
+#     "podcast": 0,
+#     "ooh": 12,
+#     "tv": 0,
+#     "billboard": 69
+#     },
+# "production": {
+#     "man_cost": 100,
+#     "sell_price": 152,
+#     "volume": 99901
+#     },
+# "factory": {
+#     "prod_emp": 100,
+#     "cont_emp": 12,
+#     "aux_emp": 5,
+#     "capital": 10000
+#     },
+# "r_d": 2500
+# }
+
 class PostSpendingsView(APIView):
 
     def post(self, request) -> Response:
@@ -50,10 +71,13 @@ class PostSpendingsView(APIView):
         except CompaniesState.DoesNotExist:
             return Response({"detail": "Company state for this turn does not exist"}, status=500)
 
+        spendings_serializer = SpendingsSerializer(data=request.data)
+        spendings_serializer.is_valid(raise_exception=True)
+
         if company_state.production:
             company_state.production.delete()
 
-        prod_serializer = ProductionSerializer(data=request.data['Production'])
+        prod_serializer = ProductionSerializer(data=request.data['production'])
         prod_serializer.is_valid(raise_exception=True)
 
         production = prod_serializer.save()

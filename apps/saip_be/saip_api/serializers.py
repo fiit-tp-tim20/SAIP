@@ -86,6 +86,13 @@ class CompanySerializer(serializers.ModelSerializer):
         return company
 
 
+class SpendingsSerializer(serializers.Serializer):
+
+    marketing = serializers.JSONField(required=True)
+    production = serializers.JSONField(required=True)
+    factory = serializers.JSONField(required=True)
+    r_d = serializers.IntegerField(required=True, min_value=0)
+
 class ProductionSerializer(serializers.ModelSerializer):
 
     man_cost = serializers.FloatField(required=True, min_value=0)
