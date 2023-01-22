@@ -37,6 +37,7 @@ class Simulation:
         self.market = self.create_market(market_state_model=market_state_model)
 
         print(self.companies)
+        print(self.market)
 
         
 
@@ -130,7 +131,11 @@ class Simulation:
         new_market = Market()
         
         #TODO finish market
-        size = market_state_model.size #models.PositiveIntegerField(null=True)
+        new_market.customer_base = market_state_model.size #models.PositiveIntegerField(null=True)
         demand = market_state_model.demand #models.PositiveIntegerField(null=True)
+
+        #TODO: debate the restructuring of the market db model - customer_base basically = demand
+
+        
         return new_market
 
