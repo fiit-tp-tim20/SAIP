@@ -110,7 +110,14 @@ class Simulation:
         volume = production_model.volume #TODO add volume to product class (or maybe the company, but product makes sense)
 
         for company_upgrade_model in company_upgrades:
-            #TODO: add upgrades to product 
+            upgrade_model = company_upgrade_model.upgrade
+            name = upgrade_model.name #char field
+            new_product.upgrades[name] = {
+                "cost": upgrade_model.cost, #pos int
+                "effect": upgrade_model.effect,  #float
+                "status": company_upgrade_model.status, #char field ("s", "ns", "f") for ("started", "not started", "finished")
+                "progress": company_upgrade_model.progress #pos int
+            }
             pass
 
         return new_product
@@ -121,5 +128,5 @@ class Simulation:
         #TODO finish market
         size = market_state_model.size #models.PositiveIntegerField(null=True)
         demand = market_state_model.demand #models.PositiveIntegerField(null=True)
-        return None
+        return new_market
 
