@@ -3,6 +3,8 @@ from typing import Dict
 from .company import Company
 from .market import Market
 from .company import Factory
+from .marketing import Billboard, SocialMedia, CableNews, Podcast, OOH
+from .product import Product
 
 import saip_api.models as models
 
@@ -34,6 +36,9 @@ class Simulation:
         
 
     def create_company(self, game_model : models.Game, turn_model : models.Turn, company_model : models.Company) -> Company:
+        #create new instance of company class, with default values
+        #change the default values based on models
+        new_company = Company()
 
         #filter models for companies_upgrades that belong to this game and this company
         try:
@@ -41,10 +46,6 @@ class Simulation:
         except models.CompaniesUpgrades.DoesNotExist:
             company_upgrades = []
             #TODO: add error message maybe
-        #parse the upgrades models and create objects
-        for company_upgrade in company_upgrades:
-            #TODO: add upgrades to product class
-            pass
 
         #get model for companies_state that belongs to this turn and this company
         #these are the decisisions made by the company in the given turn
@@ -56,32 +57,58 @@ class Simulation:
             #TODO: add error message maybe
         #parse the companies state model and create objects
         if company_state != None:
-            production_model = company_state.production
-            factory_model = company_state.factory
-            marketing_model = company_state.marketing
-            remaining_budget = company_state.balance    #float      #TODO: check if remaining_budget = balance
-            stock_price = company_state.stock_price     #float
-            storage_count = company_state.inventory     #pos int    #TODO: check if storage_count = inventory
-            r_d = company_state.r_d                     #pos big int
-            #create objects from models
-            factory = self.create_factory(factory_model=factory_model)
-            
-            pass
-        new_company = Company()
 
+            new_company.remaining_budget = company_state.balance    #float
+            new_company.stock_price = company_state.stock_price     #float
+            new_company.storage_count = company_state.inventory     #pos int
+            r_d = company_state.r_d                     #pos big int        #TODO: add rnd to class obejct
+
+            #create objects from models
+            #setup factory object
+            factory_model = company_state.factory
+            new_company.factory = self.create_factory(factory_model=factory_model)
+            #setup marketing objects in dict
+            marketing_model = company_state.marketing
+            if marketing_model.billboard > 0:
+                new_company["billboard"] = Billboard(marketing_model.billboard)
+            if marketing_model.ooh > 0:
+                new_company["ooh"] = OOH(marketing_model.ooh)
+            if marketing_model.podcast > 0:
+                new_company["podcast"] = Podcast(marketing_model.podcast)
+            if marketing_model.viral > 0:
+                new_company["social media"] = SocialMedia(marketing_model.viral)
+            if marketing_model.tv > 0:
+                new_company["cable news"] = CableNews(marketing_model.tv)
+            #setup product
+            new_company.product = self.create_product(production_model=company_state.production, company_upgrades=company_upgrades)
+        
         return new_company
     
     def create_factory(self, factory_model : models.Factory) -> Factory:
-        #all attributes are positive integer
+        new_factory = Factory()
+
+        #all attributes are positive integer (from model)
         #TODO: types are not consistent: model <-> our class
         prod_emp = factory_model.prod_emp
         cont_emp = factory_model.cont_emp 
         aux_emp = factory_model.aux_emp
-        capacity = factory_model.capacity
-        base_cost = factory_model.base_cost
-        capital = factory_model.capital
 
-        #TODO pass the attributes into the object
-        new_factory = Factory()
+        new_factory.capacity = factory_model.capacity
+        new_factory.base_energy_cost = factory_model.base_cost
+        new_factory.total_investment = factory_model.capital
+        
+        #TODO: add all attributes we need for initialization
         return new_factory
+
+    def create_product(self, production_model : models.Production, company_upgrades: list[models.CompaniesUpgrades]) -> Product:
+        #create Product object
+        new_product = Product()
+        new_product.set_price(production_model.sell_price)
+        volume = production_model.volume #TODO add volume to product class (or maybe the company, but product makes sense)
+
+        for company_upgrade_model in company_upgrades:
+            #TODO: add upgrades to product 
+            pass
+
+        return new_product
 
