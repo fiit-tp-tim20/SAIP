@@ -24,6 +24,21 @@ class Factory:
         'materials': float,  # this one might be irrelevant
         'maintenance': float
     }
+    def __init__(self):
+        self.total_investment = 0
+        self.capacity = 0
+        self.employees = 0
+        self.employee_salary = 0
+        self.base_energy_cost = 0
+        self.energy_cost_per_machine = 0
+        self.machine_count = 0 
+        self.upkeep = {
+            'rent': 0,
+            'energy': 0,
+            'salaries': 0,
+            'materials': 0,
+            'maintenance': 0
+        }
     
     def setup_factory(self):
         pass
@@ -56,6 +71,21 @@ class Company:
     costs_per_turn: dict
     stock_price: float  # company score
     marketing: Dict[str, MarketingType]
+
+    def __init__(self):
+        #setup default values
+        self.product = None
+        self.storage_count = 0
+        self.debit = 0
+        self.credit = 0
+        self.profit = 0
+        self.max_budget = 0
+        self.remaining_budget = 0
+        self.factory = None
+        self.costs_per_turn = {}
+        self.stock_price = 0
+        self.marketing = {}
+        pass
     
     def upgrade_stored_products(self):
         pass
