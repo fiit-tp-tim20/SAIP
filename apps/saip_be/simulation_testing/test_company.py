@@ -19,15 +19,14 @@ class TestFactory():
     
     def test_ppu(self):
         fac = Factory()
-        fac.setup_factory()
         
         unitsA = int(FactoryPreset.STARTING_CAPACITY * 0.8)
         unitsB = int(FactoryPreset.STARTING_CAPACITY * 0.9)
         unitsC = int(FactoryPreset.STARTING_CAPACITY * 0.95)
         
-        ppuA = fac.price_per_unit(unitsA)
-        ppuB = fac.price_per_unit(unitsB)
-        ppuC = fac.price_per_unit(unitsC)
+        ppuA = fac.calculate_price_per_unit(unitsA)
+        ppuB = fac.calculate_price_per_unit(unitsB)
+        ppuC = fac.calculate_price_per_unit(unitsC)
         
         assert ppuA > ppuB
         assert ppuB < ppuC

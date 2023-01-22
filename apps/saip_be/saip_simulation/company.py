@@ -43,9 +43,9 @@ class Factory:
     }
     
     def __init__(self):
-        pass
+        self.__setup_factory()
     
-    def setup_factory(self):
+    def __setup_factory(self):
         self.upkeep['rent'] = FactoryPreset.BASE_RENT
         self.base_energy_cost = FactoryPreset.BASE_ENERGY_COST
         
@@ -75,7 +75,7 @@ class Factory:
     def total_upkeep(self) -> float:
         return self.upkeep.get('rent') + self.__calculate_energies() + self.__calculate_salaries()
     
-    def price_per_unit(self, production_this_turn) -> float:
+    def calculate_price_per_unit(self, production_this_turn) -> float:
         ppu = self.total_upkeep() / production_this_turn
         
         if production_this_turn / self.capacity > FactoryPreset.OPTIMAL_THRESHOLD:
@@ -92,7 +92,6 @@ class Factory:
         )
         return ppu * FactoryPreset.OVER_THRESHOLD_MULTIPLIER**over_threshold
         
-
 
 @dataclass
 class Company:
@@ -129,14 +128,14 @@ class Company:
         pass
 
 
-fac = Factory()
-fac.setup_factory()
+if __name__ == '__main__':
+    fac = Factory()
 
-unitsA = int(FactoryPreset.STARTING_CAPACITY * 0.81)
-unitsB = int(FactoryPreset.STARTING_CAPACITY * 0.9)
-unitsC = int(FactoryPreset.STARTING_CAPACITY * 0.99)
+    unitsA = int(FactoryPreset.STARTING_CAPACITY * 0.81)
+    unitsB = int(FactoryPreset.STARTING_CAPACITY * 0.9)
+    unitsC = int(FactoryPreset.STARTING_CAPACITY * 0.99)
 
-ppuA = fac.price_per_unit(unitsA)
-ppuB = fac.price_per_unit(unitsB)
-ppuC = fac.price_per_unit(unitsC)
-print(ppuA, ppuB, ppuC)
+    ppuA = fac.calculate_price_per_unit(unitsA)
+    ppuB = fac.calculate_price_per_unit(unitsB)
+    ppuC = fac.calculate_price_per_unit(unitsC)
+    print(f"A:{ppuA} \nB:{ppuB} \nC:{ppuC}")

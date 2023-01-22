@@ -19,3 +19,9 @@ class Market:
     customer_base: int      #overall number of potential customers
 
     #TODO add sensitivity to attribute(marketing, rnd, price)(maybe)
+
+    def generate_demand():
+        pass
+    
+    def distribute_demand():
+        pass
