@@ -33,6 +33,9 @@ class Simulation:
             self.companies[company_model.name] = self.create_company(game_model=game_model, turn_model=turn_model, company_model=company_model)
 
         print(self.companies)
+
+        #TODO: setup market
+        market_state_model = models.MarketState.objects.get(turn=turn_model)
         
 
     def create_company(self, game_model : models.Game, turn_model : models.Turn, company_model : models.Company) -> Company:
@@ -111,4 +114,12 @@ class Simulation:
             pass
 
         return new_product
+    
+    def create_market(self, market_state_model: models.MarketState) -> Market:
+        new_market = Market()
+        
+        #TODO finish market
+        size = market_state_model.size #models.PositiveIntegerField(null=True)
+        demand = market_state_model.demand #models.PositiveIntegerField(null=True)
+        return None
 

@@ -17,5 +17,15 @@ class Market:
     price_percentage: int       #percentage of market that is interesed in price
 
     customer_base: int      #overall number of potential customers
-
     #TODO add sensitivity to attribute(marketing, rnd, price)(maybe)
+
+    def __init__(self):
+        #default values
+        self.customers = []
+        self.loan_limit = 0
+        self.interest_rate = 0
+        self.tax_rate = 0
+        self.marketing_percentage = 0
+        self.rnd_percentage = 0
+        self.price_percentage = 0 
+        self.customer_base = 0
