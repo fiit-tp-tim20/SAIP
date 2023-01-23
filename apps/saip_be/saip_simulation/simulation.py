@@ -116,12 +116,12 @@ class Simulation:
         #TODO: solve the fact that we have multiple upgrades and only one _upgrade_price in product class
         for company_upgrade_model in company_upgrades:
             upgrade_model = company_upgrade_model.upgrade
-            name = upgrade_model.name #char field
+            name = upgrade_model.name                       #char field
             new_product.upgrades[name] = {
-                "cost": upgrade_model.cost, #pos int
-                "effect": upgrade_model.effect,  #float
-                "status": company_upgrade_model.status, #char field ("s", "ns", "f") for ("started", "not started", "finished")
-                "progress": company_upgrade_model.progress #pos int
+                "cost": upgrade_model.cost,                 #pos int
+                "effect": upgrade_model.effect,             #float
+                "status": company_upgrade_model.status,     #char field ("s", "ns", "f") for ("started", "not started", "finished")
+                "progress": company_upgrade_model.progress  #pos int
             }
             pass
 
@@ -131,8 +131,8 @@ class Simulation:
         new_market = Market()
         
         #TODO finish market
-        new_market.customer_base = market_state_model.size #models.PositiveIntegerField(null=True)
-        demand = market_state_model.demand #models.PositiveIntegerField(null=True)
+        new_market.customer_base = market_state_model.size  #models.PositiveIntegerField(null=True)
+        demand = market_state_model.demand                  #models.PositiveIntegerField(null=True)
 
         #TODO: debate the restructuring of the market db model - customer_base basically = demand
 
