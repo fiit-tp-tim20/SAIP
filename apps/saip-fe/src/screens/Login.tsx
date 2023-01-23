@@ -1,14 +1,15 @@
 import React from 'react';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
-
+    const navigate = useNavigate();
     const [email, setEmail] = useState(0)
     const [password, setPassword] = useState(0)
 
     const login = async () => {
-        const response = await fetch('http://127.0.0.1:8000/login', {
+        const response = await fetch('http://127.0.0.1:8000/login/', {
             method: 'POST',
             body: JSON.stringify({
                 'username': email,
@@ -25,6 +26,7 @@ export default function Login() {
         e.preventDefault();
         //const {data, status} = useQuery('login', login)
         login()
+        //navigate("/dashboard");
     }
 
     
@@ -52,16 +54,7 @@ export default function Login() {
                         Zabudnuté heslo?
                     </a>
                 </div>
-                <p className="mt-8 text-xs font-light text-center text-gray-700">
-                    {" "}
-                    Nemáte vytvorený účet? Registrujte sa {" "}
-                    <a
-                        href="#"
-                        className="font-bold text-accent-700 hover:text-accent-500 hover:underline"
-                    >
-                        TU
-                    </a>
-                </p>
+                
             </form>
             
         </div>

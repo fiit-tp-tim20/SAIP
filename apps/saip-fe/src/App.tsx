@@ -28,9 +28,9 @@ function App() {
 							<Route path="/company" element={<Company />} />
 							<Route path="/marketing" element={<Marketing />} />
 							<Route path="/news" element={<News />} />
-							<Route path="/" element={<Navigate to="/plan" replace />} />
-							<Route path="*" element={<p>404</p>} />
-							<Route path="/loginForm" element={<Login />} />
+							<Route path="/" element={<Navigate to="/login" replace />} />
+							<Route path="*" element={<Login />} />
+							<Route path="/login" element={<Login />} />
 						</Routes>
 					</div>
 				</BrowserRouter>
