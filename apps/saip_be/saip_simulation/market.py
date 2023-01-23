@@ -2,11 +2,11 @@ from dataclasses import dataclass
 from typing import List, Dict
 from math import floor
 
-from product import Product, LastingProduct
-from company import Company, Factory
-from customer import Customer, HighBudgetCustomer, AverageBudgetCustomer, LowBudgetustomer, InovationsLover
-from marketing import OOH
-from config import MarketPreset
+from .product import Product, LastingProduct
+from .company import Company, Factory
+from .customer import Customer, HighBudgetCustomer, AverageBudgetCustomer, LowBudgetustomer, InovationsLover
+from .marketing import OOH
+from .config import MarketPreset
 
 
 
@@ -29,13 +29,13 @@ class Market:
 
     #TODO add sensitivity to attribute(marketing, rnd, price)(maybe)
     
-    def __init__(self, companies) -> None:
+    def __init__(self, companies, customer_count=None) -> None:
         self.companies = companies
         self.customer_base = []
         self.products = {}
         self.customer_distribution= {}
         
-        self.customer_count = MarketPreset.STARTING_CUSTOMER_COUNT
+        self.customer_count = MarketPreset.STARTING_CUSTOMER_COUNT if customer_count is None else customer_count
         self.rnd_percentage = MarketPreset.INTERESTED_IN_RND
         self.marketing_percentage = MarketPreset.INTERESTED_IN_MARKETING
         self.price_percentage = MarketPreset.INTERESTED_IN_PRICE

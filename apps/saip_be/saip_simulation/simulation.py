@@ -33,18 +33,20 @@ class Simulation:
             self.companies[company_model.name] = self.create_company(game_model=game_model, turn_model=turn_model, company_model=company_model)
 
         #setup the market attributes
-        market_state_model = models.MarketState.objects.get(turn=turn_model)
-        self.market = self.create_market(market_state_model=market_state_model)
+        try:
+            market_state_model = models.MarketState.objects.get(turn=turn_model)
+            self.market = Market(companies=self.companies, customer_count=market_state_model.size) #TODO: take care of the other atributes from the model
+        except models.MarketState.DoesNotExist:
+            self.market = Market(companies=self.companies.values()) #TODO: companies is aleady a dict, we dont have to generate it in market object
 
         print(self.companies)
-        print(self.market)
-
+        print(self.market)   
         
-
+        
     def create_company(self, game_model : models.Game, turn_model : models.Turn, company_model : models.Company) -> Company:
         #create new instance of company class, with default values
         #change the default values based on models
-        new_company = Company()
+        new_company = Company(brand_name=company_model.name)
 
         #filter models for companies_upgrades that belong to this game and this company
         try:
@@ -87,7 +89,7 @@ class Simulation:
             if marketing_model.tv > 0:
                 new_company["cable news"] = CableNews(marketing_model.tv)
             #setup product
-            new_company.product = self.create_product(production_model=company_state.production, company_upgrades=company_upgrades)
+            new_company.product = self.create_product(company=new_company, production_model=company_state.production, company_upgrades=company_upgrades)
         
         return new_company
     
@@ -102,16 +104,16 @@ class Simulation:
 
         new_factory.capacity = factory_model.capacity
         new_factory.base_energy_cost = factory_model.base_cost
-        new_factory.total_investment = factory_model.capital
+        new_factory.capital_investment = factory_model.capital
         
         #TODO: add all attributes we need for initialization
         return new_factory
 
-    def create_product(self, production_model : models.Production, company_upgrades: list[models.CompaniesUpgrades]) -> Product:
+    def create_product(self, company : Company, production_model : models.Production, company_upgrades: list[models.CompaniesUpgrades]) -> Product:
         #create Product object
         new_product = Product()
         new_product.set_price(production_model.sell_price)
-        volume = production_model.volume #TODO add volume to product class (or maybe the company, but product makes sense)
+        company.production_volume = production_model.volume #TODO add volume to product class (or maybe the company, but product makes sense)
 
         #TODO: solve the fact that we have multiple upgrades and only one _upgrade_price in product class
         for company_upgrade_model in company_upgrades:
@@ -127,15 +129,5 @@ class Simulation:
 
         return new_product
     
-    def create_market(self, market_state_model: models.MarketState) -> Market:
-        new_market = Market()
         
-        #TODO finish market
-        new_market.customer_base = market_state_model.size  #models.PositiveIntegerField(null=True)
-        demand = market_state_model.demand                  #models.PositiveIntegerField(null=True)
-
-        #TODO: debate the restructuring of the market db model - customer_base basically = demand
-
-        
-        return new_market
 
