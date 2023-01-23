@@ -1,5 +1,4 @@
 TURN_LENGTH = 3  # turn_length is 1 quarter, so 3 months
-FACTORY_MAINTENANCE_RATE = 0.05
 
 
 class MarketingModifiers:
@@ -9,7 +8,8 @@ class MarketingModifiers:
     OOH = 1.25
     BILLBOARD = 1
     CABLE_NEWS = 1
-    
+
+
 class MarketingInvestments:
     SOCIAL_MEDIA_MIN = 100
     SOCIAL_MEDIA_MAX = 5000
@@ -22,4 +22,30 @@ class MarketingInvestments:
     BILLBOARD_MAX = 2500
     CABLE_NEWS_MIN = 2000
     CABLE_NEWS_MAX = 3500
+
+
+class FactoryPreset:
+    BASE_RENT = 2000
+    BASE_ENERGY_COST = 1500
+
+    ENERGY_COST_PER_MACHINE = 100
+    STARTING_MACHINES = 10
     
+    STARTING_EMPLOYEES = 10
+    BASE_SALARY = 1500
+    
+    STARTING_INVESTMENT = 50_000
+    STARTING_CAPACITY = 100
+    
+    OPTIMAL_THRESHOLD = 0.9
+    OVER_THRESHOLD_MULTIPLIER = 1.015
+    
+    FACTORY_MAINTENANCE_RATE = 0.05
+
+
+class MarketPreset:
+    STARTING_CUSTOMER_COUNT = 1000
+    BASE_MARKETING_INVESTMENT = 10_000
+    INTERESTED_IN_RND = 0.15
+    INTERESTED_IN_MARKETING = 0.2
+    INTERESTED_IN_PRICE = 0.4
