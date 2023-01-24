@@ -3,7 +3,7 @@ from rest_framework.response import Response
 
 from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn
 
-from ..serializers import CompanySerializer, ProductionSerializer, SpendingsSerializer
+from ..serializers import CompanySerializer, ProductionSerializer, SpendingsSerializer, MaketingSerializer, FactorySerializer
 
 from .GameManagement import get_last_turn
 
@@ -83,6 +83,30 @@ class PostSpendingsView(APIView):
         production = prod_serializer.save()
 
         company_state.production = production
+
+
+        if company_state.factory:
+            company_state.factory.delete()
+
+        factory_serializer = FactorySerializer(data=request.data['factory'])
+        factory_serializer.is_valid(raise_exception=True)
+
+        factory = factory_serializer.save()
+
+        company_state.factory = factory
+
+
+        if company_state.marketing:
+            company_state.marketing.delete()
+
+        marketing_serializer = MaketingSerializer(data=request.data['marketing'])
+        marketing_serializer.is_valid(raise_exception=True)
+
+        marketing = marketing_serializer.save()
+
+        company_state.marketing = marketing
+
+
         company_state.save()
 
         return Response({"company": company.name, 'request': request.data,

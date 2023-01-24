@@ -115,3 +115,64 @@ class ProductionSerializer(serializers.ModelSerializer):
         production.save()
 
         return production
+
+class MaketingSerializer(serializers.ModelSerializer):
+
+    viral = serializers.IntegerField(required=True, min_value=0)
+    podcast = serializers.IntegerField(required=True, min_value=0)
+    ooh = serializers.IntegerField(required=True, min_value=0)
+    tv = serializers.IntegerField(required=True, min_value=0)
+    billboard = serializers.IntegerField(required=True, min_value=0)
+    class Meta:
+        model = Marketing
+        fields = ('viral', 'podcast', 'ooh', 'tv', 'bilboard')
+
+    def create(self, validated_data) -> Marketing:
+        viral = validated_data.get('viral')
+        podcast = validated_data.get('podcast')
+        ooh = validated_data.get('ooh')
+        tv = validated_data.get('tv')
+        bilboard = validated_data.get('bilboard')
+
+        marketing = Production.objects.create(
+            viral = viral,
+            podcast = podcast,
+            ooh = ooh,
+            tv = tv,
+            bilboard = bilboard
+        )
+        marketing.save()
+
+        return marketing
+
+class FactorySerializer(serializers.ModelSerializer):
+
+    prod_emp = serializers.IntegerField(required=True, min_value=0)
+    cont_emp = serializers.IntegerField(required=True, min_value=0)
+    aux_emp = serializers.IntegerField(required=True, min_value=0)
+    capacity = serializers.IntegerField(required=True, min_value=0)
+    base_cost = serializers.IntegerField(required=True, min_value=0)
+    capital = serializers.IntegerField(required=True, min_value=0)
+    class Meta:
+        model = Factory
+        fields = ('prod_emp', 'cont_emp', 'aux_emp', 'capacity', 'base_cost', 'capital')
+
+    def create(self, validated_data) -> Factory:
+        prod_emp = validated_data.get('prod_emp')
+        cont_emp = validated_data.get('cont_emp')
+        aux_emp = validated_data.get('aux_emp')
+        capacity = validated_data.get('capacity')
+        base_cost = validated_data.get('base_cost')
+        capital = validated_data.get('capital')
+
+        factory = Factory.objects.create(
+            prod_emp = prod_emp,
+            cont_emp = cont_emp,
+            aux_emp = aux_emp,
+            capacity = capacity,
+            base_cost = base_cost,
+            capital = capital
+        )
+        factory.save()
+
+        return factory
