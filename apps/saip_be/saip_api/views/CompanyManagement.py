@@ -109,6 +109,17 @@ class PostSpendingsView(APIView):
 
         company_state.save()
 
+
+        brakes = request.data['brakes']
+        frame = request.data['frame']
+        battery = request.data['battery']
+
+        brakes_cost = Upgrade.objects.get(name="Brakes").cost
+        frame_cost = Upgrade.objects.get(name="Frame").cost
+        battery_cost = Upgrade.objects.get(name="Battery").cost
+        print(brakes_cost)
+
+
         return Response({"company": company.name, 'request': request.data,
                          'cs': serializers.serialize('json', [company_state, ])}, status=201)
 

@@ -92,6 +92,10 @@ class SpendingsSerializer(serializers.Serializer):
     production = serializers.JSONField(required=True)
     factory = serializers.JSONField(required=True)
     r_d = serializers.IntegerField(required=True, min_value=0)
+    brakes = serializers.IntegerField(min_value=0)
+    frame = serializers.IntegerField(min_value=0)
+    battery = serializers.IntegerField(min_value=0)
+
 
 class ProductionSerializer(serializers.ModelSerializer):
 
