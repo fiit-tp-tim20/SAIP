@@ -125,21 +125,21 @@ class MaketingSerializer(serializers.ModelSerializer):
     billboard = serializers.IntegerField(required=True, min_value=0)
     class Meta:
         model = Marketing
-        fields = ('viral', 'podcast', 'ooh', 'tv', 'bilboard')
+        fields = ('viral', 'podcast', 'ooh', 'tv', 'billboard')
 
     def create(self, validated_data) -> Marketing:
         viral = validated_data.get('viral')
         podcast = validated_data.get('podcast')
         ooh = validated_data.get('ooh')
         tv = validated_data.get('tv')
-        bilboard = validated_data.get('bilboard')
+        billboard = validated_data.get('billboard')
 
-        marketing = Production.objects.create(
+        marketing = Marketing.objects.create(
             viral = viral,
             podcast = podcast,
             ooh = ooh,
             tv = tv,
-            bilboard = bilboard
+            billboard = billboard
         )
         marketing.save()
 
