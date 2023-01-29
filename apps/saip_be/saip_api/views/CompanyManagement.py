@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn
+from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn, CompaniesUpgrades
 
 from ..serializers import CompanySerializer, ProductionSerializer, SpendingsSerializer, MaketingSerializer, FactorySerializer
 
@@ -49,9 +49,14 @@ class CreateCompanyView(APIView):
 #     "prod_emp": 100,
 #     "cont_emp": 12,
 #     "aux_emp": 5,
-#     "capital": 10000
+#     "capital": 10000,
+#     "capacity": 234,
+#     "base_cost": 32
 #     },
-# "r_d": 2500
+# "r_d": 2500,
+# "brakes": 20,
+# "frame": 20,
+# "battery": 20
 # }
 
 class PostSpendingsView(APIView):
@@ -106,18 +111,39 @@ class PostSpendingsView(APIView):
 
         company_state.marketing = marketing
 
-
-        company_state.save()
-
-
         brakes = request.data['brakes']
         frame = request.data['frame']
         battery = request.data['battery']
 
-        brakes_cost = Upgrade.objects.get(name="Brakes").cost
-        frame_cost = Upgrade.objects.get(name="Frame").cost
-        battery_cost = Upgrade.objects.get(name="Battery").cost
-        print(brakes_cost)
+        if brakes > 0:
+            brakes_progress = CompaniesUpgrades.objects.get(company=company, upgrade = Upgrade.objects.get(name="Brakes"))
+            if brakes_progress.progress == 0:
+                brakes_progress.status = "s"
+            brakes_progress.progress = brakes_progress.progress + brakes
+            if brakes_progress.progress == Upgrade.objects.get(name="Brakes").cost:
+                brakes_progress.status = "f"
+            brakes_progress.save()
+
+        if frame > 0:
+            frame_progress = CompaniesUpgrades.objects.get(company=company, upgrade = Upgrade.objects.get(name="Frame"))
+            if frame_progress.progress == 0:
+                frame_progress.status = "s"
+            frame_progress.progress = frame_progress.progress + frame
+            if frame_progress.progress == Upgrade.objects.get(name="Frame").cost:
+                frame_progress.status = "f"
+            frame_progress.save()
+
+        if battery > 0:
+            battery_progress = CompaniesUpgrades.objects.get(company=company, upgrade = Upgrade.objects.get(name="Battery"))
+            if battery_progress.progress == 0:
+                battery_progress.status = "s"
+            battery_progress.progress = battery_progress.progress + battery
+            if battery_progress.progress == Upgrade.objects.get(name="Battery").cost:
+                battery_progress.status = "f"
+            battery_progress.save()
+
+        company_state.r_d = brakes + frame + battery
+        company_state.save()
 
 
         return Response({"company": company.name, 'request': request.data,
