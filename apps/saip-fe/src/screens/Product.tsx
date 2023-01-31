@@ -1,19 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
-import { getUpgrades } from "../mock/product";
+import { getUpgrades as mockGetUpgrades } from "../mock/product";
 import UpgradeInfo from "../components/product/UpgradeInfo";
 import Canvas from "../components/three/Canvas";
 import { useModal } from "../components/modal/useModal";
 import { Upgrade } from "../types/product";
 import ProductModal from "../components/product/ProductModal";
+import { getUpgrades } from "../api/Upgrades";
 
 function Product() {
 	const { t } = useTranslation();
 
 	const { Modal, setIsShowing, setElement } = useModal(<></>);
 
-	const { isLoading, data } = useQuery(["upgrades"], () => getUpgrades());
+	const { isLoading, data } = useQuery(["upgrades"], getUpgrades);
+
+	useEffect(() => {
+		console.warn("data", data);
+		console.warn("isLoading", isLoading);
+	}, [data, isLoading]);
 
 	const openModal = (feature: Upgrade) => {
 		setElement(
@@ -54,8 +60,9 @@ function Product() {
 											.map((feature) => (
 												<UpgradeInfo
 													key={feature.id}
-													name={t(`research.features.${feature.id}.title`) as string}
-													researchedAvatars={feature.players.map((player) => player.image)}
+													name={feature.name}
+													// name={t(`research.features.${feature.id}.title`) as string}
+													researchedAvatars={feature.players}
 													onClick={() => openModal(feature)}
 												/>
 											))}
@@ -78,12 +85,13 @@ function Product() {
 							<ul className="pt-1">
 								{data &&
 									data
-										.filter((feature) => feature.status === "pending")
+										.filter((feature) => feature.status === "started")
 										.map((feature) => (
 											<UpgradeInfo
 												key={feature.id}
-												name={t(`research.features.${feature.id}.title`) as string}
-												researchedAvatars={feature.players.map((player) => player.image)}
+												name={feature.name}
+												// name={t(`research.features.${feature.id}.title`) as string}
+												researchedAvatars={feature.players}
 												progressMax={feature.price}
 												progressValue={feature.progress}
 												onClick={() => openModal(feature)}
@@ -100,12 +108,13 @@ function Product() {
 							<ul className="pt-1">
 								{data &&
 									data
-										.filter((feature) => feature.status === "not_started")
+										.filter((feature) => feature.status === "not started")
 										.map((feature) => (
 											<UpgradeInfo
 												key={feature.id}
-												name={t(`research.features.${feature.id}.title`) as string}
-												researchedAvatars={feature.players.map((player) => player.image)}
+												name={feature.name}
+												// name={t(`research.features.${feature.id}.title`) as string}
+												researchedAvatars={feature.players}
 												onClick={() => openModal(feature)}
 											/>
 										))}
