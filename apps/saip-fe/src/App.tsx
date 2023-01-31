@@ -11,28 +11,35 @@ import Product from "./screens/Product";
 import Navbar from "./components/navbar/Navbar";
 import Company from "./screens/Company";
 import Marketing from "./screens/Marketing";
+import Login from "./screens/Login";
 
 const queryClient = new QueryClient();
 
 function App() {
+	const token = localStorage.getItem("token");
+
 	return (
 		<QueryClientProvider client={queryClient}>
-			<Suspense>
-				<BrowserRouter>
-					<Navbar />
-					<div className="mt-16">
-						<Routes>
-							<Route path="/dashboard" element={<Dashboard />} />
-							<Route path="/product" element={<Product />} />
-							<Route path="/company" element={<Company />} />
-							<Route path="/marketing" element={<Marketing />} />
-							<Route path="/news" element={<News />} />
-							<Route path="/" element={<Navigate to="/plan" replace />} />
-							<Route path="*" element={<p>404</p>} />
-						</Routes>
-					</div>
-				</BrowserRouter>
-			</Suspense>
+			{token ? (
+				<Suspense>
+					<BrowserRouter>
+						<Navbar />
+						<div className="mt-16">
+							<Routes>
+								<Route path="/dashboard" element={<Dashboard />} />
+								<Route path="/product" element={<Product />} />
+								<Route path="/company" element={<Company />} />
+								<Route path="/marketing" element={<Marketing />} />
+								<Route path="/news" element={<News />} />
+								<Route path="/" element={<Navigate to="/dashboard" replace />} />
+								<Route path="*" element={<Login />} />
+							</Routes>
+						</div>
+					</BrowserRouter>
+				</Suspense>
+			) : (
+				<Login />
+			)}
 			{/* <Devtools /> */}
 			<ReactQueryDevtools initialIsOpen={false} />
 		</QueryClientProvider>
