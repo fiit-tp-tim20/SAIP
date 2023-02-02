@@ -10,7 +10,7 @@ from .GameManagement import get_last_turn
 from django.core import serializers
 
 def create_upgrade_company_relation(game: Game, company: Company) -> None:
-    for upgrade in Upgrade.objects.filter(game=game):
+    for upgrade in Upgrade.objects.all():
         CompaniesUpgrades.objects.create(upgrade=upgrade, company=company, game=game)
 
 
@@ -53,7 +53,6 @@ class CreateCompanyView(APIView):
 #     "capacity": 234,
 #     "base_cost": 32
 #     },
-# "r_d": 2500,
 # "brakes": 20,
 # "frame": 20,
 # "battery": 20
@@ -76,11 +75,11 @@ class PostSpendingsView(APIView):
         except CompaniesState.DoesNotExist:
             return Response({"detail": "Company state for this turn does not exist"}, status=500)
 
+        if company_state.production or company_state.factory or company_state.marketing:
+            return Response({"detail": "Company state for this turn already exists"}, status=409)
+
         spendings_serializer = SpendingsSerializer(data=request.data)
         spendings_serializer.is_valid(raise_exception=True)
-
-        if company_state.production:
-            company_state.production.delete()
 
         prod_serializer = ProductionSerializer(data=request.data['production'])
         prod_serializer.is_valid(raise_exception=True)
@@ -90,9 +89,6 @@ class PostSpendingsView(APIView):
         company_state.production = production
 
 
-        if company_state.factory:
-            company_state.factory.delete()
-
         factory_serializer = FactorySerializer(data=request.data['factory'])
         factory_serializer.is_valid(raise_exception=True)
 
@@ -101,9 +97,6 @@ class PostSpendingsView(APIView):
         company_state.factory = factory
 
 
-        if company_state.marketing:
-            company_state.marketing.delete()
-
         marketing_serializer = MaketingSerializer(data=request.data['marketing'])
         marketing_serializer.is_valid(raise_exception=True)
 
@@ -111,16 +104,19 @@ class PostSpendingsView(APIView):
 
         company_state.marketing = marketing
 
-        brakes = request.data['brakes']
-        frame = request.data['frame']
-        battery = request.data['battery']
+        try:    brakes = request.data['brakes']
+        except KeyError: brakes = 0
+        try:    frame = request.data['frame']
+        except KeyError: frame = 0
+        try:    battery = request.data['battery']
+        except KeyError: battery = 0
 
         if brakes > 0:
             brakes_progress = CompaniesUpgrades.objects.get(company=company, upgrade = Upgrade.objects.get(name="Brakes"))
             if brakes_progress.progress == 0:
                 brakes_progress.status = "s"
             brakes_progress.progress = brakes_progress.progress + brakes
-            if brakes_progress.progress == Upgrade.objects.get(name="Brakes").cost:
+            if brakes_progress.progress >= Upgrade.objects.get(name="Brakes").cost:
                 brakes_progress.status = "f"
             brakes_progress.save()
 
@@ -129,7 +125,7 @@ class PostSpendingsView(APIView):
             if frame_progress.progress == 0:
                 frame_progress.status = "s"
             frame_progress.progress = frame_progress.progress + frame
-            if frame_progress.progress == Upgrade.objects.get(name="Frame").cost:
+            if frame_progress.progress >= Upgrade.objects.get(name="Frame").cost:
                 frame_progress.status = "f"
             frame_progress.save()
 
@@ -138,7 +134,7 @@ class PostSpendingsView(APIView):
             if battery_progress.progress == 0:
                 battery_progress.status = "s"
             battery_progress.progress = battery_progress.progress + battery
-            if battery_progress.progress == Upgrade.objects.get(name="Battery").cost:
+            if battery_progress.progress >= Upgrade.objects.get(name="Battery").cost:
                 battery_progress.status = "f"
             battery_progress.save()
 
@@ -146,6 +142,5 @@ class PostSpendingsView(APIView):
         company_state.save()
 
 
-        return Response({"company": company.name, 'request': request.data,
-                         'cs': serializers.serialize('json', [company_state, ])}, status=201)
+        return Response(status=201)
 

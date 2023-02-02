@@ -4,7 +4,7 @@ from rest_framework import serializers, validators
 
 from datetime import datetime, timezone
 
-from .models import Game, Company, Production, Marketing, Factory
+from .models import Game, Company, Production, Marketing, Factory, CompaniesState
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -91,9 +91,9 @@ class SpendingsSerializer(serializers.Serializer):
     marketing = serializers.JSONField(required=True)
     production = serializers.JSONField(required=True)
     factory = serializers.JSONField(required=True)
-    brakes = serializers.IntegerField(min_value=0, default=0)
-    frame = serializers.IntegerField(min_value=0, default=0)
-    battery = serializers.IntegerField(min_value=0, default=0)
+    brakes = serializers.IntegerField(min_value=0, required=False)
+    frame = serializers.IntegerField(min_value=0, required=False)
+    battery = serializers.IntegerField(min_value=0, required=False)
 
 
 class ProductionSerializer(serializers.ModelSerializer):

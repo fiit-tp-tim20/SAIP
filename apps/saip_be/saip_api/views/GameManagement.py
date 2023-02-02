@@ -20,9 +20,10 @@ parameters = {"GameParameters": {"budget_cap": 10000,
 
 
 def create_default_upgrades(game: Game) -> None:
-    for upgrade in parameters["Upgrades"]:
-        Upgrade.objects.create(game=game, name=upgrade["name"], cost=upgrade["cost"], effect=upgrade["effect"],
-                               camera_pos=upgrade["camera_pos"], camera_rot=upgrade["camera_rot"])
+    if not Upgrade.objects.all():
+        for upgrade in parameters["Upgrades"]:
+            Upgrade.objects.create(name=upgrade["name"], cost=upgrade["cost"], effect=upgrade["effect"],
+                                camera_pos=upgrade["camera_pos"], camera_rot=upgrade["camera_rot"]).save()
 
 
 def create_turn(number: int, game: Game) -> None:
@@ -30,10 +31,10 @@ def create_turn(number: int, game: Game) -> None:
     companies = Company.objects.filter(game=game)
 
     for company in companies:
-        CompaniesState.objects.create(turn=turn, company=company)
+        CompaniesState.objects.create(turn=turn, company=company).save()
 
 def get_last_turn(game: Game) -> Turn:
-    return Turn.objects.filter(game=game, end__isnull=True).order_by('-number').first()
+    return Turn.objects.get(game=game, end__isnull=True)
 
 class CreateGameView(PermissionRequiredMixin, APIView):
     permission_required = 'saip_api.add_game'
@@ -90,7 +91,7 @@ class EndTurnView(PermissionRequiredMixin, APIView):
         if game.admin != request.user:
             return Response({"detail": "User is not admin for this game"}, status=401)
 
-        last_turn = Turn.objects.filter(game=game, end=None).order_by("-number").first()
+        last_turn = get_last_turn(game)
 
         return Response({"Number": last_turn.number, "Start": last_turn.start, "Game": game.name}, status=200)
 
@@ -109,7 +110,7 @@ class EndTurnView(PermissionRequiredMixin, APIView):
         if game.admin != request.user:
             return Response({"detail": "User is not admin"}, status=403)
 
-        turn = Turn.objects.get(game=game, end=None)
+        turn = get_last_turn(game)
         turn.end = timezone.now()
         turn.save()
 
