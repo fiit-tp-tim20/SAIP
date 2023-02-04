@@ -39,10 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'saip_api',
     'rest_framework',
-    'knox'
+    'knox',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -50,6 +52,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+# frontend url
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
 ]
 
 ROOT_URLCONF = 'saip_be.urls'
@@ -131,6 +139,6 @@ REST_FRAMEWORK = {
 
 REST_KNOX = {"TOKEN_TTL": timedelta(days=365),
              "AUTO_REFRESH": True,
-             "TOKEN_LIMIT_PER_USER": 5,
+             "TOKEN_LIMIT_PER_USER": None,
              "MIN_REFRESH_INTERVAL": 60,
              "AUTH_HEADER_PREFIX": "Bearer"}

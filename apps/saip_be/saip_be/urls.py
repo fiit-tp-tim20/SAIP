@@ -18,6 +18,8 @@ from django.urls import path
 
 from saip_api.views.UserManagement import RegisterView, LoginView, TestView, ChangePasswordView
 from saip_api.views.Upgrade import UpgradeView
+from saip_api.views.GameManagement import CreateGameView, GetRunningGamesView, EndTurnView
+from saip_api.views.CompanyManagement import CreateCompanyView
 from knox.views import LogoutView
 
 
@@ -29,4 +31,8 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name="login"),
     path('logout/', LogoutView.as_view(), name='knox_logout'),
     path('upgrades/', UpgradeView.as_view(), name='return_upgrades'),
+    path('create_game/', CreateGameView.as_view(), name='create_game'),
+    path('list_games/', GetRunningGamesView.as_view(), name='list_games'),
+    path('create_company/', CreateCompanyView.as_view(), name='create_company'),
+    path('end_turn/', EndTurnView.as_view(), name='end_turn'),
 ]
