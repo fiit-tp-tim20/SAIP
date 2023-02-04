@@ -3,9 +3,12 @@ import React, { useEffect, useState } from "react";
 function Profile() {
 	const [open, setOpen] = useState(false);
 
-	useEffect(() => {
-		console.warn(open);
-	}, [open]);
+	//! just for testing, find a better place to do this
+	const logout = () => {
+		localStorage.removeItem("token");
+		localStorage.removeItem("expiryDate");
+		window.location.reload();
+	};
 
 	return (
 		<>
@@ -14,29 +17,22 @@ function Profile() {
 				type="button"
 				onClick={() => setOpen(!open)}
 			>
+				{/* TODO replace with real avatar */}
 				<img className="rounded-full" src="https://avatars.dicebear.com/api/miniavs/123.png" alt="user photo" />
 			</button>
 
 			{open && (
-				<div className="absolute right-0 w-48 py-2 mt-2 bg-white rounded-md shadow-xl dark:bg-gray-800">
-					<a
-						href="#"
-						className="block px-4 py-2 text-sm text-gray-700 transition-colors duration-200 transform rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
-					>
-						Profile
-					</a>
-					<a
-						href="#"
-						className="block px-4 py-2 text-sm text-gray-700 transition-colors duration-200 transform rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
-					>
-						Settings
-					</a>
-					<a
-						href="#"
-						className="block px-4 py-2 text-sm text-gray-700 transition-colors duration-200 transform rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
-					>
-						Logout
-					</a>
+				<div className="absolute right-1 py-2 mt-2 bg-white rounded-xl shadow-xl border-accent-700 border-2">
+					<div className="flex flex-col justify-between px-4 py-2">
+						{/* TODO replace with real name */}
+						<h6 className="py-2">Company Name</h6>
+						<button
+							className="bg-accent-50 transition-all ease-in-out duration-300 rounded-lg min-w-[128px] flex justify-center align-middle bg-transparent py-2 px-3 hover:text-accent-700 hover:bg-accent-300"
+							onClick={logout}
+						>
+							Logout
+						</button>
+					</div>
 				</div>
 			)}
 		</>
