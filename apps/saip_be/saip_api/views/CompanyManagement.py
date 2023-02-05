@@ -33,31 +33,6 @@ class CreateCompanyView(APIView):
         return Response({"companyID": company.id}, status=201)
 
 
-# {"marketing": {
-#     "viral": 1000,
-#     "podcast": 0,
-#     "ooh": 12,
-#     "tv": 0,
-#     "billboard": 69
-#     },
-# "production": {
-#     "man_cost": 100,
-#     "sell_price": 152,
-#     "volume": 99901
-#     },
-# "factory": {
-#     "prod_emp": 100,
-#     "cont_emp": 12,
-#     "aux_emp": 5,
-#     "capital": 10000,
-#     "capacity": 234,
-#     "base_cost": 32
-#     },
-# "brakes": 20,
-# "frame": 20,
-# "battery": 20
-# }
-
 class PostSpendingsView(APIView):
 
     def post(self, request) -> Response:
