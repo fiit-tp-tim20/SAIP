@@ -51,7 +51,7 @@ class PostSpendingsView(APIView):
             return Response({"detail": "Company state for this turn does not exist"}, status=500)
 
         if company_state.production or company_state.factory or company_state.marketing:
-            return Response({"detail": "Company state for this turn already exists"}, status=409)
+            return Response({"detail": "Decisions were posted before"}, status=409)
 
         spendings_serializer = SpendingsSerializer(data=request.data)
         spendings_serializer.is_valid(raise_exception=True)
