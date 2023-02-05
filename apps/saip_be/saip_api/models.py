@@ -79,7 +79,8 @@ class Marketing(models.Model):
 
 class Upgrade(models.Model):
     cost = models.PositiveIntegerField(null=True)
-    effect = models.FloatField(null=True)
+    sales_effect = models.FloatField(null=True)
+    man_cost_effect = models.FloatField(null=True)
     name = models.CharField(max_length=100, null=True)
     camera_pos = models.CharField(max_length=100, null=True)
     camera_rot = models.CharField(max_length=100, null=True)
@@ -160,15 +161,6 @@ class MarketState(models.Model):
 
     class Meta:
         db_table = 'Market States'
-
-
-class Parameter(models.Model):
-    turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
-    market_size_diff = models.IntegerField(default=0)
-    run_cost_multiplier = models.FloatField(default=1)
-
-    class Meta:
-        db_table = 'Parameters'
 
 
 class EmailGroup(models.Model):
