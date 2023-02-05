@@ -94,6 +94,7 @@ class SpendingsSerializer(serializers.Serializer):
     brakes = serializers.IntegerField(min_value=0, required=False)
     frame = serializers.IntegerField(min_value=0, required=False)
     battery = serializers.IntegerField(min_value=0, required=False)
+    display = serializers.IntegerField(min_value=0, required=False)
 
 
 class ProductionSerializer(serializers.ModelSerializer):

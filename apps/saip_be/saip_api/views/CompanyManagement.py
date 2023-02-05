@@ -85,6 +85,8 @@ class PostSpendingsView(APIView):
         except KeyError: frame = 0
         try:    battery = request.data['battery']
         except KeyError: battery = 0
+        try:    display = request.data['display']
+        except KeyError: display = 0
 
         if brakes > 0:
             brakes_progress = CompaniesUpgrades.objects.get(company=company, upgrade = Upgrade.objects.get(name="Brakes"))
@@ -113,7 +115,16 @@ class PostSpendingsView(APIView):
                 battery_progress.status = "f"
             battery_progress.save()
 
-        company_state.r_d = brakes + frame + battery
+        if display > 0:
+            display_progress = CompaniesUpgrades.objects.get(company=company, upgrade = Upgrade.objects.get(name="Display"))
+            if display_progress.progress == 0:
+                display_progress.status = "s"
+            display_progress.progress = display_progress.progress + display
+            if display_progress.progress >= Upgrade.objects.get(name="Display").cost:
+                display_progress.status = "f"
+            display_progress.save()
+
+        company_state.r_d = brakes + frame + battery + display
         company_state.save()
 
 
