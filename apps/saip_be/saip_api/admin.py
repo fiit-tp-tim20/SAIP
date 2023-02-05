@@ -6,11 +6,13 @@ from .models import Turn, Company, Production, Marketing, Factory, CompaniesStat
 @admin.register(Turn)
 class TurnsAdmin(admin.ModelAdmin):
     list_display = ('number', 'game', 'start', 'end')
+    list_filter = ('game',)
 
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ('name', 'game', 'user')
+    list_filter = ('game',)
 
 
 @admin.register(Production)
@@ -32,6 +34,7 @@ class FactoryAdmin(admin.ModelAdmin):
 class CompaniesStateAdmin(admin.ModelAdmin):
     list_display = ('company', 'turn', 'production', 'marketing', 'factory', 'balance', 'stock_price', 'r_d',
                     'inventory')
+    list_filter = ('turn', 'company__game')
 
 
 @admin.register(MarketState)
@@ -52,6 +55,7 @@ class EmailGroupAdmin(admin.ModelAdmin):
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
     list_display = ('name', 'admin', 'start', 'end', 'turns')
+    list_filter = ('admin',)
 
 
 @admin.register(GameParameters)
@@ -67,3 +71,4 @@ class UpgradeAdmin(admin.ModelAdmin):
 @admin.register(CompaniesUpgrades)
 class CompaniesUpgradeAdmin(admin.ModelAdmin):
     list_display = ('company', 'game', 'upgrade', 'status', 'progress')
+    list_filter = ('company__game', 'company', 'upgrade')
