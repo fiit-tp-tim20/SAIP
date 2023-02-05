@@ -98,20 +98,17 @@ class SpendingsSerializer(serializers.Serializer):
 
 class ProductionSerializer(serializers.ModelSerializer):
 
-    man_cost = serializers.FloatField(required=True, min_value=0)
     sell_price = serializers.FloatField(required=True, min_value=0)
     volume = serializers.IntegerField(required=True, min_value=0)
     class Meta:
         model = Production
-        fields = ('man_cost', 'sell_price', 'volume')
+        fields = ('sell_price', 'volume')
 
     def create(self, validated_data) -> Production:
-        man_cost = validated_data.get('man_cost')
         sell_price = validated_data.get('sell_price')
         volume = validated_data.get('volume')
 
         production = Production.objects.create(
-            man_cost = man_cost,
             sell_price = sell_price,
             volume = volume
         )
@@ -153,27 +150,21 @@ class FactorySerializer(serializers.ModelSerializer):
     prod_emp = serializers.IntegerField(required=True, min_value=0)
     cont_emp = serializers.IntegerField(required=True, min_value=0)
     aux_emp = serializers.IntegerField(required=True, min_value=0)
-    capacity = serializers.IntegerField(required=True, min_value=0)
-    base_cost = serializers.IntegerField(required=True, min_value=0)
     capital = serializers.IntegerField(required=True, min_value=0)
     class Meta:
         model = Factory
-        fields = ('prod_emp', 'cont_emp', 'aux_emp', 'capacity', 'base_cost', 'capital')
+        fields = ('prod_emp', 'cont_emp', 'aux_emp', 'capital')
 
     def create(self, validated_data) -> Factory:
         prod_emp = validated_data.get('prod_emp')
         cont_emp = validated_data.get('cont_emp')
         aux_emp = validated_data.get('aux_emp')
-        capacity = validated_data.get('capacity')
-        base_cost = validated_data.get('base_cost')
         capital = validated_data.get('capital')
 
         factory = Factory.objects.create(
             prod_emp = prod_emp,
             cont_emp = cont_emp,
             aux_emp = aux_emp,
-            capacity = capacity,
-            base_cost = base_cost,
             capital = capital
         )
         factory.save()

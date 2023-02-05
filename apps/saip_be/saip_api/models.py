@@ -55,7 +55,7 @@ class Company(models.Model):
 
 
 class Production(models.Model):
-    man_cost = models.FloatField(null=True)
+    man_cost = models.FloatField(null=True, blank=True)
     sell_price = models.FloatField(null=True)
     volume = models.PositiveIntegerField(null=True)
 
@@ -119,8 +119,8 @@ class Factory(models.Model):
     prod_emp = models.PositiveIntegerField(null=True)
     cont_emp = models.PositiveIntegerField(null=True)
     aux_emp = models.PositiveIntegerField(null=True)
-    capacity = models.PositiveIntegerField(null=True)
-    base_cost = models.PositiveIntegerField(null=True)
+    capacity = models.PositiveIntegerField(null=True, blank=True)
+    base_cost = models.PositiveIntegerField(null=True, blank=True)
     capital = models.PositiveIntegerField(null=True)
 
     # def __str__(self):
