@@ -19,38 +19,39 @@ class Simulation:
 
         self.companies = {}     #TODO: check if this is the correct way of initializing the attribute
         self.market = None
+        self.game_model = game_model
+        self.turn_model = turn_model
         self.current_turn = turn_model.number
         self.turn_limit = game_model.turns
-        self.setup_simulation(game_model=game_model, turn_model=turn_model)
+        self.setup_simulation()
 
     
-    def setup_simulation(self, game_model : models.Game, turn_model : models.Turn):
+    def setup_simulation(self):
         #Filter companies that are in this game
-        companies_models = models.Company.objects.filter(game=game_model)
+        companies_models = models.Company.objects.filter(game=self.game_model)
         #iterate over the companies and create all relevant classes
         for company_model in companies_models:
             #add the company to the companies dictionary
-            self.companies[company_model.name] = self.create_company(game_model=game_model, turn_model=turn_model, company_model=company_model)
+            self.companies[company_model.name] = self.create_company(game_model=self.game_model, turn_model=self.turn_model, company_model=company_model)
 
         #setup the market attributes
         try:
-            market_state_model = models.MarketState.objects.get(turn=turn_model)
+            market_state_model = models.MarketState.objects.get(turn=self.turn_model)
             self.market = Market(companies=self.companies, customer_count=market_state_model.size) #TODO: take care of the other atributes from the model
         except models.MarketState.DoesNotExist:
             self.market = Market(companies=self.companies.values()) #TODO: companies is aleady a dict, we dont have to generate it in market object
 
         print(self.companies)
         print(self.market)   
-        
-        
-    def create_company(self, game_model : models.Game, turn_model : models.Turn, company_model : models.Company) -> Company:
+             
+    def create_company(self, company_model : models.Company) -> Company:
         #create new instance of company class, with default values
         #change the default values based on models
         new_company = Company(brand_name=company_model.name)
 
         #filter models for companies_upgrades that belong to this game and this company
         try:
-            company_upgrades = models.CompaniesUpgrades.objects.filter(game=game_model, company=company_model)
+            company_upgrades = models.CompaniesUpgrades.objects.filter(game=self.game_model, company=company_model)
         except models.CompaniesUpgrades.DoesNotExist:
             company_upgrades = []
             #TODO: add error message maybe
@@ -59,7 +60,7 @@ class Simulation:
         #these are the decisisions made by the company in the given turn
         #and all the relevant models are associated with this class (except for upgrades)
         try:
-            company_state = models.CompaniesState.objects.get(company=company_model, turn=turn_model)
+            company_state = models.CompaniesState.objects.get(company=company_model, turn=self.turn_model)
         except models.CompaniesState.DoesNotExist:
             company_state = None
             #TODO: add error message maybe
@@ -128,6 +129,26 @@ class Simulation:
             pass
 
         return new_product
+
+    def write_simulation_results(self):
+        #load the company models
+        companies_models = models.Company.objects.filter(game=self.game_model)
+
+        #load the company states
+        company_states = {}
+        for company_model in companies_models:
+            try:
+                company_state = models.CompaniesState.objects.get(company=company_model, turn=self.turn_model)
+                company_states[company_model.name] = company_state
+            except models.CompaniesState.DoesNotExist:
+                #company state does not exist TODO: maybe add error message later if required
+                pass
     
-        
+        #load the market state model
+        try:
+            market_state_model = models.MarketState.objects.get(turn=self.turn_model)
+        except models.MarketState.DoesNotExist:
+            market_state_model = None
+
+        pass
 
