@@ -1,4 +1,5 @@
 TURN_LENGTH = 3  # turn_length is 1 quarter, so 3 months
+YEAR_LENGTH = 12  # months
 
 
 class MarketingModifiers:
@@ -40,7 +41,7 @@ class FactoryPreset:
     OPTIMAL_THRESHOLD = 0.9
     OVER_THRESHOLD_MULTIPLIER = 1.015
 
-    FACTORY_MAINTENANCE_RATE = 0.05
+    FACTORY_MAINTENANCE_RATE = 0.05 * TURN_LENGTH / YEAR_LENGTH  # yearly maintenance rate * months in turn / months in year 
 
     BASE_MATERIAL_COST_PER_UNIT = 250
 
