@@ -20,7 +20,12 @@ class CompanyInfo(APIView):
         if not request.user or not request.user.is_authenticated:
             return Response({"detail": "User is not authenticated"}, status=401)
 
-        company = Company.objects.get(user=request.user)
+        try:
+            company = Company.objects.get(user=request.user)
+        except Company.DoesNotExist:
+            return Response({"detail": "Company for this user not found"}, status=404)
+
+
         response = {'company': list()}
 
         response['company'].append({
