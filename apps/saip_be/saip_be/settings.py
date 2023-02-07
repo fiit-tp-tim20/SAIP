@@ -25,6 +25,12 @@ SECRET_KEY = 'django-insecure-6*fhta)-nmkd0_+^$1o*+1=5ezem4w)yd(2jqiv8j=a7onp-_j
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# SSL
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
@@ -41,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'corsheaders',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
