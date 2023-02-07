@@ -122,7 +122,7 @@ class EndTurnView(PermissionRequiredMixin, APIView):
         turn = get_last_turn(game)
         turn.end = timezone.now()
         #TODO: remove comment
-        #turn.save()
+        turn.save()
 
         create_turn(turn.number + 1, game)
 

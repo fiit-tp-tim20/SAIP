@@ -4,7 +4,7 @@ from .company import Company
 from .market import Market
 from .company import Factory
 from .marketing import Billboard, SocialMedia, CableNews, Podcast, OOH
-from .product import Product
+from .product import Product, LastingProduct
 
 import saip_api.models as models
 
@@ -32,7 +32,7 @@ class Simulation:
         #iterate over the companies and create all relevant classes
         for company_model in companies_models:
             #add the company to the companies dictionary
-            self.companies[company_model.name] = self.create_company(game_model=self.game_model, turn_model=self.turn_model, company_model=company_model)
+            self.companies[company_model.name] = self.create_company(company_model=company_model)
 
         #setup the market attributes
         try:
@@ -41,8 +41,9 @@ class Simulation:
         except models.MarketState.DoesNotExist:
             self.market = Market(companies=self.companies.values()) #TODO: companies is aleady a dict, we dont have to generate it in market object
 
-        print(self.companies)
-        print(self.market)   
+        #print(self.companies)
+        #print(self.market)
+        print("ALL GOOD")
              
     def create_company(self, company_model : models.Company) -> Company:
         #create new instance of company class, with default values
@@ -71,24 +72,31 @@ class Simulation:
             new_company.remaining_budget = company_state.balance    #float
             new_company.stock_price = company_state.stock_price     #float
             new_company.storage_count = company_state.inventory     #pos int
-            r_d = company_state.r_d                                 #pos big int    #TODO: add rnd to class obejct
+            #r_d = company_state.r_d                                 #pos big int    #TODO: add rnd to class obejct
 
             #create objects from models
             #setup factory object
             factory_model = company_state.factory
-            new_company.factory = self.create_factory(factory_model=factory_model)
+            if factory_model is not None:
+                new_company.factory = self.create_factory(factory_model=factory_model)
+            else:
+                print(f"FACTORY WAS NOT CREATED FOR COMPANY {company_model.name}")
+                new_company.factory = None
             #setup marketing objects in dict
             marketing_model = company_state.marketing
-            if marketing_model.billboard > 0:
-                new_company["billboard"] = Billboard(marketing_model.billboard)
-            if marketing_model.ooh > 0:
-                new_company["ooh"] = OOH(marketing_model.ooh)
-            if marketing_model.podcast > 0:
-                new_company["podcast"] = Podcast(marketing_model.podcast)
-            if marketing_model.viral > 0:
-                new_company["social media"] = SocialMedia(marketing_model.viral)
-            if marketing_model.tv > 0:
-                new_company["cable news"] = CableNews(marketing_model.tv)
+            if marketing_model is not None:
+                if marketing_model.billboard > 0:
+                    new_company.marketing["billboard"] = Billboard(marketing_model.billboard)
+                if marketing_model.ooh > 0:
+                    new_company.marketing["ooh"] = OOH(marketing_model.ooh)
+                if marketing_model.podcast > 0:
+                    new_company.marketing["podcast"] = Podcast(marketing_model.podcast)
+                if marketing_model.viral > 0:
+                    new_company.marketing["social media"] = SocialMedia(marketing_model.viral)
+                if marketing_model.tv > 0:
+                    new_company.marketing["cable news"] = CableNews(marketing_model.tv)
+            else:
+                pass
             #setup product
             new_company.product = self.create_product(company=new_company, production_model=company_state.production, company_upgrades=company_upgrades)
         
@@ -112,17 +120,22 @@ class Simulation:
 
     def create_product(self, company : Company, production_model : models.Production, company_upgrades: list[models.CompaniesUpgrades]) -> Product:
         #create Product object
-        new_product = Product()
-        new_product.set_price(production_model.sell_price)
-        company.production_volume = production_model.volume #TODO add volume to product class (or maybe the company, but product makes sense)
+        new_product = LastingProduct()  #TODO: add option to create the other kind of product (?)
+        if production_model is not None:
+            new_product.set_price(production_model.sell_price)
+            company.production_volume = production_model.volume #TODO add volume to product class (or maybe the company, but product makes sense)
+        else:
+            company.production_volume = 10 #TODO: remove this - temp fix
+            print(f"PRODUCTION MODEL WAS NONE FOR COMPANNY {company.brand}")
 
-        #TODO: solve the fact that we have multiple upgrades and only one _upgrade_price in product class
+        new_product.upgrades = {}   #TODO: maybe this should be in the object constructor
         for company_upgrade_model in company_upgrades:
             upgrade_model = company_upgrade_model.upgrade
             name = upgrade_model.name                       #char field
             new_product.upgrades[name] = {
                 "cost": upgrade_model.cost,                 #pos int
-                "effect": upgrade_model.effect,             #float
+                "sales_effect": upgrade_model.sales_effect,             #float
+                "man_cost_effect": upgrade_model.man_cost_effect,             #float
                 "status": company_upgrade_model.status,     #char field ("s", "ns", "f") for ("started", "not started", "finished")
                 "progress": company_upgrade_model.progress  #pos int
             }
