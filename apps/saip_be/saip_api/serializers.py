@@ -112,8 +112,6 @@ class ProductionSerializer(serializers.ModelSerializer):
         instance.sell_price = sell_price
         instance.volume = volume
 
-        instance.save()
-
         return instance
 
 class MaketingSerializer(serializers.ModelSerializer):
@@ -141,8 +139,6 @@ class MaketingSerializer(serializers.ModelSerializer):
         instance.tv = tv
         instance.billboard = billboard
 
-        instance.save()
-
         return instance
 
 class FactorySerializer(serializers.ModelSerializer):
@@ -166,7 +162,5 @@ class FactorySerializer(serializers.ModelSerializer):
         instance.cont_emp = cont_emp
         instance.aux_emp = aux_emp
         instance.capital = capital
-    
-        instance.save()
 
         return instance
