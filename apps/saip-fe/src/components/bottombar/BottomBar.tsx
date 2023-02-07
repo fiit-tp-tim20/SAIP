@@ -42,7 +42,7 @@ export default function BottomBar() {
 						<button
 							onClick={() => navigate("/marketing")}
 							className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 rounded-lg disabled:bg-accent-100 disabled:cursor-not-allowed"
-							disabled={totalSpent > data.budget_cap}
+							disabled={totalSpent > data.budget_cap || !getCheckedCompany() || !getCheckedMarketing()}
 						>
 							Ukončiť kolo
 						</button>
