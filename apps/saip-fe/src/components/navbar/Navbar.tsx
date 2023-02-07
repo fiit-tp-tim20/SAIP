@@ -7,7 +7,7 @@ function Navbar() {
 	const { t } = useTranslation();
 	const location = useLocation();
 
-	const tabs = ["dashboard", "product", "company", "marketing", "news"];
+	const tabs = ["dashboard", "product", "company", "marketing"];
 
 	//! just for testing, find a better place to do this
 	const logout = () => {

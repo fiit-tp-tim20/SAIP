@@ -30,9 +30,10 @@ function App() {
 								<Route path="/product" element={<Product />} />
 								<Route path="/company" element={<Company />} />
 								<Route path="/marketing" element={<Marketing />} />
-								<Route path="/news" element={<News />} />
+								{/* <Route path="/news" element={<News />} /> */}
 								<Route path="/" element={<Navigate to="/dashboard" replace />} />
-								<Route path="*" element={<Login />} />
+								{/* TODO create 404 page */}
+								<Route path="*" element={<p>404</p>} />
 							</Routes>
 						</div>
 					</BrowserRouter>
