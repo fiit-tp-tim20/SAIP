@@ -40,7 +40,7 @@ export default function BottomBar() {
 							Marketing: {getCheckedMarketing() ? "✅" : "❌"}
 						</button>
 						<button
-							onClick={() => navigate("/marketing")}
+							onClick={() => alert("Ukončenie kola!")}
 							className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 rounded-lg disabled:bg-accent-100 disabled:cursor-not-allowed"
 							disabled={totalSpent > data.budget_cap || !getCheckedCompany() || !getCheckedMarketing()}
 						>
