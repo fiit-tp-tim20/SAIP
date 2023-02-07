@@ -468,6 +468,7 @@ $RECYCLE.BIN/
 SAIP.code-workspace
 
 /apps/saip_be/saip_api/migrations/
+/apps/saip_be/notebooks/
 
 .vscode.settings.json
 
