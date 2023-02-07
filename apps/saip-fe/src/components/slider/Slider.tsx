@@ -37,6 +37,7 @@ function Slider(props: SliderProps) {
 					checked ? "opacity-50 cursor-not-allowed" : ""
 				}`}
 				disabled={checked}
+				placeholder="0"
 			/>
 			<div className="flex items-center justify-between mt-2">
 				<input
@@ -49,8 +50,8 @@ function Slider(props: SliderProps) {
 					className={`block w-1/2 mx-auto appearance-none rounded-lg p-2 border border-gray-300 ${
 						checked ? "opacity-50 cursor-not-allowed" : ""
 					}`}
-					style={{ WebkitAppearance: "none" }}
 					disabled={checked}
+					placeholder="0"
 				/>
 				<button
 					className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 mx-2 rounded-lg"
