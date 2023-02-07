@@ -68,7 +68,7 @@ function Marketing() {
 						<div>
 							<Slider
 								min={0}
-								max={1000}
+								max={10000}
 								value={viral}
 								setValue={setViral}
 								checked={viralChecked}

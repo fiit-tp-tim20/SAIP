@@ -23,11 +23,13 @@ interface MarketingState {
 	setPodcast: (value: number) => void;
 	setPodcastChecked: (value: boolean) => void;
 	reset: () => void;
+	getSum: () => number;
+	getChecked: () => boolean;
 }
 
 const useMarketingStore = create<MarketingState>()(
 	persist(
-		(set) => ({
+		(set, get) => ({
 			viral: 0,
 			viralChecked: false,
 			ooh: 0,
@@ -61,6 +63,13 @@ const useMarketingStore = create<MarketingState>()(
 					podcast: 0,
 					podcastChecked: false,
 				})),
+			getSum: () => get().viral + get().ooh + get().billboard + get().tv + get().podcast,
+			getChecked: () =>
+				get().viralChecked &&
+				get().oohChecked &&
+				get().billboardChecked &&
+				get().tvChecked &&
+				get().podcastChecked,
 		}),
 		{
 			name: "marketing-storage",

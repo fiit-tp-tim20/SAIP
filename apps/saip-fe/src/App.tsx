@@ -26,7 +26,7 @@ function App() {
 				<Suspense>
 					<BrowserRouter>
 						<Navbar />
-						<div className="mt-16">
+						<div className="my-16">
 							<Routes>
 								<Route path="/dashboard" element={<Dashboard />} />
 								<Route path="/product" element={<Product />} />
@@ -34,12 +34,11 @@ function App() {
 								<Route path="/marketing" element={<Marketing />} />
 								{/* <Route path="/news" element={<News />} /> */}
 								<Route path="/" element={<Navigate to="/dashboard" replace />} />
-								{/* TODO create 404 page */}
 								<Route path="*" element={<NotFound />} />
 							</Routes>
 						</div>
+						<BottomBar />
 					</BrowserRouter>
-					<BottomBar />
 				</Suspense>
 			) : (
 				<Login />
