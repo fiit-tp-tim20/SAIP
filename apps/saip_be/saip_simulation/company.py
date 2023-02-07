@@ -3,7 +3,9 @@ from pathlib import Path
 
 file = Path(__file__).resolve()
 parent, root = file.parent, file.parents[1]
-sys.path.append(str(root))
+
+if str(root) not in sys.path:
+    sys.path.append(str(root))
 
 # Additionally remove the current file's directory from sys.path
 try:
@@ -14,10 +16,11 @@ except ValueError:  # Already removed
 from dataclasses import dataclass
 from typing import List
 
-from .product import Product, DailyProduct, LastingProduct
-from .marketing import *
-from .config import TURN_LENGTH, FactoryPreset
-from .marketing import MarketingType
+from saip_simulation.product import Product, DailyProduct, LastingProduct
+from saip_simulation.marketing import *
+from saip_simulation.config import TURN_LENGTH, FactoryPreset
+from saip_simulation.marketing import MarketingType
+
 from typing import Dict
 from math import ceil, floor
 
@@ -178,21 +181,21 @@ class Company:
             total_investment += marketing_type.yield_value()
         return total_investment
 
-    def produce_products(self, production_this_turn: int):
-        if production_this_turn > self.factory.capacity:
+    def produce_products(self):
+        if self.production_volume > self.factory.capacity:
             raise ProductionOVerCapacityError(
-                production_this_turn, self.factory.capacity
+                self.production_volume, self.factory.capacity
             )
 
-        ppu = self.factory.calculate_price_per_unit(production_this_turn)
-        total_price = production_this_turn * ppu
+        ppu = self.factory.calculate_price_per_unit(self.production_volume)
+        total_price = self.production_volume * ppu
 
-        self.inventory += production_this_turn
+        self.inventory += self.production_volume
         self.costs_per_turn = total_price
 
 
 if __name__ == "__main__":
-    com = Company("blank", None, 0, 0, 0, 0, 10000, 10000, Factory(), 0, {})
+    com = Company("blank", None, 0, 0, 0, 0, 0, 10000, 10000, Factory(), 0, {})
 
     unitsA = int(FactoryPreset.STARTING_CAPACITY * 0.81)
     unitsB = int(FactoryPreset.STARTING_CAPACITY * 0.9)
@@ -207,11 +210,16 @@ if __name__ == "__main__":
     )
 
     print("\nTESTING PRODUCTION")
-    com.produce_products(unitsA)
+    com.production_volume = unitsA
+    com.produce_products()
     print(com.costs_per_turn, com.factory.total_upkeep())
-    com.produce_products(unitsB)
+
+    com.production_volume = unitsB
+    com.produce_products()
     print(com.costs_per_turn, com.factory.total_upkeep())
-    com.produce_products(unitsC)
+
+    com.production_volume = unitsC
+    com.produce_products()
     print(com.costs_per_turn, com.factory.total_upkeep())
 
     print("\nTESTING INVESTMENT")
@@ -228,9 +236,14 @@ if __name__ == "__main__":
         f"A:{unitsA} ppu:{ppuA:.2f} \nB:{unitsB} ppu:{ppuB:.2f} \nC:{unitsC} ppu:{ppuC:.2f}"
     )
 
-    com.produce_products(unitsA)
+    com.production_volume = unitsA
+    com.produce_products()
     print(com.costs_per_turn, com.factory.total_upkeep())
-    com.produce_products(unitsB)
+
+    com.production_volume = unitsB
+    com.produce_products()
     print(com.costs_per_turn, com.factory.total_upkeep())
-    com.produce_products(unitsC)
+
+    com.production_volume = unitsC
+    com.produce_products()
     print(com.costs_per_turn, com.factory.total_upkeep())

@@ -3,7 +3,9 @@ from pathlib import Path
 
 file = Path(__file__).resolve()
 parent, root = file.parent, file.parents[1]
-sys.path.append(str(root))
+
+if str(root) not in sys.path:
+    sys.path.append(str(root))
 
 # Additionally remove the current file's directory from sys.path
 try:
