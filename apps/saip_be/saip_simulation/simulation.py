@@ -25,7 +25,6 @@ class Simulation:
         self.turn_limit = game_model.turns
         self.setup_simulation()
 
-    
     def setup_simulation(self):
         #Filter companies that are in this game
         companies_models = models.Company.objects.filter(game=self.game_model)
@@ -40,10 +39,7 @@ class Simulation:
             self.market = Market(companies=self.companies.values(), customer_count=market_state_model.size) #TODO: take care of the other attributes from the model
         except models.MarketState.DoesNotExist:
             self.market = Market(companies=self.companies.values()) #TODO: companies is aleady a dict, we dont have to generate it in market object
-
-        #print(self.companies)
-        #print(self.market)
-        print("ALL GOOD")
+        print("Simulation was set up without any errors!")
              
     def create_company(self, company_model : models.Company) -> Company:
         #create new instance of company class, with default values
@@ -80,7 +76,7 @@ class Simulation:
             if factory_model is not None:
                 new_company.factory = self.create_factory(factory_model=factory_model)
             else:
-                print(f"FACTORY WAS NOT CREATED FOR COMPANY {company_model.name}")
+                print(f"FACTORY WAS NONE FOR COMPANY {company_model.name}")
                 new_company.factory = None
             #setup marketing objects in dict
             marketing_model = company_state.marketing
@@ -131,13 +127,13 @@ class Simulation:
         new_product.upgrades = {}   #TODO: maybe this should be in the object constructor
         for company_upgrade_model in company_upgrades:
             upgrade_model = company_upgrade_model.upgrade
-            name = upgrade_model.name                       #char field
+            name = upgrade_model.name                               #char field
             new_product.upgrades[name] = {
-                "cost": upgrade_model.cost,                 #pos int
-                "sales_effect": upgrade_model.sales_effect,             #float
-                "man_cost_effect": upgrade_model.man_cost_effect,             #float
-                "status": company_upgrade_model.status,     #char field ("s", "ns", "f") for ("started", "not started", "finished")
-                "progress": company_upgrade_model.progress  #pos int
+                "cost": upgrade_model.cost,                         #pos int
+                "sales_effect": upgrade_model.sales_effect,         #float
+                "man_cost_effect": upgrade_model.man_cost_effect,   #float
+                "status": company_upgrade_model.status,             #char field ("s", "ns", "f") for ("started", "not started", "finished")
+                "progress": company_upgrade_model.progress          #pos int
             }
             pass
 
@@ -147,10 +143,7 @@ class Simulation:
         #declare lists and dictionaries
         companies_models = []         # list of company models 
         #companies_states = Dict[models.Company, models.CompaniesState]
-        #companies_upgrades = Dict[models.Company, list[models.CompaniesUpgrades]]
         companies_states = {}
-
-
         #load the company models
         companies_models = models.Company.objects.filter(game=self.game_model)
         #load the company states
