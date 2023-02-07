@@ -37,7 +37,7 @@ class Simulation:
         #setup the market attributes
         try:
             market_state_model = models.MarketState.objects.get(turn=self.turn_model)
-            self.market = Market(companies=self.companies, customer_count=market_state_model.size) #TODO: take care of the other atributes from the model
+            self.market = Market(companies=self.companies.values(), customer_count=market_state_model.size) #TODO: take care of the other attributes from the model
         except models.MarketState.DoesNotExist:
             self.market = Market(companies=self.companies.values()) #TODO: companies is aleady a dict, we dont have to generate it in market object
 
@@ -72,7 +72,7 @@ class Simulation:
             new_company.remaining_budget = company_state.balance    #float
             new_company.stock_price = company_state.stock_price     #float
             new_company.storage_count = company_state.inventory     #pos int
-            #r_d = company_state.r_d                                 #pos big int    #TODO: add rnd to class obejct
+            #r_d = company_state.r_d                                #pos big int    #TODO: add rnd to class obejct
 
             #create objects from models
             #setup factory object
@@ -144,24 +144,39 @@ class Simulation:
         return new_product
 
     def write_simulation_results(self):
+        #declare lists and dictionaries
+        companies_models = []         # list of company models 
+        #companies_states = Dict[models.Company, models.CompaniesState]
+        #companies_upgrades = Dict[models.Company, list[models.CompaniesUpgrades]]
+        companies_states = {}
+
+
         #load the company models
         companies_models = models.Company.objects.filter(game=self.game_model)
-
         #load the company states
-        company_states = {}
         for company_model in companies_models:
             try:
-                company_state = models.CompaniesState.objects.get(company=company_model, turn=self.turn_model)
-                company_states[company_model.name] = company_state
+                company_state_model = models.CompaniesState.objects.get(company=company_model, turn=self.turn_model)
+                companies_states[company_model] = company_state_model
             except models.CompaniesState.DoesNotExist:
-                #company state does not exist TODO: maybe add error message later if required
                 pass
-    
-        #load the market state model
-        try:
-            market_state_model = models.MarketState.objects.get(turn=self.turn_model)
-        except models.MarketState.DoesNotExist:
-            market_state_model = None
+        
+        #write data from classes to models
+        for company_model in companies_states.keys():
+            company_class_object = self.companies[company_model.name]
+            companies_states[company_model].balance = company_class_object.remaining_budget
+            companies_states[company_model].stock_price = company_class_object.stock_price
+            companies_states[company_model].inventory = company_class_object.storage_count
 
-        pass
+            if companies_states[company_model].production is not None:
+                companies_states[company_model].production.man_cost = company_class_object.product.get_upgrade_price()  #TODO:check if correct
+                companies_states[company_model].production.save()
+            if companies_states[company_model].factory is not None:
+                companies_states[company_model].factory.capacity = company_class_object.factory.capacity                #TODO:check if correct
+                companies_states[company_model].factory.save()
+            companies_states[company_model].save()
+            
+            
+
+
 
