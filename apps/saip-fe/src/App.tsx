@@ -34,7 +34,6 @@ function App() {
 								<Route path="/marketing" element={<Marketing />} />
 								{/* <Route path="/news" element={<News />} /> */}
 								<Route path="/" element={<Navigate to="/dashboard" replace />} />
-								{/* TODO create 404 page */}
 								<Route path="*" element={<NotFound />} />
 							</Routes>
 						</div>
