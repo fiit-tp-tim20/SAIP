@@ -1,9 +1,32 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import Slider from "../components/slider/Slider";
+import useMarketingStore from "../store/Marketing";
 
 function Marketing() {
 	const { t } = useTranslation();
+	const {
+		viral,
+		viralChecked,
+		ooh,
+		oohChecked,
+		billboard,
+		billboardChecked,
+		tv,
+		tvChecked,
+		podcast,
+		podcastChecked,
+		setViral,
+		setViralChecked,
+		setOoh,
+		setOohChecked,
+		setBillboard,
+		setBillboardChecked,
+		setTv,
+		setTvChecked,
+		setPodcast,
+		setPodcastChecked,
+	} = useMarketingStore();
 
 	return (
 		<div className="flex flex-col xl:w-[1280px] md:w-[900px] w-[600px]">
@@ -43,7 +66,15 @@ function Marketing() {
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h3>Investícia</h3>
 						<div>
-							<Slider min={0} max={1000} step={10} />
+							<Slider
+								min={0}
+								max={1000}
+								value={viral}
+								setValue={setViral}
+								checked={viralChecked}
+								setChecked={setViralChecked}
+								step={10}
+							/>
 						</div>
 					</div>
 				</div>
@@ -61,7 +92,15 @@ function Marketing() {
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h3>Investícia</h3>
 						<div>
-							<Slider min={0} max={1000} step={10} />
+							<Slider
+								min={0}
+								max={1000}
+								value={ooh}
+								setValue={setOoh}
+								checked={oohChecked}
+								setChecked={setOohChecked}
+								step={10}
+							/>
 						</div>
 					</div>
 				</div>
@@ -79,7 +118,15 @@ function Marketing() {
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h3>Investícia</h3>
 						<div>
-							<Slider min={0} max={1000} step={10} />
+							<Slider
+								min={0}
+								max={1000}
+								value={billboard}
+								setValue={setBillboard}
+								checked={billboardChecked}
+								setChecked={setBillboardChecked}
+								step={10}
+							/>
 						</div>
 					</div>
 				</div>
@@ -97,7 +144,15 @@ function Marketing() {
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h3>Investícia</h3>
 						<div>
-							<Slider min={0} max={1000} step={10} />
+							<Slider
+								min={0}
+								max={1000}
+								value={tv}
+								setValue={setTv}
+								checked={tvChecked}
+								setChecked={setTvChecked}
+								step={10}
+							/>
 						</div>
 					</div>
 				</div>
@@ -115,7 +170,15 @@ function Marketing() {
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h3>Investícia</h3>
 						<div>
-							<Slider min={0} max={1000} step={10} />
+							<Slider
+								min={0}
+								max={1000}
+								value={podcast}
+								setValue={setPodcast}
+								checked={podcastChecked}
+								setChecked={setPodcastChecked}
+								step={10}
+							/>
 						</div>
 					</div>
 				</div>
