@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class GameParameters(models.Model):
     budget_cap = models.PositiveIntegerField(default=10000)
     depreciation = models.FloatField(default=0.1)
-    base_man_cost = models.PositiveBigIntegerField(default=50)
+    base_man_cost = models.PositiveIntegerField(default=50)
 
     class Meta:
         db_table = 'GameParameters'

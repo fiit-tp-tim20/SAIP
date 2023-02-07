@@ -30,7 +30,7 @@ def create_default_upgrades(game: Game) -> None:
                                    camera_rot=upgrade["camera_rot"]).save()
 
 
-def create_turn(number: int, game: Game) -> None:
+def create_turn(number: int, game: Game) -> Turn:
     turn = Turn.objects.create(number=number, game=game)
     companies = Company.objects.filter(game=game)
     
@@ -99,20 +99,17 @@ def calculate_man_cost(game, turn):
     for company in companies:
 
         company_upgrades = CompaniesUpgrades.objects.filter(company=company, status="f")
-        cost = 0
+        cost = 1
         for upgrade in company_upgrades:
-            cost += upgrade.upgrade.cost
+            cost += upgrade.upgrade.man_cost_effect
 
-        value = base_cost * (cost)
+        value = base_cost * cost
 
         company_state = CompaniesState.objects.get(company=company, turn=turn)
-        company_man_cost =  company_state.production.man_cost
-        company_man_cost = value
-        company_man_cost =  company_state.production
-        print(company_state)
+        company_state.production.man_cost = value
+        company_state.production.save()
+        company_state.save()
    
-
-    return
 
 class EndTurnView(PermissionRequiredMixin, APIView):
     permission_required = 'saip_api.add_turn'
