@@ -6,8 +6,11 @@ export type Player = {
 
 export type Upgrade = {
 	id: number;
-	players: Player[];
-	status: "finished" | "pending" | "not_started";
+	name: string;
+	players: string[];
+	// TODO edit be to return player as player object
+	// players: Player[];
+	status: "finished" | "started" | "not started";
 	price: number;
 	progress?: number;
 	camera: {

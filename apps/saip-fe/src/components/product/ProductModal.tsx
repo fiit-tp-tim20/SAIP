@@ -27,19 +27,19 @@ function ProductModal(props: Props) {
 					<h4>{t(`research.playerResearched.title`) as string}</h4>
 					{upgrade.players.map((player) => (
 						<div
-							key={player.id}
+							key={player}
 							className="flex items-center p-3 my-1 rounded-2xl bg-gray-200 dark:bg-[#242424]"
 						>
 							<div className="avatar pr-4">
 								<div className="w-8 rounded-full ring ring-accent-400 ring-offset-base-100 ring-offset-2">
 									<img
-										src={`https://avatars.dicebear.com/api/miniavs/${player.image}.png`}
-										alt={player.name}
+										src={`https://avatars.dicebear.com/api/miniavs/${player}.png`}
+										alt={player}
 										className="w-8 h-8 rounded-full mr-2 bg-gray-200"
 									/>
 								</div>
 							</div>
-							<p>{player.name}</p>
+							<p>{player}</p>
 						</div>
 					))}
 				</div>
