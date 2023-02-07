@@ -24,6 +24,7 @@ interface MarketingState {
 	setPodcastChecked: (value: boolean) => void;
 	reset: () => void;
 	getSum: () => number;
+	getChecked: () => boolean;
 }
 
 const useMarketingStore = create<MarketingState>()(
@@ -62,8 +63,13 @@ const useMarketingStore = create<MarketingState>()(
 					podcast: 0,
 					podcastChecked: false,
 				})),
-			// get sum of all marketing channels
 			getSum: () => get().viral + get().ooh + get().billboard + get().tv + get().podcast,
+			getChecked: () =>
+				get().viralChecked &&
+				get().oohChecked &&
+				get().billboardChecked &&
+				get().tvChecked &&
+				get().podcastChecked,
 		}),
 		{
 			name: "marketing-storage",

@@ -16,6 +16,7 @@ interface CompanyState {
 	setCapitalInvestmentsChecked: (value: boolean) => void;
 	reset: () => void;
 	getSum: () => number;
+	getChecked: () => boolean;
 }
 
 const useCompanyStore = create<CompanyState>()(
@@ -43,6 +44,7 @@ const useCompanyStore = create<CompanyState>()(
 					capitalInvestmentsChecked: false,
 				})),
 			getSum: () => get().productCount + get().productPrice + get().capitalInvestments,
+			getChecked: () => get().productCountChecked && get().productPriceChecked && get().capitalInvestmentsChecked,
 		}),
 		{
 			name: "company-storage",

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
+import { useNavigate } from "react-router";
 import { getGeneralInfo } from "../../api/CompanyInfo";
 import useCompanyStore from "../../store/Company";
 import useMarketingStore from "../../store/Marketing";
@@ -7,20 +8,33 @@ import useMarketingStore from "../../store/Marketing";
 export default function BottomBar() {
 	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());
 
-	const { getSum: getSumMarketing } = useMarketingStore();
-	const { getSum: getSumCompany } = useCompanyStore();
+	const { getSum: getSumMarketing, getChecked: getCheckedMarketing } = useMarketingStore();
+	const { getSum: getSumCompany, getChecked: getCheckedCompany } = useCompanyStore();
 
-	const [spent, setSpent] = useState(0);
+	const navigate = useNavigate();
 
 	useEffect(() => {}, [data]);
 
 	return (
-		<div className="flex flex-row p-2 bottom-0 w-screen fixed left-0 z-40 justify-center">
+		// center horizontally the bottom bar
+		<div className="fixed bottom-2 right-2 z-40">
 			{!isLoading ? (
 				<div className="bg-white p-3 rounded-lg border-2 border-accent-700">
-					<p>
-						{getSumMarketing() + getSumCompany()}/{data.budget_cap}
-					</p>
+					<div className="flex flex-row gap-8">
+						<p className="text-center font-medium">
+							Budget: {0 + getSumCompany() + getSumMarketing()}/{data.budget_cap}€
+						</p>
+						<button onClick={() => navigate("/product")} className="button-clear">
+							{/* TODO create state */}
+							Produkt: {false ? "✅" : "❌"}
+						</button>
+						<button onClick={() => navigate("/company")} className="button-clear">
+							Spoločnosť: {getCheckedCompany() ? "✅" : "❌"}
+						</button>
+						<button onClick={() => navigate("/marketing")} className="button-clear">
+							Marketing: {getCheckedMarketing() ? "✅" : "❌"}
+						</button>
+					</div>
 				</div>
 			) : null}
 		</div>
