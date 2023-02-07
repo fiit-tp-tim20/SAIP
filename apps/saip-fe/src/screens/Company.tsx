@@ -1,5 +1,7 @@
-import React from "react";
+import { useAtom } from "jotai";
+import React, { useEffect } from "react";
 import Slider from "../components/slider/Slider";
+import { totalSpentPersist } from "../store/Atoms";
 import useCompanyStore from "../store/Company";
 
 function Company() {
@@ -16,6 +18,7 @@ function Company() {
 		setProductPriceChecked,
 		setCapitalInvestments,
 		setCapitalInvestmentsChecked,
+		getSum,
 	} = useCompanyStore();
 
 	return (

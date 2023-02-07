@@ -19,6 +19,7 @@
 		"i18next": "^22.0.1",
 		"i18next-browser-languagedetector": "^6.1.8",
 		"i18next-xhr-backend": "^3.2.2",
+		"jotai": "^2.0.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"react-feather": "^2.0.10",

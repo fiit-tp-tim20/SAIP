@@ -1,7 +1,9 @@
+import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router";
 import { getGeneralInfo } from "../../api/CompanyInfo";
+import { totalSpentPersist } from "../../store/Atoms";
 import useCompanyStore from "../../store/Company";
 import useMarketingStore from "../../store/Marketing";
 
@@ -13,7 +15,11 @@ export default function BottomBar() {
 
 	const navigate = useNavigate();
 
-	useEffect(() => {}, [data]);
+	const [totalSpent, setTotalSpent] = useAtom(totalSpentPersist);
+
+	useEffect(() => {
+		setTotalSpent(0 + getSumCompany() + getSumMarketing());
+	}, [getSumCompany(), getSumMarketing()]);
 
 	return (
 		// center horizontally the bottom bar
@@ -22,7 +28,7 @@ export default function BottomBar() {
 				<div className="bg-white p-3 rounded-lg border-2 border-accent-700">
 					<div className="flex flex-row gap-8">
 						<p className="text-center font-medium">
-							Budget: {0 + getSumCompany() + getSumMarketing()}/{data.budget_cap}€
+							Budget: {totalSpent}/{data.budget_cap}€
 						</p>
 						<button onClick={() => navigate("/product")} className="button-clear">
 							{/* TODO create state */}
