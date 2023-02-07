@@ -11,6 +11,7 @@ import Product from "./screens/Product";
 import Navbar from "./components/navbar/Navbar";
 import Company from "./screens/Company";
 import Marketing from "./screens/Marketing";
+import BottomBar from "./components/bottombar/BottomBar";
 import Login from "./screens/Login";
 
 const queryClient = new QueryClient();
@@ -37,6 +38,7 @@ function App() {
 							</Routes>
 						</div>
 					</BrowserRouter>
+					<BottomBar />
 				</Suspense>
 			) : (
 				<Login />
