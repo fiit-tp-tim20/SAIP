@@ -9,6 +9,8 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from ..serializers import GameSerializer
 
+from saip_simulation.simulation import Simulation
+
 parameters = {"GameParameters": {"budget_cap": 10000,
                                  "depreciation": 0.1},
               "Upgrades": [{"name": "Battery", "cost": 15000, "sales_effect": 0.75, "man_cost_effect": 0.3,
@@ -128,10 +130,13 @@ class EndTurnView(PermissionRequiredMixin, APIView):
 
         turn = get_last_turn(game)
         turn.end = timezone.now()
+        
         turn.save()
 
         create_turn(turn.number + 1, game)
 
         # start simulation here
-
+        sim = Simulation(game_model=game, turn_model=turn)
+        sim.write_simulation_results()
+        
         return Response({"detail": "Turn ended, simulation started"}, status=200)
