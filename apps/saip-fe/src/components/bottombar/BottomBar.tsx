@@ -24,8 +24,8 @@ export default function BottomBar() {
 	return (
 		<div className="fixed bottom-2 right-2 z-40">
 			{!isLoading ? (
-				<div className="bg-white p-3 rounded-lg border-2 border-accent-700">
-					<div className="flex flex-row gap-8">
+				<div className="bg-white px-3 py-1 rounded-lg border-2 border-accent-700">
+					<div className="flex flex-row gap-8 items-center">
 						<p className="text-center font-medium">
 							Budget: {totalSpent}/{data.budget_cap}€
 						</p>
@@ -38,6 +38,13 @@ export default function BottomBar() {
 						</button>
 						<button onClick={() => navigate("/marketing")} className="button-clear">
 							Marketing: {getCheckedMarketing() ? "✅" : "❌"}
+						</button>
+						<button
+							onClick={() => navigate("/marketing")}
+							className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 rounded-lg disabled:bg-accent-100 disabled:cursor-not-allowed"
+							disabled={totalSpent > data.budget_cap}
+						>
+							Ukončiť kolo
 						</button>
 					</div>
 				</div>
