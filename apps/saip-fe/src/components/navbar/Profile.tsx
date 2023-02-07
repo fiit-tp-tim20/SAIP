@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
+import useCompanyStore from "../../store/Company";
+import useMarketingStore from "../../store/Marketing";
 
 function Profile() {
 	const [open, setOpen] = useState(false);
+
+	const { reset: marketingReset } = useMarketingStore();
+	const { reset: companyReset } = useCompanyStore();
 
 	//! just for testing, find a better place to do this
 	const logout = async () => {
@@ -15,6 +20,8 @@ function Profile() {
 
 		localStorage.removeItem("token");
 		localStorage.removeItem("expiryDate");
+		marketingReset();
+		companyReset();
 		window.location.reload();
 	};
 

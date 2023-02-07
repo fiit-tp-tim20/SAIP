@@ -14,6 +14,7 @@ interface CompanyState {
 	setProductPriceChecked: (value: boolean) => void;
 	setCapitalInvestments: (value: number) => void;
 	setCapitalInvestmentsChecked: (value: boolean) => void;
+	reset: () => void;
 }
 
 const useCompanyStore = create<CompanyState>()(
@@ -31,6 +32,15 @@ const useCompanyStore = create<CompanyState>()(
 			setProductPriceChecked: (value) => set(() => ({ productPriceChecked: value })),
 			setCapitalInvestments: (value) => set(() => ({ capitalInvestments: value })),
 			setCapitalInvestmentsChecked: (value) => set(() => ({ capitalInvestmentsChecked: value })),
+			reset: () =>
+				set(() => ({
+					productCount: 0,
+					productCountChecked: false,
+					productPrice: 0,
+					productPriceChecked: false,
+					capitalInvestments: 0,
+					capitalInvestmentsChecked: false,
+				})),
 		}),
 		{
 			name: "company-storage",

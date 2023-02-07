@@ -22,6 +22,7 @@ interface MarketingState {
 	setTvChecked: (value: boolean) => void;
 	setPodcast: (value: number) => void;
 	setPodcastChecked: (value: boolean) => void;
+	reset: () => void;
 }
 
 const useMarketingStore = create<MarketingState>()(
@@ -47,6 +48,19 @@ const useMarketingStore = create<MarketingState>()(
 			setTvChecked: (value) => set(() => ({ tvChecked: value })),
 			setPodcast: (value) => set(() => ({ podcast: value })),
 			setPodcastChecked: (value) => set(() => ({ podcastChecked: value })),
+			reset: () =>
+				set(() => ({
+					viral: 0,
+					viralChecked: false,
+					ooh: 0,
+					oohChecked: false,
+					billboard: 0,
+					billboardChecked: false,
+					tv: 0,
+					tvChecked: false,
+					podcast: 0,
+					podcastChecked: false,
+				})),
 		}),
 		{
 			name: "marketing-storage",

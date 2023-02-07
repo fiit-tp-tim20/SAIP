@@ -2,12 +2,17 @@ import React from "react";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
+import useCompanyStore from "../store/Company";
+import useMarketingStore from "../store/Marketing";
 
 export default function Login() {
 	const [email, setEmail] = useState(0);
 	const [password, setPassword] = useState(0);
 
 	const [isInvalid, setIsInvalid] = useState(false);
+
+	const { reset: marketingReset } = useMarketingStore();
+	const { reset: companyReset } = useCompanyStore();
 
 	const login = async () => {
 		const response = await fetch("http://127.0.0.1:8000/login/", {
@@ -30,6 +35,9 @@ export default function Login() {
 
 		localStorage.setItem("token", token);
 		localStorage.setItem("expiryDate", expiry);
+
+		marketingReset();
+		companyReset();
 
 		//! temporary, find a better way to do this
 		window.location.reload();
