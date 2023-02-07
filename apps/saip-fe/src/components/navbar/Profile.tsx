@@ -23,7 +23,7 @@ function Profile() {
 
 			{open && (
 				<>
-					<div className="absolute right-1 py-2 mt-2 bg-white rounded-xl shadow-xl border-accent-700 border-2 z-20">
+					<div className="absolute right-6 py-2 mt-4 bg-white rounded-xl shadow-xl border-accent-700 border-2 z-20">
 						<div className="flex flex-col justify-between px-4 py-2">
 							{/* TODO replace with real name */}
 							<h6 className="py-2">Company Name</h6>
