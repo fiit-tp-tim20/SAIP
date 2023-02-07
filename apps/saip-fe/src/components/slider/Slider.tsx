@@ -3,21 +3,25 @@ import React, { useState } from "react";
 interface SliderProps {
 	min: number;
 	max: number;
+	value: number;
+	setValue: (value: number) => void;
+	checked: boolean;
+	setChecked: (value: boolean) => void;
 	step?: number;
 }
 
-function Slider({ min, max, step = 1 }: SliderProps) {
-	const [value, setValue] = useState(0);
-	const [isDisabled, setIsDisabled] = React.useState(false);
-	const [buttonText, setButtonText] = React.useState("Potvrdiť");
+function Slider(props: SliderProps) {
+	const { min, max, value, setValue, checked, setChecked, step = 1 } = props;
+
+	const [localValue, setLocalValue] = useState(value);
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setValue(parseInt(event.target.value));
+		setLocalValue(parseInt(event.target.value));
 	};
 
 	const toggleState = () => {
-		setIsDisabled(!isDisabled);
-		setButtonText(isDisabled ? "Potvrdiť" : "Zmeniť");
+		setChecked(!checked);
+		setValue(localValue);
 	};
 
 	return (
@@ -27,12 +31,13 @@ function Slider({ min, max, step = 1 }: SliderProps) {
 				min={min}
 				max={max}
 				step={step}
-				value={value}
+				value={localValue}
 				onChange={handleChange}
 				className={`block w-full bg-gray-300 appearance-none rounded-lg cursor-pointer ${
-					isDisabled ? "opacity-50 cursor-not-allowed" : ""
+					checked ? "opacity-50 cursor-not-allowed" : ""
 				}`}
-				disabled={isDisabled}
+				disabled={checked}
+				placeholder="0"
 			/>
 			<div className="flex items-center justify-between mt-2">
 				<input
@@ -40,19 +45,19 @@ function Slider({ min, max, step = 1 }: SliderProps) {
 					min={min}
 					max={max}
 					step={step}
-					value={value}
+					value={localValue}
 					onChange={handleChange}
 					className={`block w-1/2 mx-auto appearance-none rounded-lg p-2 border border-gray-300 ${
-						isDisabled ? "opacity-50 cursor-not-allowed" : ""
+						checked ? "opacity-50 cursor-not-allowed" : ""
 					}`}
-					style={{ WebkitAppearance: "none" }}
-					disabled={isDisabled}
+					disabled={checked}
+					placeholder="0"
 				/>
 				<button
 					className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 mx-2 rounded-lg"
 					onClick={toggleState}
 				>
-					{buttonText}
+					{!checked ? "Potvrdiť" : "Zmeniť"}
 				</button>
 			</div>
 		</div>
