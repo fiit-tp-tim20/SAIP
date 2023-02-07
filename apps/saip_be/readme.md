@@ -36,3 +36,12 @@ Use ```[FE] - {commit name}``` if committing for Frontend, ```[BE] - {commit nam
 ## API
 
 Documentation can be found on [SwaggerHub](https://app.swaggerhub.com/apis-docs/y3man/SAIP/1.0.0)
+
+## Useful links
+
+CORS implementation - https://www.stackhawk.com/blog/django-cors-guide/
+
+DJANGO REST FRAMEWORK - https://www.django-rest-framework.org/
+
+KNOX - https://james1345.github.io/django-rest-knox/
+

@@ -1,19 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
-import { getUpgrades } from "../mock/product";
+import { getUpgrades as mockGetUpgrades } from "../mock/product";
 import UpgradeInfo from "../components/product/UpgradeInfo";
 import Canvas from "../components/three/Canvas";
 import { useModal } from "../components/modal/useModal";
 import { Upgrade } from "../types/product";
 import ProductModal from "../components/product/ProductModal";
+import { getUpgrades } from "../api/Upgrades";
 
 function Product() {
 	const { t } = useTranslation();
 
 	const { Modal, setIsShowing, setElement } = useModal(<></>);
 
-	const { isLoading, data } = useQuery(["upgrades"], () => getUpgrades());
+	const { isLoading, data } = useQuery(["upgrades"], getUpgrades);
+
+	useEffect(() => {
+		console.warn("data", data);
+		console.warn("isLoading", isLoading);
+	}, [data, isLoading]);
 
 	const openModal = (feature: Upgrade) => {
 		setElement(
@@ -40,7 +46,15 @@ function Product() {
 						</div>
 						<div className="py-4">
 							<h2>{t("product.description.title") as string}</h2>
-							<p className="pt-1">{t("product.description.text") as string}</p>
+							<p className="pt-1">
+								Elektrický bicykel je výkonným a praktickým komerčným produktom, ktorý ponúka široké
+								spektrum výhod pre rôzne typy používateľov. Jeho elektrický pohon umožňuje jednoduchšie
+								a rýchlejšie presuny po meste, čím zvyšuje produktivitu a znižuje náklady na dopravu.
+								Navyše, elektrický bicykel je ekologickejší ako benzínové vozidlá, čo znamená, že pomáha
+								znižovať emisie škodlivých látok a prispieva k lepšej kvalite ovzdušia. Jeho kompaktnosť
+								a schopnosť prekonať kopce aj v rušnom mestskom prostredí ho robia vhodným pre dodávky a
+								rýchle presuny.
+							</p>
 						</div>
 						<div className="py-4">
 							<h2>{t("research.finished.title") as string}</h2>
@@ -54,8 +68,9 @@ function Product() {
 											.map((feature) => (
 												<UpgradeInfo
 													key={feature.id}
-													name={t(`research.features.${feature.id}.title`) as string}
-													researchedAvatars={feature.players.map((player) => player.image)}
+													name={feature.name}
+													// name={t(`research.features.${feature.id}.title`) as string}
+													researchedAvatars={feature.players}
 													onClick={() => openModal(feature)}
 												/>
 											))}
@@ -78,12 +93,13 @@ function Product() {
 							<ul className="pt-1">
 								{data &&
 									data
-										.filter((feature) => feature.status === "pending")
+										.filter((feature) => feature.status === "started")
 										.map((feature) => (
 											<UpgradeInfo
 												key={feature.id}
-												name={t(`research.features.${feature.id}.title`) as string}
-												researchedAvatars={feature.players.map((player) => player.image)}
+												name={feature.name}
+												// name={t(`research.features.${feature.id}.title`) as string}
+												researchedAvatars={feature.players}
 												progressMax={feature.price}
 												progressValue={feature.progress}
 												onClick={() => openModal(feature)}
@@ -100,12 +116,13 @@ function Product() {
 							<ul className="pt-1">
 								{data &&
 									data
-										.filter((feature) => feature.status === "not_started")
+										.filter((feature) => feature.status === "not started")
 										.map((feature) => (
 											<UpgradeInfo
 												key={feature.id}
-												name={t(`research.features.${feature.id}.title`) as string}
-												researchedAvatars={feature.players.map((player) => player.image)}
+												name={feature.name}
+												// name={t(`research.features.${feature.id}.title`) as string}
+												researchedAvatars={feature.players}
 												onClick={() => openModal(feature)}
 											/>
 										))}

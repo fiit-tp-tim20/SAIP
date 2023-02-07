@@ -3,12 +3,12 @@ from django.contrib.auth.models import User
 
 
 class GameParameters(models.Model):
-    budget_cap = models.PositiveIntegerField(null=True)
-    depreciation = models.FloatField(null=True, blank=True)
+    budget_cap = models.PositiveIntegerField(default=10000)
+    depreciation = models.FloatField(default=0.1)
 
     class Meta:
         db_table = 'GameParameters'
-        verbose_name_plural = 'GameParameters'
+        verbose_name_plural = 'Game Parameters'
 
 
 class Game(models.Model):
@@ -34,7 +34,7 @@ class Turn(models.Model):
     game = models.ForeignKey(Game, models.DO_NOTHING, null=True)
 
     def __str__(self):
-        return f"{self.game.__str__()} - {self.number}"
+        return f"{self.game} - {self.number}"
 
     class Meta:
         db_table = 'Turns'
@@ -47,7 +47,7 @@ class Company(models.Model):
     game = models.ForeignKey(Game, models.DO_NOTHING, null=True, related_name='game_companies')
 
     def __str__(self):
-        return f"{self.game.__str__()} - {self.name} ({self.user.__str__()})"
+        return f"{self.game} - {self.name} ({self.user})"
 
     class Meta:
         db_table = 'Companies'
@@ -55,34 +55,38 @@ class Company(models.Model):
 
 
 class Production(models.Model):
-    man_cost = models.FloatField(null=True)
-    sell_price = models.FloatField(null=True)
-    volume = models.PositiveIntegerField(null=True)
+    man_cost = models.FloatField(null=True, default=0)
+    sell_price = models.FloatField(null=True, default=0)
+    volume = models.PositiveIntegerField(null=True, default=0)
 
     class Meta:
         db_table = 'Productions'
 
 
-class Spending(models.Model):
-    r_d = models.FloatField(null=True)
-    marketing = models.FloatField(null=True)
-    factory = models.FloatField(null=True)
-    run_cost = models.FloatField(null=True)
+class Marketing(models.Model):
+    viral = models.PositiveIntegerField(default=0)
+    podcast = models.PositiveIntegerField(default=0)
+    ooh = models.PositiveIntegerField(default=0)
+    tv = models.PositiveIntegerField(default=0)
+    billboard = models.PositiveIntegerField(default=0)
+
+    # def __str__(self):
+    #     return f"Marketing - {self.companiesstate.company}"
 
     class Meta:
-        db_table = 'Spendings'
+        db_table = 'Marketings'
 
 
 class Upgrade(models.Model):
     cost = models.PositiveIntegerField(null=True)
-    effect = models.FloatField(null=True)
+    sales_effect = models.FloatField(null=True)
+    man_cost_effect = models.FloatField(null=True)
     name = models.CharField(max_length=100, null=True)
     camera_pos = models.CharField(max_length=100, null=True)
     camera_rot = models.CharField(max_length=100, null=True)
-    game = models.ForeignKey(Game, models.DO_NOTHING, null=True, related_name='game_upgrades')
 
     def __str__(self):
-        return f"{self.game.__str__()} - {self.name}"
+        return f"{self.name} - {self.cost}"
 
     class Meta:
         db_table = 'Upgrades'
@@ -99,23 +103,29 @@ class CompaniesUpgrades(models.Model):
         (FINISHED, 'finished'),
     )
     status = models.CharField(max_length=100, choices=CHOICES, default=NOT_STARTED)
-    company = models.ForeignKey(Company, models.DO_NOTHING, null=True)
-    upgrade = models.ForeignKey(Upgrade, models.DO_NOTHING, null=True)
+    company = models.ForeignKey(Company, models.CASCADE, null=True)
+    upgrade = models.ForeignKey(Upgrade, models.CASCADE, null=True)
     progress = models.PositiveIntegerField(null=True, default=0)
-    game = models.ForeignKey(Game, models.DO_NOTHING, null=True)
+    game = models.ForeignKey(Game, models.CASCADE, null=True)
 
     def __str__(self):
-        return f"{self.company.__str__()} - {self.upgrade.__str__()}"
+        return f"{self.company} - {self.upgrade}"
 
     class Meta:
         db_table = 'Companies_Upgrades'
-        verbose_name_plural = 'CompaniesUpgrades'
+        verbose_name_plural = 'Companies Upgrades'
 
 
 class Factory(models.Model):
-    employees = models.PositiveIntegerField(null=True)
-    capacity = models.PositiveIntegerField(null=True)
-    base_cost = models.FloatField(null=True)
+    prod_emp = models.PositiveIntegerField(null=True, default=0)
+    cont_emp = models.PositiveIntegerField(null=True, default=0)
+    aux_emp = models.PositiveIntegerField(null=True, default=0)
+    capacity = models.PositiveIntegerField(null=True, default=0)
+    base_cost = models.PositiveIntegerField(null=True,default=0)
+    capital = models.PositiveIntegerField(null=True, default=0)
+
+    # def __str__(self):
+    #     return f"Factory - {self.companiesstate.company}"
 
     class Meta:
         db_table = 'Factories'
@@ -123,21 +133,23 @@ class Factory(models.Model):
 
 
 class CompaniesState(models.Model):
-    company = models.ForeignKey(Company, models.DO_NOTHING, null=True)
-    turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
-    production = models.OneToOneField(Production, models.DO_NOTHING, null=True)
-    spending = models.OneToOneField(Spending, models.DO_NOTHING, null=True)
-    factory = models.OneToOneField(Factory, models.DO_NOTHING, null=True)
-    fan_base = models.PositiveIntegerField(null=True, blank=True)
+    company = models.ForeignKey(Company, models.PROTECT, null=True)
+    turn = models.ForeignKey(Turn, models.PROTECT, null=True)
+    production = models.OneToOneField(Production, models.SET_NULL, null=True, blank=True)
+    factory = models.OneToOneField(Factory, models.SET_NULL, null=True, blank=True)
     balance = models.FloatField(null=True, blank=True)
     stock_price = models.FloatField(null=True, blank=True)
     inventory = models.PositiveIntegerField(null=True, blank=True)
+    r_d = models.PositiveBigIntegerField(null=True, blank=True)
+    marketing = models.OneToOneField(Marketing, models.SET_NULL, null=True, blank=True)
+    commited = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.company.__str__()} - {self.turn.__str__()}"
+        return f"{self.company} - {self.turn}"
 
     class Meta:
-        db_table = 'CompaniesStates'
+        db_table = 'Companies States'
+        verbose_name_plural = 'Companies States'
 
 
 class MarketState(models.Model):
@@ -146,19 +158,10 @@ class MarketState(models.Model):
     demand = models.PositiveIntegerField(null=True)
 
     def __str__(self):
-        return f"Market State - {self.turn.__str__()}"
+        return f"Market State - {self.turn}"
 
     class Meta:
-        db_table = 'MarketStates'
-
-
-class Parameter(models.Model):
-    turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
-    market_size_diff = models.IntegerField(null=True)
-    run_cost_multiplier = models.FloatField(null=True)
-
-    class Meta:
-        db_table = 'Parameters'
+        db_table = 'Market States'
 
 
 class EmailGroup(models.Model):
@@ -166,7 +169,7 @@ class EmailGroup(models.Model):
     email = models.EmailField(null=True)
 
     def __str__(self):
-        return f"{self.email}({self.user.__str__()})"
+        return f"{self.email}({self.user})"
 
     class Meta:
         db_table = 'Emails'

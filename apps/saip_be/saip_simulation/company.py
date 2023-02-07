@@ -14,10 +14,10 @@ except ValueError:  # Already removed
 from dataclasses import dataclass
 from typing import List
 
-from saip_simulation.product import Product, DailyProduct, LastingProduct
-from saip_simulation.marketing import *
-from saip_simulation.config import TURN_LENGTH, FactoryPreset
-from saip_simulation.marketing import MarketingType
+from .product import Product, DailyProduct, LastingProduct
+from .marketing import *
+from .config import TURN_LENGTH, FactoryPreset
+from .marketing import MarketingType
 from typing import Dict
 from math import ceil, floor
 
@@ -142,6 +142,7 @@ class Company:
     brand: str
     product: Product
     inventory: int  # assuming that the stored products are upgraded automatically, for a price
+    production_volume: int
 
     credit: float  # +profit -costs| represents whether or not the company is actually in dept / turning profit
     profit_per_turn: float

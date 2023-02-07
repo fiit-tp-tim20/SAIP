@@ -3,30 +3,54 @@ from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from saip_api.models import Game, GameParameters, Upgrade, Turn
+from saip_api.models import Game, GameParameters, Upgrade, Turn, Company, CompaniesState, Production, Marketing, Factory
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from ..serializers import GameSerializer
 
+from saip_simulation.simulation import Simulation
+
 parameters = {"GameParameters": {"budget_cap": 10000,
                                  "depreciation": 0.1},
-              "Upgrades": [{"name": "Battery", "cost": 5000, "effect": 1.2, "camera_pos": "1,2,3",
-                            "camera_rot": "3,2,1"},
-                           {"name": "Frame", "cost": 10000, "effect": 1.5, "camera_pos": "4,5,6",
-                            "camera_rot": "6,5,4"},
-                           {"name": "Brakes", "cost": 8000, "effect": 1.3, "camera_pos": "7,8,9",
-                            "camera_rot": "9,8,7"}]}
+              "Upgrades": [{"name": "Battery", "cost": 15000, "sales_effect": 0.75, "man_cost_effect": 0.3,
+                            "camera_pos": "1,2,3", "camera_rot": "3,2,1"},
+                           {"name": "Frame", "cost": 11000, "sales_effect": 0.55, "man_cost_effect": 0.2,
+                            "camera_pos": "4,5,6", "camera_rot": "6,5,4"},
+                           {"name": "Brakes", "cost": 9000, "sales_effect": 0.45, "man_cost_effect": 0.1,
+                            "camera_pos": "7,8,9", "camera_rot": "9,8,7"},
+                           {"name": "Display", "cost": 17000, "sales_effect": 0.85, "man_cost_effect": 0.4,
+                            "camera_pos": "7,8,9", "camera_rot": "9,8,7"}
+                           ]}
 
 
 def create_default_upgrades(game: Game) -> None:
-    for upgrade in parameters["Upgrades"]:
-        Upgrade.objects.create(game=game, name=upgrade["name"], cost=upgrade["cost"], effect=upgrade["effect"],
-                               camera_pos=upgrade["camera_pos"], camera_rot=upgrade["camera_rot"])
+    if not Upgrade.objects.all():
+        for upgrade in parameters["Upgrades"]:
+            Upgrade.objects.create(name=upgrade["name"], cost=upgrade["cost"], sales_effect=upgrade["sales_effect"],
+                                   man_cost_effect = upgrade['man_cost_effect'], camera_pos=upgrade["camera_pos"],
+                                   camera_rot=upgrade["camera_rot"]).save()
 
 
 def create_turn(number: int, game: Game) -> None:
-    Turn.objects.create(number=number, game=game)
+    turn = Turn.objects.create(number=number, game=game)
+    companies = Company.objects.filter(game=game)
+    
+    for company in companies:
+        cs = CompaniesState.objects.create(turn=turn, company=company)
+        production = Production.objects.create()
+        cs.production = production
+        marketing = Marketing.objects.create()
+        cs.marketing = marketing
+        factory = Factory.objects.create()
+        cs.factory = factory
+
+        cs.save()
+
+
+
+def get_last_turn(game: Game) -> Turn:
+    return Turn.objects.get(game=game, end__isnull=True)
 
 
 class CreateGameView(PermissionRequiredMixin, APIView):
@@ -66,6 +90,7 @@ class GetRunningGamesView(APIView):
 
         return Response(response)
 
+
 class EndTurnView(PermissionRequiredMixin, APIView):
     permission_required = 'saip_api.add_turn'
 
@@ -84,7 +109,7 @@ class EndTurnView(PermissionRequiredMixin, APIView):
         if game.admin != request.user:
             return Response({"detail": "User is not admin for this game"}, status=401)
 
-        last_turn = Turn.objects.filter(game=game, end=None).order_by("-number").first()
+        last_turn = get_last_turn(game)
 
         return Response({"Number": last_turn.number, "Start": last_turn.start, "Game": game.name}, status=200)
 
@@ -103,12 +128,15 @@ class EndTurnView(PermissionRequiredMixin, APIView):
         if game.admin != request.user:
             return Response({"detail": "User is not admin"}, status=403)
 
-        turn = Turn.objects.get(game=game, end=None)
+        turn = get_last_turn(game)
         turn.end = timezone.now()
+        
         turn.save()
 
-        create_turn(turn.number+1, game)
+        create_turn(turn.number + 1, game)
 
         # start simulation here
-
+        sim = Simulation(game_model=game, turn_model=turn)
+        sim.write_simulation_results()
+        
         return Response({"detail": "Turn ended, simulation started"}, status=200)
