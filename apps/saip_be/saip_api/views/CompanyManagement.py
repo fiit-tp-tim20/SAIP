@@ -50,13 +50,13 @@ class PostSpendingsView(APIView):
         except CompaniesState.DoesNotExist:
             return Response({"detail": "Company state for this turn does not exist"}, status=500)
 
-        if company_state.production or company_state.factory or company_state.marketing:
+        if company_state.commited:
             return Response({"detail": "Decisions were posted before"}, status=409)
 
         spendings_serializer = SpendingsSerializer(data=request.data)
         spendings_serializer.is_valid(raise_exception=True)
 
-        prod_serializer = ProductionSerializer(data=request.data['production'])
+        prod_serializer = ProductionSerializer(company_state.production, data=request.data['production'])
         prod_serializer.is_valid(raise_exception=True)
 
         production = prod_serializer.save()
@@ -64,7 +64,7 @@ class PostSpendingsView(APIView):
         company_state.production = production
 
 
-        factory_serializer = FactorySerializer(data=request.data['factory'])
+        factory_serializer = FactorySerializer(company_state.factory, data=request.data['factory'])
         factory_serializer.is_valid(raise_exception=True)
 
         factory = factory_serializer.save()
@@ -72,7 +72,7 @@ class PostSpendingsView(APIView):
         company_state.factory = factory
 
 
-        marketing_serializer = MaketingSerializer(data=request.data['marketing'])
+        marketing_serializer = MaketingSerializer(company_state.marketing, data=request.data['marketing'])
         marketing_serializer.is_valid(raise_exception=True)
 
         marketing = marketing_serializer.save()
@@ -125,8 +125,8 @@ class PostSpendingsView(APIView):
             display_progress.save()
 
         company_state.r_d = brakes + frame + battery + display
+        company_state.commited = True
         company_state.save()
-
 
         return Response(status=201)
 

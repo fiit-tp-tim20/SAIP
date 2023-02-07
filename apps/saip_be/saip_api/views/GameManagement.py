@@ -3,7 +3,7 @@ from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from saip_api.models import Game, GameParameters, Upgrade, Turn, Company, CompaniesState, CompaniesUpgrades
+from saip_api.models import Game, GameParameters, Upgrade, Turn, Company, CompaniesState, Production, Marketing, Factory, CompaniesUpgrades
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
@@ -33,9 +33,18 @@ def create_default_upgrades(game: Game) -> None:
 def create_turn(number: int, game: Game) -> None:
     turn = Turn.objects.create(number=number, game=game)
     companies = Company.objects.filter(game=game)
-
+    
     for company in companies:
-        CompaniesState.objects.create(turn=turn, company=company).save()
+        cs = CompaniesState.objects.create(turn=turn, company=company)
+        production = Production.objects.create()
+        cs.production = production
+        marketing = Marketing.objects.create()
+        cs.marketing = marketing
+        factory = Factory.objects.create()
+        cs.factory = factory
+
+        cs.save()
+
 
     return turn
 

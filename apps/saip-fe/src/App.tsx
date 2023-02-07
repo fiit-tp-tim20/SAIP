@@ -13,6 +13,7 @@ import Company from "./screens/Company";
 import Marketing from "./screens/Marketing";
 import BottomBar from "./components/bottombar/BottomBar";
 import Login from "./screens/Login";
+import NotFound from "./screens/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -34,7 +35,7 @@ function App() {
 								{/* <Route path="/news" element={<News />} /> */}
 								<Route path="/" element={<Navigate to="/dashboard" replace />} />
 								{/* TODO create 404 page */}
-								<Route path="*" element={<p>404</p>} />
+								<Route path="*" element={<NotFound />} />
 							</Routes>
 						</div>
 					</BrowserRouter>
