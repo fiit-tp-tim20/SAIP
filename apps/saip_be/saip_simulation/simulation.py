@@ -67,7 +67,7 @@ class Simulation:
             #TODO: add error message maybe
 
         #parse the companies state model and create objects
-        if company_state != None:
+        if company_state is not None:
 
             new_company.remaining_budget = company_state.balance    #float
             new_company.stock_price = company_state.stock_price     #float
