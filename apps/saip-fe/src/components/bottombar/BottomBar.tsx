@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { getGeneralInfo } from "../../api/CompanyInfo";
+import useCompanyStore from "../../store/Company";
 import useMarketingStore from "../../store/Marketing";
 
 export default function BottomBar() {
 	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());
 
-	const { getSum } = useMarketingStore();
+	const { getSum: getSumMarketing } = useMarketingStore();
+	const { getSum: getSumCompany } = useCompanyStore();
 
 	const [spent, setSpent] = useState(0);
 
@@ -17,7 +19,7 @@ export default function BottomBar() {
 			{!isLoading ? (
 				<div className="bg-white p-3 rounded-lg border-2 border-accent-700">
 					<p>
-						{getSum()}/{data.budget_cap}
+						{getSumMarketing() + getSumCompany()}/{data.budget_cap}
 					</p>
 				</div>
 			) : null}
