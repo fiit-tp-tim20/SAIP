@@ -4,7 +4,15 @@ function Profile() {
 	const [open, setOpen] = useState(false);
 
 	//! just for testing, find a better place to do this
-	const logout = () => {
+	const logout = async () => {
+		await fetch("http://localhost:8000/logout/", {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+				"Content-Type": "application/json",
+			},
+		});
+
 		localStorage.removeItem("token");
 		localStorage.removeItem("expiryDate");
 		window.location.reload();
