@@ -56,7 +56,7 @@ class GameAdmin(admin.ModelAdmin):
 
 @admin.register(GameParameters)
 class GameParametersAdmin(admin.ModelAdmin):
-    list_display = ('budget_cap', 'depreciation')
+    list_display = ('budget_cap', 'depreciation', 'base_man_cost')
 
 
 @admin.register(Upgrade)

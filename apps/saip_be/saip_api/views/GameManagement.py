@@ -3,7 +3,7 @@ from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from saip_api.models import Game, GameParameters, Upgrade, Turn, Company, CompaniesState
+from saip_api.models import Game, GameParameters, Upgrade, Turn, Company, CompaniesState, CompaniesUpgrades
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
@@ -36,6 +36,8 @@ def create_turn(number: int, game: Game) -> None:
 
     for company in companies:
         CompaniesState.objects.create(turn=turn, company=company).save()
+
+    return turn
 
 
 def get_last_turn(game: Game) -> Turn:
@@ -80,6 +82,29 @@ class GetRunningGamesView(APIView):
         return Response(response)
 
 
+def calculate_man_cost(game, turn):
+
+    companies = Company.objects.filter(game=game)
+    base_cost = game.parameters.base_man_cost
+
+    for company in companies:
+
+        company_upgrades = CompaniesUpgrades.objects.filter(company=company, status="f")
+        cost = 0
+        for upgrade in company_upgrades:
+            cost += upgrade.upgrade.cost
+
+        value = base_cost * (cost)
+
+        company_state = CompaniesState.objects.get(company=company, turn=turn)
+        company_man_cost =  company_state.production.man_cost
+        company_man_cost = value
+        company_man_cost =  company_state.production
+        print(company_state)
+   
+
+    return
+
 class EndTurnView(PermissionRequiredMixin, APIView):
     permission_required = 'saip_api.add_turn'
 
@@ -99,6 +124,7 @@ class EndTurnView(PermissionRequiredMixin, APIView):
             return Response({"detail": "User is not admin for this game"}, status=401)
 
         last_turn = get_last_turn(game)
+
 
         return Response({"Number": last_turn.number, "Start": last_turn.start, "Game": game.name}, status=200)
 
@@ -121,7 +147,8 @@ class EndTurnView(PermissionRequiredMixin, APIView):
         turn.end = timezone.now()
         turn.save()
 
-        create_turn(turn.number + 1, game)
+        new_turn = create_turn(turn.number + 1, game)
+        calculate_man_cost(game, new_turn)
 
         # start simulation here
 
