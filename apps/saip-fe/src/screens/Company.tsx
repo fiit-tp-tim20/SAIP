@@ -18,7 +18,6 @@ function Company() {
 		setProductPriceChecked,
 		setCapitalInvestments,
 		setCapitalInvestmentsChecked,
-		getSum,
 	} = useCompanyStore();
 
 	return (

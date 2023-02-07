@@ -22,7 +22,6 @@ export default function BottomBar() {
 	}, [getSumCompany(), getSumMarketing()]);
 
 	return (
-		// center horizontally the bottom bar
 		<div className="fixed bottom-2 right-2 z-40">
 			{!isLoading ? (
 				<div className="bg-white p-3 rounded-lg border-2 border-accent-700">
