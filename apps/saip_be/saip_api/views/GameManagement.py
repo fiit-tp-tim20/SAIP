@@ -91,7 +91,7 @@ class GetRunningGamesView(APIView):
         return Response(response)
 
 
-def calculate_man_cost(game, turn):
+def calculate_man_cost(game: Game, turn: Turn) -> None:
 
     companies = Company.objects.filter(game=game)
     base_cost = game.parameters.base_man_cost
@@ -106,7 +106,7 @@ def calculate_man_cost(game, turn):
         value = base_cost * cost
 
         company_state = CompaniesState.objects.get(company=company, turn=turn)
-        company_state.production.man_cost = value
+        company_state.production.man_cost = round(value, 2)
         company_state.production.save()
         company_state.save()
    
