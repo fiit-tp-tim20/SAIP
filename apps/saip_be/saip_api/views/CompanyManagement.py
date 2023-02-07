@@ -13,6 +13,19 @@ def create_upgrade_company_relation(game: Game, company: Company) -> None:
     for upgrade in Upgrade.objects.all():
         CompaniesUpgrades.objects.create(upgrade=upgrade, company=company, game=game)
 
+class CompanyInfo(APIView):
+
+    def get(self, request) -> Response:
+
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        try:
+            company = Company.objects.get(user=request.user)
+        except Company.DoesNotExist:
+            return Response({"detail": "Company for this user not found"}, status=404)
+
+        return Response({"id": company.id, 'name': company.name, 'budget_cap': company.game.parameters.budget_cap}, status=200)
 
 class CreateCompanyView(APIView):
 
