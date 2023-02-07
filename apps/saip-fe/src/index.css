@@ -105,16 +105,6 @@ canvas {
 	display: none;
 }
 
-.link-tab {
-	/* @apply rounded-lg text-neutral-800; */
-	@apply rounded-lg  border-accent-700 min-w-[128px] flex justify-center align-middle;
-	transition: all 0.3s ease-in-out;
-}
-
-.link-tab:hover {
-	@apply text-accent-700 bg-accent-300;
-}
-
 .active {
 	@apply text-accent-900 bg-accent-500;
 }
@@ -125,4 +115,8 @@ progress[value]::-webkit-progress-bar {
 
 progress[value]::-webkit-progress-value {
 	@apply rounded-full bg-accent-600;
+}
+
+.button-clear {
+	all: unset;
 }

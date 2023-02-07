@@ -4,7 +4,7 @@ from rest_framework import serializers, validators
 
 from datetime import datetime, timezone
 
-from .models import Game, Company
+from .models import Game, Company, Production, Marketing, Factory, CompaniesState
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -84,3 +84,90 @@ class CompanySerializer(serializers.ModelSerializer):
         company.save()
 
         return company
+
+
+class SpendingsSerializer(serializers.Serializer):
+
+    marketing = serializers.JSONField(required=True)
+    production = serializers.JSONField(required=True)
+    factory = serializers.JSONField(required=True)
+    brakes = serializers.IntegerField(min_value=0, required=False)
+    frame = serializers.IntegerField(min_value=0, required=False)
+    battery = serializers.IntegerField(min_value=0, required=False)
+    display = serializers.IntegerField(min_value=0, required=False)
+
+
+class ProductionSerializer(serializers.ModelSerializer):
+
+    sell_price = serializers.FloatField(required=True, min_value=0)
+    volume = serializers.IntegerField(required=True, min_value=0)
+    class Meta:
+        model = Production
+        fields = ('sell_price', 'volume')
+
+    def create(self, validated_data) -> Production:
+        sell_price = validated_data.get('sell_price')
+        volume = validated_data.get('volume')
+
+        production = Production.objects.create(
+            sell_price = sell_price,
+            volume = volume
+        )
+        production.save()
+
+        return production
+
+class MaketingSerializer(serializers.ModelSerializer):
+
+    viral = serializers.IntegerField(required=True, min_value=0)
+    podcast = serializers.IntegerField(required=True, min_value=0)
+    ooh = serializers.IntegerField(required=True, min_value=0)
+    tv = serializers.IntegerField(required=True, min_value=0)
+    billboard = serializers.IntegerField(required=True, min_value=0)
+    class Meta:
+        model = Marketing
+        fields = ('viral', 'podcast', 'ooh', 'tv', 'billboard')
+
+    def create(self, validated_data) -> Marketing:
+        viral = validated_data.get('viral')
+        podcast = validated_data.get('podcast')
+        ooh = validated_data.get('ooh')
+        tv = validated_data.get('tv')
+        billboard = validated_data.get('billboard')
+
+        marketing = Marketing.objects.create(
+            viral = viral,
+            podcast = podcast,
+            ooh = ooh,
+            tv = tv,
+            billboard = billboard
+        )
+        marketing.save()
+
+        return marketing
+
+class FactorySerializer(serializers.ModelSerializer):
+
+    prod_emp = serializers.IntegerField(required=True, min_value=0)
+    cont_emp = serializers.IntegerField(required=True, min_value=0)
+    aux_emp = serializers.IntegerField(required=True, min_value=0)
+    capital = serializers.IntegerField(required=True, min_value=0)
+    class Meta:
+        model = Factory
+        fields = ('prod_emp', 'cont_emp', 'aux_emp', 'capital')
+
+    def create(self, validated_data) -> Factory:
+        prod_emp = validated_data.get('prod_emp')
+        cont_emp = validated_data.get('cont_emp')
+        aux_emp = validated_data.get('aux_emp')
+        capital = validated_data.get('capital')
+
+        factory = Factory.objects.create(
+            prod_emp = prod_emp,
+            cont_emp = cont_emp,
+            aux_emp = aux_emp,
+            capital = capital
+        )
+        factory.save()
+
+        return factory

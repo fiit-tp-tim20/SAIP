@@ -20,7 +20,7 @@ class UpgradeView(APIView):
             other_companies = CompaniesUpgrades.objects.filter(upgrade=upgrade.upgrade, status="f", game=upgrade.game)
             other_companies_list = [item.company.name for item in other_companies]
 
-            local_upgrade = Upgrade.objects.get(pk=upgrade.id)
+            local_upgrade = Upgrade.objects.get(pk=upgrade.upgrade_id)
             camera_pos = local_upgrade.camera_pos.split(",")
             camera_rot = local_upgrade.camera_rot.split(",")
 
