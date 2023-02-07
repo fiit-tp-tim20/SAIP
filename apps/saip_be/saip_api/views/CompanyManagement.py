@@ -25,16 +25,7 @@ class CompanyInfo(APIView):
         except Company.DoesNotExist:
             return Response({"detail": "Company for this user not found"}, status=404)
 
-
-        response = {'company': list()}
-
-        response['company'].append({
-            'id': company.id,
-            'name': company.name,
-            'budget_cap': company.game.parameters.budget_cap,
-        })
-
-        return Response(response)
+        return Response({"id": company.id, 'name': company.name, 'budget_cap': company.game.parameters.budget_cap}, status=200)
 
 class CreateCompanyView(APIView):
 
