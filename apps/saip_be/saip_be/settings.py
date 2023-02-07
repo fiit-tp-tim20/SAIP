@@ -142,3 +142,23 @@ REST_KNOX = {"TOKEN_TTL": timedelta(days=365),
              "TOKEN_LIMIT_PER_USER": None,
              "MIN_REFRESH_INTERVAL": 60,
              "AUTH_HEADER_PREFIX": "Bearer"}
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'info.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
