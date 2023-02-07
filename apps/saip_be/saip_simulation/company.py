@@ -13,7 +13,7 @@ try:
 except ValueError:  # Already removed
     pass
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List
 
 from saip_simulation.product import Product, DailyProduct, LastingProduct
@@ -142,22 +142,22 @@ class Factory:
 
 @dataclass
 class Company:
-    brand: str
-    product: Product
-    inventory: int  # assuming that the stored products are upgraded automatically, for a price
-    production_volume: int
+    brand: str = ""
+    product: Product = None
+    inventory: int  = 0  # assuming that the stored products are upgraded automatically, for a price
+    production_volume: int = 0
 
-    credit: float  # +profit -costs| represents whether or not the company is actually in dept / turning profit
-    profit_per_turn: float
-    costs_per_turn: float
+    credit: float = 0  # +profit -costs| represents whether or not the company is actually in dept / turning profit
+    profit_per_turn: float = 0
+    costs_per_turn: float = 0
 
-    max_budget: float
-    remaining_budget: float
+    max_budget: float = 0
+    remaining_budget: float = 0
 
-    factory: Factory
+    factory: Factory = None
 
-    stock_price: float  # company score
-    marketing: Dict[str, MarketingType]
+    stock_price: float = 0  # company score
+    marketing: Dict[str, MarketingType] = field(default_factory=dict)
 
     def upgrade_stored_products(self):
         self.costs_per_turn += self.inventory * self.product.get_upgrade_price()

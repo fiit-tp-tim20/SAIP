@@ -67,7 +67,7 @@ class Simulation:
     def create_company(self, company_model: models.Company) -> Company:
         # create new instance of company class, with default values
         # change the default values based on models
-        new_company = Company(brand_name=company_model.name)
+        new_company = Company(brand=company_model.name)
 
         # filter models for companies_upgrades that belong to this game and this company
         try:
