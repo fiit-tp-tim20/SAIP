@@ -26,7 +26,7 @@ export default function BottomBar() {
 			{!isLoading ? (
 				<div className="bg-white px-3 py-1 rounded-lg border-2 border-accent-700">
 					<div className="flex flex-row gap-8 items-center">
-						<p className="text-center font-medium">
+						<p className={`text-center font-medium ${totalSpent > data.budget_cap ? "text-red-600" : ""}`}>
 							Budget: {totalSpent}/{data.budget_cap}€
 						</p>
 						<button onClick={() => navigate("/product")} className="button-clear">

@@ -43,7 +43,7 @@ const useCompanyStore = create<CompanyState>()(
 					capitalInvestments: 0,
 					capitalInvestmentsChecked: false,
 				})),
-			getSum: () => get().productCount + get().productPrice + get().capitalInvestments,
+			getSum: () => get().productCount + get().capitalInvestments,
 			getChecked: () => get().productCountChecked && get().productPriceChecked && get().capitalInvestmentsChecked,
 		}),
 		{
