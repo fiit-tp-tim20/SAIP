@@ -110,25 +110,32 @@ class Market:
         for customer in self.customer_base:
             customer_choice = customer.choose_product()
             if self.customer_distribution.get(customer_choice) is None:
-                self.customer_distribution[customer_choice] = {'demand': 0}
-            self.customer_distribution[customer_choice]['demand'] += 1
+                self.customer_distribution[customer_choice] = {"demand": 0}
+            self.customer_distribution[customer_choice]["demand"] += 1
         self.calculate_sales_per_company()
         return self.customer_distribution
-    
+
     def calculate_sales_per_company(self):
         for company in self.companies:
-            self.customer_distribution[company.brand]['unsatisfied'] = company.sell_product(self.customer_distribution.get(company.brand).get('demand'))
+            self.customer_distribution[company.brand][
+                "unsatisfied"
+            ] = company.sell_product(
+                self.customer_distribution.get(company.brand).get("demand")
+            )
 
 
 if __name__ == "__main__":
-    comA = Company(
-        "A", LastingProduct(None, 1000, -1), 0, 80, 0, 10000, Factory(), {}
-    )
-    comB = Company(
-        "B", LastingProduct(None, 1050, -1), 0, 75, 0, 10000, Factory(), {}
-    )
+    comA = Company("A", LastingProduct(None, 1000, -1), 0, 80, 0, 10000, Factory(), {})
+    comB = Company("B", LastingProduct(None, 1050, -1), 0, 75, 0, 10000, Factory(), {})
     comC = Company(
-        "C", LastingProduct(None, 900, -1), 0, 90, 0, 10000, Factory(), {"social": SocialMedia(3000)}
+        "C",
+        LastingProduct(None, 900, -1),
+        0,
+        90,
+        0,
+        10000,
+        Factory(),
+        {"social": SocialMedia(3000)},
     )
     comD = Company(
         "D",
@@ -146,11 +153,20 @@ if __name__ == "__main__":
 
     mar = Market(companies)
     print(f"\nMARKET STATE: {mar.generate_distribution()}")
-    print(f"\nTOTAL DEMAND = {sum([item.get('demand') for item in mar.customer_distribution.values()])}\n")
-    
+    print(
+        f"\nTOTAL DEMAND = {sum([item.get('demand') for item in mar.customer_distribution.values()])}\n"
+    )
+
     for company in companies:
-        print(f"COMPANY {company.brand} \nUnits Sold: {company.units_sold} | Income Per Unit: {company.product.get_price() - company.factory.calculate_price_per_unit(company.production_volume):.2f}")
-        print(f"Selling Price: {company.product.get_price()} | Costs Per Unit: {company.factory.calculate_price_per_unit(company.production_volume):.2f}")
-        print(f"Total Income: {company.income_per_turn:.2f} | Total Costs: {company.costs_per_turn:.2f} | Profit: {company.profit:.2f}")
-        print(f"Marketing: {company.yield_agg_marketing_value():.2f} | Stock price: {company.calculate_stock_price():.2f}\n")
-        
+        print(
+            f"COMPANY {company.brand} \nUnits Sold: {company.units_sold} | Income Per Unit: {company.product.get_price() - company.factory.calculate_price_per_unit(company.production_volume):.2f}"
+        )
+        print(
+            f"Selling Price: {company.product.get_price()} | Costs Per Unit: {company.factory.calculate_price_per_unit(company.production_volume):.2f}"
+        )
+        print(
+            f"Total Income: {company.income_per_turn:.2f} | Total Costs: {company.costs_per_turn:.2f} | Profit: {company.profit:.2f}"
+        )
+        print(
+            f"Marketing: {company.yield_agg_marketing_value():.2f} | Stock price: {company.calculate_stock_price():.2f}\n"
+        )
