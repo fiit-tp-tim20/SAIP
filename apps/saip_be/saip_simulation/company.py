@@ -37,6 +37,12 @@ class ProductionOVerCapacityError(CompanyError):
         super().__init__(self.message)
 
 
+class NoProductionError(CompanyError):
+    def __init__(self, production: int) -> None:
+        self.message = f"Cannot produce {production} products"
+        super().__init__(self.message)
+
+
 @dataclass
 class Factory:
     capital_investment: float
@@ -84,6 +90,7 @@ class Factory:
             self.upkeep["maintenance"] = (
                 self.capital_investment * FactoryPreset.FACTORY_MAINTENANCE_RATE
             )
+        
 
     def total_upkeep(self) -> float:
         return (
@@ -94,7 +101,10 @@ class Factory:
             + self.upkeep.get("materials")
         )
 
-    def calculate_price_per_unit(self, production_this_turn) -> float:
+    def calculate_price_per_unit(self, production_this_turn: int) -> float:
+        if production_this_turn == 0:
+            raise NoProductionError(production_this_turn)
+        
         self.update_upkeep(
             materials_cost=FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
             * production_this_turn,
@@ -106,7 +116,7 @@ class Factory:
         if cap_usage > FactoryPreset.OPTIMAL_THRESHOLD:
             return self.__price_per_unit_over_optimal(cap_usage, ppu)
 
-        return ppu
+        return round(ppu, 2)
 
     def invest_into_factory(self, investment):
         self.capital_investment += investment
@@ -144,26 +154,29 @@ class Factory:
 class Company:
     brand: str = ""
     product: Product = None
-    inventory: int  = 0  # assuming that the stored products are upgraded automatically, for a price
+    
+    inventory: int = 0  # assuming that the stored products are upgraded automatically, for a price
     production_volume: int = 0
-
-    credit: float = 0  # +profit -costs| represents whether or not the company is actually in dept / turning profit
-    profit_per_turn: float = 0
-    costs_per_turn: float = 0
+    
+    profit: float = 0  # +income -costs| represents whether or not the company is actually in dept / turning profit
+    income_per_turn: float = field(init=False)
+    costs_per_turn: float = field(init=False)
 
     max_budget: float = 0
-    remaining_budget: float = 0
+    remaining_budget: float = field(init=False)
 
+    stock_price: float = field(init=False)  # company score
+    units_sold: int = field(init=False)
+    
     factory: Factory = None
-
-    stock_price: float = 0  # company score
     marketing: Dict[str, MarketingType] = field(default_factory=dict)
-
+    
     def upgrade_stored_products(self):
         self.costs_per_turn += self.inventory * self.product.get_upgrade_price()
 
-    def calculate_stock_price(self):  # TODO STOCK PRICE!!!
-        pass
+    def calculate_stock_price(self) -> float:
+        self.stock_price = ( self.factory.capital_investment - FactoryPreset.STARTING_INVESTMENT + self.profit + self.yield_agg_marketing_value() ) / 100
+        return self.stock_price
 
     def get_product(self):
         return self.product
@@ -192,10 +205,28 @@ class Company:
 
         self.inventory += self.production_volume
         self.costs_per_turn = total_price
+    
+    def sell_product(self, demand: int) -> int:
+        if demand > self.inventory:
+            self.income_per_turn = self.inventory * self.product.get_price()
+            self.profit = self.income_per_turn - self.costs_per_turn
+            unsatisfied_demand = demand - self.inventory
+            self.units_sold = self.inventory
+            self.inventory = 0
+            return unsatisfied_demand
+        
+        self.income_per_turn = demand * self.product.get_price()
+        self.profit = self.income_per_turn - self.costs_per_turn
+        self.units_sold = demand
+        self.inventory -= demand
+        return 0
+        
+            
+        
 
 
 if __name__ == "__main__":
-    com = Company("blank", None, 0, 0, 0, 0, 0, 10000, 10000, Factory(), 0, {})
+    com = Company("blank", None, 0, 0, 0, 10000, Factory(), {})
 
     unitsA = int(FactoryPreset.STARTING_CAPACITY * 0.81)
     unitsB = int(FactoryPreset.STARTING_CAPACITY * 0.9)
