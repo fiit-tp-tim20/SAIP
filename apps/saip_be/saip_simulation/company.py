@@ -178,10 +178,9 @@ class Company:
     def calculate_stock_price(self) -> float:
         self.stock_price = (
             self.factory.capital_investment
-            - FactoryPreset.STARTING_INVESTMENT
             + self.profit
             + self.yield_agg_marketing_value()
-        ) / 100
+        ) / 1000
         return self.stock_price
 
     def get_product(self):
@@ -216,10 +215,10 @@ class Company:
         if demand > self.inventory:
             self.income_per_turn = self.inventory * self.product.get_price()
             self.profit = self.income_per_turn - self.costs_per_turn
-            unsatisfied_demand = demand - self.inventory
+            demand_not_met = demand - self.inventory
             self.units_sold = self.inventory
             self.inventory = 0
-            return unsatisfied_demand
+            return demand_not_met
 
         self.income_per_turn = demand * self.product.get_price()
         self.profit = self.income_per_turn - self.costs_per_turn

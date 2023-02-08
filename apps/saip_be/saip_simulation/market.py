@@ -118,15 +118,15 @@ class Market:
     def calculate_sales_per_company(self):
         for company in self.companies:
             self.customer_distribution[company.brand][
-                "unsatisfied"
+                "demand_not_met"
             ] = company.sell_product(
                 self.customer_distribution.get(company.brand).get("demand")
             )
 
 
 if __name__ == "__main__":
-    comA = Company("A", LastingProduct(None, 1000, -1), 0, 80, 0, 10000, Factory(), {})
-    comB = Company("B", LastingProduct(None, 1050, -1), 0, 75, 0, 10000, Factory(), {})
+    comA = Company("A", LastingProduct(None, 1000, -1), 0, 85, 0, 10000, Factory(), {})
+    comB = Company("B", LastingProduct(None, 1100, -1), 0, 82, 0, 10000, Factory(), {})
     comC = Company(
         "C",
         LastingProduct(None, 900, -1),
@@ -159,10 +159,10 @@ if __name__ == "__main__":
 
     for company in companies:
         print(
-            f"COMPANY {company.brand} \nUnits Sold: {company.units_sold} | Income Per Unit: {company.product.get_price() - company.factory.calculate_price_per_unit(company.production_volume):.2f}"
+            f"COMPANY {company.brand} \nNet Worth: {company.factory.capital_investment} | Units Sold: {company.units_sold}"
         )
         print(
-            f"Selling Price: {company.product.get_price()} | Costs Per Unit: {company.factory.calculate_price_per_unit(company.production_volume):.2f}"
+            f"Selling Price: {company.product.get_price()} | Costs Per Unit: {company.factory.calculate_price_per_unit(company.production_volume):.2f} | Income Per Unit: {company.product.get_price() - company.factory.calculate_price_per_unit(company.production_volume):.2f}"
         )
         print(
             f"Total Income: {company.income_per_turn:.2f} | Total Costs: {company.costs_per_turn:.2f} | Profit: {company.profit:.2f}"
