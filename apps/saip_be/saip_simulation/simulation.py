@@ -94,7 +94,7 @@ class Simulation:
 
             new_company.remaining_budget = company_state.balance  # float
             new_company.stock_price = company_state.stock_price  # float
-            new_company.storage_count = company_state.inventory  # pos int
+            new_company.inventory = company_state.inventory  # pos int
             # r_d = company_state.r_d                                #pos big int    #TODO: add rnd to class obejct
 
             # create objects from models
