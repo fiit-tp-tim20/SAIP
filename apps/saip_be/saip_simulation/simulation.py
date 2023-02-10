@@ -168,7 +168,9 @@ class Simulation:
             company.production_volume = 0  # TODO: remove this - temp fix
             print(f"PRODUCTION MODEL WAS NONE FOR COMPANNY {company.brand}")
 
-        new_product.upgrades = {} # TODO: maybe this should be in the object constructor
+        new_product.upgrades = (
+            {}
+        )  # TODO: maybe this should be in the object constructor
         for company_upgrade_model in company_upgrades:
             upgrade_model = company_upgrade_model.upgrade
             new_product.add_upgrade(
@@ -211,7 +213,7 @@ class Simulation:
             ].stock_price = company_class_object.stock_price
             companies_states[
                 company_model
-            ].inventory = company_class_object.storage_count
+            ].inventory = company_class_object.inventory
 
             if companies_states[company_model].production is not None:
                 companies_states[
