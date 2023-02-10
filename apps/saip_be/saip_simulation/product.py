@@ -13,7 +13,7 @@ class Upgrade:
 
 @dataclass
 class Product(ABC):
-    upgrades: dict = {}
+    upgrades: dict = None
     __price: float = 0
     __upgrade_price: float = 0
 
