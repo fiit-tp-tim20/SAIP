@@ -61,6 +61,9 @@ class Product(ABC):
             man_cost_effect=man_cost_effect,
         )
 
+    def setup_product(self):
+        self._set_upgrade_man_cost_effect_multiplier()
+        self._set_upgrade_sales_effect_multiplier()
 
     def upgrade_stored_products(self):
         self._perform_upgrade_logic()
