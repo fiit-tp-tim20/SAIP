@@ -2,20 +2,18 @@ from dataclasses import dataclass
 from abc import ABC, abstractmethod
 
 
-@dataclass 
+@dataclass
 class Upgrade:
     status: bool
     progress: int
     total_cost: int
-    sales_effect: float     # modifier for expected value increase
+    sales_effect: float  # modifier for expected value increase
     man_cost_effect: float  # modifier for manufacturing cost increase
-
-
 
 
 @dataclass
 class Product(ABC):
-    upgrades: dict = None
+    upgrades: dict = {}
     __price: float = 0
     __upgrade_price: float = 0
 
@@ -30,6 +28,17 @@ class Product(ABC):
 
     def get_upgrade_price(self) -> float:
         return self.__upgrade_price
+
+    def add_upgrade(
+        self, name, status, progress, total_cost, sales_effect, man_cost_effect
+    ):
+        self.upgrades[name] = Upgrade(
+            status=status,
+            progress=progress,
+            total_cost=total_cost,
+            sales_effect=sales_effect,
+            man_cost_effect=man_cost_effect,
+        )
 
     def upgrade_stored_products(self):
         self._perform_upgrade_logic()

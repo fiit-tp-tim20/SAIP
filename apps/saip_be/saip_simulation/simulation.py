@@ -18,7 +18,7 @@ from saip_simulation.company import Company
 from saip_simulation.market import Market
 from saip_simulation.company import Factory
 from saip_simulation.marketing import Billboard, SocialMedia, CableNews, Podcast, OOH
-from saip_simulation.product import Product, LastingProduct
+from saip_simulation.product import Product, LastingProduct, Upgrade
 
 import saip_api.models as models
 
@@ -165,22 +165,22 @@ class Simulation:
                 production_model.volume
             )  # TODO add volume to product class (or maybe the company, but product makes sense)
         else:
-            company.production_volume = 10  # TODO: remove this - temp fix
+            company.production_volume = 0  # TODO: remove this - temp fix
             print(f"PRODUCTION MODEL WAS NONE FOR COMPANNY {company.brand}")
 
-        new_product.upgrades = (
-            {}
-        )  # TODO: maybe this should be in the object constructor
+        # new_product.upgrades = (
+        #    {}
+        # )  # TODO: maybe this should be in the object constructor
         for company_upgrade_model in company_upgrades:
             upgrade_model = company_upgrade_model.upgrade
-            name = upgrade_model.name  # char field
-            new_product.upgrades[name] = {
-                "cost": upgrade_model.cost,  # pos int
-                "sales_effect": upgrade_model.sales_effect,  # float
-                "man_cost_effect": upgrade_model.man_cost_effect,  # float
-                "status": company_upgrade_model.status,  # char field ("s", "ns", "f") for ("started", "not started", "finished")
-                "progress": company_upgrade_model.progress,  # pos int
-            }
+            new_product.add_upgrade(
+                name=upgrade_model.name,  # string
+                status=company_upgrade_model.status,  # string "s", "ns", "f" for "started", "not started", and "finished"
+                progress=company_upgrade_model.progress,  # pos integer
+                total_cost=upgrade_model.cost,  # pos integer
+                sales_effect=upgrade_model.sales_effect,  # float
+                man_cost_effect=upgrade_model.man_cost_effect,  # float
+            )
             pass
 
         return new_product
