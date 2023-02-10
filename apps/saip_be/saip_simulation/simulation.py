@@ -182,7 +182,7 @@ class Simulation:
                 man_cost_effect=upgrade_model.man_cost_effect,  # float
             )
             pass
-
+        new_product.setup_product()
         return new_product
 
     def write_simulation_results(self):
