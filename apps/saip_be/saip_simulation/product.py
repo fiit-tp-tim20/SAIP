@@ -7,7 +7,9 @@ class Upgrade:
     status: bool
     progress: int
     total_cost: int
-    effect: float  # modifier for expected value increase
+    sales_effect: float     # modifier for expected value increase
+    man_cost_effect: float  # modifier for manufacturing cost increase
+
 
 
 
