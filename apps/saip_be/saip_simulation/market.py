@@ -154,7 +154,10 @@ if __name__ == "__main__":
     mar = Market(companies)
     print(f"\nMARKET STATE: {mar.generate_distribution()}")
     print(
-        f"\nTOTAL DEMAND = {sum([item.get('demand') for item in mar.customer_distribution.values()])}\n"
+        f"\nTOTAL DEMAND: {sum([item.get('demand') for item in mar.customer_distribution.values()])}"
+    )
+    print(
+        f"REMAINING CUSTOMERS: {sum([item.get('demand_not_met', 0) for item in mar.customer_distribution.values()]) + mar.customer_distribution.get('no_purchase', {}).get('demand', 0)}\n"
     )
 
     for company in companies:
