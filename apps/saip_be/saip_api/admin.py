@@ -66,5 +66,5 @@ class UpgradeAdmin(admin.ModelAdmin):
 
 @admin.register(CompaniesUpgrades)
 class CompaniesUpgradeAdmin(admin.ModelAdmin):
-    list_display = ('company', 'game', 'upgrade', 'status', 'progress')
-    list_filter = ('company__game', 'company', 'upgrade')
+    list_display = ('company', 'game', 'upgrade', 'status', 'progress', 'turn')
+    list_filter = ('company__game', 'company', 'upgrade', 'turn')

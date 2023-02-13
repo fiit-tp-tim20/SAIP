@@ -99,6 +99,7 @@ class PostSpendingsView(APIView):
             brakes_progress.progress = brakes_progress.progress + brakes
             if brakes_progress.progress >= Upgrade.objects.get(name="Brakes").cost:
                 brakes_progress.status = "f"
+                brakes_progress.turn = company_state.turn
             
 
         frame_progress = CompaniesUpgrades.objects.get(company=company, upgrade = Upgrade.objects.get(name="Frame"))
@@ -110,6 +111,7 @@ class PostSpendingsView(APIView):
             frame_progress.progress = frame_progress.progress + frame
             if frame_progress.progress >= Upgrade.objects.get(name="Frame").cost:
                 frame_progress.status = "f"
+                frame_progress.turn = company_state.turn
             
 
         battery_progress = CompaniesUpgrades.objects.get(company=company, upgrade = Upgrade.objects.get(name="Battery"))
@@ -121,6 +123,7 @@ class PostSpendingsView(APIView):
             battery_progress.progress = battery_progress.progress + battery
             if battery_progress.progress >= Upgrade.objects.get(name="Battery").cost:
                 battery_progress.status = "f"
+                battery_progress.turn = company_state.turn
             
 
         display_progress = CompaniesUpgrades.objects.get(company=company, upgrade = Upgrade.objects.get(name="Display"))
@@ -132,7 +135,7 @@ class PostSpendingsView(APIView):
             display_progress.progress = display_progress.progress + display
             if display_progress.progress >= Upgrade.objects.get(name="Display").cost:
                 display_progress.status = "f"
-            
+                display_progress.turn = company_state.turn
 
         production = prod_serializer.save()
         company_state.production = production

@@ -108,6 +108,7 @@ class CompaniesUpgrades(models.Model):
     upgrade = models.ForeignKey(Upgrade, models.CASCADE, null=True)
     progress = models.PositiveIntegerField(null=True, default=0)
     game = models.ForeignKey(Game, models.CASCADE, null=True)
+    turn = models.ForeignKey(Turn, models.PROTECT, null=True)
 
     def __str__(self):
         return f"{self.company} - {self.upgrade}"
