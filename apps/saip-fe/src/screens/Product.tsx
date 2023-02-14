@@ -1,24 +1,34 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
-import { getUpgrades as mockGetUpgrades } from "../mock/product";
 import UpgradeInfo from "../components/product/UpgradeInfo";
 import Canvas from "../components/three/Canvas";
 import { useModal } from "../components/modal/useModal";
 import { Upgrade } from "../types/product";
 import ProductModal from "../components/product/ProductModal";
 import { getUpgrades } from "../api/Upgrades";
+import useUpgradesStore from "../store/Upgrades";
 
 function Product() {
 	const { t } = useTranslation();
 
-	const { Modal, setIsShowing, setElement } = useModal(<></>);
+	const { Modal, setIsShowing, setElement } = useModal(<div />);
 
 	const { isLoading, data } = useQuery(["upgrades"], getUpgrades);
+
+	const { upgrades, setUpgrade } = useUpgradesStore();
+
+	useEffect(() => {
+		console.warn("upgrades", upgrades);
+	}, [upgrades]);
 
 	useEffect(() => {
 		console.warn("data", data);
 		console.warn("isLoading", isLoading);
+		if (!data) return;
+		data.forEach((upgrade) => {
+			setUpgrade(upgrade.name, upgrade.progress);
+		});
 	}, [data, isLoading]);
 
 	const openModal = (feature: Upgrade) => {
