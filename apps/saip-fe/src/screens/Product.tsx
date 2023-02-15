@@ -16,15 +16,9 @@ function Product() {
 
 	const { isLoading, data } = useQuery(["upgrades"], getUpgrades);
 
-	const { upgrades, setUpgrade } = useUpgradesStore();
+	const { setUpgrade } = useUpgradesStore();
 
 	useEffect(() => {
-		console.warn("upgrades", upgrades);
-	}, [upgrades]);
-
-	useEffect(() => {
-		console.warn("data", data);
-		console.warn("isLoading", isLoading);
 		if (!data) return;
 		data.forEach((upgrade) => {
 			setUpgrade(upgrade.name, upgrade.progress);
