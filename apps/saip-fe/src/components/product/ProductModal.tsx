@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { X } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { Vector3 } from "three";
+import useUpgradesStore from "../../store/Upgrades";
 import { Upgrade } from "../../types/product";
 import Slider from "../slider/Slider";
 import Canvas from "../three/Canvas";
@@ -15,7 +16,15 @@ function ProductModal(props: Props) {
 	const { upgrade, onClick } = props;
 	const { t } = useTranslation();
 
+	const { upgrades, setUpgrade } = useUpgradesStore();
 	console.log(upgrade);
+
+	console.log(upgrades);
+
+	useEffect(() => {
+		console.log("UPGRADE", upgrade);
+		console.log("UPGRADES", upgrades[upgrade.name]);
+	}, [upgrade, upgrades]);
 
 	return (
 		<div className="background-container rounded-2xl p-6 grid grid-cols-2 gap-6 max-w-5xl min-h-[50vh] max-h-[95vh]">
@@ -26,6 +35,7 @@ function ProductModal(props: Props) {
 				</div>
 				<div className="py-2">
 					<h4>{t(`research.playerResearched.title`) as string}</h4>
+					{upgrade.players.length === 0 && <p>Žiaden z hráčov zatiaľ nedokončil toto vylepšenie</p>}
 					{upgrade.players.map((player) => (
 						<div
 							key={player}
@@ -50,27 +60,29 @@ function ProductModal(props: Props) {
 				</div>
 				{upgrade.progress && (
 					<div className="py-2 items-center">
-						<h4>{t(`research.progress.title`) as string}</h4>
 						<div className="flex flex-row items-center justify-between text-center">
-							<progress
-								className="progress progress-primary w-96"
-								value={upgrade.progress}
-								max={upgrade.price}
-							/>
+							<h4>{t(`research.progress.title`) as string}</h4>
 							<p className="my-auto ml-2">
 								{upgrade.progress}/{upgrade.price}
 							</p>
 						</div>
+						<progress
+							className="progress progress-primary w-full"
+							value={upgrade.progress}
+							max={upgrade.price}
+						/>
 					</div>
 				)}
 				{upgrade.price !== upgrade.progress && (
-					<div>
+					<div className="py-2">
 						<h4>Investícia</h4>
 						<Slider
 							min={0}
 							max={upgrade.price - upgrade.progress}
 							value={0}
-							setValue={(val) => {}}
+							setValue={(val) => {
+								setUpgrade(upgrade.name, val);
+							}}
 							checked={false}
 							setChecked={(val) => {}}
 						/>

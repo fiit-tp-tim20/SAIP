@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface UpgradeState {
-	upgrades: {};
+	upgrades: { [key: string]: number };
 	setUpgrade: (upgrade: string, value: number) => void;
 	reset: () => void;
 	getSum: () => number;
