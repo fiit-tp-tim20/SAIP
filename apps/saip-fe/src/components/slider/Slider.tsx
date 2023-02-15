@@ -5,8 +5,8 @@ interface SliderProps {
 	max: number;
 	value: number;
 	setValue: (value: number) => void;
-	checked: boolean;
-	setChecked: (value: boolean) => void;
+	checked?: boolean;
+	setChecked?: (value: boolean) => void;
 	step?: number;
 }
 
@@ -20,7 +20,7 @@ function Slider(props: SliderProps) {
 	};
 
 	const toggleState = () => {
-		setChecked(!checked);
+		if (setChecked) setChecked(!checked);
 		setValue(localValue);
 	};
 
@@ -39,7 +39,7 @@ function Slider(props: SliderProps) {
 				disabled={checked}
 				placeholder="0"
 			/>
-			<div className="flex items-center justify-between mt-2">
+			<div className="flex items-center justify-between mt-2 min-w-[200px]">
 				<input
 					type="number"
 					min={min}
@@ -47,18 +47,21 @@ function Slider(props: SliderProps) {
 					step={step}
 					value={localValue}
 					onChange={handleChange}
-					className={`block w-1/2 mx-auto appearance-none rounded-lg p-2 border border-gray-300 ${
+					className={`block w-1/2 appearance-none rounded-lg p-2 m-0 border border-gray-300 slider ${
 						checked ? "opacity-50 cursor-not-allowed" : ""
 					}`}
 					disabled={checked}
 					placeholder="0"
 				/>
-				<button
-					className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 mx-2 rounded-lg"
-					onClick={toggleState}
-				>
-					{!checked ? "Potvrdiť" : "Zmeniť"}
-				</button>
+				{checked !== undefined && (
+					<button
+						type="button"
+						className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 m-0 rounded-lg"
+						onClick={toggleState}
+					>
+						{!checked ? "Potvrdiť" : "Zmeniť"}
+					</button>
+				)}
 			</div>
 		</div>
 	);

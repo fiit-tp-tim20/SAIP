@@ -3,6 +3,7 @@ import { X } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { Vector3 } from "three";
 import { Upgrade } from "../../types/product";
+import Slider from "../slider/Slider";
 import Canvas from "../three/Canvas";
 
 type Props = {
@@ -20,7 +21,7 @@ function ProductModal(props: Props) {
 		<div className="background-container rounded-2xl p-6 grid grid-cols-2 gap-6 max-w-5xl min-h-[50vh] max-h-[95vh]">
 			<div className="flex flex-col max-h-[90vh] overflow-scroll scrollbar-hide">
 				<div className="py-2">
-					<h2 className="pb-2">{t(`research.features.${upgrade.id}.title`) as string}</h2>
+					<h2 className="pb-2">{upgrade.name}</h2>
 					<p>{t(`research.features.${upgrade.id}.text`) as string}</p>
 				</div>
 				<div className="py-2">
@@ -60,6 +61,19 @@ function ProductModal(props: Props) {
 								{upgrade.progress}/{upgrade.price}
 							</p>
 						</div>
+					</div>
+				)}
+				{upgrade.price !== upgrade.progress && (
+					<div>
+						<h4>Investícia</h4>
+						<Slider
+							min={0}
+							max={upgrade.price}
+							value={0}
+							setValue={(val) => {}}
+							checked={false}
+							setChecked={(val) => {}}
+						/>
 					</div>
 				)}
 			</div>
