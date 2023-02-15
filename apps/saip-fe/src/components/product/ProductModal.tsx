@@ -68,7 +68,7 @@ function ProductModal(props: Props) {
 						<h4>Investícia</h4>
 						<Slider
 							min={0}
-							max={upgrade.price}
+							max={upgrade.price - upgrade.progress}
 							value={0}
 							setValue={(val) => {}}
 							checked={false}

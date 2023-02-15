@@ -29,17 +29,18 @@ export default function BottomBar() {
 						<p className={`text-center font-medium ${totalSpent > data.budget_cap ? "text-red-600" : ""}`}>
 							Budget: {totalSpent}/{data.budget_cap}€
 						</p>
-						<button onClick={() => navigate("/product")} className="button-clear">
+						<button type="button" onClick={() => navigate("/product")} className="button-clear">
 							{/* TODO create state */}
-							Produkt: {false ? "✅" : "❌"}
+							Produkt: ✅
 						</button>
-						<button onClick={() => navigate("/company")} className="button-clear">
+						<button type="button" onClick={() => navigate("/company")} className="button-clear">
 							Spoločnosť: {getCheckedCompany() ? "✅" : "❌"}
 						</button>
-						<button onClick={() => navigate("/marketing")} className="button-clear">
+						<button type="button" onClick={() => navigate("/marketing")} className="button-clear">
 							Marketing: {getCheckedMarketing() ? "✅" : "❌"}
 						</button>
 						<button
+							type="button"
 							onClick={() => alert("Ukončenie kola!")}
 							className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 rounded-lg disabled:bg-accent-100 disabled:cursor-not-allowed"
 							disabled={totalSpent > data.budget_cap || !getCheckedCompany() || !getCheckedMarketing()}
