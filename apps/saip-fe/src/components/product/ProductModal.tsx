@@ -16,7 +16,7 @@ function ProductModal(props: Props) {
 	const { upgrade, onClick } = props;
 	const { t } = useTranslation();
 
-	const { upgrades, setUpgrade } = useUpgradesStore();
+	const { upgrades, upgradesCheck, setUpgrade, setUpgradeCheck } = useUpgradesStore();
 	console.log(upgrade);
 
 	console.log(upgrades);
@@ -27,7 +27,7 @@ function ProductModal(props: Props) {
 	}, [upgrade, upgrades]);
 
 	return (
-		<div className="background-container rounded-2xl p-6 grid grid-cols-2 gap-6 max-w-5xl min-h-[50vh] max-h-[95vh]">
+		<div className="background-container rounded-2xl p-6 grid grid-cols-2 gap-6 w-[60vw] min-h-[50vh] max-h-[95vh]">
 			<div className="flex flex-col max-h-[90vh] overflow-scroll scrollbar-hide">
 				<div className="py-2">
 					<h2 className="pb-2">{upgrade.name}</h2>
@@ -79,12 +79,12 @@ function ProductModal(props: Props) {
 						<Slider
 							min={0}
 							max={upgrade.price - upgrade.progress}
-							value={0}
+							value={upgrades[upgrade.name]}
 							setValue={(val) => {
 								setUpgrade(upgrade.name, val);
 							}}
-							checked={false}
-							setChecked={(val) => {}}
+							checked={upgradesCheck[upgrade.name]}
+							setChecked={(val) => setUpgradeCheck(upgrade.name, val)}
 						/>
 					</div>
 				)}

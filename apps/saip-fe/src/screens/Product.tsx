@@ -16,12 +16,14 @@ function Product() {
 
 	const { isLoading, data } = useQuery(["upgrades"], getUpgrades);
 
-	const { setUpgrade } = useUpgradesStore();
+	const { upgrades, setUpgrade, setUpgradeCheck } = useUpgradesStore();
 
 	useEffect(() => {
 		if (!data) return;
 		data.forEach((upgrade) => {
-			setUpgrade(upgrade.name, upgrade.progress);
+			if (upgrades[upgrade.name]) return;
+			setUpgrade(upgrade.name, 0);
+			setUpgradeCheck(upgrade.name, false);
 		});
 	}, [data, isLoading]);
 
