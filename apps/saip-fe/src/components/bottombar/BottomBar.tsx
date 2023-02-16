@@ -6,20 +6,22 @@ import { getGeneralInfo } from "../../api/CompanyInfo";
 import { totalSpentPersist } from "../../store/Atoms";
 import useCompanyStore from "../../store/Company";
 import useMarketingStore from "../../store/Marketing";
+import useUpgradesStore from "../../store/Upgrades";
 
 export default function BottomBar() {
 	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());
 
 	const { getSum: getSumMarketing, getChecked: getCheckedMarketing } = useMarketingStore();
 	const { getSum: getSumCompany, getChecked: getCheckedCompany } = useCompanyStore();
+	const { getSum: getSumUpgrades } = useUpgradesStore();
 
 	const navigate = useNavigate();
 
 	const [totalSpent, setTotalSpent] = useAtom(totalSpentPersist);
 
 	useEffect(() => {
-		setTotalSpent(0 + getSumCompany() + getSumMarketing());
-	}, [getSumCompany(), getSumMarketing()]);
+		setTotalSpent(getSumUpgrades() + getSumCompany() + getSumMarketing());
+	}, [getSumUpgrades(), getSumCompany(), getSumMarketing()]);
 
 	return (
 		<div className="fixed bottom-2 right-2 z-40">

@@ -21,7 +21,11 @@ function Slider(props: SliderProps) {
 
 	const toggleState = () => {
 		if (setChecked) setChecked(!checked);
-		setValue(localValue);
+		if (!checked) setValue(localValue);
+		if (checked) {
+			setLocalValue(0);
+			setValue(0);
+		}
 	};
 
 	return (
