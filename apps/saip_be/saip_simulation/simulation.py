@@ -187,12 +187,20 @@ class Simulation:
         return new_product
     
     def run_simulation(self):
+        for company in self.companies.values():
+            company.factory.calculate_price_per_unit(company.production_volume)
+            company.produce_products()
+            company.factory.invest_into_factory(1) #TODO: solve the fact that we are using the capital from model as investment value;
+            #and we are using a argument for the invest_into_factory method 
+            #the argument is added to the factory.capital val at the beginning of the method
+            #if I were to pass the value from model into this function we'd be effectively using twice the value of the "capital" attribute from factory model
+            #as the investment value        
         pass
 
     def write_simulation_results(self):
         # declare lists and dictionaries
         companies_models = []  # list of company models
-        # companies_states = Dict[models.Company, models.CompaniesState]
+        #companies_states = Dict[models.Company, models.CompaniesState]
         companies_states = {}
         # load the company models
         companies_models = models.Company.objects.filter(game=self.game_model)
