@@ -173,7 +173,7 @@ class Company:
     marketing: Dict[str, MarketingType] = field(default_factory=dict)
 
     def upgrade_stored_products(self):
-        self.costs_per_turn += self.inventory * self.product.get_upgrade_price()
+        self.costs_per_turn += self.inventory * self.product.get_upgrade_man_cost_effect_multiplier()
 
     def calculate_stock_price(self) -> float:
         self.stock_price = (
