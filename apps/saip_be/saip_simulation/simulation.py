@@ -161,6 +161,7 @@ class Simulation:
         )  # TODO: add option to create the other kind of product (?)
         if production_model is not None:
             new_product.set_price(production_model.sell_price)
+            new_product.set_man_cost(production_model.man_cost)
             company.production_volume = (
                 production_model.volume
             )  # TODO add volume to product class (or maybe the company, but product makes sense)
@@ -219,7 +220,7 @@ class Simulation:
                 companies_states[
                     company_model
                 ].production.man_cost = (
-                    company_class_object.product.get_upgrade_price()
+                    company_class_object.product.get_man_cost()
                 )  # TODO:check if correct
                 companies_states[company_model].production.save()
             if companies_states[company_model].factory is not None:

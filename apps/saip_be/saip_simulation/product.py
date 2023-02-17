@@ -16,12 +16,22 @@ class Upgrade:
 class Product(ABC):
     upgrades: Dict[str, Upgrade] = field(default_factory=dict)
     __price: float = 0
+    __man_cost: float = 0
     __upgrade_sales_effect_multiplier: float = 1
     __upgrade_man_cost_effect_multiplier: float = 1
     __upgrade_stored_products_price: float = 0
 
     def set_price(self, new_price: float) -> None:
         self.__price = new_price
+    
+    def get_price(self) -> float:
+        return self.__price
+    
+    def set_man_cost(self, new_man_cost: float) -> None:
+        self.__man_cost = new_man_cost
+
+    def get_man_cost(self) -> float:
+        return self.__man_cost
 
     def _set_upgrade_sales_effect_multiplier(self):
         sum = 0
@@ -40,9 +50,6 @@ class Product(ABC):
     
     def get_upgrade_man_cost_effect_multiplier(self):
         return self.__upgrade_man_cost_effect_multiplier
-
-    def get_price(self) -> float:
-        return self.__price
 
     def _set_upgrade_stored_products_price(self, new_upgrade_price: float) -> None:
         self._set_upgrade_stored_products_price = new_upgrade_price
