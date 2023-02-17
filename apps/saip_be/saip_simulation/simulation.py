@@ -195,7 +195,10 @@ class Simulation:
             #the argument is added to the factory.capital val at the beginning of the method
             #if I were to pass the value from model into this function we'd be effectively using twice the value of the "capital" attribute from factory model
             #as the investment value
-        self.market.generate_distribution()   
+        self.market.generate_distribution()
+        for company in self.companies.values():
+            company.yield_agg_marketing_value()
+            company.calculate_stock_price()   
         pass
 
     def write_simulation_results(self):
