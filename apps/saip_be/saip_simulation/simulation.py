@@ -185,6 +185,9 @@ class Simulation:
             pass
         new_product.setup_product()
         return new_product
+    
+    def run_simulation(self):
+        pass
 
     def write_simulation_results(self):
         # declare lists and dictionaries
