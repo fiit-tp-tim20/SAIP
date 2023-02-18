@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { X } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { Vector3 } from "three";
+import useUpgradesStore from "../../store/Upgrades";
 import { Upgrade } from "../../types/product";
+import Slider from "../slider/Slider";
 import Canvas from "../three/Canvas";
 
 type Props = {
@@ -14,17 +16,26 @@ function ProductModal(props: Props) {
 	const { upgrade, onClick } = props;
 	const { t } = useTranslation();
 
+	const { upgrades, upgradesCheck, setUpgrade, setUpgradeCheck } = useUpgradesStore();
 	console.log(upgrade);
 
+	console.log(upgrades);
+
+	useEffect(() => {
+		console.log("UPGRADE", upgrade);
+		console.log("UPGRADES", upgrades[upgrade.name]);
+	}, [upgrade, upgrades]);
+
 	return (
-		<div className="background-container rounded-2xl p-6 grid grid-cols-2 gap-6 max-w-5xl min-h-[50vh] max-h-[95vh]">
+		<div className="background-container rounded-2xl p-6 grid grid-cols-2 gap-6 w-[60vw] min-h-[50vh] max-h-[95vh]">
 			<div className="flex flex-col max-h-[90vh] overflow-scroll scrollbar-hide">
 				<div className="py-2">
-					<h2 className="pb-2">{t(`research.features.${upgrade.id}.title`) as string}</h2>
+					<h2 className="pb-2">{upgrade.name}</h2>
 					<p>{t(`research.features.${upgrade.id}.text`) as string}</p>
 				</div>
 				<div className="py-2">
 					<h4>{t(`research.playerResearched.title`) as string}</h4>
+					{upgrade.players.length === 0 && <p>Žiaden z hráčov zatiaľ nedokončil toto vylepšenie</p>}
 					{upgrade.players.map((player) => (
 						<div
 							key={player}
@@ -49,17 +60,32 @@ function ProductModal(props: Props) {
 				</div>
 				{upgrade.progress && (
 					<div className="py-2 items-center">
-						<h4>{t(`research.progress.title`) as string}</h4>
 						<div className="flex flex-row items-center justify-between text-center">
-							<progress
-								className="progress progress-primary w-96"
-								value={upgrade.progress}
-								max={upgrade.price}
-							/>
+							<h4>{t(`research.progress.title`) as string}</h4>
 							<p className="my-auto ml-2">
 								{upgrade.progress}/{upgrade.price}
 							</p>
 						</div>
+						<progress
+							className="progress progress-primary w-full"
+							value={upgrade.progress}
+							max={upgrade.price}
+						/>
+					</div>
+				)}
+				{upgrade.price !== upgrade.progress && (
+					<div className="py-2">
+						<h4>Investícia</h4>
+						<Slider
+							min={0}
+							max={upgrade.price - upgrade.progress}
+							value={upgrades[upgrade.name]}
+							setValue={(val) => {
+								setUpgrade(upgrade.name, val);
+							}}
+							checked={upgradesCheck[upgrade.name]}
+							setChecked={(val) => setUpgradeCheck(upgrade.name, val)}
+						/>
 					</div>
 				)}
 			</div>

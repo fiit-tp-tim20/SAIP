@@ -12,7 +12,7 @@ export type Upgrade = {
 	// players: Player[];
 	status: "finished" | "started" | "not started";
 	price: number;
-	progress?: number;
+	progress: number;
 	camera: {
 		position: [number, number, number];
 		rotation: [number, number, number];
