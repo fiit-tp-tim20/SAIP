@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import React, { useEffect, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
-import { useSpring, a } from "@react-spring/three";
+// import { useSpring, a } from "@react-spring/three";
 import { useThree } from "@react-three/fiber";
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 };
 
 function Bike(props: JSX.IntrinsicElements["group"] & Props) {
-	const { nodes, materials } = useGLTF("/bike_v8_test.glb");
+	/*	const { nodes, materials } = useGLTF("/bike_v8_test.glb");
 	const group = useRef<THREE.Group>(null!);
 
 	const [spring, api] = useSpring(() => ({ rotation: [0, 0, 0], config: { mass: 5, tension: 100 } }), []);
@@ -35,9 +35,10 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 
 		return () => clearTimeout(timeout);
 	}, []);
-
+*/
 	return (
 		<group {...props} dispose={null}>
+			{/* 
 			<a.group name="Wheel_Front" ref={group} position={[0, 0.87, 1.44]} {...spring}>
 				<mesh
 					name="Hub_front"
@@ -189,7 +190,6 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 				scale={0.06}
 			/>
 			<mesh name="Head_tube" geometry={nodes.Head_tube.geometry} material={materials.Main} />
-			<mesh name="Fort_Seat_stay001" geometry={nodes.Fort_Seat_stay001.geometry} material={materials.Main} />
 			<mesh
 				name="Screen_body"
 				geometry={nodes.Screen_body.geometry}
@@ -206,6 +206,7 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 				rotation={[-0.6, 0, 0]}
 				scale={[0.06, 0.09, 0.09]}
 			/>
+*/}
 		</group>
 	);
 }
