@@ -14,10 +14,10 @@ except ValueError: # Already removed
 from dataclasses import dataclass
 from typing import List
 
-from saip_simulation.product import Product, DailyProduct, LastingProduct
-from saip_simulation.marketing import *
-from saip_simulation.config import TURN_LENGTH, FactoryPreset
-from saip_simulation.marketing import MarketingType
+from .product import Product, DailyProduct, LastingProduct
+from .marketing import *
+from .config import TURN_LENGTH, FactoryPreset
+from .marketing import MarketingType
 from typing import Dict
 from math import ceil, floor
 
@@ -55,6 +55,21 @@ class Factory:
         'materials': float,  # this one might be irrelevant
         'maintenance': float
     }
+    #def __init__(self):
+    #    self.total_investment = 0
+    #    self.capacity = 0
+    #    self.employees = 0
+    #    self.employee_salary = 0
+    #    self.base_energy_cost = 0
+    #    self.energy_cost_per_machine = 0
+    #    self.machine_count = 0 
+    #    self.upkeep = {
+    #        'rent': 0,
+    #        'energy': 0,
+    #        'salaries': 0,
+    #        'materials': 0,
+    #        'maintenance': 0
+    #    }
     
     def __init__(self):
         self.__setup_factory()
@@ -117,7 +132,8 @@ class Company:
     brand: str
     product: Product
     inventory: int  # assuming that the stored products are upgraded automatically, for a price
-    
+    production_volume: int
+
     credit: float  # +profit -costs| represents whether or not the company is actually in dept / turning profit
     profit_per_turn: float
     costs_per_turn: float
@@ -129,6 +145,26 @@ class Company:
     
     stock_price: float  # company score
     marketing: Dict[str, MarketingType]
+
+    def __init__(self, brand_name=None):
+        #setup default values
+        self.brand = "" if brand_name is None else brand_name
+        self.inventory = 0
+        self.profit_per_turn = 0
+
+        self.product = None
+        self.storage_count = 0
+        self.debit = 0
+        self.credit = 0
+        self.profit = 0
+        self.max_budget = 0
+        self.remaining_budget = 0
+        self.factory = None
+        self.costs_per_turn = {}
+        self.stock_price = 0
+        self.marketing = {}
+        self.production_volume = 0
+        pass
     
     def upgrade_stored_products(self):
         self.costs_per_turn += self.inventory * self.product.get_upgrade_price()

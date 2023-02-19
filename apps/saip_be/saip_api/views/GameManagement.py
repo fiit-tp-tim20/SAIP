@@ -3,11 +3,13 @@ from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from saip_api.models import Game, GameParameters, Upgrade, Turn, Company, CompaniesState
+from saip_api.models import Game, GameParameters, Upgrade, Turn, Company, CompaniesState, Production, Marketing, Factory, CompaniesUpgrades
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from ..serializers import GameSerializer
+
+from saip_simulation.simulation import Simulation
 
 parameters = {"GameParameters": {"budget_cap": 10000,
                                  "depreciation": 0.1},
@@ -30,12 +32,23 @@ def create_default_upgrades(game: Game) -> None:
                                    camera_rot=upgrade["camera_rot"]).save()
 
 
-def create_turn(number: int, game: Game) -> None:
+def create_turn(number: int, game: Game) -> Turn:
     turn = Turn.objects.create(number=number, game=game)
     companies = Company.objects.filter(game=game)
-
+    
     for company in companies:
-        CompaniesState.objects.create(turn=turn, company=company).save()
+        cs = CompaniesState.objects.create(turn=turn, company=company)
+        production = Production.objects.create()
+        cs.production = production
+        marketing = Marketing.objects.create()
+        cs.marketing = marketing
+        factory = Factory.objects.create()
+        cs.factory = factory
+
+        cs.save()
+
+
+    return turn
 
 
 def get_last_turn(game: Game) -> Turn:
@@ -80,6 +93,26 @@ class GetRunningGamesView(APIView):
         return Response(response)
 
 
+def calculate_man_cost(game: Game, turn: Turn) -> None:
+
+    companies = Company.objects.filter(game=game)
+    base_cost = game.parameters.base_man_cost
+
+    for company in companies:
+
+        company_upgrades = CompaniesUpgrades.objects.filter(company=company, status="f")
+        cost = 1
+        for upgrade in company_upgrades:
+            cost += upgrade.upgrade.man_cost_effect
+
+        value = base_cost * cost
+
+        company_state = CompaniesState.objects.get(company=company, turn=turn)
+        company_state.production.man_cost = round(value, 2)
+        company_state.production.save()
+        company_state.save()
+   
+
 class EndTurnView(PermissionRequiredMixin, APIView):
     permission_required = 'saip_api.add_turn'
 
@@ -100,6 +133,7 @@ class EndTurnView(PermissionRequiredMixin, APIView):
 
         last_turn = get_last_turn(game)
 
+
         return Response({"Number": last_turn.number, "Start": last_turn.start, "Game": game.name}, status=200)
 
     def post(self, request) -> Response:
@@ -119,10 +153,14 @@ class EndTurnView(PermissionRequiredMixin, APIView):
 
         turn = get_last_turn(game)
         turn.end = timezone.now()
+        
         turn.save()
 
-        create_turn(turn.number + 1, game)
+        new_turn = create_turn(turn.number + 1, game)
+        calculate_man_cost(game, new_turn)
 
         # start simulation here
-
+        sim = Simulation(game_model=game, turn_model=turn)
+        sim.write_simulation_results()
+        
         return Response({"detail": "Turn ended, simulation started"}, status=200)

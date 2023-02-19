@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 class GameParameters(models.Model):
     budget_cap = models.PositiveIntegerField(default=10000)
     depreciation = models.FloatField(default=0.1)
+    base_man_cost = models.PositiveIntegerField(default=50)
 
     class Meta:
         db_table = 'GameParameters'
@@ -55,9 +56,9 @@ class Company(models.Model):
 
 
 class Production(models.Model):
-    man_cost = models.FloatField(null=True, blank=True)
-    sell_price = models.FloatField(null=True)
-    volume = models.PositiveIntegerField(null=True)
+    man_cost = models.FloatField(null=True, default=0)
+    sell_price = models.FloatField(null=True, default=0)
+    volume = models.PositiveIntegerField(null=True, default=0)
 
     class Meta:
         db_table = 'Productions'
@@ -107,6 +108,7 @@ class CompaniesUpgrades(models.Model):
     upgrade = models.ForeignKey(Upgrade, models.CASCADE, null=True)
     progress = models.PositiveIntegerField(null=True, default=0)
     game = models.ForeignKey(Game, models.CASCADE, null=True)
+    turn = models.ForeignKey(Turn, models.PROTECT, null=True)
 
     def __str__(self):
         return f"{self.company} - {self.upgrade}"
@@ -117,12 +119,12 @@ class CompaniesUpgrades(models.Model):
 
 
 class Factory(models.Model):
-    prod_emp = models.PositiveIntegerField(null=True)
-    cont_emp = models.PositiveIntegerField(null=True)
-    aux_emp = models.PositiveIntegerField(null=True)
-    capacity = models.PositiveIntegerField(null=True, blank=True)
-    base_cost = models.PositiveIntegerField(null=True, blank=True)
-    capital = models.PositiveIntegerField(null=True)
+    prod_emp = models.PositiveIntegerField(null=True, default=0)
+    cont_emp = models.PositiveIntegerField(null=True, default=0)
+    aux_emp = models.PositiveIntegerField(null=True, default=0)
+    capacity = models.PositiveIntegerField(null=True, default=0)
+    base_cost = models.PositiveIntegerField(null=True,default=0)
+    capital = models.PositiveIntegerField(null=True, default=0)
 
     # def __str__(self):
     #     return f"Factory - {self.companiesstate.company}"
@@ -142,6 +144,7 @@ class CompaniesState(models.Model):
     inventory = models.PositiveIntegerField(null=True, blank=True)
     r_d = models.PositiveBigIntegerField(null=True, blank=True)
     marketing = models.OneToOneField(Marketing, models.SET_NULL, null=True, blank=True)
+    commited = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.company} - {self.turn}"

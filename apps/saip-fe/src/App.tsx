@@ -11,7 +11,9 @@ import Product from "./screens/Product";
 import Navbar from "./components/navbar/Navbar";
 import Company from "./screens/Company";
 import Marketing from "./screens/Marketing";
+import BottomBar from "./components/bottombar/BottomBar";
 import Login from "./screens/Login";
+import NotFound from "./screens/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -24,17 +26,18 @@ function App() {
 				<Suspense>
 					<BrowserRouter>
 						<Navbar />
-						<div className="mt-16">
+						<div className="my-16">
 							<Routes>
 								<Route path="/dashboard" element={<Dashboard />} />
 								<Route path="/product" element={<Product />} />
 								<Route path="/company" element={<Company />} />
 								<Route path="/marketing" element={<Marketing />} />
-								<Route path="/news" element={<News />} />
+								{/* <Route path="/news" element={<News />} /> */}
 								<Route path="/" element={<Navigate to="/dashboard" replace />} />
-								<Route path="*" element={<Login />} />
+								<Route path="*" element={<NotFound />} />
 							</Routes>
 						</div>
+						<BottomBar />
 					</BrowserRouter>
 				</Suspense>
 			) : (

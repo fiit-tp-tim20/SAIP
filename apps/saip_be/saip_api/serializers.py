@@ -105,17 +105,14 @@ class ProductionSerializer(serializers.ModelSerializer):
         model = Production
         fields = ('sell_price', 'volume')
 
-    def create(self, validated_data) -> Production:
+    def update(self, instance, validated_data) -> Production:
         sell_price = validated_data.get('sell_price')
         volume = validated_data.get('volume')
 
-        production = Production.objects.create(
-            sell_price = sell_price,
-            volume = volume
-        )
-        production.save()
+        instance.sell_price = sell_price
+        instance.volume = volume
 
-        return production
+        return instance
 
 class MaketingSerializer(serializers.ModelSerializer):
 
@@ -128,23 +125,21 @@ class MaketingSerializer(serializers.ModelSerializer):
         model = Marketing
         fields = ('viral', 'podcast', 'ooh', 'tv', 'billboard')
 
-    def create(self, validated_data) -> Marketing:
+    def update(self, instance, validated_data) -> Marketing:
         viral = validated_data.get('viral')
         podcast = validated_data.get('podcast')
         ooh = validated_data.get('ooh')
         tv = validated_data.get('tv')
         billboard = validated_data.get('billboard')
 
-        marketing = Marketing.objects.create(
-            viral = viral,
-            podcast = podcast,
-            ooh = ooh,
-            tv = tv,
-            billboard = billboard
-        )
-        marketing.save()
 
-        return marketing
+        instance.viral = viral
+        instance.podcast = podcast
+        instance.ooh = ooh
+        instance.tv = tv
+        instance.billboard = billboard
+
+        return instance
 
 class FactorySerializer(serializers.ModelSerializer):
 
@@ -156,18 +151,16 @@ class FactorySerializer(serializers.ModelSerializer):
         model = Factory
         fields = ('prod_emp', 'cont_emp', 'aux_emp', 'capital')
 
-    def create(self, validated_data) -> Factory:
+    def update(self, instance, validated_data) -> Factory:
         prod_emp = validated_data.get('prod_emp')
         cont_emp = validated_data.get('cont_emp')
         aux_emp = validated_data.get('aux_emp')
         capital = validated_data.get('capital')
 
-        factory = Factory.objects.create(
-            prod_emp = prod_emp,
-            cont_emp = cont_emp,
-            aux_emp = aux_emp,
-            capital = capital
-        )
-        factory.save()
+        
+        instance.prod_emp = prod_emp
+        instance.cont_emp = cont_emp
+        instance.aux_emp = aux_emp
+        instance.capital = capital
 
-        return factory
+        return instance
