@@ -59,6 +59,7 @@ class Production(models.Model):
     man_cost = models.FloatField(null=True, default=0)
     sell_price = models.FloatField(null=True, default=0)
     volume = models.PositiveIntegerField(null=True, default=0)
+    sold = models.PositiveIntegerField(null=True, default=0)
 
     class Meta:
         db_table = 'Productions'

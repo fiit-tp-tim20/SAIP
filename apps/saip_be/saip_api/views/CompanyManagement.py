@@ -40,14 +40,32 @@ class Report(APIView):
             return Response({"detail": "Company for this user not found"}, status=404)
 
         last_turn = get_last_turn(company.game)
-        try:
-            company_state = CompaniesState.objects.get(turn=last_turn, company=company)
-        except CompaniesState.DoesNotExist:
-            return Response({"detail": "Company state for this turn does not exist"}, status=500)
 
-        
+        r_d_list = []
+        marketing_list = []
+        volume_list = []
+        inventory_list = []
+        sold_list = []
 
-        return Response({"r_d": company.id, 'name': company.name, 'budget_cap': company.game.parameters.budget_cap}, status=200)
+        for turn in range(1, last_turn.number):
+            company_state = CompaniesState.objects.get(turn=Turn.objects.get(number=turn), company=company)
+            r_d_list.append(company_state.r_d)
+            marketing_list.append([company_state.marketing.viral, company_state.marketing.billboard, company_state.marketing.podcast, company_state.marketing.ooh, company_state.marketing.tv])
+            volume_list.append(company_state.production.volume)
+            inventory_list.append(company_state.inventory)
+            sold_list.append(company_state.production.sold)
+
+            if turn == (last_turn.number - 1):
+                r_d = company_state.r_d
+                capacity = company_state.factory.capacity
+                man_cost = company_state.production.man_cost
+                stock_price = company_state.stock_price
+                inventory = company_state.inventory
+                utilization = (company_state.production.volume/capacity)
+                sold = company_state.production.sold
+
+
+        return Response({"r_d": r_d, 'stock_price': stock_price, 'inventory': inventory, 'capacity': capacity, 'utilization': utilization, 'man_cost': man_cost, 'sold': sold, 'r_d_list': r_d_list, 'marketing_list': marketing_list, 'volume_list': volume_list, 'inventory_list': inventory_list, 'sold_list': sold_list}, status=200)
   
 
 class CreateCompanyView(APIView):
