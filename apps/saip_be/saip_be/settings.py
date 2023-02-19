@@ -31,7 +31,8 @@ DEBUG = True
 # CSRF_COOKIE_SECURE = True
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
+# pridat akademicku siet
 
 
 # Application definition
@@ -62,10 +63,12 @@ MIDDLEWARE = [
 ]
 
 # frontend url
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5173",
+#     "http://127.0.0.1:5173",
+# ]
+# pridat akademicku siet
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'saip_be.urls'
 
@@ -100,7 +103,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'saip',
         'USER': 'saip_user',
-        'PASSWORD': 'nbusr123',
+        'PASSWORD': 's4QuJ5gB5QGaSASM',
         'HOST': 'localhost',
         'PORT': '',
     }
@@ -162,21 +165,21 @@ REST_KNOX = {"TOKEN_TTL": timedelta(days=365),
              "AUTH_HEADER_PREFIX": "Bearer"}
 
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': 'info.log',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-    },
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'file': {
+#             'level': 'INFO',
+#             'class': 'logging.FileHandler',
+#             'filename': 'info.log',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['file'],
+#             'level': 'INFO',
+#             'propagate': True,
+#         },
+#     },
+# }
