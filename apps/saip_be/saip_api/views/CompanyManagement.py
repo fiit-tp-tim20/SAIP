@@ -55,17 +55,19 @@ class Report(APIView):
             inventory_list.append(company_state.inventory)
             sold_list.append(company_state.production.sold)
 
+
             if turn == (last_turn.number - 1):
                 r_d = company_state.r_d
+                marketing = company_state.marketing.billboard + company_state.marketing.tv + company_state.marketing.ooh + company_state.marketing.viral + company_state.marketing.podcast
                 capacity = company_state.factory.capacity
                 man_cost = company_state.production.man_cost
                 stock_price = company_state.stock_price
                 inventory = company_state.inventory
-                utilization = (company_state.production.volume/capacity)
+                utilization = (company_state.production.volume/capacity) * 100
                 sold = company_state.production.sold
 
 
-        return Response({"r_d": r_d, 'stock_price': stock_price, 'inventory': inventory, 'capacity': capacity, 'utilization': utilization, 'man_cost': man_cost, 'sold': sold, 'r_d_list': r_d_list, 'marketing_list': marketing_list, 'volume_list': volume_list, 'inventory_list': inventory_list, 'sold_list': sold_list}, status=200)
+        return Response({"r_d": r_d, "marketing": marketing, 'stock_price': stock_price, 'inventory': inventory, 'capacity': capacity, 'utilization': utilization, 'man_cost': man_cost, 'sold': sold, 'r_d_list': r_d_list, 'marketing_list': marketing_list, 'volume_list': volume_list, 'inventory_list': inventory_list, 'sold_list': sold_list}, status=200)
   
 
 class CreateCompanyView(APIView):
