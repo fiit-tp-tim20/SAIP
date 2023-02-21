@@ -157,6 +157,11 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
 }
 
+if not DEBUG:
+    REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] = (
+            "rest_framework.renderers.JSONRenderer",
+        )
+
 REST_KNOX = {"TOKEN_TTL": timedelta(days=365),
              "AUTO_REFRESH": True,
              "TOKEN_LIMIT_PER_USER": None,
