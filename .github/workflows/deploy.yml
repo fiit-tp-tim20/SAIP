@@ -24,6 +24,8 @@ jobs:
             git pull
   build_fe:
     runs-on: ubuntu-latest
+    needs: git_pull
+    if: ${{ !contains(github.event.head_commit.message), '#beonly' }}
     steps:
       - name: Deploy backend and frontend
         uses: appleboy/ssh-action@master
@@ -33,11 +35,24 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd ~/SAIP
-            sudo cp apps/saip_be /var/www/ -r
-            cd apps/saip-fe
+            cd ~/SAIP/apps/saip-fe
             yarn run build
             sudo cp dist /var/www/ -r
+            sudo systemctl restart nginx
+  build_be:
+    runs-on: ubuntu-latest
+    needs: git_pull
+    if: ${{ !contains(github.event.head_commit.message), '#feonly' }}
+    steps:
+      - name: Deploy backend
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ~/SAIP
+            sudo cp apps/saip_be /var/www/ -r
             sudo systemctl restart gunicorn
             sudo systemctl restart nginx
-
