@@ -20,7 +20,7 @@ const queryClient = new QueryClient();
 function App() {
 	const token = localStorage.getItem("token");
 
-	console.log("App.tsx");
+	console.warn("App.tsx aa aaaa");
 
 	return (
 		<QueryClientProvider client={queryClient}>
