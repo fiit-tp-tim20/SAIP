@@ -12,7 +12,7 @@ export default function BottomBar() {
 	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());
 
 	const { getSum: getSumMarketing, getChecked: getCheckedMarketing } = useMarketingStore();
-	const { getSum: getSumCompany, getChecked: getCheckedCompany } = useCompanyStore();
+	const { capitalInvestments, getChecked: getCheckedCompany } = useCompanyStore();
 	const { getSum: getSumUpgrades } = useUpgradesStore();
 
 	const navigate = useNavigate();
@@ -20,8 +20,8 @@ export default function BottomBar() {
 	const [totalSpent, setTotalSpent] = useAtom(totalSpentPersist);
 
 	useEffect(() => {
-		setTotalSpent(getSumUpgrades() + getSumCompany() + getSumMarketing());
-	}, [getSumUpgrades(), getSumCompany(), getSumMarketing()]);
+		setTotalSpent(getSumUpgrades() + capitalInvestments + getSumMarketing());
+	}, [getSumUpgrades(), capitalInvestments, getSumMarketing()]);
 
 	return (
 		<div className="fixed bottom-2 right-2 z-40">
