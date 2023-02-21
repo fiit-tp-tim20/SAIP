@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'corsheaders',
-    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -168,7 +167,7 @@ import platform
 if platform.system() == 'Windows':
     LOG_FILE = 'info.log'
 else:
-    LOG_FILE = '/var/log/saip_info.log'
+    LOG_FILE = '/tmp/saip_info.log'
 
 LOGGING = {
     'version': 1,
