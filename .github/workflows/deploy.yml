@@ -4,14 +4,14 @@ on:
     branches:
       - prod
 jobs:
-  build-and-deploy:
+  git_pull:
     runs-on: ubuntu-latest
     steps:
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          known_hosts: unnecessary
+        known_hosts: unnecessary
       - name: Deploy backend and frontend
         uses: appleboy/ssh-action@master
         with:
@@ -22,6 +22,18 @@ jobs:
           script: |
             cd ~/SAIP
             git pull
+  build_fe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy backend and frontend
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd ~/SAIP
             sudo cp apps/saip_be /var/www/ -r
             cd apps/saip-fe
             yarn run build
