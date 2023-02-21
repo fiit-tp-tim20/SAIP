@@ -20,4 +20,12 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            pwd
+            cd ~/SAIP
+            git pull
+            sudo cp apps/saip_be /var/www/ -r
+            cd apps/saip-fe
+            yarn run build
+            sudo cp dist /var/www/ -r
+            sudo systemctl restart gunicorn
+            sudo systemctl restart nginx
+
