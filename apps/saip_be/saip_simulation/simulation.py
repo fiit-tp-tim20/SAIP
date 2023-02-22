@@ -20,6 +20,8 @@ from saip_simulation.company import Factory
 from saip_simulation.marketing import Billboard, SocialMedia, CableNews, Podcast, OOH
 from saip_simulation.product import Product, LastingProduct, Upgrade
 
+from saip_simulation.config import FactoryPreset
+
 import saip_api.models as models
 
 
@@ -29,7 +31,7 @@ class Simulation:
     current_turn: int  # the current turn being evaluated
     turn_limit: int  # maximum number of turns
 
-    def __init__(self, game_model: models.Game, turn_model: models.Turn) -> None:
+    def __init__(self, game_model: models.Game, turn_model: models.Turn, new_turn_model: models.Turn) -> None:
 
         self.companies = (
             {}
@@ -37,6 +39,7 @@ class Simulation:
         self.market = None
         self.game_model = game_model
         self.turn_model = turn_model
+        self.new_turn_model = new_turn_model
         self.current_turn = turn_model.number
         self.turn_limit = game_model.turns
         self.setup_simulation()
@@ -141,8 +144,12 @@ class Simulation:
         prod_emp = factory_model.prod_emp
         cont_emp = factory_model.cont_emp
         aux_emp = factory_model.aux_emp
-
-        new_factory.capacity = factory_model.capacity
+        
+        # TODO: TEMP FIX - create the correct initialization of models
+        if factory_model.capacity < FactoryPreset.STARTING_CAPACITY:
+            pass
+        else:
+            new_factory.capacity = factory_model.capacity
         new_factory.base_energy_cost = factory_model.base_cost
         new_factory.capital_investment = factory_model.capital
 
@@ -188,6 +195,7 @@ class Simulation:
     
     def run_simulation(self):
         for company in self.companies.values():
+            print(company)
             company.factory.calculate_price_per_unit(company.production_volume)
             company.produce_products()
             company.factory.invest_into_factory(1) #TODO: solve the fact that we are using the capital from model as investment value;
@@ -198,7 +206,8 @@ class Simulation:
         self.market.generate_distribution()
         for company in self.companies.values():
             company.yield_agg_marketing_value()
-            company.calculate_stock_price()   
+            company.calculate_stock_price() 
+            print(company)  
         pass
 
     def write_simulation_results(self):
@@ -212,7 +221,7 @@ class Simulation:
         for company_model in companies_models:
             try:
                 company_state_model = models.CompaniesState.objects.get(
-                    company=company_model, turn=self.turn_model
+                    company=company_model, turn=self.new_turn_model
                 )
                 companies_states[company_model] = company_state_model
             except models.CompaniesState.DoesNotExist:
