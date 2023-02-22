@@ -14,14 +14,15 @@ import Marketing from "./screens/Marketing";
 import BottomBar from "./components/bottombar/BottomBar";
 import Login from "./screens/Login";
 import NotFound from "./screens/NotFound";
+import { getTurn } from "./api/GetTurn";
 
 function App() {
-	const { data, isLoading, refetch } = useQuery("currentTurn", () => {});
+	const { data, isLoading, refetch } = useQuery({
+		queryKey: ["currentTurn"],
+		queryFn: () => getTurn(),
+		refetchInterval: 1000,
+	});
 	const token = localStorage.getItem("token");
-
-	setTimeout(() => {
-		refetch();
-	}, 1000);
 
 	return (
 		<>

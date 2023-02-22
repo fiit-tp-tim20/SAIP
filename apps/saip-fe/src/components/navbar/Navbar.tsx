@@ -1,12 +1,19 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "react-query";
 import { useLocation } from "react-router";
+import { getTurn } from "../../api/GetTurn";
 import LinkTab from "./LinkTab";
 import Profile from "./Profile";
 
 function Navbar() {
 	const { t } = useTranslation();
 	const location = useLocation();
+
+	const { data, isLoading } = useQuery({
+		queryKey: ["currentTurn"],
+		queryFn: () => getTurn(),
+	});
 
 	const tabs = ["dashboard", "product", "company", "marketing"];
 
@@ -25,6 +32,7 @@ function Navbar() {
 					))}
 				</ul>
 				<div className="pr-3">
+					<p>{data.Number}</p>
 					<Profile />
 				</div>
 			</div>

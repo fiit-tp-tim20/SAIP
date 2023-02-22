@@ -1,5 +1,5 @@
 export const getTurn = async () => {
-	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/turn_info`, {
+	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/turn_info/`, {
 		headers: {
 			Authorization: `Bearer ${localStorage.getItem("token")}`,
 		},
