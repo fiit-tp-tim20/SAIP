@@ -44,7 +44,7 @@ class Simulation:
         self.turn_limit = game_model.turns
         self.setup_simulation()
 
-    def setup_simulation(self):
+    def setup_simulation(self) -> None:
         # Filter companies that are in this game
         companies_models = models.Company.objects.filter(game=self.game_model)
         # iterate over the companies and create all relevant classes
@@ -193,7 +193,7 @@ class Simulation:
         new_product.setup_product()
         return new_product
     
-    def run_simulation(self):
+    def run_simulation(self) -> None:
         for company in self.companies.values():
             print(company)
             company.factory.calculate_price_per_unit(company.production_volume)
@@ -210,7 +210,7 @@ class Simulation:
             print(company)  
         pass
 
-    def write_simulation_results(self):
+    def write_simulation_results(self) -> None:
         # declare lists and dictionaries
         companies_models = []  # list of company models
         #companies_states = Dict[models.Company, models.CompaniesState]
