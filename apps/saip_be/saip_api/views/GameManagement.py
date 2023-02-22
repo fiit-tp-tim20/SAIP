@@ -137,7 +137,7 @@ class EndTurnView(PermissionRequiredMixin, APIView):
 
         # start simulation here
         sim = Simulation(game_model=game, turn_model=turn, new_turn_model=get_last_turn(game=game))
-        sim.run_simulation()   #TODO: remove after merging with branch with fixes
+        sim.run_simulation()
         sim.write_simulation_results()
         
         return Response({"detail": "Turn ended, simulation started"}, status=200)

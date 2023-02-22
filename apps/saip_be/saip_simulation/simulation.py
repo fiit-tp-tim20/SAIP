@@ -95,9 +95,9 @@ class Simulation:
         # parse the companies state model and create objects
         if company_state is not None:
 
-            new_company.remaining_budget = company_state.balance  # float
-            new_company.stock_price = company_state.stock_price  # float
-            new_company.inventory = company_state.inventory  # pos int
+            new_company.remaining_budget = company_state.balance if company_state.balance is not None else 0 # float
+            new_company.stock_price = company_state.stock_price if company_state.stock_price is not None else 0 # float
+            new_company.inventory = company_state.inventory if company_state.inventory is not None else 0 # pos int
             # r_d = company_state.r_d                                #pos big int    #TODO: add rnd to class obejct
 
             # create objects from models
@@ -111,19 +111,19 @@ class Simulation:
             # setup marketing objects in dict
             marketing_model = company_state.marketing
             if marketing_model is not None:
-                if marketing_model.billboard > 0:
+                if marketing_model.billboard is not None and marketing_model.billboard > 0:
                     new_company.marketing["billboard"] = Billboard(
                         marketing_model.billboard
                     )
-                if marketing_model.ooh > 0:
+                if marketing_model.ooh is not None and marketing_model.ooh > 0:
                     new_company.marketing["ooh"] = OOH(marketing_model.ooh)
-                if marketing_model.podcast > 0:
+                if marketing_model.podcast is not None and marketing_model.podcast > 0:
                     new_company.marketing["podcast"] = Podcast(marketing_model.podcast)
-                if marketing_model.viral > 0:
+                if marketing_model.viral is not None and marketing_model.viral > 0:
                     new_company.marketing["social media"] = SocialMedia(
                         marketing_model.viral
                     )
-                if marketing_model.tv > 0:
+                if marketing_model.tv is not None and marketing_model.tv > 0:
                     new_company.marketing["cable news"] = CableNews(marketing_model.tv)
             else:
                 pass
