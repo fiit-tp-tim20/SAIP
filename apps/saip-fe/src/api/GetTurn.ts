@@ -1,8 +1,6 @@
 export const getTurn = async () => {
-	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/end_turn`, {
-		method: "GET",
+	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/turn_info`, {
 		headers: {
-			"Content-Type": "application/json",
 			Authorization: `Bearer ${localStorage.getItem("token")}`,
 		},
 	});
