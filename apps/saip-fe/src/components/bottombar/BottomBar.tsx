@@ -7,13 +7,23 @@ import { totalSpentPersist } from "../../store/Atoms";
 import useCompanyStore from "../../store/Company";
 import useMarketingStore from "../../store/Marketing";
 import useUpgradesStore from "../../store/Upgrades";
+import { GameState } from "../../types/gameState";
+import { endTurn } from "../../api/EndTurn";
 
 export default function BottomBar() {
 	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());
 
-	const { getSum: getSumMarketing, getChecked: getCheckedMarketing } = useMarketingStore();
-	const { capitalInvestments, getChecked: getCheckedCompany } = useCompanyStore();
-	const { getSum: getSumUpgrades } = useUpgradesStore();
+	const {
+		getSum: getSumMarketing,
+		getChecked: getCheckedMarketing,
+		viral,
+		ooh,
+		billboard,
+		tv,
+		podcast,
+	} = useMarketingStore();
+	const { capitalInvestments, getChecked: getCheckedCompany, productCount, productPrice } = useCompanyStore();
+	const { getSum: getSumUpgrades, upgrades } = useUpgradesStore();
 
 	const navigate = useNavigate();
 
@@ -22,6 +32,26 @@ export default function BottomBar() {
 	useEffect(() => {
 		setTotalSpent(getSumUpgrades() + capitalInvestments + getSumMarketing());
 	}, [getSumUpgrades(), capitalInvestments, getSumMarketing()]);
+
+	const handleEndTurn = () => {
+		const gameState: GameState = {
+			upgrades,
+			company: {
+				productPrice,
+				productCount,
+				capitalInvestments,
+			},
+			marketing: {
+				viral,
+				ooh,
+				billboard,
+				tv,
+				podcast,
+			},
+		};
+
+		endTurn(gameState);
+	};
 
 	return (
 		<div className="fixed bottom-2 right-2 z-40">
@@ -43,7 +73,7 @@ export default function BottomBar() {
 						</button>
 						<button
 							type="button"
-							onClick={() => alert("Ukončenie kola!")}
+							onClick={() => handleEndTurn()}
 							className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 rounded-lg disabled:bg-accent-100 disabled:cursor-not-allowed"
 							disabled={totalSpent > data.budget_cap || !getCheckedCompany() || !getCheckedMarketing()}
 						>
