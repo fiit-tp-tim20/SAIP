@@ -66,6 +66,8 @@ class PostSpendingsView(APIView):
         if company_state.commited:
             return Response({"detail": "Decisions were posted before"}, status=409)
 
+        print(company_state.marketing.viral, company_state.turn.number)
+
         spendings_serializer = SpendingsSerializer(data=request.data)
         spendings_serializer.is_valid(raise_exception=True)
 
@@ -138,12 +140,15 @@ class PostSpendingsView(APIView):
                 display_progress.turn = company_state.turn
 
         production = prod_serializer.save()
+        production.save()
         company_state.production = production
 
         factory = factory_serializer.save()
+        factory.save()
         company_state.factory = factory
 
         marketing = marketing_serializer.save()
+        marketing.save()
         company_state.marketing = marketing
 
         brakes_progress.save()
