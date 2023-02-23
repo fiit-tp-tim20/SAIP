@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import "./i18n";
 import Dashboard from "./screens/Dashboard";
@@ -14,14 +14,18 @@ import Marketing from "./screens/Marketing";
 import BottomBar from "./components/bottombar/BottomBar";
 import Login from "./screens/Login";
 import NotFound from "./screens/NotFound";
-
-const queryClient = new QueryClient();
+import { getTurn } from "./api/GetTurn";
 
 function App() {
+	const { data, isLoading, refetch } = useQuery({
+		queryKey: ["currentTurn"],
+		queryFn: () => getTurn(),
+		refetchInterval: 1000,
+	});
 	const token = localStorage.getItem("token");
 
 	return (
-		<QueryClientProvider client={queryClient}>
+		<>
 			{token ? (
 				<Suspense>
 					<BrowserRouter>
@@ -45,7 +49,7 @@ function App() {
 			)}
 			{/* <Devtools /> */}
 			<ReactQueryDevtools initialIsOpen={false} />
-		</QueryClientProvider>
+		</>
 	);
 }
 
