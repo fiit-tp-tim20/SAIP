@@ -27,7 +27,7 @@ class CompanyInfo(APIView):
 
         return Response({"id": company.id, 'name': company.name, 'budget_cap': company.game.parameters.budget_cap}, status=200)
 
-class Report(APIView):
+class CompanyReport(APIView):
 
     def get(self, request) -> Response:
 
@@ -40,34 +40,49 @@ class Report(APIView):
             return Response({"detail": "Company for this user not found"}, status=404)
 
         last_turn = get_last_turn(company.game)
+        company_state = CompaniesState.objects.get(turn=last_turn, company=company)
+        company_state_previous = CompaniesState.objects.get(turn=Turn.objects.get(number=last_turn.number-1), company=company)
 
-        r_d_list = []
-        marketing_list = []
-        volume_list = []
-        inventory_list = []
-        sold_list = []
+        production = dict()
+        production['production'] = company_state_previous.production.volume
+        production['capacity'] = company_state_previous.factory.capacity
+        production['utilization'] = (company_state_previous.production.volume/company_state_previous.factory.capacity)*100
+        production['man_cost'] = company_state_previous.production.man_cost
+        production['new_inventory'] = company_state.inventory
 
-        for turn in range(1, last_turn.number):
-            company_state = CompaniesState.objects.get(turn=Turn.objects.get(number=turn), company=company)
-            r_d_list.append(company_state.r_d)
-            marketing_list.append([company_state.marketing.viral, company_state.marketing.billboard, company_state.marketing.podcast, company_state.marketing.ooh, company_state.marketing.tv])
-            volume_list.append(company_state.production.volume)
-            inventory_list.append(company_state.inventory)
-            sold_list.append(company_state.production.sold)
+        sales = dict()
+        sales['orders_received'] = company_state_previous.orders_received
+        sales['orders_fulfilled'] = company_state_previous.orders_fulfilled
+        sales['orders_unfulfilled'] = company_state_previous.orders_received - company_state_previous.orders_fulfilled
+        sales['selling_price'] = company_state_previous.production.sell_price
+
+        # r_d_list = []
+        # marketing_list = []
+        # volume_list = []
+        # inventory_list = []
+        # sold_list = []
+
+        # for turn in range(1, last_turn.number):
+        #     company_state = CompaniesState.objects.get(turn=Turn.objects.get(number=turn), company=company)
+        #     r_d_list.append(company_state.r_d)
+        #     marketing_list.append([company_state.marketing.viral, company_state.marketing.billboard, company_state.marketing.podcast, company_state.marketing.ooh, company_state.marketing.tv])
+        #     volume_list.append(company_state.production.volume)
+        #     inventory_list.append(company_state.inventory)
+        #     sold_list.append(company_state.production.sold)
 
 
-            if turn == (last_turn.number - 1):
-                r_d = company_state.r_d
-                marketing = company_state.marketing.billboard + company_state.marketing.tv + company_state.marketing.ooh + company_state.marketing.viral + company_state.marketing.podcast
-                capacity = company_state.factory.capacity
-                man_cost = company_state.production.man_cost
-                stock_price = company_state.stock_price
-                inventory = company_state.inventory
-                utilization = (company_state.production.volume/capacity) * 100
-                sold = company_state.production.sold
+        #     if turn == (last_turn.number - 1):
+        #         r_d = company_state.r_d
+        #         marketing = company_state.marketing.billboard + company_state.marketing.tv + company_state.marketing.ooh + company_state.marketing.viral + company_state.marketing.podcast
+        #         capacity = company_state.factory.capacity
+        #         man_cost = company_state.production.man_cost
+        #         stock_price = company_state.stock_price
+        #         inventory = company_state.inventory
+        #         utilization = (company_state.production.volume/capacity) * 100
+        #         sold = company_state.production.sold
 
 
-        return Response({"r_d": r_d, "marketing": marketing, 'stock_price': stock_price, 'inventory': inventory, 'capacity': capacity, 'utilization': utilization, 'man_cost': man_cost, 'sold': sold, 'r_d_list': r_d_list, 'marketing_list': marketing_list, 'volume_list': volume_list, 'inventory_list': inventory_list, 'sold_list': sold_list}, status=200)
+        # return Response({"r_d": r_d, "marketing": marketing, 'stock_price': stock_price, 'inventory': inventory, 'capacity': capacity, 'utilization': utilization, 'man_cost': man_cost, 'sold': sold, 'r_d_list': r_d_list, 'marketing_list': marketing_list, 'volume_list': volume_list, 'inventory_list': inventory_list, 'sold_list': sold_list}, status=200)
   
 
 class CreateCompanyView(APIView):

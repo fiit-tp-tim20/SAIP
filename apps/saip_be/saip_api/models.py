@@ -146,6 +146,8 @@ class CompaniesState(models.Model):
     r_d = models.PositiveBigIntegerField(null=True, blank=True)
     marketing = models.OneToOneField(Marketing, models.SET_NULL, null=True, blank=True)
     commited = models.BooleanField(default=False)
+    orders_received = models.PositiveIntegerField(null=True, blank=True)
+    orders_fulfilled = models.PositiveIntegerField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.company} - {self.turn}"
