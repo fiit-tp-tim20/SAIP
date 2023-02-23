@@ -14,7 +14,8 @@ function Profile() {
 
 	//! just for testing, find a better place to do this
 	const logout = async () => {
-		await fetch("http://localhost:8000/logout/", {
+		console.log(`${import.meta.env.VITE_BACKEND_URL}/logout/`);
+		await fetch(`${import.meta.env.VITE_BACKEND_URL}/logout/`, {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -6,20 +6,22 @@ import { getGeneralInfo } from "../../api/CompanyInfo";
 import { totalSpentPersist } from "../../store/Atoms";
 import useCompanyStore from "../../store/Company";
 import useMarketingStore from "../../store/Marketing";
+import useUpgradesStore from "../../store/Upgrades";
 
 export default function BottomBar() {
 	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());
 
 	const { getSum: getSumMarketing, getChecked: getCheckedMarketing } = useMarketingStore();
 	const { getSum: getSumCompany, getChecked: getCheckedCompany } = useCompanyStore();
+	const { getSum: getSumUpgrades } = useUpgradesStore();
 
 	const navigate = useNavigate();
 
 	const [totalSpent, setTotalSpent] = useAtom(totalSpentPersist);
 
 	useEffect(() => {
-		setTotalSpent(0 + getSumCompany() + getSumMarketing());
-	}, [getSumCompany(), getSumMarketing()]);
+		setTotalSpent(getSumUpgrades() + getSumCompany() + getSumMarketing());
+	}, [getSumUpgrades(), getSumCompany(), getSumMarketing()]);
 
 	return (
 		<div className="fixed bottom-2 right-2 z-40">
@@ -29,17 +31,18 @@ export default function BottomBar() {
 						<p className={`text-center font-medium ${totalSpent > data.budget_cap ? "text-red-600" : ""}`}>
 							Budget: {totalSpent}/{data.budget_cap}€
 						</p>
-						<button onClick={() => navigate("/product")} className="button-clear">
+						<button type="button" onClick={() => navigate("/product")} className="button-clear">
 							{/* TODO create state */}
-							Produkt: {false ? "✅" : "❌"}
+							Produkt: ✅
 						</button>
-						<button onClick={() => navigate("/company")} className="button-clear">
+						<button type="button" onClick={() => navigate("/company")} className="button-clear">
 							Spoločnosť: {getCheckedCompany() ? "✅" : "❌"}
 						</button>
-						<button onClick={() => navigate("/marketing")} className="button-clear">
+						<button type="button" onClick={() => navigate("/marketing")} className="button-clear">
 							Marketing: {getCheckedMarketing() ? "✅" : "❌"}
 						</button>
 						<button
+							type="button"
 							onClick={() => alert("Ukončenie kola!")}
 							className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 rounded-lg disabled:bg-accent-100 disabled:cursor-not-allowed"
 							disabled={totalSpent > data.budget_cap || !getCheckedCompany() || !getCheckedMarketing()}
