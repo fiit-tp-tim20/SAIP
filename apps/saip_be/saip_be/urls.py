@@ -19,21 +19,24 @@ from django.urls import path
 from saip_api.views.UserManagement import RegisterView, LoginView, TestView, ChangePasswordView
 from saip_api.views.Upgrade import UpgradeView
 from saip_api.views.GameManagement import CreateGameView, GetRunningGamesView, EndTurnView
-from saip_api.views.CompanyManagement import CreateCompanyView, PostSpendingsView
+from saip_api.views.CompanyManagement import CreateCompanyView, PostSpendingsView, CompanyInfo, TurnInfoView, Commited
 from knox.views import LogoutView
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('register/', RegisterView.as_view(), name="register"),
-    path('test/', TestView.as_view(), name="test"),
-    path('change_password/', ChangePasswordView.as_view(), name="change_password"),
-    path('login/', LoginView.as_view(), name="login"),
-    path('logout/', LogoutView.as_view(), name='knox_logout'),
-    path('upgrades/', UpgradeView.as_view(), name='return_upgrades'),
-    path('create_game/', CreateGameView.as_view(), name='create_game'),
-    path('list_games/', GetRunningGamesView.as_view(), name='list_games'),
-    path('create_company/', CreateCompanyView.as_view(), name='create_company'),
-    path('end_turn/', EndTurnView.as_view(), name='end_turn'),
-    path('spendings/', PostSpendingsView.as_view(), name='spendings'),
+    path('api/admin/', admin.site.urls),
+    path('api/register/', RegisterView.as_view(), name="register"),
+    path('api/test/', TestView.as_view(), name="test"),
+    path('api/change_password/', ChangePasswordView.as_view(), name="change_password"),
+    path('api/login/', LoginView.as_view(), name="login"),
+    path('api/logout/', LogoutView.as_view(), name='knox_logout'),
+    path('api/upgrades/', UpgradeView.as_view(), name='return_upgrades'),
+    path('api/create_game/', CreateGameView.as_view(), name='create_game'),
+    path('api/list_games/', GetRunningGamesView.as_view(), name='list_games'),
+    path('api/create_company/', CreateCompanyView.as_view(), name='create_company'),
+    path('api/end_turn/', EndTurnView.as_view(), name='end_turn'),
+    path('api/spendings/', PostSpendingsView.as_view(), name='spendings'),
+    path('api/company_info/', CompanyInfo.as_view(), name='company_info'),
+    path('api/commited/', Commited.as_view(), name='commited'),
+    path('api/turn_info/', TurnInfoView.as_view(), name='turn_info')
 ]

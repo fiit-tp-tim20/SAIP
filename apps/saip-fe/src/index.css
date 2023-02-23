@@ -119,4 +119,5 @@ progress[value]::-webkit-progress-value {
 
 .button-clear {
 	all: unset;
+	cursor: pointer;
 }

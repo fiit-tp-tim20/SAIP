@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 class GameParameters(models.Model):
     budget_cap = models.PositiveIntegerField(default=10000)
     depreciation = models.FloatField(default=0.1)
+    base_man_cost = models.PositiveIntegerField(default=50)
 
     class Meta:
         db_table = 'GameParameters'
@@ -107,6 +108,7 @@ class CompaniesUpgrades(models.Model):
     upgrade = models.ForeignKey(Upgrade, models.CASCADE, null=True)
     progress = models.PositiveIntegerField(null=True, default=0)
     game = models.ForeignKey(Game, models.CASCADE, null=True)
+    turn = models.ForeignKey(Turn, models.PROTECT, null=True)
 
     def __str__(self):
         return f"{self.company} - {self.upgrade}"
