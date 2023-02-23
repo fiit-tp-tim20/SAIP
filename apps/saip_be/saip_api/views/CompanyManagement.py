@@ -162,3 +162,13 @@ class PostSpendingsView(APIView):
 
         return Response(status=201)
 
+class TurnInfoView(APIView):
+    def get(self, request) -> Response:
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        company = Company.objects.get(user=request.user)
+        game = company.game
+        turn = get_last_turn(game)
+
+        return Response({"Number": turn.number, "Start": turn.start})
