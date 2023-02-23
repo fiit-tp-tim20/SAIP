@@ -31,8 +31,8 @@ function Navbar() {
 						/>
 					))}
 				</ul>
-				<div className="pr-3">
-					<p>{data.Number}</p>
+				<div className="flex flex-row gap-3 pr-3">
+					<p className="m-auto">Kolo {isLoading ? null : data?.Number}</p>
 					<Profile />
 				</div>
 			</div>
