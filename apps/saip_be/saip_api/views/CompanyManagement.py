@@ -56,6 +56,21 @@ class CompanyReport(APIView):
         sales['orders_unfulfilled'] = company_state_previous.orders_received - company_state_previous.orders_fulfilled
         sales['selling_price'] = company_state_previous.production.sell_price
 
+        balance = dict()
+        balance['cash'] = company_state.cash
+        balance['inventory_money'] = company_state.inventory * company_state.production.man_cost
+        balance['capital_investments'] = company_state_previous.capital_invesments
+        balance['ret_earnings'] = company_state_previous.ret_earnings
+        balance['base_capital'] = company.game.parameters.base_capital
+
+        cash_flow = dict()
+        cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(number=last_turn.number-2), company=company).cash
+        cash_flow['net_profit'] = company_state_previous.net_profit
+        cash_flow['depreciation'] = company_state_previous.depreciation
+        cash_flow['capital_investment'] = company_state_previous.factory.capital
+        cash_flow['new_loans'] = company_state_previous.new_loans
+        cash_flow['inventory_change'] = company_state_previous.inventory_change
+
         # r_d_list = []
         # marketing_list = []
         # volume_list = []

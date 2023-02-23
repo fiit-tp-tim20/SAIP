@@ -6,6 +6,7 @@ class GameParameters(models.Model):
     budget_cap = models.PositiveIntegerField(default=10000)
     depreciation = models.FloatField(default=0.1)
     base_man_cost = models.PositiveIntegerField(default=50)
+    base_capital = models.PositiveIntegerField(default=10000)
 
     class Meta:
         db_table = 'GameParameters'
@@ -59,7 +60,6 @@ class Production(models.Model):
     man_cost = models.FloatField(null=True, default=0)
     sell_price = models.FloatField(null=True, default=0)
     volume = models.PositiveIntegerField(null=True, default=0)
-    sold = models.PositiveIntegerField(null=True, default=0)
 
     class Meta:
         db_table = 'Productions'
@@ -125,7 +125,7 @@ class Factory(models.Model):
     aux_emp = models.PositiveIntegerField(null=True, default=0)
     capacity = models.PositiveIntegerField(null=True, default=0)
     base_cost = models.PositiveIntegerField(null=True,default=0)
-    capital = models.PositiveIntegerField(null=True, default=0)
+    capital = models.PositiveIntegerField(null=True,default=0)
 
     # def __str__(self):
     #     return f"Factory - {self.companiesstate.company}"
@@ -146,8 +146,18 @@ class CompaniesState(models.Model):
     r_d = models.PositiveBigIntegerField(null=True, blank=True)
     marketing = models.OneToOneField(Marketing, models.SET_NULL, null=True, blank=True)
     commited = models.BooleanField(default=False)
+
+    #kontrola
     orders_received = models.PositiveIntegerField(null=True, blank=True)
     orders_fulfilled = models.PositiveIntegerField(null=True, blank=True)
+    capital_invesments = models.PositiveBigIntegerField(null=True, blank=True)
+    cash = models.PositiveIntegerField(null=True, blank=True)
+    capital_invesments = models.PositiveIntegerField(null=True, blank=True)
+    ret_earnings = models.PositiveIntegerField(null=True, blank=True)
+    net_profit = models.PositiveIntegerField(null=True, blank=True)
+    depreciation = models.PositiveIntegerField(null=True, blank=True)
+    new_loans = models.PositiveIntegerField(null=True, blank=True)
+    inventory_change = models.PositiveIntegerField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.company} - {self.turn}"
