@@ -203,6 +203,8 @@ class Company:
             raise ProductionOVerCapacityError(
                 self.production_volume, self.factory.capacity
             )
+        #TODO: make it so that we produce max capacity if production volume is higher
+        # note: change the production_volume to max capacity value and write
 
         ppu = self.factory.calculate_price_per_unit(self.production_volume)
         total_price = self.production_volume * ppu

@@ -35,7 +35,7 @@ class FactoryPreset:
     STARTING_EMPLOYEES = 10
     BASE_SALARY = 1500
 
-    STARTING_INVESTMENT = 50_000
+    STARTING_INVESTMENT = 50_000    #TODO: capacity depends on the capital investment - adjust values so that they makes sense together - and add the investment-to-capacity calculation
     STARTING_CAPACITY = 100
 
     OPTIMAL_THRESHOLD = 0.9
