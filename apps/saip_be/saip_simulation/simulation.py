@@ -214,44 +214,82 @@ class Simulation:
         # declare lists and dictionaries
         companies_models = []  # list of company models
         #companies_states = Dict[models.Company, models.CompaniesState]
-        companies_states = {}
+        ct_companies_states = {}
+        nt_companies_states = {}
         # load the company models
         companies_models = models.Company.objects.filter(game=self.game_model)
         # load the company states
         for company_model in companies_models:
-            try:
-                company_state_model = models.CompaniesState.objects.get(
-                    company=company_model, turn=self.new_turn_model
+            try:    # get company states for the current trun
+                ct_company_state_model = models.CompaniesState.objects.get(
+                    company=company_model, turn=self.turn_model
                 )
-                companies_states[company_model] = company_state_model
+                ct_companies_states[company_model] = ct_company_state_model
             except models.CompaniesState.DoesNotExist:
                 pass
-
+            try:    # get company states for the next turn
+                nt_company_state_model = models.CompaniesState.objects.get(
+                    company=company_model, turn=self.new_turn_model
+                )
+                nt_companies_states[company_model] = nt_company_state_model
+            except models.CompaniesState.DoesNotExist:
+                pass
         # write data from classes to models
-        for company_model in companies_states.keys():
+        # curent turn
+        for company_model in ct_companies_states.keys():
             company_class_object = self.companies[company_model.name]
-            companies_states[
+            nt_companies_states[
                 company_model
             ].balance = company_class_object.remaining_budget
-            companies_states[
+            nt_companies_states[
                 company_model
             ].stock_price = company_class_object.stock_price
-            companies_states[
+            nt_companies_states[
                 company_model
             ].inventory = company_class_object.inventory
 
-            if companies_states[company_model].production is not None:
-                companies_states[
+            if nt_companies_states[company_model].production is not None:
+                nt_companies_states[
                     company_model
                 ].production.man_cost = (
                     company_class_object.product.get_man_cost()
-                )  # TODO:check if correct
-                companies_states[company_model].production.save()
-            if companies_states[company_model].factory is not None:
-                companies_states[
+                )
+                nt_companies_states[company_model].production.save()
+            if nt_companies_states[company_model].factory is not None:
+                nt_companies_states[
                     company_model
                 ].factory.capacity = (
                     company_class_object.factory.capacity
-                )  # TODO:check if correct
-                companies_states[company_model].factory.save()
-            companies_states[company_model].save()
+                )
+                nt_companies_states[company_model].factory.save()
+            nt_companies_states[company_model].save()
+
+        # write data from classes to models
+        # next turn
+        for company_model in nt_companies_states.keys():
+            company_class_object = self.companies[company_model.name]
+            nt_companies_states[
+                company_model
+            ].balance = company_class_object.remaining_budget
+            nt_companies_states[
+                company_model
+            ].stock_price = company_class_object.stock_price
+            nt_companies_states[
+                company_model
+            ].inventory = company_class_object.inventory
+
+            if nt_companies_states[company_model].production is not None:
+                nt_companies_states[
+                    company_model
+                ].production.man_cost = (
+                    company_class_object.product.get_man_cost()
+                )
+                nt_companies_states[company_model].production.save()
+            if nt_companies_states[company_model].factory is not None:
+                nt_companies_states[
+                    company_model
+                ].factory.capacity = (
+                    company_class_object.factory.capacity
+                )
+                nt_companies_states[company_model].factory.save()
+            nt_companies_states[company_model].save()
