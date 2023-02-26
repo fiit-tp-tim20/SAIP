@@ -11,9 +11,16 @@ import { GameState } from "../../types/gameState";
 import { endTurn } from "../../api/EndTurn";
 import { useModal } from "../modal/useModal";
 import BottomBarModal from "./BottomBarModal";
+import { getCommited } from "../../api/GetCommited";
 
 export default function BottomBar() {
 	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());
+	const {
+		data: commited,
+		isLoading: isLoadingCommited,
+		refetch: refetchCommited,
+	} = useQuery("commited", () => getCommited());
+
 	const { Modal, setIsShowing, setElement } = useModal(<div />);
 
 	const {
@@ -59,6 +66,7 @@ export default function BottomBar() {
 	const handleModalSubmit = () => {
 		handleEndTurn();
 		setIsShowing(false);
+		refetchCommited();
 	};
 
 	const openModal = () => {
@@ -95,7 +103,10 @@ export default function BottomBar() {
 								onClick={openModal}
 								className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 rounded-lg disabled:bg-accent-100 disabled:cursor-not-allowed"
 								disabled={
-									totalSpent > data.budget_cap || !getCheckedCompany() || !getCheckedMarketing()
+									totalSpent > data.budget_cap ||
+									!getCheckedCompany() ||
+									!getCheckedMarketing() ||
+									commited
 								}
 							>
 								Ukončiť kolo
