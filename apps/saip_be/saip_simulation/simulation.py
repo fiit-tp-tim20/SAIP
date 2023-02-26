@@ -188,6 +188,7 @@ class Simulation:
                 total_cost=upgrade_model.cost,  # pos integer
                 sales_effect=upgrade_model.sales_effect,  # float
                 man_cost_effect=upgrade_model.man_cost_effect,  # float
+                # TODO: add active-since-turn-X attribute from model and implement functionality
             )
             pass
         new_product.setup_product()
