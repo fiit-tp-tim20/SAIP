@@ -13,13 +13,13 @@ function IndustryReport() {
                     <table className="table-auto">
                         <thead>
                             <tr>
-                                <th className="border px-4 py-2 bg-gray-300">  </th>
-                                <th className="border px-4 py-2 bg-gray-300">Poradie</th>
-                                <th className="border px-4 py-2 bg-gray-300">Akcia</th>
-                                <th className="border px-4 py-2 bg-gray-300">Net profit</th>
-                                <th className="border px-4 py-2 bg-gray-300">Predajná cena</th>
-                                <th className="border px-4 py-2 bg-gray-300">Výsledok hospodárenia</th>
-                                <th className="border px-4 py-2 bg-gray-300">Tržby</th>
+                                <th className="border px-4 py-2 bg-accent-500">  </th>
+                                <th className="border px-4 py-2 bg-accent-500 text-white">Poradie</th>
+                                <th className="border px-4 py-2 bg-accent-500 text-white">Akcia</th>
+                                <th className="border px-4 py-2 bg-accent-500 text-white">Čistý zisk</th>
+                                <th className="border px-4 py-2 bg-accent-500 text-white">Predajná cena</th>
+                                <th className="border px-4 py-2 bg-accent-500 text-white">Výsledok hospodárenia</th>
+                                <th className="border px-4 py-2 bg-accent-500 text-white">Tržby</th>
                             </tr>
                         </thead>
                         <tbody>
