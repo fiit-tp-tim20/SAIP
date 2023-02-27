@@ -13,6 +13,7 @@ function IndustryReport() {
                     <table className="table-auto">
                         <thead>
                             <tr>
+                                <th className="border px-4 py-2 bg-gray-300">  </th>
                                 <th className="border px-4 py-2 bg-gray-300">Poradie</th>
                                 <th className="border px-4 py-2 bg-gray-300">Akcia</th>
                                 <th className="border px-4 py-2 bg-gray-300">Net profit</th>
@@ -23,6 +24,7 @@ function IndustryReport() {
                         </thead>
                         <tbody>
                             <tr className="hover:bg-stone-100">
+                                <td className="border px-4 py-2 text-center">1</td>
                                 <td className="border px-4 py-2 text-center">Commited Inc.</td>
                                 <td className="border px-4 py-2 text-center">%</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
@@ -31,6 +33,7 @@ function IndustryReport() {
                                 <td className="border px-4 py-2 text-center">1234</td>
                             </tr>
                             <tr className="hover:bg-stone-100">
+                                <td className="border px-4 py-2 text-center">2</td>
                                 <td className="border px-4 py-2 text-center">Holo Inc.</td>
                                 <td className="border px-4 py-2 text-center">%</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
@@ -39,6 +42,7 @@ function IndustryReport() {
                                 <td className="border px-4 py-2 text-center">1234</td>
                             </tr>
                             <tr className="hover:bg-stone-100">
+                                <td className="border px-4 py-2 text-center">3</td>
                                 <td className="border px-4 py-2 text-center">HolTek Inc.</td>
                                 <td className="border px-4 py-2 text-center">%</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
@@ -47,6 +51,7 @@ function IndustryReport() {
                                 <td className="border px-4 py-2 text-center">1234</td>
                             </tr>
                             <tr className="hover:bg-stone-100">
+                                <td className="border px-4 py-2 text-center">4</td>
                                 <td className="border px-4 py-2 text-center">ZET Inc.</td>
                                 <td className="border px-4 py-2 text-center">%</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
@@ -55,6 +60,7 @@ function IndustryReport() {
                                 <td className="border px-4 py-2 text-center">1234</td>
                             </tr>
                             <tr className="hover:bg-stone-100">
+                                <td className="border px-4 py-2 text-center">5</td>
                                 <td className="border px-4 py-2 text-center">ALL*Star Inc.</td>
                                 <td className="border px-4 py-2 text-center">%</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
@@ -63,6 +69,7 @@ function IndustryReport() {
                                 <td className="border px-4 py-2 text-center">1234</td>
                             </tr>
                             <tr className="hover:bg-stone-100">
+                                <td className="border px-4 py-2 text-center">6</td>
                                 <td className="border px-4 py-2 text-center">Mucka Inc.</td>
                                 <td className="border px-4 py-2 text-center">%</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
