@@ -21,6 +21,7 @@ from saip_simulation.marketing import Billboard, SocialMedia, CableNews, Podcast
 from saip_simulation.product import Product, LastingProduct, Upgrade
 
 from saip_simulation.config import FactoryPreset
+import saip_simulation.config as config
 
 import saip_api.models as models
 
@@ -59,7 +60,7 @@ class Simulation:
             market_state_model = models.MarketState.objects.get(turn=self.turn_model)
             self.market = Market(
                 companies=self.companies.values(),
-                customer_count=market_state_model.size,
+                customer_count=market_state_model.size if market_state_model is not None else config.MarketPreset.STARTING_CUSTOMER_COUNT,
             )  # TODO: take care of the other attributes from the model
         except models.MarketState.DoesNotExist:
             self.market = Market(
@@ -170,7 +171,7 @@ class Simulation:
             new_product.set_price(production_model.sell_price)
             new_product.set_man_cost(production_model.man_cost)
             company.production_volume = (
-                production_model.volume
+                production_model.volume if production_model.volume is not None else 0
             )  # TODO add volume to product class (or maybe the company, but product makes sense)
         else:
             company.production_volume = 0  # TODO: remove this - temp fix
