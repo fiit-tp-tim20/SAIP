@@ -32,11 +32,14 @@ class Simulation:
     current_turn: int  # the current turn being evaluated
     turn_limit: int  # maximum number of turns
 
-    def __init__(self, game_model: models.Game, turn_model: models.Turn, new_turn_model: models.Turn) -> None:
+    def __init__(
+        self,
+        game_model: models.Game,
+        turn_model: models.Turn,
+        new_turn_model: models.Turn,
+    ) -> None:
 
-        self.companies = (
-            {}
-        )  # TODO: check if this is the correct way of initializing the attribute
+        self.companies = {}
         self.market = None
         self.game_model = game_model
         self.turn_model = turn_model
@@ -60,7 +63,9 @@ class Simulation:
             market_state_model = models.MarketState.objects.get(turn=self.turn_model)
             self.market = Market(
                 companies=self.companies.values(),
-                customer_count=market_state_model.size if market_state_model is not None else config.MarketPreset.STARTING_CUSTOMER_COUNT,
+                customer_count=market_state_model.size
+                if market_state_model is not None
+                else config.MarketPreset.STARTING_CUSTOMER_COUNT,
             )  # TODO: take care of the other attributes from the model
         except models.MarketState.DoesNotExist:
             self.market = Market(
@@ -96,9 +101,17 @@ class Simulation:
         # parse the companies state model and create objects
         if company_state is not None:
 
-            new_company.remaining_budget = company_state.balance if company_state.balance is not None else 0 # float
-            new_company.stock_price = company_state.stock_price if company_state.stock_price is not None else 0 # float
-            new_company.inventory = company_state.inventory if company_state.inventory is not None else 0 # pos int
+            new_company.remaining_budget = (
+                company_state.balance if company_state.balance is not None else 0
+            )  # float
+            new_company.stock_price = (
+                company_state.stock_price
+                if company_state.stock_price is not None
+                else 0
+            )  # float
+            new_company.inventory = (
+                company_state.inventory if company_state.inventory is not None else 0
+            )  # pos int
             # r_d = company_state.r_d                                #pos big int    #TODO: add rnd to class obejct
 
             # create objects from models
@@ -112,7 +125,10 @@ class Simulation:
             # setup marketing objects in dict
             marketing_model = company_state.marketing
             if marketing_model is not None:
-                if marketing_model.billboard is not None and marketing_model.billboard > 0:
+                if (
+                    marketing_model.billboard is not None
+                    and marketing_model.billboard > 0
+                ):
                     new_company.marketing["billboard"] = Billboard(
                         marketing_model.billboard
                     )
@@ -145,7 +161,7 @@ class Simulation:
         prod_emp = factory_model.prod_emp
         cont_emp = factory_model.cont_emp
         aux_emp = factory_model.aux_emp
-        
+
         # TODO: TEMP FIX - create the correct initialization of models
         if factory_model.capacity < FactoryPreset.STARTING_CAPACITY:
             pass
@@ -194,42 +210,44 @@ class Simulation:
             pass
         new_product.setup_product()
         return new_product
-    
+
     def run_simulation(self) -> None:
         for company in self.companies.values():
             print(company)
             company.factory.calculate_price_per_unit(company.production_volume)
             company.produce_products()
-            company.factory.invest_into_factory(1) #TODO: solve the fact that we are using the capital from model as investment value;
-            #and we are using a argument for the invest_into_factory method 
-            #the argument is added to the factory.capital val at the beginning of the method
-            #if I were to pass the value from model into this function we'd be effectively using twice the value of the "capital" attribute from factory model
-            #as the investment value
+            company.factory.invest_into_factory(
+                1
+            )  # TODO: solve the fact that we are using the capital from model as investment value;
+            # and we are using a argument for the invest_into_factory method
+            # the argument is added to the factory.capital val at the beginning of the method
+            # if I were to pass the value from model into this function we'd be effectively using twice the value of the "capital" attribute from factory model
+            # as the investment value
         self.market.generate_distribution()
         for company in self.companies.values():
             company.yield_agg_marketing_value()
-            company.calculate_stock_price() 
-            print(company)  
+            company.calculate_stock_price()
+            print(company)
         pass
 
     def write_simulation_results(self) -> None:
         # declare lists and dictionaries
         companies_models = []  # list of company models
-        #companies_states = Dict[models.Company, models.CompaniesState]
+        # companies_states = Dict[models.Company, models.CompaniesState]
         ct_companies_states = {}
         nt_companies_states = {}
         # load the company models
         companies_models = models.Company.objects.filter(game=self.game_model)
         # load the company states
         for company_model in companies_models:
-            try:    # get company states for the current trun
+            try:  # get company states for the current trun
                 ct_company_state_model = models.CompaniesState.objects.get(
                     company=company_model, turn=self.turn_model
                 )
                 ct_companies_states[company_model] = ct_company_state_model
             except models.CompaniesState.DoesNotExist:
                 pass
-            try:    # get company states for the next turn
+            try:  # get company states for the next turn
                 nt_company_state_model = models.CompaniesState.objects.get(
                     company=company_model, turn=self.new_turn_model
                 )
@@ -257,19 +275,17 @@ class Simulation:
                     company_model
                 ].production.man_cost = (
                     company_class_object.product.get_man_cost()
-                )   # TODO maybe we dont want to write this in this turn
+                )  # TODO maybe we dont want to write this in this turn
                 nt_companies_states[
                     company_model
                 ].production.volume = company_class_object.production_volume
-                #this is done because the volume of actual products produced could have differed from the one submitted by the company (for instance, because of a lack of funds)
-                
+                # this is done because the volume of actual products produced could have differed from the one submitted by the company (for instance, because of a lack of funds)
+
                 nt_companies_states[company_model].production.save()
             if nt_companies_states[company_model].factory is not None:
                 nt_companies_states[
                     company_model
-                ].factory.capacity = (
-                    company_class_object.factory.capacity
-                )
+                ].factory.capacity = company_class_object.factory.capacity
                 nt_companies_states[company_model].factory.save()
             nt_companies_states[company_model].save()
 
@@ -280,9 +296,9 @@ class Simulation:
             nt_companies_states[
                 company_model
             ].balance = company_class_object.remaining_budget
-            #nt_companies_states[
+            # nt_companies_states[
             #    company_model
-            #].stock_price = company_class_object.stock_price
+            # ].stock_price = company_class_object.stock_price
             nt_companies_states[
                 company_model
             ].inventory = company_class_object.inventory
@@ -290,15 +306,11 @@ class Simulation:
             if nt_companies_states[company_model].production is not None:
                 nt_companies_states[
                     company_model
-                ].production.man_cost = (
-                    company_class_object.product.get_man_cost()
-                )
+                ].production.man_cost = company_class_object.product.get_man_cost()
                 nt_companies_states[company_model].production.save()
             if nt_companies_states[company_model].factory is not None:
                 nt_companies_states[
                     company_model
-                ].factory.capacity = (
-                    company_class_object.factory.capacity
-                )
+                ].factory.capacity = company_class_object.factory.capacity
                 nt_companies_states[company_model].factory.save()
             nt_companies_states[company_model].save()

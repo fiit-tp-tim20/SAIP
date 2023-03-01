@@ -154,25 +154,29 @@ class Company:
     brand: str = ""
     product: Product = None
 
-    inventory: int = 0  # assuming that the stored products are upgraded automatically, for a price
+    inventory: int = (
+        0  # assuming that the stored products are upgraded automatically, for a price
+    )
     production_volume: int = 0
 
     profit: float = 0  # +income -costs| represents whether or not the company is actually in dept / turning profit
-    income_per_turn: float = 0 #TODO changed this because of AttributeError: 'Company' object has no attribute 'income_per_turn' #field(init=False)
-    #DECIDED TO INITIALIZE ALL THE ATTRIBUTES THAT HAD field(init=False)
-    costs_per_turn: float = 0#field(init=False)
+    income_per_turn: float = 0  # TODO changed this because of AttributeError: 'Company' object has no attribute 'income_per_turn' #field(init=False)
+    # DECIDED TO INITIALIZE ALL THE ATTRIBUTES THAT HAD field(init=False)
+    costs_per_turn: float = 0  # field(init=False)
 
     max_budget: float = 0
-    remaining_budget: float = 0#field(init=False)
+    remaining_budget: float = 0  # field(init=False)
 
-    stock_price: float = 0#field(init=False)  # company score
-    units_sold: int = 0#field(init=False)
+    stock_price: float = 0  # field(init=False)  # company score
+    units_sold: int = 0  # field(init=False)
 
     factory: Factory = None
     marketing: Dict[str, MarketingType] = field(default_factory=dict)
 
     def upgrade_stored_products(self):
-        self.costs_per_turn += self.inventory * self.product.get_upgrade_man_cost_effect_multiplier()
+        self.costs_per_turn += (
+            self.inventory * self.product.get_upgrade_man_cost_effect_multiplier()
+        )
 
     def calculate_stock_price(self) -> float:
         self.stock_price = (
@@ -203,7 +207,7 @@ class Company:
             raise ProductionOVerCapacityError(
                 self.production_volume, self.factory.capacity
             )
-        #TODO: make it so that we produce max capacity if production volume is higher
+        # TODO: make it so that we produce max capacity if production volume is higher
         # note: change the production_volume to max capacity value and write
 
         ppu = self.factory.calculate_price_per_unit(self.production_volume)

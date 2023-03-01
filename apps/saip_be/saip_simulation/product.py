@@ -23,10 +23,10 @@ class Product(ABC):
 
     def set_price(self, new_price: float) -> None:
         self.__price = new_price
-    
+
     def get_price(self) -> float:
         return self.__price
-    
+
     def set_man_cost(self, new_man_cost: float) -> None:
         self.__man_cost = new_man_cost
 
@@ -36,9 +36,9 @@ class Product(ABC):
     def _set_upgrade_sales_effect_multiplier(self):
         sum = 0
         for upgrade in self.upgrades.values():
-            sum+= upgrade.sales_effect
+            sum += upgrade.sales_effect
         self.__upgrade_sales_effect_multiplier = 1 + sum
-    
+
     def _set_upgrade_man_cost_effect_multiplier(self):
         sum = 0
         for upgrade in self.upgrades.values():
@@ -47,7 +47,7 @@ class Product(ABC):
 
     def get_upgrade_sales_effect_multiplier(self):
         return self.__upgrade_sales_effect_multiplier
-    
+
     def get_upgrade_man_cost_effect_multiplier(self):
         return self.__upgrade_man_cost_effect_multiplier
 
@@ -60,7 +60,9 @@ class Product(ABC):
     def add_upgrade(
         self, name, status, progress, total_cost, sales_effect, man_cost_effect
     ):
-        if status == 'f' or status == 'finished':           # TODO: add condition (and another argument) - active since turn N + 1 
+        if (
+            status == "f" or status == "finished"
+        ):  # TODO: add condition (and another argument) - active since turn N + 1
             self.upgrades[name] = Upgrade(
                 status=status,
                 progress=progress,
