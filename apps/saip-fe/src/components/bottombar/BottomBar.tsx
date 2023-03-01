@@ -43,7 +43,7 @@ export default function BottomBar() {
 		setTotalSpent(getSumUpgrades() + capitalInvestments + getSumMarketing());
 	}, [getSumUpgrades(), capitalInvestments, getSumMarketing()]);
 
-	const handleEndTurn = () => {
+	const handleEndTurn = async () => {
 		const gameState: GameState = {
 			upgrades,
 			company: {
@@ -60,11 +60,11 @@ export default function BottomBar() {
 			},
 		};
 
-		endTurn(gameState);
+		await endTurn(gameState);
 	};
 
-	const handleModalSubmit = () => {
-		handleEndTurn();
+	const handleModalSubmit = async () => {
+		await handleEndTurn();
 		setIsShowing(false);
 		refetchCommited();
 	};
