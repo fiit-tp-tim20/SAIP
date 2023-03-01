@@ -238,6 +238,9 @@ class Simulation:
                 pass
         # write data from classes to models
         # curent turn
+        # TODO: add units_sold to models, add units_demanded to models
+        #       nove uvery, poplatok za zasoby, odpisy(?) - ani v modeloch, ani v sim
+        #       add costs_per_turn to models, add income_per_turn to models
         for company_model in ct_companies_states.keys():
             company_class_object = self.companies[company_model.name]
             nt_companies_states[
@@ -249,13 +252,17 @@ class Simulation:
             nt_companies_states[
                 company_model
             ].inventory = company_class_object.inventory
-
             if nt_companies_states[company_model].production is not None:
                 nt_companies_states[
                     company_model
                 ].production.man_cost = (
                     company_class_object.product.get_man_cost()
-                )
+                )   # TODO maybe we dont want to write this in this turn
+                nt_companies_states[
+                    company_model
+                ].production.volume = company_class_object.production_volume
+                #this is done because the volume of actual products produced could have differed from the one submitted by the company (for instance, because of a lack of funds)
+                
                 nt_companies_states[company_model].production.save()
             if nt_companies_states[company_model].factory is not None:
                 nt_companies_states[
@@ -273,9 +280,9 @@ class Simulation:
             nt_companies_states[
                 company_model
             ].balance = company_class_object.remaining_budget
-            nt_companies_states[
-                company_model
-            ].stock_price = company_class_object.stock_price
+            #nt_companies_states[
+            #    company_model
+            #].stock_price = company_class_object.stock_price
             nt_companies_states[
                 company_model
             ].inventory = company_class_object.inventory
