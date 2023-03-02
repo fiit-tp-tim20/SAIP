@@ -18,7 +18,7 @@ from typing import List
 
 from saip_simulation.product import Product, DailyProduct, LastingProduct
 from saip_simulation.marketing import *
-from saip_simulation.config import TURN_LENGTH, FactoryPreset
+from saip_simulation.config import TURN_LENGTH, FactoryPreset, CompanyPreset
 from saip_simulation.marketing import MarketingType
 
 from typing import Dict
@@ -45,35 +45,26 @@ class NoProductionError(CompanyError):
 
 @dataclass
 class Factory:
-    capital_investment: float
-    capacity: int
+    capital_investment: float = FactoryPreset.STARTING_INVESTMENT
+    capacity: int = FactoryPreset.STARTING_CAPACITY
 
-    employees: int  # to be changed to list (or multiple attributes) after we implement different employees
-    employee_salary: float
+    # to be changed to list (or multiple attributes) after we implement different employees
+    employees: int = FactoryPreset.STARTING_EMPLOYEES
+    employee_salary: float = FactoryPreset.BASE_SALARY
 
-    base_energy_cost: float
-    energy_cost_per_machine: float
-    machine_count: int
+    base_energy_cost: float = FactoryPreset.BASE_ENERGY_COST
+    energy_cost_per_machine: float = FactoryPreset.ENERGY_COST_PER_MACHINE
+    machine_count: int = FactoryPreset.STARTING_MACHINES
 
     upkeep = {
         "rent": float,
         "energy": float,
         "salaries": float,  # employees * salary * 3 (length of turn)
         "materials": float,  # this one might be irrelevant
-        "maintenance": float,
+        "writeoff": float,
     }
 
-    def __init__(self):
-        self.base_energy_cost = FactoryPreset.BASE_ENERGY_COST
-
-        self.capital_investment = FactoryPreset.STARTING_INVESTMENT
-        self.capacity = FactoryPreset.STARTING_CAPACITY
-
-        self.employees = FactoryPreset.STARTING_EMPLOYEES
-        self.employee_salary = FactoryPreset.BASE_SALARY
-
-        self.energy_cost_per_machine = FactoryPreset.ENERGY_COST_PER_MACHINE
-        self.machine_count = FactoryPreset.STARTING_MACHINES
+    def __post_init__(self):
         self.update_upkeep(FactoryPreset.BASE_RENT, 0)
 
     def update_upkeep(
@@ -87,8 +78,8 @@ class Factory:
         if skip is False:
             self.upkeep["energy"] = self.__calculate_energies()
             self.upkeep["salaries"] = self.__calculate_salaries()
-            self.upkeep["maintenance"] = (
-                self.capital_investment * FactoryPreset.FACTORY_MAINTENANCE_RATE
+            self.upkeep["writeoff"] = (
+                self.capital_investment * FactoryPreset.FACTORY_WRITEOFF_RATE
             )
 
     def total_upkeep(self) -> float:
@@ -96,7 +87,6 @@ class Factory:
             self.upkeep.get("rent")
             + self.upkeep.get("energy")
             + self.upkeep.get("salaries")
-            + self.upkeep.get("maintenance")
             + self.upkeep.get("materials")
         )
 
@@ -117,16 +107,23 @@ class Factory:
 
         return round(ppu, 2)
 
-    def invest_into_factory(self, investment):
+    def invest_into_factory(self, investment: int) -> None:
+        self.__devalue_capital()
         self.capital_investment += investment
         self.capacity += floor(
-            investment
+            self.capital_investment
+            - FactoryPreset.STARTING_INVESTMENT
             / FactoryPreset.STARTING_INVESTMENT
             * FactoryPreset.STARTING_CAPACITY
         )
         self.update_upkeep()
 
-    def invest_into_machines(self, machine_count_increase):
+    def __devalue_capital(self) -> None:
+        self.capital_investment = round(
+            self.capital_investment - self.upkeep.get("writeoff"), 2
+        )
+
+    def invest_into_machines(self, machine_count_increase: int) -> None:
         self.machine_count += machine_count_increase
         self.capacity += floor(
             machine_count_increase
@@ -135,16 +132,18 @@ class Factory:
         )
         self.update_upkeep()
 
-    def __calculate_energies(self):
+    def __calculate_energies(self) -> float:
         return self.base_energy_cost + self.energy_cost_per_machine * self.machine_count
 
-    def __calculate_salaries(self):
+    def __calculate_salaries(self) -> float:
         return self.employee_salary * self.employees * TURN_LENGTH
 
-    def _price_per_unit(self, production_this_turn) -> float:  # used in unit tests only
+    def _price_per_unit(
+        self, production_this_turn: int
+    ) -> float:  # used in unit tests only
         return self.total_upkeep() / production_this_turn
 
-    def __price_per_unit_over_optimal(self, cap_usage, ppu) -> float:
+    def __price_per_unit_over_optimal(self, cap_usage: float, ppu: float) -> float:
         over_threshold = ceil((cap_usage - FactoryPreset.OPTIMAL_THRESHOLD) * 100)
         return ppu * FactoryPreset.OVER_THRESHOLD_MULTIPLIER**over_threshold
 
@@ -158,8 +157,11 @@ class Company:
         0  # assuming that the stored products are upgraded automatically, for a price
     )
     production_volume: int = 0
+    
 
     profit: float = 0  # +income -costs| represents whether or not the company is actually in dept / turning profit
+    loans: float = 0
+    interest_rate: float = CompanyPreset.DEFAULT_INTEREST_RATE
     income_per_turn: float = field(init=False)
     costs_per_turn: float = field(init=False)
 
@@ -172,13 +174,16 @@ class Company:
     factory: Factory = None
     marketing: Dict[str, MarketingType] = field(default_factory=dict)
 
-    def upgrade_stored_products(self):
+    def upgrade_stored_products(self) -> None:
         self.costs_per_turn += self.inventory * self.product.get_upgrade_price()
 
     def calculate_stock_price(self) -> float:
+        self.__update_loan()
+        
         self.stock_price = (
             self.factory.capital_investment
-            + self.profit
+            + self.profit * 0.3
+            - self.loans * 0.5
             + self.yield_agg_marketing_value()
         ) / 1000
         return self.stock_price
@@ -199,7 +204,7 @@ class Company:
             total_investment += marketing_type.yield_value()
         return total_investment
 
-    def produce_products(self):
+    def produce_products(self) -> None:
         if self.production_volume > self.factory.capacity:
             raise ProductionOVerCapacityError(
                 self.production_volume, self.factory.capacity
@@ -225,6 +230,13 @@ class Company:
         self.units_sold = demand
         self.inventory -= demand
         return 0
+    
+    def __update_loan(self):
+        self.loans = self.loans * self.interest_rate
+        if self.profit < 0: 
+            self.loans -= self.profit  # alebo nejaku pravidelnu ciastku napr. 10K?
+            self.profit = 0
+        self.loans -= self.remaining_budget
 
 
 if __name__ == "__main__":
