@@ -112,7 +112,7 @@ class Simulation:
             new_company.inventory = (
                 company_state.inventory if company_state.inventory is not None else 0
             )  # pos int
-            # r_d = company_state.r_d                                #pos big int    #TODO: add rnd to class obejct
+            # r_d = company_state.r_d   #pos big int    #TODO: add rnd to class obejct
 
             # create objects from models
             # setup factory object
@@ -188,7 +188,7 @@ class Simulation:
             new_product.set_man_cost(production_model.man_cost)
             company.production_volume = (
                 production_model.volume if production_model.volume is not None else 0
-            )  # TODO add volume to product class (or maybe the company, but product makes sense)
+            )
         else:
             company.production_volume = 0  # TODO: remove this - temp fix
             print(f"PRODUCTION MODEL WAS NONE FOR COMPANNY {company.brand}")
