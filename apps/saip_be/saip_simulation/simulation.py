@@ -214,8 +214,6 @@ class Simulation:
     def run_simulation(self) -> None:
         for company in self.companies.values():
             print(company)
-            company.factory.calculate_price_per_unit(company.production_volume)
-            company.produce_products()
             company.factory.invest_into_factory(
                 0
             )  # TODO: solve the fact that we are using the capital from model as investment value;
@@ -223,6 +221,9 @@ class Simulation:
             # the argument is added to the factory.capital val at the beginning of the method
             # if I were to pass the value from model into this function we'd be effectively using twice the value of the "capital" attribute from factory model
             # as the investment value
+            company.factory.calculate_price_per_unit(company.production_volume)
+            company.produce_products()
+            
         self.market.generate_distribution()
         for company in self.companies.values():
             company.yield_agg_marketing_value()
@@ -261,27 +262,27 @@ class Simulation:
         #       add costs_per_turn to models, add income_per_turn to models
         for company_model in ct_companies_states.keys():
             company_class_object = self.companies[company_model.name]
-            nt_companies_states[
+            ct_companies_states[
                 company_model
             ].balance = company_class_object.remaining_budget
-            nt_companies_states[
+            ct_companies_states[
                 company_model
             ].stock_price = company_class_object.stock_price
-            nt_companies_states[
+            ct_companies_states[
                 company_model
             ].inventory = company_class_object.inventory
-            if nt_companies_states[company_model].production is not None:
-                nt_companies_states[
+            if ct_companies_states[company_model].production is not None:
+                ct_companies_states[
                     company_model
                 ].production.man_cost = (
                     company_class_object.product.get_man_cost()
                 )  # TODO maybe we dont want to write this in this turn
-                nt_companies_states[
+                ct_companies_states[
                     company_model
                 ].production.volume = company_class_object.production_volume
                 # this is done because the volume of actual products produced could have differed from the one submitted by the company (for instance, because of a lack of funds)
 
-                nt_companies_states[company_model].production.save()
+                ct_companies_states[company_model].production.save()
             if nt_companies_states[company_model].factory is not None:
                 nt_companies_states[
                     company_model

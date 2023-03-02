@@ -162,8 +162,8 @@ class Company:
     profit: float = 0  # +income -costs| represents whether or not the company is actually in dept / turning profit
     loans: float = 0
     interest_rate: float = CompanyPreset.DEFAULT_INTEREST_RATE
-    income_per_turn: float = field(init=False)
-    costs_per_turn: float = field(init=False)
+    income_per_turn: float = 0 #field(init=False)
+    costs_per_turn: float = 0 #field(init=False)
 
     max_budget: float = 0
     remaining_budget: float = 0  # field(init=False)
