@@ -106,6 +106,25 @@ class CreateCompanyView(APIView):
 
         return Response({"companyID": company.id}, status=201)
 
+class Commited(APIView):
+
+    def get(self, request) -> Response:
+
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        try:
+            company = Company.objects.get(user=request.user)
+        except Company.DoesNotExist:
+            return Response({"detail": "Company for this user not found"}, status=404)
+
+        last_turn = get_last_turn(company.game)
+        try:
+            company_state = CompaniesState.objects.get(turn=last_turn, company=company)
+        except CompaniesState.DoesNotExist:
+            return Response({"detail": "Company state for this turn does not exist"}, status=500)
+
+        return Response({"commited": company_state.commited}, status=200)
 
 class PostSpendingsView(APIView):
 
@@ -223,3 +242,13 @@ class PostSpendingsView(APIView):
 
         return Response(status=201)
 
+class TurnInfoView(APIView):
+    def get(self, request) -> Response:
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        company = Company.objects.get(user=request.user)
+        game = company.game
+        turn = get_last_turn(game)
+
+        return Response({"Number": turn.number, "Start": turn.start})
