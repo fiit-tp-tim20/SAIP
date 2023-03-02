@@ -123,7 +123,7 @@ class Factory(models.Model):
     prod_emp = models.PositiveIntegerField(null=True, default=0)
     cont_emp = models.PositiveIntegerField(null=True, default=0)
     aux_emp = models.PositiveIntegerField(null=True, default=0)
-    capacity = models.PositiveIntegerField(null=True, default=0)
+    capacity = models.PositiveIntegerField(null=True, default=100)
     base_cost = models.PositiveIntegerField(null=True,default=0)
     capital = models.PositiveIntegerField(null=True,default=0)
 
@@ -151,19 +151,20 @@ class CompaniesState(models.Model):
     orders_received = models.PositiveIntegerField(null=True, blank=True)
     orders_fulfilled = models.PositiveIntegerField(null=True, blank=True)
     capital_invesments = models.PositiveBigIntegerField(null=True, blank=True)
-    cash = models.PositiveIntegerField(null=True, blank=True)
-    capital_invesments = models.PositiveIntegerField(null=True, blank=True)
-    ret_earnings = models.PositiveIntegerField(null=True, blank=True)
-    net_profit = models.PositiveIntegerField(null=True, blank=True)
+    cash = models.PositiveIntegerField(null=True, blank=True) #celkovo dostupných prostriedkov
+    capital = models.PositiveIntegerField(null=True, blank=True)
+    ret_earnings = models.PositiveIntegerField(null=True, blank=True) 
+    net_profit = models.PositiveIntegerField(null=True, blank=True) #za kolo
     depreciation = models.PositiveIntegerField(null=True, blank=True)
     new_loans = models.PositiveIntegerField(null=True, blank=True)
     inventory_charge = models.PositiveIntegerField(null=True, blank=True)
-    #inventory_change = models.PositiveIntegerField(null=True, blank=True)
     sales = models.PositiveIntegerField(null=True, blank=True)
     sold_man_cost = models.PositiveIntegerField(null=True, blank=True)
     tax = models.PositiveIntegerField(null=True, blank=True)
     profit_before_tax = models.PositiveIntegerField(null=True, blank=True)
     interest = models.PositiveIntegerField(null=True, blank=True)
+    cash_flow_res = models.PositiveIntegerField(null=True, blank=True)
+    loan_repayment = models.PositiveIntegerField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.company} - {self.turn}"

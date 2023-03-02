@@ -43,6 +43,7 @@ class CompanyReport(APIView):
         company_state = CompaniesState.objects.get(turn=last_turn, company=company)
         print(last_turn.number-1)
         company_state_previous = CompaniesState.objects.get(turn=Turn.objects.get(number=last_turn.number-1), company=company)
+        marketing = company_state_previous.marketing.billboard + company_state_previous.marketing.tv + company_state_previous.marketing.viral + company_state_previous.marketing.podcast + company_state_previous.marketing.ooh
 
         production = dict()
         production['production'] = company_state_previous.production.volume
@@ -50,39 +51,50 @@ class CompanyReport(APIView):
         production['utilization'] = (company_state_previous.production.volume/company_state_previous.factory.capacity)*100
         production['man_cost'] = company_state_previous.production.man_cost
         production['new_inventory'] = company_state.inventory
+        production['selling_price'] = company_state_previous.production.sell_price
 
-        # sales = dict()
-        # sales['orders_received'] = company_state_previous.orders_received
-        # sales['orders_fulfilled'] = company_state_previous.orders_fulfilled
-        # sales['orders_unfulfilled'] = company_state_previous.orders_received - company_state_previous.orders_fulfilled
-        # sales['selling_price'] = company_state_previous.production.sell_price
+        sales = dict()
+        sales['orders_received'] = company_state_previous.orders_received
+        sales['orders_fulfilled'] = company_state_previous.orders_fulfilled
+        sales['orders_unfulfilled'] = company_state_previous.orders_received - company_state_previous.orders_fulfilled
+        sales['selling_price'] = company_state_previous.production.sell_price
 
-        # balance = dict()
-        # balance['cash'] = company_state.cash
-        # balance['inventory_money'] = company_state.inventory * company_state.production.man_cost
-        # balance['capital_investments'] = company_state_previous.capital_invesments
-        # balance['ret_earnings'] = company_state_previous.ret_earnings
-        # balance['base_capital'] = company.game.parameters.base_capital
+        balance = dict()
+        balance['cash'] = company_state.cash
+        balance['inventory_money'] = company_state.inventory * company_state.production.man_cost
+        balance['capital_investments'] = company_state_previous.capital_invesments
+        balance['ret_earnings'] = company_state_previous.ret_earnings
+        balance['base_capital'] = company.game.parameters.base_capital
 
-        # cash_flow = dict()
-        # cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(number=last_turn.number-2), company=company).cash
-        # cash_flow['net_profit'] = company_state_previous.net_profit
-        # cash_flow['depreciation'] = company_state_previous.depreciation
-        # cash_flow['capital_investment'] = company_state_previous.factory.capital
-        # cash_flow['new_loans'] = company_state_previous.new_loans
-        # #cash_flow['inventory_change'] = company_state_previous.inventory_change
+        cash_flow = dict()
+        cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(number=last_turn.number-2), company=company).cash
+        cash_flow['sales'] =  company_state_previous.sales #plus
+        cash_flow['sold_man_cost'] = company_state_previous.sold_man_cost #minus
+        # vydavky na rozhodnutia - zratane vydavky na marketing r_d a capital s minusovou hodnotou
+        cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.capital
+        cash_flow['interest'] = company_state_previous.interest # minus
+        cash_flow['tax'] = company_state_previous.tax # minus
+        # teraz bude stav cash flow aby vedeli či potrebuju pozicku
+        cash_flow['cash_flow_result'] = company_state_previous.cash_flow_res
 
-        # income_statement = dict()
-        # income_statement['sales'] = company_state_previous.sales
-        # income_statement['sold_man_cost'] = company_state_previous.sold_man_cost
-        # income_statement['marketing'] = company_state_previous.marketing.billboard + company_state_previous.marketing.tv + company_state_previous.marketing.viral + company_state_previous.marketing.podcast + company_state_previous.marketing.ooh
-        # income_statement['r_d'] = company_state_previous.r_d
-        # income_statement['depreciation'] = company_state_previous.depreciation
-        # income_statement['net_profit'] = company_state_previous.net_profit
-        # income_statement['interestt'] = company_state_previous.interest
-        # income_statement['profit_before_tax'] = company_state_previous.profit_before_tax
-        # income_statement['tax'] = company_state_previous.tax
-        # income_statement['inventory_charge'] = company_state_previous.inventory_charge
+        #teraz ak je minus tak novy ubver alebo ak nie tak spatenie uveru
+        cash_flow['new_loans'] = company_state_previous.new_loans
+        cash_flow['loan_repayment'] = company_state_previous.loan_repayment
+         
+        #zostatok do dalssieho prostredia
+        cash_flow['cash'] = company_state.cash
+
+        income_statement = dict()
+        income_statement['sales'] = company_state_previous.sales
+        income_statement['sold_man_cost'] = company_state_previous.sold_man_cost
+        income_statement['marketing'] = marketing
+        income_statement['r_d'] = company_state_previous.r_d
+        income_statement['depreciation'] = company_state_previous.depreciation
+        income_statement['net_profit'] = company_state_previous.net_profit
+        income_statement['interest'] = company_state_previous.interest
+        income_statement['profit_before_tax'] = company_state_previous.profit_before_tax
+        income_statement['tax'] = company_state_previous.tax
+        income_statement['inventory_charge'] = company_state_previous.inventory_charge # minus
 
 
         return Response({"production": production, "sales": sales, 'balance': balance, 'cash_flow': cash_flow, 'income_statement': income_statement}, status=200)
@@ -103,6 +115,7 @@ class CreateCompanyView(APIView):
         company.save()
 
         create_upgrade_company_relation(company.game, company)
+        
 
         return Response({"companyID": company.id}, status=201)
 
