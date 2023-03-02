@@ -13,16 +13,20 @@ class MarketingModifiers:
 
 class MarketingInvestments:
     SOCIAL_MEDIA_MIN = 100
-    SOCIAL_MEDIA_MAX = 5000
+    SOCIAL_MEDIA_MAX = 10_000
     SOCIAL_MEDIA_STEP = 1000
+    
     PODCAST_MIN = 1000
-    PODCAST_MAX = 2500
+    PODCAST_MAX = 10_000
+    
     OOH_MIN = 500
-    OOH_MAX = 1500
+    OOH_MAX = 10_000
+    
     BILLBOARD_MIN = 500
-    BILLBOARD_MAX = 2500
+    BILLBOARD_MAX = 10_000
+    
     CABLE_NEWS_MIN = 2000
-    CABLE_NEWS_MAX = 3500
+    CABLE_NEWS_MAX = 10_000
 
 
 class FactoryPreset:
