@@ -41,7 +41,9 @@ class FactoryPreset:
     OPTIMAL_THRESHOLD = 0.9
     OVER_THRESHOLD_MULTIPLIER = 1.015
 
-    FACTORY_MAINTENANCE_RATE = 0.05 * TURN_LENGTH / YEAR_LENGTH  # yearly maintenance rate * months in turn / months in year 
+    FACTORY_WRITEOFF_RATE = (
+        0.05 * TURN_LENGTH / YEAR_LENGTH
+    )  # yearly maintenance rate * months in turn / months in year
 
     BASE_MATERIAL_COST_PER_UNIT = 250
 
@@ -52,3 +54,7 @@ class MarketPreset:
     INTERESTED_IN_RND = 0.15
     INTERESTED_IN_MARKETING = 0.2
     INTERESTED_IN_PRICE = 0.4
+    
+    
+class CompanyPreset:
+    DEFAULT_INTEREST_RATE = 1.025

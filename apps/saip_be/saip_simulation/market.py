@@ -149,6 +149,12 @@ if __name__ == "__main__":
     )
     companies = [comA, comB, comC, comD]
     for company in companies:
+        if company.brand == "A" or company.brand == "B":
+            company.factory.invest_into_factory(5000)
+        elif company.brand == "D":
+            company.factory.invest_into_factory(2500)
+        else:
+            company.factory.invest_into_factory(0)
         company.produce_products()
 
     mar = Market(companies)
