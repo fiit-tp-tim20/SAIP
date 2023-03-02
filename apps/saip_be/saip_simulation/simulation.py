@@ -283,12 +283,12 @@ class Simulation:
                 # this is done because the volume of actual products produced could have differed from the one submitted by the company (for instance, because of a lack of funds)
 
                 ct_companies_states[company_model].production.save()
-            if nt_companies_states[company_model].factory is not None:
-                nt_companies_states[
+            if ct_companies_states[company_model].factory is not None:
+                ct_companies_states[
                     company_model
                 ].factory.capacity = company_class_object.factory.capacity
-                nt_companies_states[company_model].factory.save()
-            nt_companies_states[company_model].save()
+                ct_companies_states[company_model].factory.save()
+            ct_companies_states[company_model].save()
 
         # write data from classes to models
         # next turn
