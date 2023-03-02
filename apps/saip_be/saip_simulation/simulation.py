@@ -81,7 +81,7 @@ class Simulation:
         # filter models for companies_upgrades that belong to this game and this company
         try:
             company_upgrades = models.CompaniesUpgrades.objects.filter(
-                game=self.game_model, company=company_model
+                game=self.game_model, company=company_model, turn=self.turn_model   #TODO Test the addition of turn
             )
         except models.CompaniesUpgrades.DoesNotExist:
             company_upgrades = []
@@ -217,7 +217,7 @@ class Simulation:
             company.factory.calculate_price_per_unit(company.production_volume)
             company.produce_products()
             company.factory.invest_into_factory(
-                1
+                0
             )  # TODO: solve the fact that we are using the capital from model as investment value;
             # and we are using a argument for the invest_into_factory method
             # the argument is added to the factory.capital val at the beginning of the method
