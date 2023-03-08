@@ -216,11 +216,7 @@ class Simulation:
             print(company)
             company.factory.invest_into_factory(
                 0
-            )  # TODO: solve the fact that we are using the capital from model as investment value;
-            # and we are using a argument for the invest_into_factory method
-            # the argument is added to the factory.capital val at the beginning of the method
-            # if I were to pass the value from model into this function we'd be effectively using twice the value of the "capital" attribute from factory model
-            # as the investment value
+            )  # TODO: properly call the invest into factory method
             company.factory.calculate_price_per_unit(company.production_volume)
             company.produce_products()
             
