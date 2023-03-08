@@ -142,17 +142,17 @@ class CompaniesState(models.Model):
     factory = models.OneToOneField(Factory, models.SET_NULL, null=True, blank=True)
     balance = models.FloatField(null=True, blank=True)
     stock_price = models.FloatField(null=True, blank=True)
-    inventory = models.PositiveIntegerField(null=True, blank=True)
-    r_d = models.PositiveBigIntegerField(null=True, blank=True)
+    inventory = models.PositiveIntegerField(null=True, default=0)
+    r_d = models.PositiveBigIntegerField(null=True, default=0)
     marketing = models.OneToOneField(Marketing, models.SET_NULL, null=True, blank=True)
     commited = models.BooleanField(default=False)
 
     #kontrola
-    orders_received = models.PositiveIntegerField(null=True, blank=True)
-    orders_fulfilled = models.PositiveIntegerField(null=True, blank=True)
+    orders_received = models.PositiveIntegerField(null=True, default=0)
+    orders_fulfilled = models.PositiveIntegerField(null=True, default=0)
     capital_invesments = models.PositiveBigIntegerField(null=True, blank=True)
     cash = models.PositiveIntegerField(null=True, blank=True) #celkovo dostupných prostriedkov
-    capital = models.PositiveIntegerField(null=True, blank=True)
+    capital = models.PositiveIntegerField(null=True, default=0)
     ret_earnings = models.PositiveIntegerField(null=True, blank=True) 
     net_profit = models.PositiveIntegerField(null=True, blank=True) #za kolo
     depreciation = models.PositiveIntegerField(null=True, blank=True)

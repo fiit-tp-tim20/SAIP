@@ -27,6 +27,32 @@ class CompanyInfo(APIView):
 
         return Response({"id": company.id, 'name': company.name, 'budget_cap': company.game.parameters.budget_cap}, status=200)
 
+class IndustryReport(APIView):
+
+    def get(self, request) -> Response:
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        try:
+            company = Company.objects.get(user=request.user)
+        except Company.DoesNotExist:
+            return Response({"detail": "Company for this user not found"}, status=404)
+
+        last_turn = get_last_turn(company.game)
+        company_states = CompaniesState.objects.filter(turn=last_turn)
+
+        industry = dict()
+        for state in company_states:
+            company_info = dict()
+            company_info['stock_price'] = state.stock_price
+            company_info['sell_price'] = state.production.sell_price
+            company_info['net_profit'] = state.net_profit
+
+            industry[state.company.name] = company_info
+
+        return Response({"industry": industry}, status=201)
+
+
 class CompanyReport(APIView):
 
     def get(self, request) -> Response:
@@ -41,7 +67,7 @@ class CompanyReport(APIView):
 
         last_turn = get_last_turn(company.game)
         company_state = CompaniesState.objects.get(turn=last_turn, company=company)
-        print(last_turn.number-1)
+        
         company_state_previous = CompaniesState.objects.get(turn=Turn.objects.get(number=last_turn.number-1), company=company)
         marketing = company_state_previous.marketing.billboard + company_state_previous.marketing.tv + company_state_previous.marketing.viral + company_state_previous.marketing.podcast + company_state_previous.marketing.ooh
 
