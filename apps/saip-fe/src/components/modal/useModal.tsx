@@ -1,13 +1,6 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
-/**
- *
- * @param _element element to be rendered in the modal
- * @returns {object} {sShowing, setIsShowing, Modal, setElement}
- * @example
- * const { isShowing, setIsShowing, Modal, setElement } = useModal(<div>Modal content</div>);
- */
-export const useModal = (_element: any) => {
+const useModal = (_element: any) => {
 	const [isShowing, setIsShowing] = useState(false);
 	const [element, setElement] = useState(_element);
 
@@ -16,11 +9,12 @@ export const useModal = (_element: any) => {
 
 		if (e.target.id === "modal") {
 			setIsShowing(false);
+			setElement(<div />);
 		}
 	};
 
-	function Modal() {
-		return (
+	const Modal = useCallback(
+		() => (
 			<div
 				className={`${
 					isShowing ? "block" : "hidden"
@@ -31,8 +25,10 @@ export const useModal = (_element: any) => {
 					{element}
 				</div>
 			</div>
-		);
-	}
+		),
+
+		[isShowing, element],
+	);
 
 	return {
 		isShowing,
@@ -41,3 +37,5 @@ export const useModal = (_element: any) => {
 		setElement,
 	};
 };
+
+export default useModal;

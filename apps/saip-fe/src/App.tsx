@@ -36,7 +36,7 @@ function App() {
 		if (!savedTurn) {
 			localStorage.setItem("turn", data.Number);
 		}
-		if (savedTurn && data && data.Number !== savedTurn) {
+		if (savedTurn && data && data.Number !== parseInt(savedTurn, 10)) {
 			localStorage.setItem("turn", data.Number);
 			resetCompanyState();
 			resetUpgradeState();

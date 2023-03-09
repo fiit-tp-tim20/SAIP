@@ -9,19 +9,15 @@ import useMarketingStore from "../../store/Marketing";
 import useUpgradesStore from "../../store/Upgrades";
 import { GameState } from "../../types/gameState";
 import { endTurn } from "../../api/EndTurn";
-import { useModal } from "../modal/useModal";
+import useModal from "../modal/useModal";
 import BottomBarModal from "./BottomBarModal";
 import { getCommited } from "../../api/GetCommited";
 
 export default function BottomBar() {
 	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());
-	const {
-		data: commited,
-		isLoading: isLoadingCommited,
-		refetch: refetchCommited,
-	} = useQuery("commited", () => getCommited());
+	const { data: commited, refetch: refetchCommited } = useQuery("commited", () => getCommited());
 
-	const { Modal, setIsShowing, setElement } = useModal(<div />);
+	const { Modal, isShowing, setIsShowing, setElement } = useModal(<div />);
 
 	const {
 		getSum: getSumMarketing,
@@ -76,7 +72,7 @@ export default function BottomBar() {
 
 	return (
 		<>
-			<Modal />
+			{isShowing && <Modal />}
 			<div className="fixed bottom-2 right-2 z-40">
 				{!isLoading ? (
 					<div className="bg-white px-3 py-1 rounded-lg border-2 border-accent-700">

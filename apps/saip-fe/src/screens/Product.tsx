@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
 import UpgradeInfo from "../components/product/UpgradeInfo";
 import Canvas from "../components/three/Canvas";
-import { useModal } from "../components/modal/useModal";
+import useModal from "../components/modal/useModal";
 import { Upgrade } from "../types/product";
 import ProductModal from "../components/product/ProductModal";
 import { getUpgrades } from "../api/Upgrades";
@@ -12,7 +12,7 @@ import useUpgradesStore from "../store/Upgrades";
 function Product() {
 	const { t } = useTranslation();
 
-	const { Modal, setIsShowing, setElement } = useModal(<div />);
+	const { Modal, isShowing, setIsShowing, setElement } = useModal(<div />);
 
 	const { isLoading, data } = useQuery(["upgrades"], getUpgrades);
 
@@ -41,7 +41,7 @@ function Product() {
 
 	return (
 		<>
-			<Modal />
+			{isShowing && <Modal />}
 			<div className="max-w-7xl flex flex-col justify-center">
 				<h1 className="p-6 pl-12">{t("product.title") as string}</h1>
 				<div className="grid grid-cols-2 gap-6 px-6 max-w-7xl">
