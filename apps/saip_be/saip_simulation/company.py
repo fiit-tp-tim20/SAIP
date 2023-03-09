@@ -54,7 +54,7 @@ class Factory:
 
     base_energy_cost: float = FactoryPreset.BASE_ENERGY_COST
     energy_cost_per_machine: float = FactoryPreset.ENERGY_COST_PER_MACHINE
-    machine_count: int = FactoryPreset.STARTING_MACHINES
+    # machine_count: int = FactoryPreset.STARTING_MACHINES
 
     upkeep = {
         "rent": float,
@@ -123,17 +123,19 @@ class Factory:
             self.capital_investment - self.upkeep.get("writeoff"), 2
         )
 
-    def invest_into_machines(self, machine_count_increase: int) -> None:
-        self.machine_count += machine_count_increase
-        self.capacity += floor(
-            machine_count_increase
-            * FactoryPreset.STARTING_CAPACITY
-            / FactoryPreset.STARTING_MACHINES
-        )
-        self.update_upkeep()
+    # def invest_into_machines(self, machine_count_increase: int) -> None:
+    #     self.machine_count += machine_count_increase
+    #     self.capacity += floor(
+    #         machine_count_increase
+    #         * FactoryPreset.STARTING_CAPACITY
+    #         / FactoryPreset.STARTING_MACHINES
+    #     )
+    #     self.update_upkeep()
 
     def __calculate_energies(self) -> float:
-        return self.base_energy_cost + self.energy_cost_per_machine * self.machine_count
+        return (
+            self.base_energy_cost
+        )  # + self.energy_cost_per_machine * self.machine_count
 
     def __calculate_salaries(self) -> float:
         return self.employee_salary * self.employees * TURN_LENGTH
@@ -165,7 +167,7 @@ class Company:
     income_per_turn: float = field(init=False)
     costs_per_turn: float = field(init=False)
 
-    max_budget: float = 0
+    max_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
     remaining_budget: float = field(init=False)
 
     stock_price: float = field(init=False)  # company score
@@ -174,20 +176,27 @@ class Company:
     factory: Factory = None
     marketing: Dict[str, MarketingType] = field(default_factory=dict)
 
+    def __post_init__(self):
+        self.remaining_budget = self.max_budget
+        self.pay_for_marketing()
+
+    def pay_for_marketing(self):
+        for marketing_type in self.marketing.values():
+            self.remaining_budget -= marketing_type.investment
+
     def upgrade_stored_products(self) -> None:
         self.costs_per_turn += self.inventory * self.product.get_upgrade_price()
 
     def calculate_stock_price(self) -> float:
-        self.__update_loan()
+        self.__update_loans()
 
         self.stock_price = (
             self.factory.capital_investment
-            + self.balance * 0.1  # long term performance
+            + self.balance * 0.2  # long term performance
             + self.profit * 0.3  # per turn performance
             - self.loans * 0.5  # log term debt
             + self.yield_agg_marketing_value()
         ) / 1000
-        return self.stock_price
 
     def get_product(self):
         return self.product
@@ -222,7 +231,7 @@ class Company:
             self.income_per_turn = self.inventory * self.product.get_price()
             self.profit = self.income_per_turn - self.costs_per_turn
             self.apply_tax()
-            self.balance += self.profit
+            self.balance += self.profit + self.remaining_budget
             demand_not_met = demand - self.inventory
             self.units_sold = self.inventory
             self.inventory = 0
@@ -230,6 +239,8 @@ class Company:
 
         self.income_per_turn = demand * self.product.get_price()
         self.profit = self.income_per_turn - self.costs_per_turn
+        self.apply_tax()
+        self.balance += self.profit + self.remaining_budget
         self.units_sold = demand
         self.inventory -= demand
         return 0
@@ -237,12 +248,26 @@ class Company:
     def apply_tax(self):
         self.profit = self.profit * (1 - CompanyPreset.DEFAULT_TAX_RATE)
 
-    def __update_loan(self):  # musi ist do + 10_000
-        self.loans = self.loans * self.interest_rate
-        if self.profit < 0:
-            self.loans -= self.profit
-            self.profit = 0
-        self.loans -= self.remaining_budget
+    def __update_loans(self):
+        self.balance -= self.loans * self.interest_rate
+        if self.balance < 0:
+            self.loans -= self.balance
+            self.balance = 0
+
+        if self.balance < self.max_budget:
+            self.loans += self.max_budget - self.balance
+            self.balance = 0
+            return
+
+        if (self.balance - self.max_budget) > self.loans:
+            self.balance -= self.loans + self.max_budget
+            self.loans = 0
+            return
+
+        self.loans -= self.balance - self.max_budget
+        self.balance = 0
+        # zahrnut naklady za marketing a upgrade do celkovej ceny na jednotku
+        # odlisit od vyrobnej ceny
 
 
 if __name__ == "__main__":

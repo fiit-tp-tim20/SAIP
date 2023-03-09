@@ -122,6 +122,7 @@ class Market:
             ] = company.sell_product(
                 self.customer_distribution.get(company.brand).get("demand")
             )
+            company.calculate_stock_price()
 
 
 if __name__ == "__main__":
@@ -130,8 +131,7 @@ if __name__ == "__main__":
         product=LastingProduct(None, 1000, -1),
         inventory=0,
         production_volume=85,
-        profit=0,
-        max_budget=10000,
+        balance=0,
         factory=Factory(),
         marketing={},
     )
@@ -140,8 +140,7 @@ if __name__ == "__main__":
         product=LastingProduct(None, 1100, -1),
         inventory=0,
         production_volume=82,
-        profit=0,
-        max_budget=10000,
+        balance=0,
         factory=Factory(),
         marketing={},
     )
@@ -150,8 +149,7 @@ if __name__ == "__main__":
         product=LastingProduct(None, 900, -1),
         inventory=0,
         production_volume=90,
-        profit=0,
-        max_budget=10000,
+        balance=0,
         factory=Factory(),
         marketing={"social": SocialMedia(3000)},
     )
@@ -160,8 +158,7 @@ if __name__ == "__main__":
         product=LastingProduct(None, 1200, -1),
         inventory=0,
         production_volume=95,
-        profit=0,
-        max_budget=10000,
+        balance=0,
         factory=Factory(),
         marketing={"ooh": OOH(1500)},
     )
@@ -194,6 +191,7 @@ if __name__ == "__main__":
         print(
             f"Total Income: {company.income_per_turn:.2f} | Total Costs: {company.costs_per_turn:.2f} | Profit: {company.profit:.2f}"
         )
+        print(f"Balance: {company.balance:.2f} | Loans: {company.loans:.2f}")
         print(
-            f"Marketing: {company.yield_agg_marketing_value():.2f} | Stock price: {company.calculate_stock_price():.2f}\n"
+            f"Marketing: {company.yield_agg_marketing_value():.2f} | Stock price: {company.stock_price:.2f}\n"
         )
