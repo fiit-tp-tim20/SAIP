@@ -125,27 +125,45 @@ class Market:
 
 
 if __name__ == "__main__":
-    comA = Company("A", LastingProduct(None, 1000, -1), 0, 85, 0, 10000, Factory(), {})
-    comB = Company("B", LastingProduct(None, 1100, -1), 0, 82, 0, 10000, Factory(), {})
+    comA = Company(
+        brand="A",
+        product=LastingProduct(None, 1000, -1),
+        inventory=0,
+        production_volume=85,
+        profit=0,
+        max_budget=10000,
+        factory=Factory(),
+        marketing={},
+    )
+    comB = Company(
+        brand="B",
+        product=LastingProduct(None, 1100, -1),
+        inventory=0,
+        production_volume=82,
+        profit=0,
+        max_budget=10000,
+        factory=Factory(),
+        marketing={},
+    )
     comC = Company(
-        "C",
-        LastingProduct(None, 900, -1),
-        0,
-        90,
-        0,
-        10000,
-        Factory(),
-        {"social": SocialMedia(3000)},
+        brand="C",
+        product=LastingProduct(None, 900, -1),
+        inventory=0,
+        production_volume=90,
+        profit=0,
+        max_budget=10000,
+        factory=Factory(),
+        marketing={"social": SocialMedia(3000)},
     )
     comD = Company(
-        "D",
-        LastingProduct(None, 1200, -1),
-        0,
-        95,
-        0,
-        10000,
-        Factory(),
-        {"ooh": OOH(1500)},
+        brand="D",
+        product=LastingProduct(None, 1200, -1),
+        inventory=0,
+        production_volume=95,
+        profit=0,
+        max_budget=10000,
+        factory=Factory(),
+        marketing={"ooh": OOH(1500)},
     )
     companies = [comA, comB, comC, comD]
     for company in companies:

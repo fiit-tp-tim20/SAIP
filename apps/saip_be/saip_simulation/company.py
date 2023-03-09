@@ -62,7 +62,7 @@ class Factory:
         "salaries": float,  # employees * salary * 3 (length of turn)
         "materials": float,  # this one might be irrelevant
         "writeoff": float,
-    }
+    }  # TODO inflation
 
     def __post_init__(self):
         self.update_upkeep(FactoryPreset.BASE_RENT, 0)
@@ -157,10 +157,10 @@ class Company:
         0  # assuming that the stored products are upgraded automatically, for a price
     )
     production_volume: int = 0
-    
 
-    profit: float = 0  # +income -costs| represents whether or not the company is actually in dept / turning profit
-    loans: float = 0
+    balance: float = 0  # current state of the company finances
+    profit: float = field(init=False)  # +income -costs | per turn only
+    loans: float = FactoryPreset.STARTING_INVESTMENT
     interest_rate: float = CompanyPreset.DEFAULT_INTEREST_RATE
     income_per_turn: float = field(init=False)
     costs_per_turn: float = field(init=False)
@@ -179,11 +179,12 @@ class Company:
 
     def calculate_stock_price(self) -> float:
         self.__update_loan()
-        
+
         self.stock_price = (
             self.factory.capital_investment
-            + self.profit * 0.3
-            - self.loans * 0.5
+            + self.balance * 0.1  # long term performance
+            + self.profit * 0.3  # per turn performance
+            - self.loans * 0.5  # log term debt
             + self.yield_agg_marketing_value()
         ) / 1000
         return self.stock_price
@@ -220,6 +221,8 @@ class Company:
         if demand > self.inventory:
             self.income_per_turn = self.inventory * self.product.get_price()
             self.profit = self.income_per_turn - self.costs_per_turn
+            self.apply_tax()
+            self.balance += self.profit
             demand_not_met = demand - self.inventory
             self.units_sold = self.inventory
             self.inventory = 0
@@ -230,11 +233,14 @@ class Company:
         self.units_sold = demand
         self.inventory -= demand
         return 0
-    
-    def __update_loan(self):
+
+    def apply_tax(self):
+        self.profit = self.profit * (1 - CompanyPreset.DEFAULT_TAX_RATE)
+
+    def __update_loan(self):  # musi ist do + 10_000
         self.loans = self.loans * self.interest_rate
-        if self.profit < 0: 
-            self.loans -= self.profit  # alebo nejaku pravidelnu ciastku napr. 10K?
+        if self.profit < 0:
+            self.loans -= self.profit
             self.profit = 0
         self.loans -= self.remaining_budget
 
