@@ -52,7 +52,7 @@ def create_turn(number: int, game: Game) -> Turn:
 
 
 def get_last_turn(game: Game) -> Turn:
-    return Turn.objects.get(game=game, end__isnull=True)
+    return Turn.objects.filter(game=game, end__isnull=True).order_by('-number').first()
 
 
 class CreateGameView(PermissionRequiredMixin, APIView):
@@ -151,17 +151,21 @@ class EndTurnView(PermissionRequiredMixin, APIView):
         if game.admin != request.user:
             return Response({"detail": "User is not admin"}, status=403)
 
-        turn = get_last_turn(game)
-        turn.end = timezone.now()
-        
-        turn.save()
-
-        new_turn = create_turn(turn.number + 1, game)
-        calculate_man_cost(game, new_turn)
-
-        # start simulation here
-        sim = Simulation(game_model=game, turn_model=turn, new_turn_model=get_last_turn(game=game))
-        sim.run_simulation()
-        sim.write_simulation_results()
+        end_turn(get_last_turn(game))
         
         return Response({"detail": "Turn ended, simulation started"}, status=200)
+
+def end_turn(turn: Turn) -> Turn:
+    game = turn.game
+
+    new_turn = create_turn(turn.number + 1, game)
+    calculate_man_cost(game, new_turn)
+
+    sim = Simulation(game_model=game, turn_model=turn, new_turn_model=new_turn)
+    sim.run_simulation()
+    sim.write_simulation_results()
+
+    turn.end = timezone.now()
+    turn.save()
+
+    return new_turn
