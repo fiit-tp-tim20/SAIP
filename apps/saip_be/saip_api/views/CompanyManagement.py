@@ -47,10 +47,11 @@ class IndustryReport(APIView):
             company_info['stock_price'] = state.stock_price
             company_info['sell_price'] = state.production.sell_price
             company_info['net_profit'] = state.net_profit
+            company_info['som'] = 12.5
 
             industry[state.company.name] = company_info
 
-        return Response({"industry": industry}, status=201)
+        return Response({"industry": industry}, status=200)
 
 
 class CompanyReport(APIView):
@@ -68,7 +69,7 @@ class CompanyReport(APIView):
         last_turn = get_last_turn(company.game)
         company_state = CompaniesState.objects.get(turn=last_turn, company=company)
         
-        company_state_previous = CompaniesState.objects.get(turn=Turn.objects.get(number=last_turn.number-1), company=company)
+        company_state_previous = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1), company=company)
         marketing = company_state_previous.marketing.billboard + company_state_previous.marketing.tv + company_state_previous.marketing.viral + company_state_previous.marketing.podcast + company_state_previous.marketing.ooh
 
         production = dict()
@@ -145,7 +146,7 @@ class CreateCompanyView(APIView):
 
         return Response({"companyID": company.id}, status=201)
 
-class Commited(APIView):
+class Committed(APIView):
 
     def get(self, request) -> Response:
 
@@ -163,7 +164,7 @@ class Commited(APIView):
         except CompaniesState.DoesNotExist:
             return Response({"detail": "Company state for this turn does not exist"}, status=500)
 
-        return Response({"commited": company_state.commited}, status=200)
+        return Response({"committed": company_state.committed}, status=200)
 
 class PostSpendingsView(APIView):
 
@@ -182,7 +183,7 @@ class PostSpendingsView(APIView):
         except CompaniesState.DoesNotExist:
             return Response({"detail": "Company state for this turn does not exist"}, status=500)
 
-        if company_state.commited:
+        if company_state.committed:
             return Response({"detail": "Decisions were posted before"}, status=409)
 
         print(company_state.marketing.viral, company_state.turn.number)
@@ -276,7 +277,7 @@ class PostSpendingsView(APIView):
         display_progress.save()
 
         company_state.r_d = brakes + frame + battery + display
-        company_state.commited = True
+        company_state.committed = True
         company_state.save()
 
         return Response(status=201)
@@ -286,8 +287,11 @@ class TurnInfoView(APIView):
         if not request.user or not request.user.is_authenticated:
             return Response({"detail": "User is not authenticated"}, status=401)
 
-        company = Company.objects.get(user=request.user)
-        game = company.game
-        turn = get_last_turn(game)
+        try:
+            company = Company.objects.get(user=request.user)
+        except Company.DoesNotExist:
+            return Response({"detail": "Company for this user not found"}, status=404)
+        
+        turn = get_last_turn(company.game)
 
         return Response({"Number": turn.number, "Start": turn.start})

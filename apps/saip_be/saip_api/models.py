@@ -145,26 +145,26 @@ class CompaniesState(models.Model):
     inventory = models.PositiveIntegerField(null=True, default=0)
     r_d = models.PositiveBigIntegerField(null=True, default=0)
     marketing = models.OneToOneField(Marketing, models.SET_NULL, null=True, blank=True)
-    commited = models.BooleanField(default=False)
+    committed = models.BooleanField(default=False)
 
     #kontrola
     orders_received = models.PositiveIntegerField(null=True, default=0)
     orders_fulfilled = models.PositiveIntegerField(null=True, default=0)
-    capital_invesments = models.PositiveBigIntegerField(null=True, blank=True)
-    cash = models.PositiveIntegerField(null=True, blank=True) #celkovo dostupných prostriedkov
-    capital = models.PositiveIntegerField(null=True, default=0)
-    ret_earnings = models.PositiveIntegerField(null=True, blank=True) 
-    net_profit = models.PositiveIntegerField(null=True, blank=True) #za kolo
-    depreciation = models.PositiveIntegerField(null=True, blank=True)
-    new_loans = models.PositiveIntegerField(null=True, blank=True)
-    inventory_charge = models.PositiveIntegerField(null=True, blank=True)
-    sales = models.PositiveIntegerField(null=True, blank=True)
-    sold_man_cost = models.PositiveIntegerField(null=True, blank=True)
-    tax = models.PositiveIntegerField(null=True, blank=True)
-    profit_before_tax = models.PositiveIntegerField(null=True, blank=True)
-    interest = models.PositiveIntegerField(null=True, blank=True)
-    cash_flow_res = models.PositiveIntegerField(null=True, blank=True)
-    loan_repayment = models.PositiveIntegerField(null=True, blank=True)
+    capital_invesments = models.FloatField(null=True, blank=True)
+    cash = models.FloatField(null=True, blank=True) #celkovo dostupných prostriedkov
+    capital = models.FloatField(null=True, default=0)
+    ret_earnings = models.FloatField(null=True, blank=True) 
+    net_profit = models.FloatField(null=True, blank=True) #za kolo
+    depreciation = models.FloatField(null=True, blank=True)
+    new_loans = models.FloatField(null=True, blank=True)
+    inventory_charge = models.FloatField(null=True, blank=True)
+    sales = models.FloatField(null=True, blank=True)
+    sold_man_cost = models.FloatField(null=True, blank=True)
+    tax = models.FloatField(null=True, blank=True)
+    profit_before_tax = models.FloatField(null=True, blank=True)
+    interest = models.FloatField(null=True, blank=True)
+    cash_flow_res = models.FloatField(null=True, blank=True)
+    loan_repayment = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.company} - {self.turn}"
