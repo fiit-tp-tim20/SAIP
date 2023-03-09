@@ -18,8 +18,7 @@ function IndustryReport() {
                                 <th className="border px-4 py-2 bg-accent-500 text-white">Akcia</th>
                                 <th className="border px-4 py-2 bg-accent-500 text-white">Čistý zisk</th>
                                 <th className="border px-4 py-2 bg-accent-500 text-white">Predajná cena</th>
-                                <th className="border px-4 py-2 bg-accent-500 text-white">Výsledok hospodárenia</th>
-                                <th className="border px-4 py-2 bg-accent-500 text-white">Tržby</th>
+                                <th className="border px-4 py-2 bg-accent-500 text-white">Podiel na trhu</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -30,7 +29,7 @@ function IndustryReport() {
                                 <td className="border px-4 py-2 text-center">1234</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
-                                <td className="border px-4 py-2 text-center">1234</td>
+                                
                             </tr>
                             <tr className="hover:bg-stone-100">
                                 <td className="border px-4 py-2 text-center">2</td>
@@ -39,7 +38,7 @@ function IndustryReport() {
                                 <td className="border px-4 py-2 text-center">1234</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
-                                <td className="border px-4 py-2 text-center">1234</td>
+                                
                             </tr>
                             <tr className="hover:bg-stone-100">
                                 <td className="border px-4 py-2 text-center">3</td>
@@ -48,7 +47,7 @@ function IndustryReport() {
                                 <td className="border px-4 py-2 text-center">1234</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
-                                <td className="border px-4 py-2 text-center">1234</td>
+                                
                             </tr>
                             <tr className="hover:bg-stone-100">
                                 <td className="border px-4 py-2 text-center">4</td>
@@ -57,7 +56,7 @@ function IndustryReport() {
                                 <td className="border px-4 py-2 text-center">1234</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
-                                <td className="border px-4 py-2 text-center">1234</td>
+                                
                             </tr>
                             <tr className="hover:bg-stone-100">
                                 <td className="border px-4 py-2 text-center">5</td>
@@ -66,7 +65,7 @@ function IndustryReport() {
                                 <td className="border px-4 py-2 text-center">1234</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
-                                <td className="border px-4 py-2 text-center">1234</td>
+                                
                             </tr>
                             <tr className="hover:bg-stone-100">
                                 <td className="border px-4 py-2 text-center">6</td>
@@ -75,7 +74,7 @@ function IndustryReport() {
                                 <td className="border px-4 py-2 text-center">1234</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
                                 <td className="border px-4 py-2 text-center">1234</td>
-                                <td className="border px-4 py-2 text-center">1234</td>
+                                
                             </tr>
                         </tbody>
                     </table>
