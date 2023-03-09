@@ -1,4 +1,5 @@
 TURN_LENGTH = 3  # turn_length is 1 quarter, so 3 months
+YEAR_LENGTH = 12  # months
 
 
 class MarketingModifiers:
@@ -30,17 +31,21 @@ class FactoryPreset:
 
     ENERGY_COST_PER_MACHINE = 100
     STARTING_MACHINES = 10
-    
+
     STARTING_EMPLOYEES = 10
     BASE_SALARY = 1500
-    
-    STARTING_INVESTMENT = 50_000
+
+    STARTING_INVESTMENT = 50_000    #TODO: capacity depends on the capital investment - adjust values so that they makes sense together - and add the investment-to-capacity calculation
     STARTING_CAPACITY = 100
-    
+
     OPTIMAL_THRESHOLD = 0.9
     OVER_THRESHOLD_MULTIPLIER = 1.015
-    
-    FACTORY_MAINTENANCE_RATE = 0.05
+
+    FACTORY_WRITEOFF_RATE = (
+        0.05 * TURN_LENGTH / YEAR_LENGTH
+    )  # yearly maintenance rate * months in turn / months in year
+
+    BASE_MATERIAL_COST_PER_UNIT = 250
 
 
 class MarketPreset:
@@ -49,3 +54,7 @@ class MarketPreset:
     INTERESTED_IN_RND = 0.15
     INTERESTED_IN_MARKETING = 0.2
     INTERESTED_IN_PRICE = 0.4
+    
+    
+class CompanyPreset:
+    DEFAULT_INTEREST_RATE = 1.025
