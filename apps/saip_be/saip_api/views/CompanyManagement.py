@@ -9,6 +9,12 @@ from .GameManagement import get_last_turn
 
 from django.core import serializers
 
+
+from saip_simulation.simulation import Simulation
+from django.utils import timezone
+from .GameManagement import create_turn, calculate_man_cost
+
+
 def create_upgrade_company_relation(game: Game, company: Company) -> None:
     for upgrade in Upgrade.objects.all():
         CompaniesUpgrades.objects.create(upgrade=upgrade, company=company, game=game)
@@ -45,6 +51,26 @@ class CreateCompanyView(APIView):
 
         return Response({"companyID": company.id}, status=201)
 
+def checkCommited(turn):
+    states = CompaniesState.objects.filter(turn=turn)
+    next_turn = False
+
+    for company in states:
+        next_turn = company.commited
+        if(next_turn == False):
+            break
+
+    if (next_turn == True):
+        turn.end = timezone.now()
+        
+        turn.save()
+
+        new_turn = create_turn(turn.number + 1, turn.game)
+        calculate_man_cost(turn.game, new_turn)
+
+        # start simulation here
+        sim = Simulation(game_model=turn.game, turn_model=turn)
+        sim.write_simulation_results()
 
 class PostSpendingsView(APIView):
 
@@ -154,6 +180,8 @@ class PostSpendingsView(APIView):
         company_state.r_d = brakes + frame + battery + display
         company_state.commited = True
         company_state.save()
+
+        checkCommited(last_turn)
 
         return Response(status=201)
 
