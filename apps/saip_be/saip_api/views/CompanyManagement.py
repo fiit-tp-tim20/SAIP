@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn, CompaniesUpgrades
+from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn, CompaniesUpgrades, MarketState
 
 from ..serializers import CompanySerializer, ProductionSerializer, SpendingsSerializer, MaketingSerializer, FactorySerializer
 
@@ -40,6 +40,7 @@ class IndustryReport(APIView):
 
         last_turn = get_last_turn(company.game)
         company_states = CompaniesState.objects.filter(turn=last_turn)
+        market_state = MarketState.objects.get(turn=last_turn)
 
         industry = dict()
         for state in company_states:
@@ -47,11 +48,18 @@ class IndustryReport(APIView):
             company_info['stock_price'] = state.stock_price
             company_info['sell_price'] = state.production.sell_price
             company_info['net_profit'] = state.net_profit
-            company_info['som'] = 12.5
+            company_info['market_share'] = state.orders_fulfilled/market_state.sold
 
             industry[state.company.name] = company_info
 
-        return Response({"industry": industry}, status=200)
+        market_state = MarketState.objects.get(turn=last_turn)
+        market = dict()
+        market['sold_products'] = market_state.sold
+        market['demand'] = market_state.demand
+        market['inventory'] = market_state.inventory
+
+
+        return Response({"industry": industry, "market": market}, status=200)
 
 
 class CompanyReport(APIView):
@@ -90,6 +98,9 @@ class CompanyReport(APIView):
         balance['cash'] = company_state.cash
         balance['inventory_money'] = company_state.inventory * company_state.production.man_cost
         balance['capital_investments'] = company_state_previous.capital_invesments
+
+        #pasiva
+        balance['loans'] = company_state_previous.loans
         balance['ret_earnings'] = company_state_previous.ret_earnings
         balance['base_capital'] = company.game.parameters.base_capital
 
@@ -101,6 +112,7 @@ class CompanyReport(APIView):
         cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.capital
         cash_flow['interest'] = company_state_previous.interest # minus
         cash_flow['tax'] = company_state_previous.tax # minus
+        income_statement['inventory_charge'] = company_state_previous.inventory_charge # minus
         # teraz bude stav cash flow aby vedeli či potrebuju pozicku
         cash_flow['cash_flow_result'] = company_state_previous.cash_flow_res
 

@@ -165,6 +165,7 @@ class CompaniesState(models.Model):
     interest = models.FloatField(null=True, blank=True)
     cash_flow_res = models.FloatField(null=True, blank=True)
     loan_repayment = models.FloatField(null=True, blank=True)
+    loans = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.company} - {self.turn}"
@@ -176,8 +177,9 @@ class CompaniesState(models.Model):
 
 class MarketState(models.Model):
     turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
-    size = models.PositiveIntegerField(null=True)
+    sold = models.PositiveIntegerField(null=True)
     demand = models.PositiveIntegerField(null=True)
+    inventory = models.PositiveIntegerField(null=True)
 
     def __str__(self):
         return f"Market State - {self.turn}"
