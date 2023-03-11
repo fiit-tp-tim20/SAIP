@@ -143,24 +143,25 @@ class MaketingSerializer(serializers.ModelSerializer):
 
 class FactorySerializer(serializers.ModelSerializer):
 
-    prod_emp = serializers.IntegerField(required=True, min_value=0)
-    cont_emp = serializers.IntegerField(required=True, min_value=0)
-    aux_emp = serializers.IntegerField(required=True, min_value=0)
+    # prod_emp = serializers.IntegerField(required=True, min_value=0)
+    # cont_emp = serializers.IntegerField(required=True, min_value=0)
+    # aux_emp = serializers.IntegerField(required=True, min_value=0)
     capital = serializers.IntegerField(required=True, min_value=0)
     class Meta:
         model = Factory
-        fields = ('prod_emp', 'cont_emp', 'aux_emp', 'capital')
+        # fields = ('prod_emp', 'cont_emp', 'aux_emp', 'capital')
+        fields = ('capital')
 
     def update(self, instance, validated_data) -> Factory:
-        prod_emp = validated_data.get('prod_emp')
-        cont_emp = validated_data.get('cont_emp')
-        aux_emp = validated_data.get('aux_emp')
+        # prod_emp = validated_data.get('prod_emp')
+        # cont_emp = validated_data.get('cont_emp')
+        # aux_emp = validated_data.get('aux_emp')
         capital = validated_data.get('capital')
 
         
-        instance.prod_emp = prod_emp
-        instance.cont_emp = cont_emp
-        instance.aux_emp = aux_emp
+        # instance.prod_emp = prod_emp
+        # instance.cont_emp = cont_emp
+        # instance.aux_emp = aux_emp
         instance.capital = capital
 
         return instance

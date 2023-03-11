@@ -75,7 +75,7 @@ class CompanyReport(APIView):
             return Response({"detail": "Company for this user not found"}, status=404)
 
         last_turn = get_last_turn(company.game)
-        company_state = CompaniesState.objects.get(turn=last_turn, company=company)
+        #company_state = CompaniesState.objects.get(turn=last_turn, company=company)
         
         company_state_previous = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1), company=company)
         marketing = company_state_previous.marketing.billboard + company_state_previous.marketing.tv + company_state_previous.marketing.viral + company_state_previous.marketing.podcast + company_state_previous.marketing.ooh
@@ -85,7 +85,7 @@ class CompanyReport(APIView):
         production['capacity'] = company_state_previous.factory.capacity
         production['utilization'] = (company_state_previous.production.volume/company_state_previous.factory.capacity)*100
         production['man_cost'] = company_state_previous.production.man_cost
-        production['new_inventory'] = company_state.inventory
+        production['new_inventory'] = company_state_previous.inventory
         production['selling_price'] = company_state_previous.production.sell_price
 
         sales = dict()
@@ -95,8 +95,8 @@ class CompanyReport(APIView):
         sales['selling_price'] = company_state_previous.production.sell_price
 
         balance = dict()
-        balance['cash'] = company_state.cash
-        balance['inventory_money'] = company_state.inventory * company_state.production.man_cost
+        balance['cash'] = company_state_previous.cash
+        balance['inventory_money'] = company_state_previous.inventory * company_state_previous.production.man_cost
         balance['capital_investments'] = company_state_previous.capital_invesments
 
         #pasiva
@@ -105,7 +105,7 @@ class CompanyReport(APIView):
         balance['base_capital'] = company.game.parameters.base_capital
 
         cash_flow = dict()
-        cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(number=last_turn.number-2), company=company).cash
+        cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(number=last_turn.number-2), company=company).cash #???
         cash_flow['sales'] =  company_state_previous.sales #plus
         cash_flow['sold_man_cost'] = company_state_previous.sold_man_cost #minus
         # vydavky na rozhodnutia - zratane vydavky na marketing r_d a capital s minusovou hodnotou
@@ -121,7 +121,7 @@ class CompanyReport(APIView):
         cash_flow['loan_repayment'] = company_state_previous.loan_repayment
          
         #zostatok do dalssieho prostredia
-        cash_flow['cash'] = company_state.cash
+        cash_flow['cash'] = company_state_previous.cash
 
         income_statement = dict()
         income_statement['sales'] = company_state_previous.sales
@@ -129,11 +129,11 @@ class CompanyReport(APIView):
         income_statement['marketing'] = marketing
         income_statement['r_d'] = company_state_previous.r_d
         income_statement['depreciation'] = company_state_previous.depreciation
-        income_statement['net_profit'] = company_state_previous.net_profit
+        income_statement['inventory_charge'] = company_state_previous.inventory_charge # minus
         income_statement['interest'] = company_state_previous.interest
         income_statement['profit_before_tax'] = company_state_previous.profit_before_tax
         income_statement['tax'] = company_state_previous.tax
-        income_statement['inventory_charge'] = company_state_previous.inventory_charge # minus
+        income_statement['net_profit'] = company_state_previous.net_profit #???
 
 
         return Response({"production": production, "sales": sales, 'balance': balance, 'cash_flow': cash_flow, 'income_statement': income_statement}, status=200)

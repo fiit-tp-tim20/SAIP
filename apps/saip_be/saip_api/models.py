@@ -120,12 +120,13 @@ class CompaniesUpgrades(models.Model):
 
 
 class Factory(models.Model):
-    prod_emp = models.PositiveIntegerField(null=True, default=0)
-    cont_emp = models.PositiveIntegerField(null=True, default=0)
-    aux_emp = models.PositiveIntegerField(null=True, default=0)
+    # prod_emp = models.PositiveIntegerField(null=True, default=0)
+    # cont_emp = models.PositiveIntegerField(null=True, default=0)
+    # aux_emp = models.PositiveIntegerField(null=True, default=0)
     capacity = models.PositiveIntegerField(null=True, default=100)
     base_cost = models.PositiveIntegerField(null=True,default=0)
     capital = models.PositiveIntegerField(null=True,default=0)
+    capital_invesments = models.FloatField(null=True, blank=True)
 
     # def __str__(self):
     #     return f"Factory - {self.companiesstate.company}"
@@ -150,7 +151,6 @@ class CompaniesState(models.Model):
     #kontrola
     orders_received = models.PositiveIntegerField(null=True, default=0)
     orders_fulfilled = models.PositiveIntegerField(null=True, default=0)
-    capital_invesments = models.FloatField(null=True, blank=True)
     cash = models.FloatField(null=True, blank=True) #celkovo dostupných prostriedkov
     capital = models.FloatField(null=True, default=0)
     ret_earnings = models.FloatField(null=True, blank=True) 
