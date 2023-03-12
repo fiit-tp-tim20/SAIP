@@ -6,6 +6,7 @@ class GameParameters(models.Model):
     budget_cap = models.PositiveIntegerField(default=10000)
     depreciation = models.FloatField(default=0.1)
     base_man_cost = models.PositiveIntegerField(default=50)
+    base_capital = models.PositiveIntegerField(default=10000)
 
     class Meta:
         db_table = 'GameParameters'
@@ -119,12 +120,13 @@ class CompaniesUpgrades(models.Model):
 
 
 class Factory(models.Model):
-    prod_emp = models.PositiveIntegerField(null=True, default=0)
-    cont_emp = models.PositiveIntegerField(null=True, default=0)
-    aux_emp = models.PositiveIntegerField(null=True, default=0)
-    capacity = models.PositiveIntegerField(null=True, default=0)
+    # prod_emp = models.PositiveIntegerField(null=True, default=0)
+    # cont_emp = models.PositiveIntegerField(null=True, default=0)
+    # aux_emp = models.PositiveIntegerField(null=True, default=0)
+    capacity = models.PositiveIntegerField(null=True, default=100)
     base_cost = models.PositiveIntegerField(null=True,default=0)
-    capital = models.PositiveIntegerField(null=True, default=0)
+    capital = models.PositiveIntegerField(null=True,default=0)
+    capital_invesments = models.FloatField(null=True, blank=True)
 
     # def __str__(self):
     #     return f"Factory - {self.companiesstate.company}"
@@ -141,10 +143,29 @@ class CompaniesState(models.Model):
     factory = models.OneToOneField(Factory, models.SET_NULL, null=True, blank=True)
     balance = models.FloatField(null=True, blank=True)
     stock_price = models.FloatField(null=True, blank=True)
-    inventory = models.PositiveIntegerField(null=True, blank=True)
-    r_d = models.PositiveBigIntegerField(null=True, blank=True)
+    inventory = models.PositiveIntegerField(null=True, default=0)
+    r_d = models.PositiveBigIntegerField(null=True, default=0)
     marketing = models.OneToOneField(Marketing, models.SET_NULL, null=True, blank=True)
-    commited = models.BooleanField(default=False)
+    committed = models.BooleanField(default=False)
+
+    #kontrola
+    orders_received = models.PositiveIntegerField(null=True, default=0)
+    orders_fulfilled = models.PositiveIntegerField(null=True, default=0)
+    cash = models.FloatField(null=True, blank=True) #celkovo dostupných prostriedkov
+    capital = models.FloatField(null=True, default=0)
+    ret_earnings = models.FloatField(null=True, blank=True) 
+    net_profit = models.FloatField(null=True, blank=True) #za kolo
+    depreciation = models.FloatField(null=True, blank=True)
+    new_loans = models.FloatField(null=True, blank=True)
+    inventory_charge = models.FloatField(null=True, blank=True)
+    sales = models.FloatField(null=True, blank=True)
+    sold_man_cost = models.FloatField(null=True, blank=True)
+    tax = models.FloatField(null=True, blank=True)
+    profit_before_tax = models.FloatField(null=True, blank=True)
+    interest = models.FloatField(null=True, blank=True)
+    cash_flow_res = models.FloatField(null=True, blank=True)
+    loan_repayment = models.FloatField(null=True, blank=True)
+    loans = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.company} - {self.turn}"
@@ -156,8 +177,9 @@ class CompaniesState(models.Model):
 
 class MarketState(models.Model):
     turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
-    size = models.PositiveIntegerField(null=True)
+    sold = models.PositiveIntegerField(null=True)
     demand = models.PositiveIntegerField(null=True)
+    inventory = models.PositiveIntegerField(null=True)
 
     def __str__(self):
         return f"Market State - {self.turn}"
