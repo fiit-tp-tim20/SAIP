@@ -112,7 +112,6 @@ class CompanyReport(APIView):
         cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.capital
         cash_flow['interest'] = company_state_previous.interest # minus
         cash_flow['tax'] = company_state_previous.tax # minus
-        income_statement['inventory_charge'] = company_state_previous.inventory_charge # minus
         # teraz bude stav cash flow aby vedeli či potrebuju pozicku
         cash_flow['cash_flow_result'] = company_state_previous.cash_flow_res
 
