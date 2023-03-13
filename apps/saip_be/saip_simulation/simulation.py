@@ -272,11 +272,11 @@ class Simulation:
 
             ct_companies_states[company_model].cash = 0  # TODO: add correct value
 
-            ct_companies_states[company_model].capital = 0  # TODO: add correct value
+            #ct_companies_states[company_model].capital = 0  # TODO: add correct value
 
             ct_companies_states[company_model].ret_earnings = 0  # TODO: add correct value
 
-            ct_companies_states[company_model].net_profit = 0  # TODO: add correct value
+            ct_companies_states[company_model].net_profit = company_class_object.profit # TODO: check if correct (income per turn - costs per turn)
 
             ct_companies_states[company_model].depreciation = (
                 company_class_object.factory.upkeep["writeoff"]
@@ -288,14 +288,14 @@ class Simulation:
 
             ct_companies_states[company_model].inventory_charge = 0  # TODO: add correct value
 
-            ct_companies_states[company_model].sales = company_class_object.income_per_turn  # TODO check if correct
+            ct_companies_states[company_model].sales =  company_class_object.income_per_turn #TODO: check if correct
 
             ct_companies_states[company_model].sold_man_cost = (
                 company_class_object.product.get_man_cost()
                 * company_class_object.units_sold
             )
 
-            ct_companies_states[company_model].tax = 0  # TODO: add correct value
+            ct_companies_states[company_model].tax = 0  # TODO: add correct value   #TODO: add taxation
 
             ct_companies_states[company_model].profit_before_tax = 0  # TODO: add correct value
 
