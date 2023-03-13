@@ -258,15 +258,105 @@ class Simulation:
         #       add costs_per_turn to models, add income_per_turn to models
         for company_model in ct_companies_states.keys():
             company_class_object = self.companies[company_model.name]
+
             ct_companies_states[
                 company_model
             ].balance = company_class_object.remaining_budget
+
             ct_companies_states[
                 company_model
             ].stock_price = company_class_object.stock_price
+
             ct_companies_states[
                 company_model
             ].inventory = company_class_object.inventory
+
+            ct_companies_states[
+                company_model
+            ].orders_received = self.market.customer_distribution[company_class_object.brand]
+
+            ct_companies_states[
+                company_model
+            ].orders_fulfilled = company_class_object.units_sold
+
+            ct_companies_states[
+                company_model
+            ].cash = 0 #TODO: add correct value
+
+            ct_companies_states[
+                company_model
+            ].capital = 0 #TODO: add correct value
+
+            ct_companies_states[
+                company_model
+            ].ret_earnings = 0 #TODO: add correct value
+
+            ct_companies_states[
+                company_model
+            ].net_profit = 0 #TODO: add correct value
+
+            ct_companies_states[
+                company_model
+            ].depreciation = 0 #TODO: add correct value
+
+            ct_companies_states[
+                company_model
+            ].new_loans = 0 #TODO: add correct value
+
+            ct_companies_states[
+                company_model
+            ].inventory_charge = 0 #TODO: add correct value
+
+            ct_companies_states[
+                company_model
+            ].sales = 0 #TODO: add correct value
+
+            ct_companies_states[
+                company_model
+            ].sold_man_cost = 0 #TODO: add correct value
+
+            ct_companies_states[
+                company_model
+            ].tax = 0 #TODO: add correct value
+
+            ct_companies_states[
+                company_model
+            ].profit_before_tax = 0 #TODO: add correct value
+
+            ct_companies_states[
+                company_model
+            ].interest = 0 #TODO: add correct value
+
+            ct_companies_states[
+                company_model
+            ].cash_flow_res = 0 #TODO: add correct value
+
+            ct_companies_states[
+                company_model
+            ].loan_repayment = 0 #TODO: add correct value
+
+            ct_companies_states[
+                company_model
+            ].loans = 0 #TODO: add correct value
+
+            #orders_received = models.PositiveIntegerField(null=True, default=0)
+            #orders_fulfilled = models.PositiveIntegerField(null=True, default=0)
+            #cash = models.FloatField(null=True, blank=True) #celkovo dostupných prostriedkov
+            #capital = models.FloatField(null=True, default=0)
+            #ret_earnings = models.FloatField(null=True, blank=True) 
+            #net_profit = models.FloatField(null=True, blank=True) #za kolo
+            #depreciation = models.FloatField(null=True, blank=True)
+            #new_loans = models.FloatField(null=True, blank=True)
+            #inventory_charge = models.FloatField(null=True, blank=True)
+            #sales = models.FloatField(null=True, blank=True)
+            #sold_man_cost = models.FloatField(null=True, blank=True)
+            #tax = models.FloatField(null=True, blank=True)
+            #profit_before_tax = models.FloatField(null=True, blank=True)
+            #interest = models.FloatField(null=True, blank=True)
+            #cash_flow_res = models.FloatField(null=True, blank=True)
+            #loan_repayment = models.FloatField(null=True, blank=True)
+            #loans = models.FloatField(null=True, blank=True)
+
             if ct_companies_states[company_model].production is not None:
                 ct_companies_states[
                     company_model
