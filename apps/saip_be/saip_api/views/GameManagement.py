@@ -165,9 +165,9 @@ def end_turn(turn: Turn) -> Turn:
     new_turn = create_turn(turn.number + 1, game)
     calculate_man_cost(game, new_turn)
 
-    sim = Simulation(game_model=game, turn_model=turn, new_turn_model=new_turn)
-    sim.run_simulation()
-    sim.write_simulation_results()
+    # sim = Simulation(game_model=game, turn_model=turn, new_turn_model=new_turn)
+    # sim.run_simulation()
+    # sim.write_simulation_results()
 
     turn.end = timezone.now()
     turn.save()

@@ -36,6 +36,8 @@ class Turn(models.Model):
     game = models.ForeignKey(Game, models.DO_NOTHING, null=True)
 
     def __str__(self):
+        if self.end:
+            return f"{self.game} - {self.number} (Ended)"
         return f"{self.game} - {self.number}"
 
     class Meta:

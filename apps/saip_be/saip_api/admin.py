@@ -4,19 +4,17 @@ from .models import Turn, Company, Production, Marketing, Factory, CompaniesStat
 
 from django_object_actions import DjangoObjectActions, action
 
-from django.shortcuts import redirect
+from .views.GameManagement import end_turn
 
 @admin.register(Turn)
 class TurnsAdmin(DjangoObjectActions, admin.ModelAdmin):
     @action(label='End Turn', description='Ends the turn if you are admin for this game')
     def EndTurn(modeladmin, request, queryset):
-        print(queryset)
-
-        if request.user != queryset.game.admin:
-            print("You are not the admin of this game")
+        if request.user != queryset.game.admin or queryset.end is not None:
+            # print("You are not the admin of this game")
             return
         
-        # return redirect(queryset.game)
+        _ = end_turn(queryset)
     
     change_actions = ('EndTurn',)
     list_display = ('number', 'game', 'start', 'end')
@@ -31,17 +29,20 @@ class CompanyAdmin(admin.ModelAdmin):
 
 @admin.register(Production)
 class ProductionAdmin(admin.ModelAdmin):
-    list_display = ('man_cost', 'sell_price', 'volume')
+    list_display = ('man_cost', 'sell_price', 'volume', 'companiesstate')
+    list_filter = ('companiesstate__company__game',)
 
 
 @admin.register(Marketing)
 class SpendingAdmin(admin.ModelAdmin):
-    list_display = ('viral', 'podcast', 'ooh', 'tv', 'billboard')
+    list_display = ('viral', 'podcast', 'ooh', 'tv', 'billboard', 'companiesstate')
+    list_filter = ('companiesstate__company__game',)
 
 
 @admin.register(Factory)
 class FactoryAdmin(admin.ModelAdmin):
-    list_display = ('capacity', 'base_cost', 'capital', 'capital_investments')
+    list_display = ('capacity', 'base_cost', 'capital', 'capital_investments', 'companiesstate')
+    list_filter = ('companiesstate__company__game',)
 
 
 @admin.register(CompaniesState)
@@ -70,7 +71,7 @@ class GameAdmin(admin.ModelAdmin):
 
 @admin.register(GameParameters)
 class GameParametersAdmin(admin.ModelAdmin):
-    list_display = ('budget_cap', 'depreciation', 'base_man_cost')
+    list_display = ('__str__', 'budget_cap', 'depreciation', 'base_man_cost')
 
 
 @admin.register(Upgrade)
