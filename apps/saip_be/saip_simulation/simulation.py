@@ -297,11 +297,11 @@ class Simulation:
 
             ct_companies_states[company_model].tax = 0  # TODO: add correct value   #TODO: add taxation
 
-            ct_companies_states[company_model].profit_before_tax = 0  # TODO: add correct value
+            ct_companies_states[company_model].profit_before_tax = 0  # TODO: add correct value #TODO: taxation
 
             ct_companies_states[company_model].interest = company_class_object.interest_rate
 
-            ct_companies_states[company_model].cash_flow_res = 0  # TODO: add correct value
+            ct_companies_states[company_model].cash_flow_res = 0  # TODO: add correct value  #TODO: taxation
 
             ct_companies_states[company_model].loan_repayment = 0  # TODO: add correct value
 
