@@ -2,9 +2,23 @@ from django.contrib import admin
 from .models import Turn, Company, Production, Marketing, Factory, CompaniesState, Game, GameParameters, MarketState,\
     EmailGroup, Upgrade, CompaniesUpgrades
 
+from django_object_actions import DjangoObjectActions, action
+
+from django.shortcuts import redirect
 
 @admin.register(Turn)
-class TurnsAdmin(admin.ModelAdmin):
+class TurnsAdmin(DjangoObjectActions, admin.ModelAdmin):
+    @action(label='End Turn', description='Ends the turn if you are admin for this game')
+    def EndTurn(modeladmin, request, queryset):
+        print(queryset)
+
+        if request.user != queryset.game.admin:
+            print("You are not the admin of this game")
+            return
+        
+        # return redirect(queryset.game)
+    
+    change_actions = ('EndTurn',)
     list_display = ('number', 'game', 'start', 'end')
     list_filter = ('game',)
 
