@@ -5,9 +5,16 @@ from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, Companies
 
 from ..serializers import CompanySerializer, ProductionSerializer, SpendingsSerializer, MaketingSerializer, FactorySerializer
 
-from .GameManagement import get_last_turn, create_company_state
+from .GameManagement import get_last_turn, create_company_state, end_turn
+
 
 from django.core import serializers
+
+
+from saip_simulation.simulation import Simulation
+from django.utils import timezone
+from .GameManagement import create_turn, calculate_man_cost
+
 
 def create_upgrade_company_relation(game: Game, company: Company) -> None:
     for upgrade in Upgrade.objects.all():
@@ -159,6 +166,19 @@ class CreateCompanyView(APIView):
 
         return Response({"companyID": company.id}, status=201)
 
+def checkCommitted(turn: Turn, end: bool = True) -> bool:
+    states = CompaniesState.objects.filter(turn=turn)
+
+    for company in states:
+        if not company.commited:
+            return False
+
+    if end:
+        end_turn(turn)
+    
+    return True
+
+
 class Committed(APIView):
 
     def get(self, request) -> Response:
@@ -292,6 +312,8 @@ class PostSpendingsView(APIView):
         company_state.r_d = brakes + frame + battery + display
         company_state.committed = True
         company_state.save()
+
+        checkCommitted(last_turn)
 
         return Response(status=201)
 
