@@ -160,9 +160,9 @@ class Simulation:
 
         # all attributes are positive integer (from model)
         # TODO: types are not consistent: model <-> our class
-        prod_emp = factory_model.prod_emp
-        cont_emp = factory_model.cont_emp
-        aux_emp = factory_model.aux_emp
+        #prod_emp = factory_model.prod_emp
+        #cont_emp = factory_model.cont_emp
+        #aux_emp = factory_model.aux_emp
 
         # TODO: TEMP FIX - create the correct initialization of models
         if factory_model.capacity < FactoryPreset.STARTING_CAPACITY:
@@ -253,7 +253,7 @@ class Simulation:
                 nt_companies_states[company_model] = nt_company_state_model
             except models.CompaniesState.DoesNotExist:
                 pass
-            
+
         # write data from classes to models
         # curent turn
         for company_model in ct_companies_states.keys():
