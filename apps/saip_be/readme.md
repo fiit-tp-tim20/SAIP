@@ -2,9 +2,19 @@
 
 ## Environment
 
+Use ```python``` on Windows and ```python3``` on Unix/Linux.
+
 Please install your own venv. You can use the following command to create a venv:
 
-```python3 -m venv venv```
+```python -m venv venv```
+
+To activate the environment use:
+
+```source /venv/bin/activate``` on Unix/Linux
+
+or
+
+```\venv\bin\Activate.ps1``` on Windows.
 
 Packages can be found in requirements.txt (remove this from PROD).
 Install them using the following command:
@@ -15,19 +25,21 @@ Install them using the following command:
 
 To set up, use following commands:
 
-```python .\manage.py makemigrations``` to create models' migrations.
+```python manage.py makemigrations``` to create django migrations.
 
-```python .\manage.py migrate``` to create the database and apply the migrations.
+```python manage.py makemigrations saip_api``` to create models' migrations (if the above command does not detect changes in models).
 
-```python .\manage.py createsuperuser``` to create a superuser (needed for admin login).
+```python manage.py migrate``` to create the database and apply the migrations.
+
+```python manage.py createsuperuser``` to create a superuser (needed for admin login).
 
 Start the server with:
 
-```python .\manage.py runserver```
+```python manage.py runserver```
 
 After you modify the models, please re-run the makemigrations and migrate commands.
 
-Admin interface can be found at http://127.0.0.1:8000/admin/
+Admin interface can be found at http://127.0.0.1:8000/api/admin/
 
 ## Commits
 
