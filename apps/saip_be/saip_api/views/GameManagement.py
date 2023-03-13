@@ -32,27 +32,31 @@ def create_default_upgrades(game: Game) -> None:
                                    camera_rot=upgrade["camera_rot"]).save()
 
 
+def create_company_state(company: Company, turn: Turn) -> CompaniesState:
+    cs = CompaniesState.objects.create(turn=turn, company=company)
+    production = Production.objects.create()
+    cs.production = production
+    marketing = Marketing.objects.create()
+    cs.marketing = marketing
+    factory = Factory.objects.create()
+    cs.factory = factory
+
+    cs.save()
+
+    return cs
+
 def create_turn(number: int, game: Game) -> Turn:
     turn = Turn.objects.create(number=number, game=game)
     companies = Company.objects.filter(game=game)
     
     for company in companies:
-        cs = CompaniesState.objects.create(turn=turn, company=company)
-        production = Production.objects.create()
-        cs.production = production
-        marketing = Marketing.objects.create()
-        cs.marketing = marketing
-        factory = Factory.objects.create()
-        cs.factory = factory
-
-        cs.save()
-
+        create_company_state(company, turn)
 
     return turn
 
 
 def get_last_turn(game: Game) -> Turn:
-    return Turn.objects.get(game=game, end__isnull=True)
+    return Turn.objects.filter(game=game, end__isnull=True).order_by('-number').first()
 
 
 class CreateGameView(PermissionRequiredMixin, APIView):
@@ -151,17 +155,21 @@ class EndTurnView(PermissionRequiredMixin, APIView):
         if game.admin != request.user:
             return Response({"detail": "User is not admin"}, status=403)
 
-        turn = get_last_turn(game)
-        turn.end = timezone.now()
-        
-        turn.save()
-
-        new_turn = create_turn(turn.number + 1, game)
-        calculate_man_cost(game, new_turn)
-
-        # start simulation here
-        sim = Simulation(game_model=game, turn_model=turn, new_turn_model=get_last_turn(game=game))
-        sim.run_simulation()
-        sim.write_simulation_results()
+        end_turn(get_last_turn(game))
         
         return Response({"detail": "Turn ended, simulation started"}, status=200)
+
+def end_turn(turn: Turn) -> Turn:
+    game = turn.game
+
+    new_turn = create_turn(turn.number + 1, game)
+    calculate_man_cost(game, new_turn)
+
+    sim = Simulation(game_model=game, turn_model=turn, new_turn_model=new_turn)
+    sim.run_simulation()
+    sim.write_simulation_results()
+
+    turn.end = timezone.now()
+    turn.save()
+
+    return new_turn

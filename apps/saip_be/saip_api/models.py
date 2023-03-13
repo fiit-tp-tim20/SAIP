@@ -124,9 +124,9 @@ class Factory(models.Model):
     # cont_emp = models.PositiveIntegerField(null=True, default=0)
     # aux_emp = models.PositiveIntegerField(null=True, default=0)
     capacity = models.PositiveIntegerField(null=True, default=100)
-    base_cost = models.PositiveIntegerField(null=True,default=0)
-    capital = models.PositiveIntegerField(null=True,default=0)
-    capital_invesments = models.FloatField(null=True, blank=True)
+    base_cost = models.FloatField(null=True,default=0)
+    capital = models.FloatField(null=True,default=0)
+    capital_investments = models.FloatField(null=True, blank=True)
 
     # def __str__(self):
     #     return f"Factory - {self.companiesstate.company}"
