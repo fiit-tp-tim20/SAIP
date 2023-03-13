@@ -4,7 +4,7 @@ from rest_framework import serializers, validators
 
 from datetime import datetime, timezone
 
-from .models import Game, Company, Production, Marketing, Factory, CompaniesState
+from .models import Game, Company, Production, Marketing, Factory, CompaniesState, Turn
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -76,6 +76,11 @@ class CompanySerializer(serializers.ModelSerializer):
     def create(self, validated_data) -> Company:
         name = validated_data.get('name')
         game = validated_data.get('game')
+
+        game_turn = Turn.objects.filter(game=game, end__isnull=True).order_by('-number').first().number
+
+        if game_turn != 0:
+            raise serializers.ValidationError({"detail": "Game has already started"})
 
         company = Company.objects.create(
             name=name,

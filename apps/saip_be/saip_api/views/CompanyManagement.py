@@ -5,7 +5,7 @@ from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, Companies
 
 from ..serializers import CompanySerializer, ProductionSerializer, SpendingsSerializer, MaketingSerializer, FactorySerializer
 
-from .GameManagement import get_last_turn
+from .GameManagement import get_last_turn, create_company_state
 
 from django.core import serializers
 
@@ -154,6 +154,8 @@ class CreateCompanyView(APIView):
 
         create_upgrade_company_relation(company.game, company)
         
+        turn = Turn.objects.get(game=company.game, number=0)
+        create_company_state(company, turn)
 
         return Response({"companyID": company.id}, status=201)
 

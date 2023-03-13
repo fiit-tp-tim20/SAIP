@@ -32,21 +32,25 @@ def create_default_upgrades(game: Game) -> None:
                                    camera_rot=upgrade["camera_rot"]).save()
 
 
+def create_company_state(company: Company, turn: Turn) -> CompaniesState:
+    cs = CompaniesState.objects.create(turn=turn, company=company)
+    production = Production.objects.create()
+    cs.production = production
+    marketing = Marketing.objects.create()
+    cs.marketing = marketing
+    factory = Factory.objects.create()
+    cs.factory = factory
+
+    cs.save()
+
+    return cs
+
 def create_turn(number: int, game: Game) -> Turn:
     turn = Turn.objects.create(number=number, game=game)
     companies = Company.objects.filter(game=game)
     
     for company in companies:
-        cs = CompaniesState.objects.create(turn=turn, company=company)
-        production = Production.objects.create()
-        cs.production = production
-        marketing = Marketing.objects.create()
-        cs.marketing = marketing
-        factory = Factory.objects.create()
-        cs.factory = factory
-
-        cs.save()
-
+        create_company_state(company, turn)
 
     return turn
 
