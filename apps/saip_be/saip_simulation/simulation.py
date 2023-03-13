@@ -81,7 +81,9 @@ class Simulation:
         # filter models for companies_upgrades that belong to this game and this company
         try:
             company_upgrades = models.CompaniesUpgrades.objects.filter(
-                game=self.game_model, company=company_model, turn=self.turn_model   #TODO Test the addition of turn
+                game=self.game_model,
+                company=company_model,
+                turn=self.turn_model,  # TODO Test the addition of turn
             )
         except models.CompaniesUpgrades.DoesNotExist:
             company_upgrades = []
@@ -219,7 +221,7 @@ class Simulation:
             )  # TODO: properly call the invest into factory method
             company.factory.calculate_price_per_unit(company.production_volume)
             company.produce_products()
-            
+
         self.market.generate_distribution()
         for company in self.companies.values():
             company.yield_agg_marketing_value()
@@ -259,120 +261,84 @@ class Simulation:
         for company_model in ct_companies_states.keys():
             company_class_object = self.companies[company_model.name]
 
-            ct_companies_states[
-                company_model
-            ].balance = company_class_object.remaining_budget
+            ct_companies_states[company_model].balance = company_class_object.remaining_budget
 
-            ct_companies_states[
-                company_model
-            ].stock_price = company_class_object.stock_price
+            ct_companies_states[company_model].stock_price = company_class_object.stock_price
 
-            ct_companies_states[
-                company_model
-            ].inventory = company_class_object.inventory
+            ct_companies_states[company_model].inventory = company_class_object.inventory
 
-            ct_companies_states[
-                company_model
-            ].orders_received = self.market.customer_distribution[company_class_object.brand]
+            # attributes added to the model after the update
+            ct_companies_states[company_model].orders_received = self.market.customer_distribution[company_class_object.brand]
 
-            ct_companies_states[
-                company_model
-            ].orders_fulfilled = company_class_object.units_sold
+            ct_companies_states[company_model].orders_fulfilled = company_class_object.units_sold
 
-            ct_companies_states[
-                company_model
-            ].cash = 0 #TODO: add correct value
+            ct_companies_states[company_model].cash = 0  # TODO: add correct value
 
-            ct_companies_states[
-                company_model
-            ].capital = 0 #TODO: add correct value
+            ct_companies_states[company_model].capital = 0  # TODO: add correct value
 
-            ct_companies_states[
-                company_model
-            ].ret_earnings = 0 #TODO: add correct value
+            ct_companies_states[company_model].ret_earnings = 0  # TODO: add correct value
 
-            ct_companies_states[
-                company_model
-            ].net_profit = 0 #TODO: add correct value
+            ct_companies_states[company_model].net_profit = 0  # TODO: add correct value
 
-            ct_companies_states[
-                company_model
-            ].depreciation = 0 #TODO: add correct value
+            ct_companies_states[company_model].depreciation = (
+                company_class_object.factory.upkeep["writeoff"]
+                if company_class_object.factory.upkeep["writeoff"]
+                else 0
+            )  # TODO: check if correct
 
-            ct_companies_states[
-                company_model
-            ].new_loans = 0 #TODO: add correct value
+            ct_companies_states[company_model].new_loans = 0  # TODO: add correct value
 
-            ct_companies_states[
-                company_model
-            ].inventory_charge = 0 #TODO: add correct value
+            ct_companies_states[company_model].inventory_charge = 0  # TODO: add correct value
 
-            ct_companies_states[
-                company_model
-            ].sales = 0 #TODO: add correct value
+            ct_companies_states[company_model].sales = company_class_object.income_per_turn  # TODO check if correct
 
-            ct_companies_states[
-                company_model
-            ].sold_man_cost = 0 #TODO: add correct value
+            ct_companies_states[company_model].sold_man_cost = (
+                company_class_object.product.get_man_cost()
+                * company_class_object.units_sold
+            )
 
-            ct_companies_states[
-                company_model
-            ].tax = 0 #TODO: add correct value
+            ct_companies_states[company_model].tax = 0  # TODO: add correct value
 
-            ct_companies_states[
-                company_model
-            ].profit_before_tax = 0 #TODO: add correct value
+            ct_companies_states[company_model].profit_before_tax = 0  # TODO: add correct value
 
-            ct_companies_states[
-                company_model
-            ].interest = 0 #TODO: add correct value
+            ct_companies_states[company_model].interest = company_class_object.interest_rate
 
-            ct_companies_states[
-                company_model
-            ].cash_flow_res = 0 #TODO: add correct value
+            ct_companies_states[company_model].cash_flow_res = 0  # TODO: add correct value
 
-            ct_companies_states[
-                company_model
-            ].loan_repayment = 0 #TODO: add correct value
+            ct_companies_states[company_model].loan_repayment = 0  # TODO: add correct value
 
-            ct_companies_states[
-                company_model
-            ].loans = 0 #TODO: add correct value
+            ct_companies_states[company_model].loans = company_class_object.loans
 
-            #orders_received = models.PositiveIntegerField(null=True, default=0)
-            #orders_fulfilled = models.PositiveIntegerField(null=True, default=0)
-            #cash = models.FloatField(null=True, blank=True) #celkovo dostupných prostriedkov
-            #capital = models.FloatField(null=True, default=0)
-            #ret_earnings = models.FloatField(null=True, blank=True) 
-            #net_profit = models.FloatField(null=True, blank=True) #za kolo
-            #depreciation = models.FloatField(null=True, blank=True)
-            #new_loans = models.FloatField(null=True, blank=True)
-            #inventory_charge = models.FloatField(null=True, blank=True)
-            #sales = models.FloatField(null=True, blank=True)
-            #sold_man_cost = models.FloatField(null=True, blank=True)
-            #tax = models.FloatField(null=True, blank=True)
-            #profit_before_tax = models.FloatField(null=True, blank=True)
-            #interest = models.FloatField(null=True, blank=True)
-            #cash_flow_res = models.FloatField(null=True, blank=True)
-            #loan_repayment = models.FloatField(null=True, blank=True)
-            #loans = models.FloatField(null=True, blank=True)
+            # orders_received = models.PositiveIntegerField(null=True, default=0)
+            # orders_fulfilled = models.PositiveIntegerField(null=True, default=0)
+            # cash = models.FloatField(null=True, blank=True) #celkovo dostupných prostriedkov
+            # capital = models.FloatField(null=True, default=0)
+            # ret_earnings = models.FloatField(null=True, blank=True)
+            # net_profit = models.FloatField(null=True, blank=True) #za kolo
+            # depreciation = models.FloatField(null=True, blank=True)
+            # new_loans = models.FloatField(null=True, blank=True)
+            # inventory_charge = models.FloatField(null=True, blank=True)
+            # sales = models.FloatField(null=True, blank=True)
+            # sold_man_cost = models.FloatField(null=True, blank=True)
+            # tax = models.FloatField(null=True, blank=True)
+            # profit_before_tax = models.FloatField(null=True, blank=True)
+            # interest = models.FloatField(null=True, blank=True)
+            # cash_flow_res = models.FloatField(null=True, blank=True)
+            # loan_repayment = models.FloatField(null=True, blank=True)
+            # loans = models.FloatField(null=True, blank=True)
 
             if ct_companies_states[company_model].production is not None:
-                ct_companies_states[
-                    company_model
-                ].production.man_cost = (
+
+                ct_companies_states[company_model].production.man_cost = (
                     company_class_object.product.get_man_cost()
                 )  # TODO maybe we dont want to write this in this turn
-                ct_companies_states[
-                    company_model
-                ].production.volume = company_class_object.production_volume
+
+                ct_companies_states[company_model].production.volume = company_class_object.production_volume
                 # this is done because the volume of actual products produced could have differed from the one submitted by the company (for instance, because of a lack of funds)
 
                 ct_companies_states[company_model].production.save()
             if ct_companies_states[company_model].factory is not None:
-                ct_companies_states[
-                    company_model
-                ].factory.capacity = company_class_object.factory.capacity
+                ct_companies_states[company_model].factory.capacity = company_class_object.factory.capacity
                 ct_companies_states[company_model].factory.save()
             ct_companies_states[company_model].save()
 
@@ -380,24 +346,16 @@ class Simulation:
         # next turn
         for company_model in nt_companies_states.keys():
             company_class_object = self.companies[company_model.name]
-            nt_companies_states[
-                company_model
-            ].balance = company_class_object.remaining_budget
+            nt_companies_states[company_model].balance = company_class_object.remaining_budget
             # nt_companies_states[
             #    company_model
             # ].stock_price = company_class_object.stock_price
-            nt_companies_states[
-                company_model
-            ].inventory = company_class_object.inventory
+            nt_companies_states[company_model].inventory = company_class_object.inventory
 
             if nt_companies_states[company_model].production is not None:
-                nt_companies_states[
-                    company_model
-                ].production.man_cost = company_class_object.product.get_man_cost()
+                nt_companies_states[company_model].production.man_cost = company_class_object.product.get_man_cost()
                 nt_companies_states[company_model].production.save()
             if nt_companies_states[company_model].factory is not None:
-                nt_companies_states[
-                    company_model
-                ].factory.capacity = company_class_object.factory.capacity
+                nt_companies_states[company_model].factory.capacity = company_class_object.factory.capacity
                 nt_companies_states[company_model].factory.save()
             nt_companies_states[company_model].save()
