@@ -46,6 +46,7 @@ class NoProductionError(CompanyError):
 @dataclass
 class Factory:
     capital_investment: float = FactoryPreset.STARTING_INVESTMENT
+    capital_investment_this_turn: float = 0.0
     capacity: int = FactoryPreset.STARTING_CAPACITY
 
     # to be changed to list (or multiple attributes) after we implement different employees

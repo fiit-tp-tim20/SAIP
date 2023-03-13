@@ -170,9 +170,11 @@ class Simulation:
         else:
             new_factory.capacity = factory_model.capacity
         new_factory.base_energy_cost = factory_model.base_cost
-        new_factory.capital_investment = factory_model.capital
+        new_factory.capital_investment = factory_model.capital_invesments
+        new_factory.capital_investment_this_turn = factory_model.capital
+        
+        # TODO: solve difference between capital and capital_investments 
 
-        # TODO: add all attributes we need for initialization
         return new_factory
 
     def create_product(
@@ -217,8 +219,8 @@ class Simulation:
         for company in self.companies.values():
             print(company)
             company.factory.invest_into_factory(
-                0
-            )  # TODO: properly call the invest into factory method
+                company.factory.capital_investment_this_turn
+            )  # TODO: check if correct
             company.factory.calculate_price_per_unit(company.production_volume)
             company.produce_products()
 
