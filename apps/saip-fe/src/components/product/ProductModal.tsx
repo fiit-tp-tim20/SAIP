@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { X } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { Vector3 } from "three";
@@ -15,16 +15,7 @@ type Props = {
 function ProductModal(props: Props) {
 	const { upgrade, onClick } = props;
 	const { t } = useTranslation();
-
 	const { upgrades, upgradesCheck, setUpgrade, setUpgradeCheck } = useUpgradesStore();
-	console.log(upgrade);
-
-	console.log(upgrades);
-
-	useEffect(() => {
-		console.log("UPGRADE", upgrade);
-		console.log("UPGRADES", upgrades[upgrade.name]);
-	}, [upgrade, upgrades]);
 
 	return (
 		<div className="background-container rounded-2xl p-6 grid grid-cols-2 gap-6 w-[60vw] min-h-[50vh] max-h-[95vh]">
