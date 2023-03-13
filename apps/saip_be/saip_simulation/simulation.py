@@ -253,11 +253,9 @@ class Simulation:
                 nt_companies_states[company_model] = nt_company_state_model
             except models.CompaniesState.DoesNotExist:
                 pass
+            
         # write data from classes to models
         # curent turn
-        # TODO: add units_sold to models, add units_demanded to models
-        #       nove uvery, poplatok za zasoby, odpisy(?) - ani v modeloch, ani v sim
-        #       add costs_per_turn to models, add income_per_turn to models
         for company_model in ct_companies_states.keys():
             company_class_object = self.companies[company_model.name]
 
