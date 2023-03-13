@@ -357,5 +357,6 @@ class Simulation:
                 nt_companies_states[company_model].production.save()
             if nt_companies_states[company_model].factory is not None:
                 nt_companies_states[company_model].factory.capacity = company_class_object.factory.capacity
+                ct_companies_states[company_model].factory.capital_investments = company_class_object.factory.capital_investment #TODO maybe add this to current turn as well
                 nt_companies_states[company_model].factory.save()
             nt_companies_states[company_model].save()
