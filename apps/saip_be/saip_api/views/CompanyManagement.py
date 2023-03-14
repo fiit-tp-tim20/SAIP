@@ -104,7 +104,7 @@ class CompanyReport(APIView):
         balance = dict()
         balance['cash'] = company_state_previous.cash
         balance['inventory_money'] = company_state_previous.inventory * company_state_previous.production.man_cost
-        balance['capital_investments'] = company_state_previous.capital_invesments
+        balance['capital_investments'] = company_state_previous.factory.capital_investments
 
         #pasiva
         balance['loans'] = company_state_previous.loans
@@ -112,7 +112,7 @@ class CompanyReport(APIView):
         balance['base_capital'] = company.game.parameters.base_capital
 
         cash_flow = dict()
-        cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(number=last_turn.number-2), company=company).cash #???
+        cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(number=last_turn.number-1), company=company).cash #???
         cash_flow['sales'] =  company_state_previous.sales #plus
         cash_flow['sold_man_cost'] = company_state_previous.sold_man_cost #minus
         # vydavky na rozhodnutia - zratane vydavky na marketing r_d a capital s minusovou hodnotou
