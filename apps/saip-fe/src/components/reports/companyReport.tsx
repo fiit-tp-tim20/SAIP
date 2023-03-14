@@ -26,27 +26,27 @@ function CompanyReport() {
 								<tbody>
 									<tr>
 									<td className="border px-4 py-2">Produkcia</td>
-									<td className="border px-4 py-2">{data.production.production}</td>
+									<td className="border px-4 py-2">{data.production.production} ks</td>
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Výrobná kapacita</td>
-									<td className="border px-4 py-2">{data.production.capacity}</td>
+									<td className="border px-4 py-2">{data.production.capacity} ks</td>
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Utilizácia</td>
-									<td className="border px-4 py-2">{data.production.utilization}</td>
+									<td className="border px-4 py-2">{data.production.utilization} %</td>
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Výrobná cena</td>
-									<td className="border px-4 py-2">{data.production.man_cost}€</td>
+									<td className="border px-4 py-2">{data.production.man_cost} €/ks</td>
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Inventár</td>
-									<td className="border px-4 py-2">{data.production.new_inventory}</td>
+									<td className="border px-4 py-2">{data.production.new_inventory} ks</td>
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Predajná cena</td>
-									<td className="border px-4 py-2">{data.production.selling_price}€</td>
+									<td className="border px-4 py-2">{data.production.selling_price} €/ks</td>
 									</tr>
 								</tbody>
 								</table>
@@ -71,7 +71,7 @@ function CompanyReport() {
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Predajná cena</td>
-									<td className="border px-4 py-2">{data.sales.selling_price}</td>
+									<td className="border px-4 py-2">{data.sales.selling_price} €/ks</td>
 									</tr>
 								</tbody>
 							</table>
@@ -89,15 +89,15 @@ function CompanyReport() {
 								<tbody>
 									<tr>
 									<td className="border px-4 py-2">Hotovosť</td>
-									<td className="border px-4 py-2">{data.balance.cash}€</td>
+									<td className="border px-4 py-2">{data.balance.cash} €</td>
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Zásoby</td>
-									<td className="border px-4 py-2">{data.balance.inventory_money}€</td>
+									<td className="border px-4 py-2">{data.balance.inventory_money} €</td>
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Kapitálové invsetície</td>
-									<td className="border px-4 py-2">{data.balance.capital_investments}€</td>
+									<td className="border px-4 py-2">{data.balance.capital_investments} €</td>
 									</tr>
 								</tbody>
 								<thead>
@@ -108,15 +108,15 @@ function CompanyReport() {
 								<tbody>
 									<tr>
 									<td className="border px-4 py-2">Pôžičky</td>
-									<td className="border px-4 py-2">{data.balance.loans}€</td>
+									<td className="border px-4 py-2">{data.balance.loans} €</td>
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Výsledok hospodárenia z predchádzajúcich období</td>
-									<td className="border px-4 py-2">{data.balance.ret_earnings}€</td>
+									<td className="border px-4 py-2">{data.balance.ret_earnings} €</td>
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Vlastné ímanie</td>
-									<td className="border px-4 py-2">{data.balance.base_capital}€</td>
+									<td className="border px-4 py-2">{data.balance.base_capital} €</td>
 									</tr>
 								</tbody>
 							</table>
@@ -135,48 +135,49 @@ function CompanyReport() {
 								<tbody>
 									<tr>
 									<td className="border px-4 py-2">Počiatočná hotovosť</td>
-									<td className="border px-4 py-2">{data.cash_flow.beginning_cash}€</td>
+									<td className="border px-4 py-2">{data.cash_flow.beginning_cash} €</td>
 									</tr>
 									<tr>
-									<td className="border px-4 py-2">Sales??</td>
-									<td className="border px-4 py-2">{data.cash_flow.sales}€</td>
+									<td className="border px-4 py-2">Zisk z predaja</td>
+									<td className="border px-4 py-2">{data.cash_flow.sales} €</td>
 									</tr>
 									<tr>
-									<td className="border px-4 py-2">Sold man cost??</td>
-									<td className="border px-4 py-2">{data.cash_flow.sold_man_cost}€</td>
+									<td className="border px-4 py-2">Náklady na predaný tovar</td>
+									<td className="border px-4 py-2">{data.cash_flow.sold_man_cost} €</td>
 									</tr>
 									<tr>
-									<td className="border px-4 py-2">Výdavky</td>
-									<td className="border px-4 py-2">{data.cash_flow.expenses}€</td>
+									<td className="border px-4 py-2">Výdavky na rozhodnutia</td>
+									<td className="border px-4 py-2">{data.cash_flow.expenses} €</td>
 									</tr>
 									<tr>
-									<td className="border px-4 py-2">Úroky</td>
-									<td className="border px-4 py-2">{data.cash_flow.interest}€</td>
+									<td className="border px-4 py-2">Úrok</td>
+									<td className="border px-4 py-2">{data.cash_flow.interest} €</td>
 									</tr>
 									<tr>
-									<td className="border px-4 py-2">Dane</td>
-									<td className="border px-4 py-2">{data.cash_flow.tax}€</td>
+									<td className="border px-4 py-2">Daň</td>
+									<td className="border px-4 py-2">{data.cash_flow.tax} €</td>
 									</tr>
+									{/* Sem hrubá čiara a výsledok */}
 									<tr>
-									<td className="border px-4 py-2">Výsledok hospodárenia po zdanení?</td>
-									<td className="border px-4 py-2">{data.cash_flow.cash_flow_result}€</td>
+									<td className="border px-4 py-2"><b>Výsledok finančného toku</b></td>
+									<td className="border px-4 py-2"><b>{data.cash_flow.cash_flow_result} €</b></td>
 									</tr>
 									{data.cash_flow.new_loans > 0 ? (
 
 										<tr>
 										<td className="border px-4 py-2">Nové úvery</td>
-										<td className="border px-4 py-2">{data.cash_flow.new_loans}€</td>
+										<td className="border px-4 py-2">{data.cash_flow.new_loans} €</td>
 										</tr>
 									) :
 									(
 										<tr>
 										<td className="border px-4 py-2">Splátka</td>
-										<td className="border px-4 py-2">{data.cash_flow.loan_repayment}€</td>
+										<td className="border px-4 py-2">{data.cash_flow.loan_repayment} €</td>
 										</tr>
 									)}
 									<tr>
-									<td className="border px-4 py-2">Cash?</td>
-									<td className="border px-4 py-2">{data.cash_flow.cash}€</td>
+									<td className="border px-4 py-2"><b>Konečná hotovosť</b></td>
+									<td className="border px-4 py-2"><b>{data.cash_flow.cash} €</b></td>
 									</tr>
 								</tbody>
 							</table>
@@ -188,44 +189,44 @@ function CompanyReport() {
 							<table className="table-auto">
 								<tbody>
 									<tr>
-									<td className="border px-4 py-2">Tržby</td>
-									<td className="border px-4 py-2">{data.income_statement.sales}€</td>
+									<td className="border px-4 py-2">Zisk z predaja</td>
+									<td className="border px-4 py-2">{data.income_statement.sales} €</td>
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Náklady na predaný tovar</td>
-									<td className="border px-4 py-2">{data.income_statement.sold_man_cost}€</td>
+									<td className="border px-4 py-2">{data.income_statement.sold_man_cost} €</td>
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Marketing</td>
-									<td className="border px-4 py-2">{data.income_statement.marketing}€</td>
+									<td className="border px-4 py-2">{data.income_statement.marketing} €</td>
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Výskum a vývoj</td>
-									<td className="border px-4 py-2">{data.income_statement.r_d}€</td>
+									<td className="border px-4 py-2">{data.income_statement.r_d} €</td>
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Odpisy</td>
-									<td className="border px-4 py-2">{data.income_statement.depreciation}€</td>
+									<td className="border px-4 py-2">{data.income_statement.depreciation} €</td>
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Poplatok za zásoby</td>
-									<td className="border px-4 py-2">{data.income_statement.inventory_charge}€</td>
+									<td className="border px-4 py-2">{data.income_statement.inventory_charge} €</td>
 									</tr>
 									<tr>
-									<td className="border px-4 py-2">Úroky</td>
-									<td className="border px-4 py-2">{data.income_statement.interest}€</td>
+									<td className="border px-4 py-2">Úrok</td>
+									<td className="border px-4 py-2">{data.income_statement.interest} €</td>
 									</tr>
 									<tr>
-									<td className="border px-4 py-2">Výsledok hospodárenia pred zdanením</td>
-									<td className="border px-4 py-2">{data.income_statement.profit_before_tax}€</td>
+									<td className="border px-4 py-2"><b>Výsledok hospodárenia pred zdanením</b></td>
+									<td className="border px-4 py-2"><b>{data.income_statement.profit_before_tax} €</b></td>
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Daň</td>
-									<td className="border px-4 py-2">{data.income_statement.tax}€</td>
+									<td className="border px-4 py-2">{data.income_statement.tax} €</td>
 									</tr>
 									<tr>
-									<td className="border px-4 py-2">Výsledok hospodárenia po zdanení</td>
-									<td className="border px-4 py-2">{data.income_statement.sales}€</td>
+									<td className="border px-4 py-2"><b>Výsledok hospodárenia po zdanení</b></td>
+									<td className="border px-4 py-2"><b>{data.income_statement.sales} €</b></td>
 									</tr>
 								</tbody>
 							</table>
