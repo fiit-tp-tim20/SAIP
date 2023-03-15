@@ -30,8 +30,11 @@ function UpgradeInfo(props: Props) {
 			<div className="flex mb-5 -space-x-4">
 				{researchedAvatars
 					.filter((_el, index) => index < 3)
-					.map((avatar, index) => (
-						<div className="border-4 border-accent-400 ring-offset-base-100 ring-offset-2 w-12 h-12 rounded-full bg-gray-200">
+					.map((avatar) => (
+						<div
+							key={avatar}
+							className="border-4 border-accent-400 ring-offset-base-100 ring-offset-2 w-12 h-12 rounded-full bg-gray-200"
+						>
 							<img
 								className="rounded-full"
 								src={`https://avatars.dicebear.com/api/miniavs/${avatar}.png`}

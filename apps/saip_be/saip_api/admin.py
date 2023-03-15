@@ -27,7 +27,7 @@ class SpendingAdmin(admin.ModelAdmin):
 
 @admin.register(Factory)
 class FactoryAdmin(admin.ModelAdmin):
-    list_display = ('prod_emp', 'cont_emp', 'aux_emp', 'capacity', 'base_cost', 'capital')
+    list_display = ('capacity', 'base_cost', 'capital', 'capital_investments')
 
 
 @admin.register(CompaniesState)
@@ -39,7 +39,7 @@ class CompaniesStateAdmin(admin.ModelAdmin):
 
 @admin.register(MarketState)
 class MarketStateAdmin(admin.ModelAdmin):
-    list_display = ('turn', 'size', 'demand')
+    list_display = ('turn', 'sold', 'demand', 'inventory')
 
 
 
