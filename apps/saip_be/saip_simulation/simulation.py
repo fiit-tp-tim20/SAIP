@@ -164,15 +164,10 @@ class Simulation:
         #cont_emp = factory_model.cont_emp
         #aux_emp = factory_model.aux_emp
 
-        # TODO: TEMP FIX - create the correct initialization of models
-        if factory_model.capacity < FactoryPreset.STARTING_CAPACITY:
-            pass
-        else:
-            new_factory.capacity = factory_model.capacity
-        new_factory.base_energy_cost = factory_model.base_cost
-        new_factory.capital_investment = factory_model.capital_invesments
-        new_factory.capital_investment_this_turn = factory_model.capital
-        
+        new_factory.capacity = factory_model.capacity if factory_model.capacity is not None else FactoryPreset.STARTING_CAPACITY
+        new_factory.base_energy_cost = factory_model.base_cost if factory_model.base_cost is not None else FactoryPreset.BASE_ENERGY_COST
+        new_factory.capital_investment = factory_model.capital_investments if factory_model.capital_investments is not None else FactoryPreset.STARTING_INVESTMENT
+        new_factory.capital_investment_this_turn = factory_model.capital if factory_model.capital is not None else 0.0
         # TODO: solve difference between capital and capital_investments 
 
         return new_factory
@@ -272,9 +267,9 @@ class Simulation:
 
             ct_companies_states[company_model].orders_fulfilled = company_class_object.units_sold
 
-            ct_companies_states[company_model].cash = 0  # TODO: add correct value
+            ct_companies_states[company_model].cash = company_class_object.remaining_budget # TODO: add correct value (same as budget - one of them probably should be a different value)
 
-            #ct_companies_states[company_model].capital = 0  # TODO: add correct value
+            #ct_companies_states[company_model].capital = 0
 
             ct_companies_states[company_model].ret_earnings = 0  # TODO: add correct value
 
