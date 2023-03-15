@@ -74,6 +74,7 @@ function IndustryReport() {
 					</tbody>
 				</table>
 			</div>
+
 			<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 				<div className="flex flex-row items-center justify-between py-2">
 					<h2>Správa o odvetví</h2>
@@ -82,11 +83,13 @@ function IndustryReport() {
 					<thead>
 						<th className="border px-4 py-2 bg-accent-500 text-white">Kategória</th>
 						<th className="border px-4 py-2 bg-accent-500 text-white">Počet kusov</th>
+						<th className="border px-4 py-2 bg-accent-500 text-white">Nárast / pokles</th>
 					</thead>
 					<tbody>
 						<tr className="hover:bg-stone-100">
 							<td className="border px-4 py-2">Celkové objednávky</td>
 							<td className="border px-4 py-2">100</td>
+							<td className="border px-4 py-2">7 %</td>
 						</tr>
 						<tr className="hover:bg-stone-100">
 							<td className="border px-4 py-2">Celkový predaj</td>
@@ -102,6 +105,38 @@ function IndustryReport() {
 						</tr>
 						<tr className="hover:bg-stone-100">
 							<td className="border px-4 py-2">Celkové zásoby v odvetví</td>
+							<td className="border px-4 py-2">100</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div className="background-container my-2 flex flex-col rounded-2xl p-6">
+				<div className="flex flex-row items-center justify-between py-2">
+					<h2>Ekonomické parametre trhu</h2>
+				</div>
+				<table className="table-auto">
+					<thead>
+						<th className="border px-4 py-2 bg-accent-500 text-white">Parameter</th>
+						<th className="border px-4 py-2 bg-accent-500 text-white">Hodnota</th>
+						<th className="border px-4 py-2 bg-accent-500 text-white">Nárast / pokles</th>
+					</thead>
+					<tbody>
+						<tr className="hover:bg-stone-100">
+							<td className="border px-4 py-2">Úroková sadzba</td>
+							<td className="border px-4 py-2">100</td>
+							<td className="border px-4 py-2">7 %</td>
+						</tr>
+						<tr className="hover:bg-stone-100">
+							<td className="border px-4 py-2">Úverový limit</td>
+							<td className="border px-4 py-2">100</td>
+						</tr>
+						<tr className="hover:bg-stone-100">
+							<td className="border px-4 py-2">Sazdba dane z prijmu</td>
+							<td className="border px-4 py-2">100</td>
+						</tr>
+						<tr className="hover:bg-stone-100">
+							<td className="border px-4 py-2">Inflácia</td>
 							<td className="border px-4 py-2">100</td>
 						</tr>
 					</tbody>
