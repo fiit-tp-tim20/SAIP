@@ -180,6 +180,12 @@ class MarketState(models.Model):
     sold = models.PositiveIntegerField(null=True)
     demand = models.PositiveIntegerField(null=True)
     inventory = models.PositiveIntegerField(null=True)
+    manufactured = models.PositiveIntegerField(null=True)
+    capacity = models.PositiveIntegerField(null=True)
+    interest_rate = models.FloatField(null=True)
+    tax_rate = models.FloatField(null=True)
+    inflation = models.FloatField(null=True)
+    loan_limit = models.FloatField(null=True)
 
     def __str__(self):
         return f"Market State - {self.turn}"
