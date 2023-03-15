@@ -1,6 +1,7 @@
 import React from "react";
 
 function IndustryReport() {
+	// poradie
 	return (
 		<div className="flex w-[600px] flex-col md:w-[900px] xl:w-[1280px]">
 			<h1 className="my-4">Industry report</h1>
@@ -12,9 +13,11 @@ function IndustryReport() {
 					<thead>
 						<tr>
 							<th className="border px-4 py-2 bg-accent-500"> </th>
-							<th className="border px-4 py-2 bg-accent-500 text-white">Poradie</th>
-							<th className="border px-4 py-2 bg-accent-500 text-white">Akcia</th>
-							<th className="border px-4 py-2 bg-accent-500 text-white">Čistý zisk</th>
+							<th className="border px-4 py-2 bg-accent-500 text-white">Spoločnosť</th>
+							<th className="border px-4 py-2 bg-accent-500 text-white">Hodnota jednej akcie</th>
+							<th className="border px-4 py-2 bg-accent-500 text-white">
+								Výsledok hospodárenia po zdanení
+							</th>
 							<th className="border px-4 py-2 bg-accent-500 text-white">Predajná cena</th>
 							<th className="border px-4 py-2 bg-accent-500 text-white">Podiel na trhu</th>
 						</tr>
@@ -73,7 +76,7 @@ function IndustryReport() {
 			</div>
 			<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 				<div className="flex flex-row items-center justify-between py-2">
-					<h2>Celkový stav trhu</h2>
+					<h2>Správa o odvetví</h2>
 				</div>
 				<table className="table-auto">
 					<thead>
@@ -82,15 +85,23 @@ function IndustryReport() {
 					</thead>
 					<tbody>
 						<tr className="hover:bg-stone-100">
-							<td className="border px-4 py-2">Predané produkty</td>
+							<td className="border px-4 py-2">Celkové objednávky</td>
 							<td className="border px-4 py-2">100</td>
 						</tr>
 						<tr className="hover:bg-stone-100">
-							<td className="border px-4 py-2">Dopyt</td>
+							<td className="border px-4 py-2">Celkový predaj</td>
 							<td className="border px-4 py-2">100</td>
 						</tr>
 						<tr className="hover:bg-stone-100">
-							<td className="border px-4 py-2">Zostatok v inventári</td>
+							<td className="border px-4 py-2">Celková výroba</td>
+							<td className="border px-4 py-2">100</td>
+						</tr>
+						<tr className="hover:bg-stone-100">
+							<td className="border px-4 py-2">Celková kapacita</td>
+							<td className="border px-4 py-2">100</td>
+						</tr>
+						<tr className="hover:bg-stone-100">
+							<td className="border px-4 py-2">Celkové zásoby v odvetví</td>
 							<td className="border px-4 py-2">100</td>
 						</tr>
 					</tbody>
