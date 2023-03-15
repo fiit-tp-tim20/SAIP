@@ -263,7 +263,7 @@ class Simulation:
             ct_companies_states[company_model].inventory = company_class_object.inventory
 
             # attributes added to the model after the update
-            ct_companies_states[company_model].orders_received = self.market.customer_distribution[company_class_object.brand]
+            ct_companies_states[company_model].orders_received = self.market.customer_distribution[company_class_object.brand]["demand"]
 
             ct_companies_states[company_model].orders_fulfilled = company_class_object.units_sold
 
