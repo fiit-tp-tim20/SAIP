@@ -168,12 +168,13 @@ class CreateCompanyView(APIView):
 
 def checkCommitted(turn: Turn, end: bool = True) -> bool:
     states = CompaniesState.objects.filter(turn=turn)
+    auto_end = turn.game.parameters.end_turn_on_committed
 
     for company in states:
         if not company.commited:
             return False
 
-    if end:
+    if end and auto_end:
         end_turn(turn)
     
     return True
