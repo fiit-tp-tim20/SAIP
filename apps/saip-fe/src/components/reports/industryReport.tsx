@@ -35,7 +35,7 @@ function IndustryReport() {
 								{Object.entries(data?.industry)
 									.sort((a, b) => a[1].stock_price | (0 > b[1].stock_price) | 0)
 									.map((industry, index) => (
-										<tr className="hover:bg-stone-100">
+										<tr key={industry[0]} className="hover:bg-stone-100">
 											<td className="border px-4 py-2 text-center">{index + 1}</td>
 											<td className="border px-4 py-2 text-center">{industry[0]}</td>
 											<td className="border px-4 py-2 text-center">
@@ -59,30 +59,34 @@ function IndustryReport() {
 						<table className="table-auto">
 							<thead>
 								<th className="border px-4 py-2 bg-accent-500 text-white">Kategória</th>
-								<th className="border px-4 py-2 bg-accent-500 text-white">Počet kusov</th>
+								<th className="border px-4 py-2 bg-accent-500 text-white">Hodnota</th>
 								<th className="border px-4 py-2 bg-accent-500 text-white">Nárast / pokles</th>
 							</thead>
 							<tbody>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Celkové objednávky</td>
-									<td className="border px-4 py-2">100</td>
-									<td className="border px-4 py-2">7 %</td>
+									<td className="border px-4 py-2">{data?.market.demand || 0}</td>
+									<td className="border px-4 py-2">{data?.market.demand_difference || 0} %</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Celkový predaj</td>
-									<td className="border px-4 py-2">100</td>
+									<td className="border px-4 py-2">{data?.market.sold_products || 0}</td>
+									<td className="border px-4 py-2">{data?.market.sold_products_difference || 0} %</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Celková výroba</td>
-									<td className="border px-4 py-2">100</td>
+									<td className="border px-4 py-2">{data?.market.manufactured || 0}</td>
+									<td className="border px-4 py-2">{data?.market.manufactured_difference || 0} %</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Celková kapacita</td>
-									<td className="border px-4 py-2">100</td>
+									<td className="border px-4 py-2">{data?.market.capacity || 0}</td>
+									<td className="border px-4 py-2">{data?.market.capacity_difference || 0} %</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Celkové zásoby v odvetví</td>
-									<td className="border px-4 py-2">100</td>
+									<td className="border px-4 py-2">{data?.market.inventory || 0}</td>
+									<td className="border px-4 py-2">{data?.market.inventory_difference || 0} %</td>
 								</tr>
 							</tbody>
 						</table>
@@ -101,20 +105,31 @@ function IndustryReport() {
 							<tbody>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Úroková sadzba</td>
-									<td className="border px-4 py-2">100</td>
-									<td className="border px-4 py-2">7 %</td>
+									<td className="border px-4 py-2">{data?.economic_parameters.interest_rate || 0}</td>
+									<td className="border px-4 py-2">
+										{data?.economic_parameters.interest_rate_difference || 0} %
+									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Úverový limit</td>
-									<td className="border px-4 py-2">100</td>
+									<td className="border px-4 py-2">{data?.economic_parameters.loan_limit || 0}</td>
+									<td className="border px-4 py-2">
+										{data?.economic_parameters.loan_limit_difference || 0} %
+									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Sazdba dane z prijmu</td>
-									<td className="border px-4 py-2">100</td>
+									<td className="border px-4 py-2">{data?.economic_parameters.tax_rate || 0}</td>
+									<td className="border px-4 py-2">
+										{data?.economic_parameters.tax_rate_difference || 0} %
+									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Inflácia</td>
-									<td className="border px-4 py-2">100</td>
+									<td className="border px-4 py-2">{data?.economic_parameters.inflation || 0}</td>
+									<td className="border px-4 py-2">
+										{data?.economic_parameters.inflation_difference || 0} %
+									</td>
 								</tr>
 							</tbody>
 						</table>

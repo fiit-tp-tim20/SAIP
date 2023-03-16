@@ -7,8 +7,28 @@ type IndustryReportData = {
 			stock_price: number | null;
 		};
 	};
-	market: any;
-	exonomic_parameters: any;
+	market: {
+		capacity: number | null;
+		capacity_difference: number | null;
+		demand: number | null;
+		demand_difference: number | null;
+		inventory: number | null;
+		inventory_difference: number | null;
+		manufactured: number | null;
+		manufactured_difference: number | null;
+		sold_products: number | null;
+		sold_products_difference: number | null;
+	};
+	exonomic_parameters: {
+		inflation: number | null;
+		inflation_difference: number | null;
+		interest_rate: number | null;
+		interest_rate_difference: number | null;
+		loan_limit: number | null;
+		loan_limit_difference: number | null;
+		tax_rate: number | null;
+		tax_rate_difference: number | null;
+	};
 };
 
 const getIndustryReport = async () => {
@@ -19,7 +39,6 @@ const getIndustryReport = async () => {
 		},
 	});
 	const data = (await response.json()) as IndustryReportData;
-	console.warn(Object.entries(data.industry));
 	return data;
 };
 
