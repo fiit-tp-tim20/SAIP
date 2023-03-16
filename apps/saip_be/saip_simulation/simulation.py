@@ -293,7 +293,9 @@ class Simulation:
             )   #TODO possibly add other upkeep costs to the overall manufacturing cost
                 # change to price per one unit and add ((the other costs + man cost) / units produced ) 
                 # change this to produced units instead of sold units
-                # TODO: Actually... we should have both sold man cost and prod man cost. 
+                # TODO: Actually... we should have both sold man cost and prod man cost.
+
+                # TODO: add inflation - it should only affect the man cost 
 
             ct_companies_states[company_model].tax = 0  # TODO: add correct value   #TODO: add taxation
 
