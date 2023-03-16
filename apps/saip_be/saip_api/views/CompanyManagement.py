@@ -62,7 +62,7 @@ class IndustryReport(APIView):
         market_state_previous = MarketState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1))
         
         market = dict()
-        market['demand_difference'] = market_state.demand
+        market['demand'] = market_state.demand
         market['demand_difference'] = ((market_state.demand/market_state_previous.demand) - 1)*100
         market['sold_products'] = market_state.sold
         market['sold_products_difference'] = ((market_state.sold/market_state_previous.sold) - 1)*100
@@ -83,7 +83,7 @@ class IndustryReport(APIView):
         economic_parameters['loan_limit'] = market_state.loan_limit
         economic_parameters['loan_limit_difference'] = ((market_state.loan_limit/market_state_previous.loan_limit) - 1)*100
 
-        return Response({"industry": industry, "market": market, economic_parameters: "economic_parameters"}, status=200)
+        return Response({"industry": industry, "market": market, "economic_parameters": economic_parameters}, status=200)
 
 
 class CompanyReport(APIView):
