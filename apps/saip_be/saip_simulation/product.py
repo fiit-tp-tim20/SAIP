@@ -58,7 +58,7 @@ class Product(ABC):
         return self.__upgrade_stored_products_price
 
     def add_upgrade(
-        self, name, status, progress, total_cost, sales_effect, man_cost_effect
+        self, name, status, progress, total_cost, sales_effect, man_cost_effect, committed
     ):
         if (
             status == "f" or status == "finished"
@@ -68,7 +68,7 @@ class Product(ABC):
                 progress=progress,
                 total_cost=total_cost,
                 sales_effect=sales_effect,
-                man_cost_effect=man_cost_effect,
+                man_cost_effect=man_cost_effect
             )
         else:
             pass

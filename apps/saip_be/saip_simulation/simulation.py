@@ -189,7 +189,7 @@ class Simulation:
                 production_model.volume if production_model.volume is not None else 0
             )
         else:
-            company.production_volume = 0  # TODO: remove this - temp fix
+            company.production_volume = 0 # TODO: remove this - temp fix
             print(f"PRODUCTION MODEL WAS NONE FOR COMPANNY {company.brand}")
 
         new_product.upgrades = (
@@ -204,7 +204,7 @@ class Simulation:
                 total_cost=upgrade_model.cost,  # pos integer
                 sales_effect=upgrade_model.sales_effect,  # float
                 man_cost_effect=upgrade_model.man_cost_effect,  # float
-                # TODO: add active-since-turn-X attribute from model and implement functionality
+                committed=None #TODO: add 
             )
             pass
         new_product.setup_product()
