@@ -290,7 +290,10 @@ class Simulation:
             ct_companies_states[company_model].sold_man_cost = (
                 company_class_object.product.get_man_cost()
                 * company_class_object.units_sold
-            )
+            )   #TODO possibly add other upkeep costs to the overall manufacturing cost
+                # change to price per one unit and add ((the other costs + man cost) / units produced ) 
+                # change this to produced units instead of sold units
+                # TODO: Actually... we should have both sold man cost and prod man cost. 
 
             ct_companies_states[company_model].tax = 0  # TODO: add correct value   #TODO: add taxation
 
