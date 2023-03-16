@@ -46,6 +46,7 @@ class NoProductionError(CompanyError):
 @dataclass
 class Factory:
     capital_investment: float = FactoryPreset.STARTING_INVESTMENT
+    capital_investment_this_turn: float = 0.0
     capacity: int = FactoryPreset.STARTING_CAPACITY
 
     # to be changed to list (or multiple attributes) after we implement different employees
@@ -233,7 +234,7 @@ class Company:
         self.inventory -= demand
         return 0
     
-    def __update_loan(self):
+    def __update_loan(self):    #TODO add loan limit
         self.loans = self.loans * self.interest_rate
         if self.profit < 0: 
             self.loans -= self.profit  # alebo nejaku pravidelnu ciastku napr. 10K?

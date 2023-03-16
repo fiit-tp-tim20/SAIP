@@ -187,7 +187,7 @@ def checkCommitted(turn: Turn, end: bool = True) -> bool:
     states = CompaniesState.objects.filter(turn=turn)
 
     for company in states:
-        if not company.commited:
+        if not company.committed:
             return False
 
     if end:
