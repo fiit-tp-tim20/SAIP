@@ -16,9 +16,6 @@ export const endTurn = async (state: GameState) => {
 				volume: state.company.productCount,
 			},
 			factory: {
-				prod_emp: 0,
-				cont_emp: 0,
-				aux_emp: 0,
 				capital: state.company.capitalInvestments,
 			},
 			brakes: state.upgrades.brakes,

@@ -55,7 +55,8 @@ class IndustryReport(APIView):
             company_info['stock_price'] = state.stock_price
             company_info['sell_price'] = state.production.sell_price
             company_info['net_profit'] = state.net_profit
-            company_info['market_share'] = state.orders_fulfilled/market_state.sold
+            # company_info['market_share'] = state.orders_fulfilled/market_state.sold
+            company_info['market_share'] = 0
 
             industry[state.company.name] = company_info
 
@@ -63,25 +64,34 @@ class IndustryReport(APIView):
         
         market = dict()
         market['demand'] = market_state.demand
-        market['demand_difference'] = ((market_state.demand/market_state_previous.demand) - 1)*100
+        # market['demand_difference'] = ((market_state.demand/market_state_previous.demand) - 1)*100
+        market['demand_difference'] = 0
         market['sold_products'] = market_state.sold
-        market['sold_products_difference'] = ((market_state.sold/market_state_previous.sold) - 1)*100
+        # market['sold_products_difference'] = ((market_state.sold/market_state_previous.sold) - 1)*100
+        market['sold_products_difference'] = 0
         market['manufactured'] = market_state.manufactured
-        market['manufactured_difference'] = ((market_state.manufactured/market_state_previous.manufactured) - 1)*100
+        # market['manufactured_difference'] = ((market_state.manufactured/market_state_previous.manufactured) - 1)*100
+        market['manufactured_difference'] = 0
         market['capacity'] = market_state.capacity
-        market['capacity_difference'] = ((market_state.capacity/market_state_previous.capacity) - 1)*100
+        # market['capacity_difference'] = ((market_state.capacity/market_state_previous.capacity) - 1)*100
+        market['capacity_difference'] = 0
         market['inventory'] = market_state.inventory
-        market['inventory_difference'] = ((market_state.inventory/market_state_previous.inventory) - 1)*100
+        # market['inventory_difference'] = ((market_state.inventory/market_state_previous.inventory) - 1)*100
+        market['inventory_difference'] = 0
 
         economic_parameters = dict()
         economic_parameters['interest_rate'] = market_state.interest_rate
-        economic_parameters['interest_rate_difference'] = ((market_state.interest_rate/market_state_previous.interest_rate) - 1)*100
+        # economic_parameters['interest_rate_difference'] = ((market_state.interest_rate/market_state_previous.interest_rate) - 1)*100
+        economic_parameters['interest_rate_difference'] = 0
         economic_parameters['tax_rate'] = market_state.tax_rate
-        economic_parameters['tax_rate_difference'] = ((market_state.tax_rate/market_state_previous.tax_rate) - 1)*100
+        # economic_parameters['tax_rate_difference'] = ((market_state.tax_rate/market_state_previous.tax_rate) - 1)*100
+        economic_parameters['tax_rate_difference'] = 0
         economic_parameters['inflation'] = market_state.inflation
-        economic_parameters['inflation_difference'] = ((market_state.inflation/market_state_previous.inflation) - 1)*100
+        # economic_parameters['inflation_difference'] = ((market_state.inflation/market_state_previous.inflation) - 1)*100
+        economic_parameters['inflation_difference'] = 0
         economic_parameters['loan_limit'] = market_state.loan_limit
-        economic_parameters['loan_limit_difference'] = ((market_state.loan_limit/market_state_previous.loan_limit) - 1)*100
+        # economic_parameters['loan_limit_difference'] = ((market_state.loan_limit/market_state_previous.loan_limit) - 1)*100
+        economic_parameters['loan_limit_difference'] = 0
 
         return Response({"industry": industry, "market": market, "economic_parameters": economic_parameters}, status=200)
 
