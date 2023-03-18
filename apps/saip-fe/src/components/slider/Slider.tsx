@@ -8,10 +8,11 @@ interface SliderProps {
 	checked?: boolean;
 	setChecked?: (value: boolean) => void;
 	step?: number;
+	requiredMin?: number;
 }
 
 function Slider(props: SliderProps) {
-	const { min, max, value, setValue, checked, setChecked, step = 1 } = props;
+	const { min, max, value, setValue, checked, setChecked, step = 1, requiredMin } = props;
 
 	const [localValue, setLocalValue] = useState(value);
 
@@ -41,7 +42,7 @@ function Slider(props: SliderProps) {
 					checked ? "opacity-50 cursor-not-allowed" : ""
 				}`}
 				disabled={checked}
-				placeholder="0"
+				placeholder={`1`}
 			/>
 			<div className="flex items-center justify-between mt-2 min-w-[200px]">
 				<input
@@ -55,13 +56,14 @@ function Slider(props: SliderProps) {
 						checked ? "opacity-50 cursor-not-allowed" : ""
 					}`}
 					disabled={checked}
-					placeholder="0"
+					placeholder={`1`}
 				/>
 				{checked !== undefined && (
 					<button
 						type="button"
 						className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 m-0 rounded-lg"
 						onClick={toggleState}
+						disabled={requiredMin ? localValue < requiredMin : false}
 					>
 						{!checked ? "Potvrdiť" : "Zmeniť"}
 					</button>
