@@ -204,7 +204,6 @@ class Simulation:
                 total_cost=upgrade_model.cost,  # pos integer
                 sales_effect=upgrade_model.sales_effect,  # float
                 man_cost_effect=upgrade_model.man_cost_effect,  # float
-                committed=None #TODO: add 
             )
             pass
         new_product.setup_product()
