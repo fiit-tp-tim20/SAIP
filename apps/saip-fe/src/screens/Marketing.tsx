@@ -64,7 +64,12 @@ function Marketing() {
 						Incidunt aliquid labore voluptatem.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
-						<h3>Investícia</h3>
+						<div className="flex flex-col">
+							<h3>Investícia</h3>
+							<p>
+								Minimum: <span className="font-bold">100</span>
+							</p>
+						</div>
 						<div>
 							<Slider
 								min={0}
@@ -91,7 +96,12 @@ function Marketing() {
 						Incidunt aliquid labore voluptatem.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
-						<h3>Investícia</h3>
+						<div className="flex flex-col">
+							<h3>Investícia</h3>
+							<p>
+								Minimum: <span className="font-bold">500</span>
+							</p>
+						</div>
 						<div>
 							<Slider
 								min={0}
@@ -118,7 +128,12 @@ function Marketing() {
 						Incidunt aliquid labore voluptatem.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
-						<h3>Investícia</h3>
+						<div className="flex flex-col">
+							<h3>Investícia</h3>
+							<p>
+								Minimum: <span className="font-bold">500</span>
+							</p>
+						</div>
 						<div>
 							<Slider
 								min={0}
@@ -145,7 +160,12 @@ function Marketing() {
 						Incidunt aliquid labore voluptatem.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
-						<h3>Investícia</h3>
+						<div className="flex flex-col">
+							<h3>Investícia</h3>
+							<p>
+								Minimum: <span className="font-bold">2000</span>
+							</p>
+						</div>
 						<div>
 							<Slider
 								min={0}
@@ -172,7 +192,12 @@ function Marketing() {
 						Incidunt aliquid labore voluptatem.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
-						<h3>Investícia</h3>
+						<div className="flex flex-col">
+							<h3>Investícia</h3>
+							<p>
+								Minimum: <span className="font-bold">1000</span>
+							</p>
+						</div>
 						<div>
 							<Slider
 								min={0}
