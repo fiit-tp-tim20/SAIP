@@ -42,7 +42,7 @@ function Slider(props: SliderProps) {
 					checked ? "opacity-50 cursor-not-allowed" : ""
 				}`}
 				disabled={checked}
-				placeholder={`1`}
+				placeholder="0"
 			/>
 			<div className="flex items-center justify-between mt-2 min-w-[200px]">
 				<input
@@ -56,14 +56,14 @@ function Slider(props: SliderProps) {
 						checked ? "opacity-50 cursor-not-allowed" : ""
 					}`}
 					disabled={checked}
-					placeholder={`1`}
+					placeholder="0"
 				/>
 				{checked !== undefined && (
 					<button
 						type="button"
-						className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 m-0 rounded-lg"
+						className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 m-0 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
 						onClick={toggleState}
-						disabled={requiredMin ? localValue < requiredMin : false}
+						disabled={requiredMin && localValue < requiredMin}
 					>
 						{!checked ? "Potvrdiť" : "Zmeniť"}
 					</button>
