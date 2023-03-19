@@ -18,10 +18,10 @@ export const endTurn = async (state: GameState) => {
 			factory: {
 				capital: state.company.capitalInvestments,
 			},
-			brakes: state.upgrades.brakes,
-			frame: state.upgrades.frame,
-			battery: state.upgrades.battery,
-			display: state.upgrades.display,
+			brakes: state.upgrades.Brakes,
+			frame: state.upgrades.Frame,
+			battery: state.upgrades.Battery,
+			display: state.upgrades.Display,
 		}),
 	});
 };
