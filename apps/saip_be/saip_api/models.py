@@ -58,6 +58,7 @@ class Company(models.Model):
 
 class Production(models.Model):
     man_cost = models.FloatField(null=True, default=0)
+    man_cost_all = models.FloatField(null=True, default=0)
     sell_price = models.FloatField(null=True, default=0)
     volume = models.PositiveIntegerField(null=True, default=0)
 
@@ -159,7 +160,7 @@ class CompaniesState(models.Model):
     new_loans = models.FloatField(null=True, blank=True)
     inventory_charge = models.FloatField(null=True, blank=True)
     sales = models.FloatField(null=True, blank=True)
-    sold_man_cost = models.FloatField(null=True, blank=True)
+    manufactured_man_cost = models.FloatField(null=True, blank=True)
     tax = models.FloatField(null=True, blank=True)
     profit_before_tax = models.FloatField(null=True, blank=True)
     interest = models.FloatField(null=True, blank=True)

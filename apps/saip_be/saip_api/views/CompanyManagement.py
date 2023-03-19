@@ -120,7 +120,7 @@ class CompanyReport(APIView):
         production['utilization'] = (company_state_previous.production.volume/company_state_previous.factory.capacity)*100
         production['man_cost'] = company_state_previous.production.man_cost
         production['new_inventory'] = company_state_previous.inventory
-        production['selling_price'] = company_state_previous.production.sell_price
+        production['man_cost_all'] = company_state_previous.production.man_cost_all
 
         sales = dict()
         sales['orders_received'] = company_state_previous.orders_received
@@ -131,19 +131,21 @@ class CompanyReport(APIView):
         balance = dict()
         balance['cash'] = company_state_previous.cash
         balance['inventory_money'] = company_state_previous.inventory * company_state_previous.production.man_cost
-        balance['capital_investments'] = company_state_previous.capital_invesments
+        balance['capital_investments'] = company_state_previous.factory.capital_investments
+        balance['assets_summary'] = company_state_previous.cash + company_state_previous.inventory * company_state_previous.production.man_cost + company_state_previous.factory.capital_investments
 
         #pasiva
         balance['loans'] = company_state_previous.loans
         balance['ret_earnings'] = company_state_previous.ret_earnings
         balance['base_capital'] = company.game.parameters.base_capital
+        balance['liabilities_summary'] = company_state_previous.loans + company_state_previous.ret_earnings + company.game.parameters.base_capital
 
         cash_flow = dict()
         cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(number=last_turn.number-2), company=company).cash #???
         cash_flow['sales'] =  company_state_previous.sales #plus
-        cash_flow['sold_man_cost'] = company_state_previous.sold_man_cost #minus
+        cash_flow['manufactured_man_cost'] = company_state_previous.manufactured_man_cost #minus
         # vydavky na rozhodnutia - zratane vydavky na marketing r_d a capital s minusovou hodnotou
-        cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.capital
+        cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.factory.capital
         cash_flow['interest'] = company_state_previous.interest # minus
         cash_flow['tax'] = company_state_previous.tax # minus
         # teraz bude stav cash flow aby vedeli či potrebuju pozicku
@@ -158,7 +160,7 @@ class CompanyReport(APIView):
 
         income_statement = dict()
         income_statement['sales'] = company_state_previous.sales
-        income_statement['sold_man_cost'] = company_state_previous.sold_man_cost
+        income_statement['manufactured_man_cost'] = company_state_previous.manufactured_man_cost
         income_statement['marketing'] = marketing
         income_statement['r_d'] = company_state_previous.r_d
         income_statement['depreciation'] = company_state_previous.depreciation
