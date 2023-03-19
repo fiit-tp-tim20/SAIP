@@ -155,7 +155,7 @@ class FactorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Factory
         # fields = ('prod_emp', 'cont_emp', 'aux_emp', 'capital')
-        fields = ('capital')
+        fields = ('capital', )
 
     def update(self, instance, validated_data) -> Factory:
         # prod_emp = validated_data.get('prod_emp')

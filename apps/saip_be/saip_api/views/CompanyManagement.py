@@ -55,18 +55,45 @@ class IndustryReport(APIView):
             company_info['stock_price'] = state.stock_price
             company_info['sell_price'] = state.production.sell_price
             company_info['net_profit'] = state.net_profit
-            company_info['market_share'] = state.orders_fulfilled/market_state.sold
+            # company_info['market_share'] = state.orders_fulfilled/market_state.sold
+            company_info['market_share'] = 0
 
             industry[state.company.name] = company_info
 
-        market_state = MarketState.objects.get(turn=last_turn)
+        market_state_previous = MarketState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1))
+        
         market = dict()
-        market['sold_products'] = market_state.sold
         market['demand'] = market_state.demand
+        # market['demand_difference'] = ((market_state.demand/market_state_previous.demand) - 1)*100
+        market['demand_difference'] = 0
+        market['sold_products'] = market_state.sold
+        # market['sold_products_difference'] = ((market_state.sold/market_state_previous.sold) - 1)*100
+        market['sold_products_difference'] = 0
+        market['manufactured'] = market_state.manufactured
+        # market['manufactured_difference'] = ((market_state.manufactured/market_state_previous.manufactured) - 1)*100
+        market['manufactured_difference'] = 0
+        market['capacity'] = market_state.capacity
+        # market['capacity_difference'] = ((market_state.capacity/market_state_previous.capacity) - 1)*100
+        market['capacity_difference'] = 0
         market['inventory'] = market_state.inventory
+        # market['inventory_difference'] = ((market_state.inventory/market_state_previous.inventory) - 1)*100
+        market['inventory_difference'] = 0
 
+        economic_parameters = dict()
+        economic_parameters['interest_rate'] = market_state.interest_rate
+        # economic_parameters['interest_rate_difference'] = ((market_state.interest_rate/market_state_previous.interest_rate) - 1)*100
+        economic_parameters['interest_rate_difference'] = 0
+        economic_parameters['tax_rate'] = market_state.tax_rate
+        # economic_parameters['tax_rate_difference'] = ((market_state.tax_rate/market_state_previous.tax_rate) - 1)*100
+        economic_parameters['tax_rate_difference'] = 0
+        economic_parameters['inflation'] = market_state.inflation
+        # economic_parameters['inflation_difference'] = ((market_state.inflation/market_state_previous.inflation) - 1)*100
+        economic_parameters['inflation_difference'] = 0
+        economic_parameters['loan_limit'] = market_state.loan_limit
+        # economic_parameters['loan_limit_difference'] = ((market_state.loan_limit/market_state_previous.loan_limit) - 1)*100
+        economic_parameters['loan_limit_difference'] = 0
 
-        return Response({"industry": industry, "market": market}, status=200)
+        return Response({"industry": industry, "market": market, "economic_parameters": economic_parameters}, status=200)
 
 
 class CompanyReport(APIView):
@@ -93,7 +120,7 @@ class CompanyReport(APIView):
         production['utilization'] = (company_state_previous.production.volume/company_state_previous.factory.capacity)*100
         production['man_cost'] = company_state_previous.production.man_cost
         production['new_inventory'] = company_state_previous.inventory
-        production['selling_price'] = company_state_previous.production.sell_price
+        production['man_cost_all'] = company_state_previous.production.man_cost_all
 
         sales = dict()
         sales['orders_received'] = company_state_previous.orders_received
@@ -105,18 +132,20 @@ class CompanyReport(APIView):
         balance['cash'] = company_state_previous.cash
         balance['inventory_money'] = company_state_previous.inventory * company_state_previous.production.man_cost
         balance['capital_investments'] = company_state_previous.factory.capital_investments
+        balance['assets_summary'] = company_state_previous.cash + company_state_previous.inventory * company_state_previous.production.man_cost + company_state_previous.factory.capital_investments
 
         #pasiva
         balance['loans'] = company_state_previous.loans
         balance['ret_earnings'] = company_state_previous.ret_earnings
         balance['base_capital'] = company.game.parameters.base_capital
+        balance['liabilities_summary'] = company_state_previous.loans + company_state_previous.ret_earnings + company.game.parameters.base_capital
 
         cash_flow = dict()
         cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(number=last_turn.number-1), company=company).cash #???
         cash_flow['sales'] =  company_state_previous.sales #plus
-        cash_flow['sold_man_cost'] = company_state_previous.sold_man_cost #minus
+        cash_flow['manufactured_man_cost'] = company_state_previous.manufactured_man_cost #minus
         # vydavky na rozhodnutia - zratane vydavky na marketing r_d a capital s minusovou hodnotou
-        cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.capital
+        cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.factory.capital
         cash_flow['interest'] = company_state_previous.interest # minus
         cash_flow['tax'] = company_state_previous.tax # minus
         # teraz bude stav cash flow aby vedeli či potrebuju pozicku
@@ -131,7 +160,7 @@ class CompanyReport(APIView):
 
         income_statement = dict()
         income_statement['sales'] = company_state_previous.sales
-        income_statement['sold_man_cost'] = company_state_previous.sold_man_cost
+        income_statement['manufactured_man_cost'] = company_state_previous.manufactured_man_cost
         income_statement['marketing'] = marketing
         income_statement['r_d'] = company_state_previous.r_d
         income_statement['depreciation'] = company_state_previous.depreciation
@@ -170,7 +199,7 @@ def checkCommitted(turn: Turn, end: bool = True) -> bool:
     states = CompaniesState.objects.filter(turn=turn)
 
     for company in states:
-        if not company.commited:
+        if not company.committed:
             return False
 
     if end:

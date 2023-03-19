@@ -39,7 +39,7 @@ class CompaniesStateAdmin(admin.ModelAdmin):
 
 @admin.register(MarketState)
 class MarketStateAdmin(admin.ModelAdmin):
-    list_display = ('turn', 'sold', 'demand', 'inventory')
+    list_display = ('turn', 'sold', 'demand', 'inventory', 'manufactured', 'capacity', 'interest_rate', 'tax_rate', 'inflation', 'loan_limit')
 
 
 
