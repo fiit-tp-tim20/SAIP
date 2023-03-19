@@ -64,16 +64,22 @@ function Marketing() {
 						Incidunt aliquid labore voluptatem.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
-						<h3>Investícia</h3>
+						<div className="flex flex-col">
+							<h3>Investícia</h3>
+							<p>
+								Minimum: <span className="font-bold">100</span>
+							</p>
+						</div>
 						<div>
 							<Slider
 								min={0}
-								max={10000}
+								max={5000}
 								value={viral}
 								setValue={setViral}
 								checked={viralChecked}
 								setChecked={setViralChecked}
 								step={10}
+								requiredMin={100}
 							/>
 						</div>
 					</div>
@@ -90,16 +96,22 @@ function Marketing() {
 						Incidunt aliquid labore voluptatem.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
-						<h3>Investícia</h3>
+						<div className="flex flex-col">
+							<h3>Investícia</h3>
+							<p>
+								Minimum: <span className="font-bold">500</span>
+							</p>
+						</div>
 						<div>
 							<Slider
 								min={0}
-								max={1000}
+								max={5000}
 								value={ooh}
 								setValue={setOoh}
 								checked={oohChecked}
 								setChecked={setOohChecked}
 								step={10}
+								requiredMin={500}
 							/>
 						</div>
 					</div>
@@ -116,16 +128,22 @@ function Marketing() {
 						Incidunt aliquid labore voluptatem.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
-						<h3>Investícia</h3>
+						<div className="flex flex-col">
+							<h3>Investícia</h3>
+							<p>
+								Minimum: <span className="font-bold">500</span>
+							</p>
+						</div>
 						<div>
 							<Slider
 								min={0}
-								max={1000}
+								max={5000}
 								value={billboard}
 								setValue={setBillboard}
 								checked={billboardChecked}
 								setChecked={setBillboardChecked}
 								step={10}
+								requiredMin={500}
 							/>
 						</div>
 					</div>
@@ -142,16 +160,22 @@ function Marketing() {
 						Incidunt aliquid labore voluptatem.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
-						<h3>Investícia</h3>
+						<div className="flex flex-col">
+							<h3>Investícia</h3>
+							<p>
+								Minimum: <span className="font-bold">2000</span>
+							</p>
+						</div>
 						<div>
 							<Slider
 								min={0}
-								max={1000}
+								max={5000}
 								value={tv}
 								setValue={setTv}
 								checked={tvChecked}
 								setChecked={setTvChecked}
 								step={10}
+								requiredMin={2000}
 							/>
 						</div>
 					</div>
@@ -168,16 +192,22 @@ function Marketing() {
 						Incidunt aliquid labore voluptatem.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
-						<h3>Investícia</h3>
+						<div className="flex flex-col">
+							<h3>Investícia</h3>
+							<p>
+								Minimum: <span className="font-bold">1000</span>
+							</p>
+						</div>
 						<div>
 							<Slider
 								min={0}
-								max={1000}
+								max={5000}
 								value={podcast}
 								setValue={setPodcast}
 								checked={podcastChecked}
 								setChecked={setPodcastChecked}
 								step={10}
+								requiredMin={1000}
 							/>
 						</div>
 					</div>
