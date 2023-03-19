@@ -46,7 +46,7 @@ function CompanyReport() {
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Celkové náklady</td>
-									<td className="border px-4 py-2 whitespace-nowrap">{data.production.selling_price} €/ks</td>
+									<td className="border px-4 py-2 whitespace-nowrap">{data.production.man_cost_all} €/ks</td>
 									</tr>
 								</tbody>
 								</table>
@@ -99,6 +99,10 @@ function CompanyReport() {
 									<td className="border px-4 py-2">Kapitálové investície</td>
 									<td className="border px-4 py-2 whitespace-nowrap">{data.balance.capital_investments} €</td>
 									</tr>
+									<tr>
+									<td className="border px-4 py-2"><b>Súčet aktív</b></td>
+									<td className="border px-4 py-2 whitespace-nowrap">{data.balance.assets_summary} €</td>
+									</tr>
 								</tbody>
 								<thead>
 									<tr>
@@ -117,6 +121,10 @@ function CompanyReport() {
 									<tr>
 									<td className="border px-4 py-2">Základné ímanie</td>
 									<td className="border px-4 py-2 whitespace-nowrap">{data.balance.base_capital} €</td>
+									</tr>
+									<tr>
+									<td className="border px-4 py-2"><b>Súčet pasív</b></td>
+									<td className="border px-4 py-2 whitespace-nowrap">{data.balance.liabilities_summary} €</td>
 									</tr>
 								</tbody>
 							</table>
@@ -143,7 +151,7 @@ function CompanyReport() {
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Výdavky na vyrobené výrobky</td>
-									<td className="border px-4 py-2 whitespace-nowrap">{data.cash_flow.sold_man_cost} €</td>
+									<td className="border px-4 py-2 whitespace-nowrap">{data.cash_flow.manufactured_man_cost} €</td>
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Výdavky na rozhodnutia</td>
@@ -194,7 +202,7 @@ function CompanyReport() {
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Výrobné náklady</td>
-									<td className="border px-4 py-2 whitespace-nowrap">{data.income_statement.sold_man_cost} €</td>
+									<td className="border px-4 py-2 whitespace-nowrap">{data.income_statement.manufactured_man_cost} €</td>
 									</tr>
 									<tr>
 									<td className="border px-4 py-2">Náklady na marketing</td>
