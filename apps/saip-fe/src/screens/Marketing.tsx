@@ -57,11 +57,7 @@ function Marketing() {
 						<h2>Virálny marketing</h2>
 					</div>
 					<p className="pt-1">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur natus non distinctio
-						voluptas velit, officiis amet! Modi doloribus aspernatur natus aut vitae! Vel recusandae
-						corrupti eum minus dolores. Eos in tempora eligendi pariatur earum? Aliquam ipsa recusandae
-						incidunt impedit ex nam similique possimus. Perferendis quo molestias libero quidem, at tempore!
-						Incidunt aliquid labore voluptatem.
+						Informácie o produktoch šírené pomocou elektronických médií, najmä sociálnych sietí, ale aj pomocou virálneho priestoru ako súčasť zábavy, hier, či web stránok.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
 						<div className="flex flex-col">
@@ -89,11 +85,7 @@ function Marketing() {
 						<h2>OOH</h2>
 					</div>
 					<p className="pt-1">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur natus non distinctio
-						voluptas velit, officiis amet! Modi doloribus aspernatur natus aut vitae! Vel recusandae
-						corrupti eum minus dolores. Eos in tempora eligendi pariatur earum? Aliquam ipsa recusandae
-						incidunt impedit ex nam similique possimus. Perferendis quo molestias libero quidem, at tempore!
-						Incidunt aliquid labore voluptatem.
+						Kombinácia vynúteného vnímania bilbordovej reklamy umiestňovanej na miestach, kde sa musia zdržiavať klienti ako je napr MHD, zastávky, čakárne v kombinácii s virálnym, televíznym alebo podcastovým marketingom, kde bilbord človeka upúta a základné informuje a nálendá reklama vynúti pozornosť až natoľko, že klient aktívne hľadá bližšie informácie o produkte.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
 						<div className="flex flex-col">
@@ -121,11 +113,7 @@ function Marketing() {
 						<h2>Billboardy</h2>
 					</div>
 					<p className="pt-1">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur natus non distinctio
-						voluptas velit, officiis amet! Modi doloribus aspernatur natus aut vitae! Vel recusandae
-						corrupti eum minus dolores. Eos in tempora eligendi pariatur earum? Aliquam ipsa recusandae
-						incidunt impedit ex nam similique possimus. Perferendis quo molestias libero quidem, at tempore!
-						Incidunt aliquid labore voluptatem.
+						Tlačená vonkajšia reklama obyčajne veľký rozmer, ale môžem mať aj podobu citylightu.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
 						<div className="flex flex-col">
@@ -153,11 +141,7 @@ function Marketing() {
 						<h2>Televízia</h2>
 					</div>
 					<p className="pt-1">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur natus non distinctio
-						voluptas velit, officiis amet! Modi doloribus aspernatur natus aut vitae! Vel recusandae
-						corrupti eum minus dolores. Eos in tempora eligendi pariatur earum? Aliquam ipsa recusandae
-						incidunt impedit ex nam similique possimus. Perferendis quo molestias libero quidem, at tempore!
-						Incidunt aliquid labore voluptatem.
+						Klasická televízna reklama vysielaná pomocou v terestriálnej ale streamovacej siete televíznych programov.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
 						<div className="flex flex-col">
@@ -185,11 +169,7 @@ function Marketing() {
 						<h2>Podcasty</h2>
 					</div>
 					<p className="pt-1">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur natus non distinctio
-						voluptas velit, officiis amet! Modi doloribus aspernatur natus aut vitae! Vel recusandae
-						corrupti eum minus dolores. Eos in tempora eligendi pariatur earum? Aliquam ipsa recusandae
-						incidunt impedit ex nam similique possimus. Perferendis quo molestias libero quidem, at tempore!
-						Incidunt aliquid labore voluptatem.
+					Marketingové aktivity ako súčasť nahratých rozhovorov v rámci cyklov či jednorazových aktivít médií, či vysielaní rozhlasu alebo televízií.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
 						<div className="flex flex-col">
