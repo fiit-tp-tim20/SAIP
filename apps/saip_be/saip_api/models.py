@@ -199,6 +199,7 @@ class TeacherDecisions(models.Model):
 
     class Meta:
         db_table = 'Teacher Decisions'
+        verbose_name_plural = 'Teacher Decisions'
 
 class EmailGroup(models.Model):
     user = models.ForeignKey(User, models.DO_NOTHING, null=True)
