@@ -306,6 +306,7 @@ class Simulation:
             )   #TODO possibly add other upkeep costs to the overall manufacturing cost
                 # change to price per one unit and add ((the other costs + man cost) / units produced ) 
                 # change this to produced units instead of sold units
+                # MAN_COST_ALL - cena za jeden kus ale so vsetkymi nakladmi
                 # TODO: Actually... we should have both sold man cost and prod man cost.
 
                 # TODO: add inflation - it should only affect the man cost 
