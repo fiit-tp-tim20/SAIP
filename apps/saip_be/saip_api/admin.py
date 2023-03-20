@@ -4,19 +4,10 @@ from .models import Turn, Company, Production, Marketing, Factory, CompaniesStat
 
 from django_object_actions import DjangoObjectActions, action
 
-from .views.GameManagement import end_turn
+from .views.GameManagement import end_turn, get_last_turn
 
 @admin.register(Turn)
-class TurnsAdmin(DjangoObjectActions, admin.ModelAdmin):
-    @action(label='End Turn', description='Ends the turn if you are admin for this game')
-    def EndTurn(modeladmin, request, queryset):
-        if request.user != queryset.game.admin or queryset.end is not None:
-            # print("You are not the admin of this game")
-            return
-        
-        _ = end_turn(queryset)
-    
-    change_actions = ('EndTurn',)
+class TurnsAdmin(admin.ModelAdmin):
     list_display = ('number', 'game', 'start', 'end')
     list_filter = ('game',)
 
@@ -64,7 +55,19 @@ class EmailGroupAdmin(admin.ModelAdmin):
 
 
 @admin.register(Game)
-class GameAdmin(admin.ModelAdmin):
+class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
+    @action(label='End Turn', description='Ends the turn if you are admin for this game')
+    def EndTurn(modeladmin, request, queryset):
+        if request.user != queryset.admin or queryset.end is not None:
+            # print("You are not the admin of this game")
+            return
+
+        last_turn = get_last_turn(queryset)
+        if not last_turn or last_turn.end is not None:
+            return
+        _ = end_turn(last_turn)
+
+    change_actions = ('EndTurn',)
     list_display = ('name', 'admin', 'start', 'end', 'turns')
     list_filter = ('admin',)
 
