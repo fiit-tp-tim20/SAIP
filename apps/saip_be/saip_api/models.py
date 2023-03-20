@@ -157,7 +157,7 @@ class CompaniesState(models.Model):
     orders_fulfilled = models.PositiveIntegerField(null=True, default=0)
     cash = models.FloatField(null=True, default=15000) #celkovo dostupných prostriedkov
     #capital = models.FloatField(null=True, default=0)
-    ret_earnings = models.FloatField(null=True, blank=True) 
+    ret_earnings = models.FloatField(null=True, default=0) 
     net_profit = models.FloatField(null=True, blank=True) #za kolo
     depreciation = models.FloatField(null=True, blank=True)
     new_loans = models.FloatField(null=True, blank=True)
