@@ -3,7 +3,7 @@ from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from saip_api.models import Game, GameParameters, Upgrade, Turn, Company, CompaniesState, Production, Marketing, Factory, CompaniesUpgrades, MarketState
+from saip_api.models import Game, GameParameters, Upgrade, Turn, Company, CompaniesState, Production, Marketing, Factory, CompaniesUpgrades, MarketState, TeacherDecisions
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
@@ -48,6 +48,7 @@ def create_company_state(company: Company, turn: Turn) -> CompaniesState:
 def create_turn(number: int, game: Game) -> Turn:
     turn = Turn.objects.create(number=number, game=game)
     MarketState.objects.create(turn=turn).save()
+    TeacherDecisions.objects.create(turn=turn).save()
     
     companies = Company.objects.filter(game=game)
     

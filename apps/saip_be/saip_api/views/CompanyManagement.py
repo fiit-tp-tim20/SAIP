@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn, CompaniesUpgrades, MarketState
+from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn, CompaniesUpgrades, MarketState, TeacherDecisions
 
 from ..serializers import CompanySerializer, ProductionSerializer, SpendingsSerializer, MaketingSerializer, FactorySerializer
 
@@ -79,18 +79,20 @@ class IndustryReport(APIView):
         # market['inventory_difference'] = ((market_state.inventory/market_state_previous.inventory) - 1)*100
         market['inventory_difference'] = 0
 
+        teacher_decisions = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=last_turn.number-1))
+        teacher_decisions_previous = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=last_turn.number-2))
         economic_parameters = dict()
-        economic_parameters['interest_rate'] = market_state.interest_rate
-        # economic_parameters['interest_rate_difference'] = ((market_state.interest_rate/market_state_previous.interest_rate) - 1)*100
+        economic_parameters['interest_rate'] = teacher_decisions.interest_rate
+        # economic_parameters['interest_rate_difference'] = ((teacher_decisions.interest_rate/teacher_decisions_previous.interest_rate) - 1)*100
         economic_parameters['interest_rate_difference'] = 0
-        economic_parameters['tax_rate'] = market_state.tax_rate
-        # economic_parameters['tax_rate_difference'] = ((market_state.tax_rate/market_state_previous.tax_rate) - 1)*100
+        economic_parameters['tax_rate'] = teacher_decisions.tax_rate
+        # economic_parameters['tax_rate_difference'] = ((teacher_decisions.tax_rate/teacher_decisions_previous.tax_rate) - 1)*100
         economic_parameters['tax_rate_difference'] = 0
-        economic_parameters['inflation'] = market_state.inflation
-        # economic_parameters['inflation_difference'] = ((market_state.inflation/market_state_previous.inflation) - 1)*100
+        economic_parameters['inflation'] = teacher_decisions.inflation
+        # economic_parameters['inflation_difference'] = ((teacher_decisions.inflation/teacher_decisions_previous.inflation) - 1)*100
         economic_parameters['inflation_difference'] = 0
-        economic_parameters['loan_limit'] = market_state.loan_limit
-        # economic_parameters['loan_limit_difference'] = ((market_state.loan_limit/market_state_previous.loan_limit) - 1)*100
+        economic_parameters['loan_limit'] = teacher_decisions.loan_limit
+        # economic_parameters['loan_limit_difference'] = ((teacher_decisions.loan_limit/teacher_decisions_previous.loan_limit) - 1)*100
         economic_parameters['loan_limit_difference'] = 0
 
         return Response({"industry": industry, "market": market, "economic_parameters": economic_parameters}, status=200)
