@@ -7,6 +7,7 @@ class GameParameters(models.Model):
     depreciation = models.FloatField(default=0.1)
     base_man_cost = models.PositiveIntegerField(default=50)
     base_capital = models.PositiveIntegerField(default=10000)
+    end_turn_on_committed = models.BooleanField(default=True)
 
     class Meta:
         db_table = 'GameParameters'
@@ -36,6 +37,8 @@ class Turn(models.Model):
     game = models.ForeignKey(Game, models.DO_NOTHING, null=True)
 
     def __str__(self):
+        if self.end:
+            return f"{self.game} - {self.number} (Ended)"
         return f"{self.game} - {self.number}"
 
     class Meta:
