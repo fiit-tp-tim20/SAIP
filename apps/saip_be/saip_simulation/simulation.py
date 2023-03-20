@@ -63,7 +63,7 @@ class Simulation:
             market_state_model = models.MarketState.objects.get(turn=self.turn_model)
             self.market = Market(
                 companies=self.companies.values(),
-                customer_count=market_state_model.size
+                customer_count=market_state_model.demand
                 if market_state_model is not None
                 else config.MarketPreset.STARTING_CUSTOMER_COUNT,
             )  # TODO: take care of the other attributes from the model
@@ -228,10 +228,10 @@ class Simulation:
 
     def write_simulation_results(self) -> None:
         # declare lists and dictionaries
-        companies_models = []  # list of company models
-        # companies_states = Dict[models.Company, models.CompaniesState]
-        ct_companies_states = {}
-        nt_companies_states = {}
+        companies_models: models.Company = []
+        ct_companies_states: Dict[models.Company, models.CompaniesState] = {}
+        nt_companies_states: Dict[models.Company, models.CompaniesState] = {}
+
         # load the company models
         companies_models = models.Company.objects.filter(game=self.game_model)
         # load the company states
@@ -250,26 +250,40 @@ class Simulation:
                 nt_companies_states[company_model] = nt_company_state_model
             except models.CompaniesState.DoesNotExist:
                 pass
+        # load the market state model
+        ct_market_state = models.MarketState.objects.get(turn=self.turn_model)
+
 
         # write data from classes to models
         # curent turn
+        ct_total_units_sold = 0
+        ct_total_units_demanded = 0
+        ct_total_units_manufactured = 0
+        ct_total_inventory = 0
+        ct_total_capacity = 0
         for company_model in ct_companies_states.keys():
             company_class_object = self.companies[company_model.name]
+
+            # add units produced to overall sum of all units produced
+            ct_total_units_manufactured += company_class_object.production_volume   #TODO: maybe this attribute will change later
 
             ct_companies_states[company_model].balance = company_class_object.remaining_budget
 
             ct_companies_states[company_model].stock_price = company_class_object.stock_price
 
             ct_companies_states[company_model].inventory = company_class_object.inventory
+            # add inventory to overall sum of all inventories
+            ct_total_inventory += company_class_object.inventory
 
-            # attributes added to the model after the update
             ct_companies_states[company_model].orders_received = self.market.customer_distribution[company_class_object.brand]["demand"]
+            # add units demanded to overall sum of all units demanded
+            ct_total_units_demanded += self.market.customer_distribution[company_class_object.brand]["demand"]
 
             ct_companies_states[company_model].orders_fulfilled = company_class_object.units_sold
+            # add units sold to overall sum of all units sold
+            ct_total_units_sold += company_class_object.units_sold
 
             ct_companies_states[company_model].cash = company_class_object.remaining_budget # TODO: add correct value (same as budget - one of them probably should be a different value)
-
-            #ct_companies_states[company_model].capital = 0
 
             ct_companies_states[company_model].ret_earnings = 0  # TODO: add correct value
 
@@ -334,9 +348,19 @@ class Simulation:
                 ct_companies_states[company_model].production.save()
             if ct_companies_states[company_model].factory is not None:
                 ct_companies_states[company_model].factory.capacity = company_class_object.factory.capacity
+                # add factory capacity to overall sum of all capacities
+                ct_total_capacity += company_class_object.factory.capacity
                 ct_companies_states[company_model].factory.save()
             ct_companies_states[company_model].save()
 
+        #write current turn market state
+        ct_market_state.sold = ct_total_units_sold          # sum of all units sold
+        ct_market_state.demand = ct_total_units_demanded    # sum of all units demanded
+        ct_market_state.capacity = ct_total_capacity        # sum of all capacities
+        ct_market_state.inventory = ct_total_inventory      # sum of all inventories
+        ct_market_state.manufactured = ct_total_units_manufactured  # sum of all units manufactured
+        ct_market_state.save()
+        
         # write data from classes to models
         # next turn
         for company_model in nt_companies_states.keys():

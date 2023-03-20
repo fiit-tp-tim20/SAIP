@@ -58,6 +58,7 @@ class Company(models.Model):
 
 class Production(models.Model):
     man_cost = models.FloatField(null=True, default=0)
+    man_cost_all = models.FloatField(null=True, default=0)
     sell_price = models.FloatField(null=True, default=0)
     volume = models.PositiveIntegerField(null=True, default=0)
 
@@ -159,7 +160,7 @@ class CompaniesState(models.Model):
     new_loans = models.FloatField(null=True, blank=True)
     inventory_charge = models.FloatField(null=True, blank=True)
     sales = models.FloatField(null=True, blank=True)
-    sold_man_cost = models.FloatField(null=True, blank=True)
+    manufactured_man_cost = models.FloatField(null=True, blank=True)
     tax = models.FloatField(null=True, blank=True)
     profit_before_tax = models.FloatField(null=True, blank=True)
     interest = models.FloatField(null=True, blank=True)
@@ -177,9 +178,15 @@ class CompaniesState(models.Model):
 
 class MarketState(models.Model):
     turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
-    sold = models.PositiveIntegerField(null=True)
-    demand = models.PositiveIntegerField(null=True)
-    inventory = models.PositiveIntegerField(null=True)
+    sold = models.PositiveIntegerField(null=True, blank=True)
+    demand = models.PositiveIntegerField(null=True, blank=True)
+    inventory = models.PositiveIntegerField(null=True, blank=True)
+    manufactured = models.PositiveIntegerField(null=True, blank=True)
+    capacity = models.PositiveIntegerField(null=True, blank=True)
+    interest_rate = models.FloatField(null=True, default=0.05)
+    tax_rate = models.FloatField(null=True, default=0.2)
+    inflation = models.FloatField(null=True, default=0)
+    loan_limit = models.FloatField(null=True, default=20000)
 
     def __str__(self):
         return f"Market State - {self.turn}"
