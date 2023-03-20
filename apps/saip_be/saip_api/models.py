@@ -130,7 +130,7 @@ class Factory(models.Model):
     capacity = models.PositiveIntegerField(null=True, default=100)
     base_cost = models.FloatField(null=True,default=0)
     capital = models.FloatField(null=True,default=0)
-    capital_investments = models.FloatField(null=True, blank=True)
+    capital_investments = models.FloatField(null=True, default=10000)
 
     # def __str__(self):
     #     return f"Factory - {self.companiesstate.company}"
@@ -155,7 +155,7 @@ class CompaniesState(models.Model):
     #kontrola
     orders_received = models.PositiveIntegerField(null=True, default=0)
     orders_fulfilled = models.PositiveIntegerField(null=True, default=0)
-    cash = models.FloatField(null=True, blank=True) #celkovo dostupných prostriedkov
+    cash = models.FloatField(null=True, default=15000) #celkovo dostupných prostriedkov
     #capital = models.FloatField(null=True, default=0)
     ret_earnings = models.FloatField(null=True, blank=True) 
     net_profit = models.FloatField(null=True, blank=True) #za kolo
