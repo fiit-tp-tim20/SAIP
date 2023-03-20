@@ -169,7 +169,7 @@ class CompaniesState(models.Model):
     interest = models.FloatField(null=True, blank=True)
     cash_flow_res = models.FloatField(null=True, blank=True)
     loan_repayment = models.FloatField(null=True, blank=True)
-    loans = models.FloatField(null=True, blank=True)
+    loans = models.FloatField(null=True, default=0)
 
     def __str__(self):
         return f"{self.company} - {self.turn}"
