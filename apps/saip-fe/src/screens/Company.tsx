@@ -55,8 +55,8 @@ function Company() {
 						<h3>Počet kusov</h3>
 						<div>
 							<Slider
-								min={0}
-								max={1000}
+								min={1}
+								max={2000}
 								value={productCount}
 								setValue={setProductCount}
 								checked={productCountChecked}
