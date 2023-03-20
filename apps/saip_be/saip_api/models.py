@@ -204,9 +204,9 @@ class TeacherDecisions(models.Model):
         db_table = 'Teacher Decisions'
         verbose_name_plural = 'Teacher Decisions'
 
-class EmailGroup(models.Model):
+class Participants(models.Model):
     user = models.ForeignKey(User, models.DO_NOTHING, null=True)
-    email = models.EmailField(null=True)
+    names = models.CharField(null=True)
 
     def __str__(self):
         return f"{self.email}({self.user})"
