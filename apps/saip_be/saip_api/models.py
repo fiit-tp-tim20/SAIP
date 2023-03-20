@@ -186,10 +186,6 @@ class MarketState(models.Model):
     inventory = models.PositiveIntegerField(null=True, blank=True)
     manufactured = models.PositiveIntegerField(null=True, blank=True)
     capacity = models.PositiveIntegerField(null=True, blank=True)
-    interest_rate = models.FloatField(null=True, default=0.05)
-    tax_rate = models.FloatField(null=True, default=0.2)
-    inflation = models.FloatField(null=True, default=0)
-    loan_limit = models.FloatField(null=True, default=20000)
 
     def __str__(self):
         return f"Market State - {self.turn}"
@@ -197,6 +193,16 @@ class MarketState(models.Model):
     class Meta:
         db_table = 'Market States'
 
+class TeacherDecisions(models.Model):
+    turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
+    interest_rate = models.FloatField(null=True, default=0.05)
+    tax_rate = models.FloatField(null=True, default=0.2)
+    inflation = models.FloatField(null=True, default=0)
+    loan_limit = models.FloatField(null=True, default=20000)
+
+    class Meta:
+        db_table = 'Teacher Decisions'
+        verbose_name_plural = 'Teacher Decisions'
 
 class EmailGroup(models.Model):
     user = models.ForeignKey(User, models.DO_NOTHING, null=True)

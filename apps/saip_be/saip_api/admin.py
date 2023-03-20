@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Turn, Company, Production, Marketing, Factory, CompaniesState, Game, GameParameters, MarketState,\
-    EmailGroup, Upgrade, CompaniesUpgrades
+    EmailGroup, Upgrade, CompaniesUpgrades, TeacherDecisions
 
 from django_object_actions import DjangoObjectActions, action
 
@@ -39,14 +39,17 @@ class FactoryAdmin(admin.ModelAdmin):
 @admin.register(CompaniesState)
 class CompaniesStateAdmin(admin.ModelAdmin):
     list_display = ('company', 'turn', 'production', 'marketing', 'factory', 'balance', 'stock_price', 'r_d',
-                    'inventory')
+                    'inventory', 'manufactured_man_cost')
     list_filter = ('turn', 'company__game')
 
 
 @admin.register(MarketState)
 class MarketStateAdmin(admin.ModelAdmin):
-    list_display = ('turn', 'sold', 'demand', 'inventory', 'manufactured', 'capacity', 'interest_rate', 'tax_rate', 'inflation', 'loan_limit')
+    list_display = ('turn', 'sold', 'demand', 'inventory', 'manufactured', 'capacity')
 
+@admin.register(TeacherDecisions)
+class TeacherDecisions(admin.ModelAdmin):
+    list_display = ('interest_rate', 'tax_rate', 'inflation', 'loan_limit')
 
 
 @admin.register(EmailGroup)
