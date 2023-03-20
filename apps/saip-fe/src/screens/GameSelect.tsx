@@ -1,22 +1,37 @@
 import React from "react";
 import { useState, useEffect } from "react";
 
+const test_games = [{
+    "id": 69,
+    "name": "Kantrencik-LS22-UT-1300"
+  },{
+    "id": 70,
+    "name": "Zatrochova-LS22-UT-1300"
+  }]
 
 function GameSelect() {
 
 
     const [numOfMembers, setNumOfMembers] = useState('');
     const [fields, setFields] = useState([]);
-    const [games, setGames] = useState([]);
+    const [games, setGames] = useState(test_games);
     
+    useEffect(() => {
+        confirm( );
+      }, [])
 
     
     const confirm = async () => {
 		const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/list_games/`, {
+            //treba pridat bearer token
 			method: "GET",
 			headers: {
 				"Content-type": "application/json",
 			},
+            // headers: {
+            //     "Content-Type": "application/json",
+            //     Authorization: `Bearer ${token}`,
+            // },
 		});
         console.log(response);
 
@@ -74,11 +89,11 @@ function GameSelect() {
 					/>
                     <label className="block text-gray-700 text-sm font-bold mb-2">Zvoľte vaše cvičenie</label>
                     <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent-500 focus:border-accent-500 block w-full p-2.5">
-                        <option selected>Cvičenie, do ktorého patríte</option>
-                        <option value="US">United States</option>
-                        <option value="CA">Canada</option>
-                        <option value="FR">France</option>
-                        <option value="DE">Germany</option>
+                       {games.map(({id,name}) => 
+                        <>
+                        <option value={name}>{name}</option>
+                        </>
+                       )}
                     </select>
                     <label className="block text-gray-700 text-sm font-bold mb-2">Počet ľudí v tíme</label>
                     <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent-500 focus:border-accent-500 block w-full p-2.5" onChange={onChangeNumberOfMembers}>
