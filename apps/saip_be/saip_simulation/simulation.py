@@ -284,7 +284,7 @@ class Simulation:
 
             ct_companies_states[company_model].cash = company_class_object.remaining_budget # TODO: add correct value (same as budget - one of them probably should be a different value)
 
-            ct_companies_states[company_model].ret_earnings = 0  # TODO: add correct value
+            ct_companies_states[company_model].ret_earnings = 0  # TODO: add correct value  #doteraz sales scitane dokopy (? mozno)
 
             ct_companies_states[company_model].net_profit = company_class_object.profit # TODO: check if correct (income per turn - costs per turn)
 
@@ -296,14 +296,13 @@ class Simulation:
 
             ct_companies_states[company_model].new_loans = 0  # TODO: add correct value
 
-            ct_companies_states[company_model].inventory_charge = 0  # TODO: add correct value
+            ct_companies_states[company_model].inventory_charge = 0  # TODO: add correct value  #inventory * hodnota uchovania za kus
 
             ct_companies_states[company_model].sales =  company_class_object.income_per_turn #TODO: check if correct
 
-            ct_companies_states[company_model].sold_man_cost = (
-                company_class_object.product.get_man_cost()
-                * company_class_object.units_sold
-            )   #TODO possibly add other upkeep costs to the overall manufacturing cost
+            ct_companies_states[company_model].manufactured_man_cost = company_class_object.production_volume * company_class_object.product.get_man_cost() # TODO: add units manufactured attrubute
+            
+                #TODO possibly add other upkeep costs to the overall manufacturing cost
                 # change to price per one unit and add ((the other costs + man cost) / units produced ) 
                 # change this to produced units instead of sold units
                 # MAN_COST_ALL - cena za jeden kus ale so vsetkymi nakladmi
@@ -311,13 +310,14 @@ class Simulation:
 
                 # TODO: add inflation - it should only affect the man cost 
 
-            ct_companies_states[company_model].tax = 0  # TODO: add correct value   #TODO: add taxation
+            ct_companies_states[company_model].tax = 0  # TODO: add correct value   #TODO: add taxation #TODO: value in cash
 
             ct_companies_states[company_model].profit_before_tax = 0  # TODO: add correct value #TODO: taxation
 
-            ct_companies_states[company_model].interest = company_class_object.interest_rate
+            ct_companies_states[company_model].interest = company_class_object.interest_rate #TODO: change to the value in cash that is deducted after interest
 
-            ct_companies_states[company_model].cash_flow_res = 0  # TODO: add correct value  #TODO: taxation
+            ct_companies_states[company_model].cash_flow_res = 0  # TODO: add correct value  #TODO: taxation    #cash z minuleho kola plus trzby, odratava sa kolko minuli na vyrobu produktov celkovo, odrata sa expenses (investicie do marketingu a rnd, capital), odrata sa interest (iba urok), odrata sa dan (asi z predaja)
+            # z cashflow res mame urcovat ci berieme novu pozicku a kolko cashu mame
 
             ct_companies_states[company_model].loan_repayment = 0  # TODO: add correct value
 
