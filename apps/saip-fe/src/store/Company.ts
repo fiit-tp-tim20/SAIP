@@ -21,7 +21,7 @@ interface CompanyState {
 const useCompanyStore = create<CompanyState>()(
 	persist(
 		(set, get) => ({
-			productCount: 0,
+			productCount: 1,
 			productCountChecked: false,
 			productPrice: 0,
 			productPriceChecked: false,
@@ -35,7 +35,7 @@ const useCompanyStore = create<CompanyState>()(
 			setCapitalInvestmentsChecked: (value) => set(() => ({ capitalInvestmentsChecked: value })),
 			reset: () =>
 				set(() => ({
-					productCount: 0,
+					productCount: 1,
 					productCountChecked: false,
 					productPrice: 0,
 					productPriceChecked: false,

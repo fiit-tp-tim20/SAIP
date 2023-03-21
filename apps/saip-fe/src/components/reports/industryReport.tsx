@@ -44,8 +44,12 @@ function IndustryReport() {
 											<td className="border px-4 py-2 text-center">
 												{industry[1].net_profit || 0} €
 											</td>
-											<td className="border px-4 py-2 text-center">{industry[1].sell_price}</td>
-											<td className="border px-4 py-2 text-center">{industry[1].market_share}</td>
+											<td className="border px-4 py-2 text-center">
+												{industry[1].sell_price} €/ks
+											</td>
+											<td className="border px-4 py-2 text-center">
+												{industry[1].market_share} %
+											</td>
 										</tr>
 									))}
 							</tbody>

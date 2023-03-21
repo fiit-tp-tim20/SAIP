@@ -57,23 +57,25 @@ function Marketing() {
 						<h2>Virálny marketing</h2>
 					</div>
 					<p className="pt-1">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur natus non distinctio
-						voluptas velit, officiis amet! Modi doloribus aspernatur natus aut vitae! Vel recusandae
-						corrupti eum minus dolores. Eos in tempora eligendi pariatur earum? Aliquam ipsa recusandae
-						incidunt impedit ex nam similique possimus. Perferendis quo molestias libero quidem, at tempore!
-						Incidunt aliquid labore voluptatem.
+						Informácie o produktoch šírené pomocou elektronických médií, najmä sociálnych sietí, ale aj pomocou virálneho priestoru ako súčasť zábavy, hier, či web stránok.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
-						<h3>Investícia</h3>
+						<div className="flex flex-col">
+							<h3>Investícia</h3>
+							<p>
+								Minimum: <span className="font-bold">100</span>
+							</p>
+						</div>
 						<div>
 							<Slider
 								min={0}
-								max={10000}
+								max={5000}
 								value={viral}
 								setValue={setViral}
 								checked={viralChecked}
 								setChecked={setViralChecked}
 								step={10}
+								requiredMin={100}
 							/>
 						</div>
 					</div>
@@ -83,23 +85,25 @@ function Marketing() {
 						<h2>OOH</h2>
 					</div>
 					<p className="pt-1">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur natus non distinctio
-						voluptas velit, officiis amet! Modi doloribus aspernatur natus aut vitae! Vel recusandae
-						corrupti eum minus dolores. Eos in tempora eligendi pariatur earum? Aliquam ipsa recusandae
-						incidunt impedit ex nam similique possimus. Perferendis quo molestias libero quidem, at tempore!
-						Incidunt aliquid labore voluptatem.
+						Kombinácia vynúteného vnímania bilbordovej reklamy umiestňovanej na miestach, kde sa musia zdržiavať klienti ako je napr MHD, zastávky, čakárne v kombinácii s virálnym, televíznym alebo podcastovým marketingom, kde bilbord človeka upúta a základné informuje a nálendá reklama vynúti pozornosť až natoľko, že klient aktívne hľadá bližšie informácie o produkte.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
-						<h3>Investícia</h3>
+						<div className="flex flex-col">
+							<h3>Investícia</h3>
+							<p>
+								Minimum: <span className="font-bold">500</span>
+							</p>
+						</div>
 						<div>
 							<Slider
 								min={0}
-								max={1000}
+								max={5000}
 								value={ooh}
 								setValue={setOoh}
 								checked={oohChecked}
 								setChecked={setOohChecked}
 								step={10}
+								requiredMin={500}
 							/>
 						</div>
 					</div>
@@ -109,23 +113,25 @@ function Marketing() {
 						<h2>Billboardy</h2>
 					</div>
 					<p className="pt-1">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur natus non distinctio
-						voluptas velit, officiis amet! Modi doloribus aspernatur natus aut vitae! Vel recusandae
-						corrupti eum minus dolores. Eos in tempora eligendi pariatur earum? Aliquam ipsa recusandae
-						incidunt impedit ex nam similique possimus. Perferendis quo molestias libero quidem, at tempore!
-						Incidunt aliquid labore voluptatem.
+						Tlačená vonkajšia reklama obyčajne veľký rozmer, ale môžem mať aj podobu citylightu.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
-						<h3>Investícia</h3>
+						<div className="flex flex-col">
+							<h3>Investícia</h3>
+							<p>
+								Minimum: <span className="font-bold">500</span>
+							</p>
+						</div>
 						<div>
 							<Slider
 								min={0}
-								max={1000}
+								max={5000}
 								value={billboard}
 								setValue={setBillboard}
 								checked={billboardChecked}
 								setChecked={setBillboardChecked}
 								step={10}
+								requiredMin={500}
 							/>
 						</div>
 					</div>
@@ -135,23 +141,25 @@ function Marketing() {
 						<h2>Televízia</h2>
 					</div>
 					<p className="pt-1">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur natus non distinctio
-						voluptas velit, officiis amet! Modi doloribus aspernatur natus aut vitae! Vel recusandae
-						corrupti eum minus dolores. Eos in tempora eligendi pariatur earum? Aliquam ipsa recusandae
-						incidunt impedit ex nam similique possimus. Perferendis quo molestias libero quidem, at tempore!
-						Incidunt aliquid labore voluptatem.
+						Klasická televízna reklama vysielaná pomocou v terestriálnej ale streamovacej siete televíznych programov.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
-						<h3>Investícia</h3>
+						<div className="flex flex-col">
+							<h3>Investícia</h3>
+							<p>
+								Minimum: <span className="font-bold">2000</span>
+							</p>
+						</div>
 						<div>
 							<Slider
 								min={0}
-								max={1000}
+								max={5000}
 								value={tv}
 								setValue={setTv}
 								checked={tvChecked}
 								setChecked={setTvChecked}
 								step={10}
+								requiredMin={2000}
 							/>
 						</div>
 					</div>
@@ -161,23 +169,25 @@ function Marketing() {
 						<h2>Podcasty</h2>
 					</div>
 					<p className="pt-1">
-						Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur natus non distinctio
-						voluptas velit, officiis amet! Modi doloribus aspernatur natus aut vitae! Vel recusandae
-						corrupti eum minus dolores. Eos in tempora eligendi pariatur earum? Aliquam ipsa recusandae
-						incidunt impedit ex nam similique possimus. Perferendis quo molestias libero quidem, at tempore!
-						Incidunt aliquid labore voluptatem.
+					Marketingové aktivity ako súčasť nahratých rozhovorov v rámci cyklov či jednorazových aktivít médií, či vysielaní rozhlasu alebo televízií.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
-						<h3>Investícia</h3>
+						<div className="flex flex-col">
+							<h3>Investícia</h3>
+							<p>
+								Minimum: <span className="font-bold">1000</span>
+							</p>
+						</div>
 						<div>
 							<Slider
 								min={0}
-								max={1000}
+								max={5000}
 								value={podcast}
 								setValue={setPodcast}
 								checked={podcastChecked}
 								setChecked={setPodcastChecked}
 								step={10}
+								requiredMin={1000}
 							/>
 						</div>
 					</div>

@@ -1,4 +1,4 @@
-export const getCommited = async () => {
+export const getCommitted = async () => {
 	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/committed/`, {
 		method: "GET",
 		headers: {
@@ -6,5 +6,5 @@ export const getCommited = async () => {
 		},
 	});
 	const data = await response.json();
-	return data.commited;
+	return data.committed;
 };

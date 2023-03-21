@@ -66,7 +66,8 @@ class GameSerializer(serializers.ModelSerializer):
 
 class CompanySerializer(serializers.ModelSerializer):
 
-    name = serializers.CharField(required=True, allow_blank=False)
+    name = serializers.CharField(required=True, allow_blank=False, 
+                                 validators=[validators.UniqueValidator(queryset=Company.objects.all())])
     game = serializers.PrimaryKeyRelatedField(queryset=Game.objects.filter(end__isnull=True))
 
     class Meta:

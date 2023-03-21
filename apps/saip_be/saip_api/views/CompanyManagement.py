@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn, CompaniesUpgrades, MarketState
+from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn, CompaniesUpgrades, MarketState, TeacherDecisions
 
 from ..serializers import CompanySerializer, ProductionSerializer, SpendingsSerializer, MaketingSerializer, FactorySerializer
 
@@ -79,18 +79,20 @@ class IndustryReport(APIView):
         # market['inventory_difference'] = ((market_state.inventory/market_state_previous.inventory) - 1)*100
         market['inventory_difference'] = 0
 
+        teacher_decisions = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=last_turn.number-1))
+        teacher_decisions_previous = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=last_turn.number-2))
         economic_parameters = dict()
-        economic_parameters['interest_rate'] = market_state.interest_rate
-        # economic_parameters['interest_rate_difference'] = ((market_state.interest_rate/market_state_previous.interest_rate) - 1)*100
+        economic_parameters['interest_rate'] = teacher_decisions.interest_rate
+        # economic_parameters['interest_rate_difference'] = ((teacher_decisions.interest_rate/teacher_decisions_previous.interest_rate) - 1)*100
         economic_parameters['interest_rate_difference'] = 0
-        economic_parameters['tax_rate'] = market_state.tax_rate
-        # economic_parameters['tax_rate_difference'] = ((market_state.tax_rate/market_state_previous.tax_rate) - 1)*100
+        economic_parameters['tax_rate'] = teacher_decisions.tax_rate
+        # economic_parameters['tax_rate_difference'] = ((teacher_decisions.tax_rate/teacher_decisions_previous.tax_rate) - 1)*100
         economic_parameters['tax_rate_difference'] = 0
-        economic_parameters['inflation'] = market_state.inflation
-        # economic_parameters['inflation_difference'] = ((market_state.inflation/market_state_previous.inflation) - 1)*100
+        economic_parameters['inflation'] = teacher_decisions.inflation
+        # economic_parameters['inflation_difference'] = ((teacher_decisions.inflation/teacher_decisions_previous.inflation) - 1)*100
         economic_parameters['inflation_difference'] = 0
-        economic_parameters['loan_limit'] = market_state.loan_limit
-        # economic_parameters['loan_limit_difference'] = ((market_state.loan_limit/market_state_previous.loan_limit) - 1)*100
+        economic_parameters['loan_limit'] = teacher_decisions.loan_limit
+        # economic_parameters['loan_limit_difference'] = ((teacher_decisions.loan_limit/teacher_decisions_previous.loan_limit) - 1)*100
         economic_parameters['loan_limit_difference'] = 0
 
         return Response({"industry": industry, "market": market, "economic_parameters": economic_parameters}, status=200)
@@ -120,7 +122,7 @@ class CompanyReport(APIView):
         production['utilization'] = (company_state_previous.production.volume/company_state_previous.factory.capacity)*100
         production['man_cost'] = company_state_previous.production.man_cost
         production['new_inventory'] = company_state_previous.inventory
-        production['selling_price'] = company_state_previous.production.sell_price
+        production['man_cost_all'] = company_state_previous.production.man_cost_all
 
         sales = dict()
         sales['orders_received'] = company_state_previous.orders_received
@@ -131,19 +133,21 @@ class CompanyReport(APIView):
         balance = dict()
         balance['cash'] = company_state_previous.cash
         balance['inventory_money'] = company_state_previous.inventory * company_state_previous.production.man_cost
-        balance['capital_investments'] = company_state_previous.capital_invesments
+        balance['capital_investments'] = company_state_previous.factory.capital_investments
+        balance['assets_summary'] = company_state_previous.cash + company_state_previous.inventory * company_state_previous.production.man_cost + company_state_previous.factory.capital_investments
 
         #pasiva
         balance['loans'] = company_state_previous.loans
         balance['ret_earnings'] = company_state_previous.ret_earnings
         balance['base_capital'] = company.game.parameters.base_capital
+        balance['liabilities_summary'] = company_state_previous.loans + company_state_previous.ret_earnings + company.game.parameters.base_capital
 
         cash_flow = dict()
-        cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(number=last_turn.number-2), company=company).cash #???
+        cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1), company=company).cash #???
         cash_flow['sales'] =  company_state_previous.sales #plus
-        cash_flow['sold_man_cost'] = company_state_previous.sold_man_cost #minus
+        cash_flow['manufactured_man_cost'] = company_state_previous.manufactured_man_cost #minus
         # vydavky na rozhodnutia - zratane vydavky na marketing r_d a capital s minusovou hodnotou
-        cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.capital
+        cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.factory.capital
         cash_flow['interest'] = company_state_previous.interest # minus
         cash_flow['tax'] = company_state_previous.tax # minus
         # teraz bude stav cash flow aby vedeli či potrebuju pozicku
@@ -158,7 +162,7 @@ class CompanyReport(APIView):
 
         income_statement = dict()
         income_statement['sales'] = company_state_previous.sales
-        income_statement['sold_man_cost'] = company_state_previous.sold_man_cost
+        income_statement['manufactured_man_cost'] = company_state_previous.manufactured_man_cost
         income_statement['marketing'] = marketing
         income_statement['r_d'] = company_state_previous.r_d
         income_statement['depreciation'] = company_state_previous.depreciation
@@ -195,12 +199,13 @@ class CreateCompanyView(APIView):
 
 def checkCommitted(turn: Turn, end: bool = True) -> bool:
     states = CompaniesState.objects.filter(turn=turn)
+    auto_end = turn.game.parameters.end_turn_on_committed
 
     for company in states:
         if not company.committed:
             return False
 
-    if end:
+    if end and auto_end:
         end_turn(turn)
     
     return True
