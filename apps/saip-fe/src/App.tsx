@@ -18,9 +18,10 @@ import { getTurn } from "./api/GetTurn";
 import useCompanyStore from "./store/Company";
 import useUpgradesStore from "./store/Upgrades";
 import useMarketingStore from "./store/Marketing";
+import GameSelect from "./screens/GameSelect";
 
 function App() {
-	const { data, isLoading, refetch } = useQuery({
+	const { data, isLoading, refetch, error } = useQuery({
 		queryKey: ["currentTurn"],
 		queryFn: () => getTurn(),
 		refetchInterval: 1000,
@@ -44,10 +45,16 @@ function App() {
 		}
 	}, [data && data.Number]);
 
+	useEffect(() => {
+		console.warn("aaaaa", error)
+		console.warn(data)
+	}, [error])
+
 	return (
 		<>
 			{token ? (
 				<Suspense>
+					{ error ? (<p>aaaa</p>) : (<></>) }
 					<BrowserRouter>
 						<Navbar />
 						<div className="my-16">
@@ -56,6 +63,7 @@ function App() {
 								<Route path="/product" element={<Product />} />
 								<Route path="/company" element={<Company />} />
 								<Route path="/marketing" element={<Marketing />} />
+								<Route path="/game" element={<GameSelect />} />
 								{/* <Route path="/news" element={<News />} /> */}
 								<Route path="/" element={<Navigate to="/dashboard" replace />} />
 								<Route path="*" element={<NotFound />} />

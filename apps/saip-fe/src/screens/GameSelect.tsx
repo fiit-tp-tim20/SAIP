@@ -34,14 +34,28 @@ function GameSelect() {
             // },
 		});
         console.log(response);
-
+            
     }
-    
+
+    const setPlayers = async() => {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/list_games/`, {
+            //treba pridat bearer token
+			method: "POST",
+			headers: {
+				"Content-type": "application/json",
+			},
+            // headers: {
+            //     "Content-Type": "application/json",
+            //     Authorization: `Bearer ${token}`,
+            // },
+		}); 
+    }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		//const {data, status} = useQuery('login', login)
 		confirm();
+        //setPlayers();
 		//navigate("/dashboard");
 	};
 
