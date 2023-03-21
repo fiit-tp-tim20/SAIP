@@ -1,12 +1,8 @@
-import React from "react";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import React, { useState } from "react";
 import CompanyReport from "../components/reports/companyReport";
 import IndustryReport from "../components/reports/industryReport";
 
 function Plan() {
-	const { t } = useTranslation();
-
 	const [showCompanyReport, setShowCompanyReport] = useState(true);
 
 	const handleSwitchScreen = () => {
@@ -18,6 +14,7 @@ function Plan() {
 			{showCompanyReport ? (
 				<button
 					className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 m-0 rounded-lg"
+					type="button"
 					onClick={handleSwitchScreen}
 				>
 					Prejsť na správu o trhu
@@ -25,6 +22,7 @@ function Plan() {
 			) : (
 				<button
 					className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 m-0 rounded-lg"
+					type="button"
 					onClick={handleSwitchScreen}
 				>
 					Prejsť na správu o spoločnosti

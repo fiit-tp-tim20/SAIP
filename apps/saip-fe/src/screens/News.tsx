@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
 import Tweet from "../components/news/tweet";
-import { getTweets } from "../mock/news";
+import getTweets from "../mock/news";
 
 function News() {
 	const { t } = useTranslation();

@@ -17,7 +17,7 @@ function Slider(props: SliderProps) {
 	const [localValue, setLocalValue] = useState(value);
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setLocalValue(parseInt(event.target.value));
+		setLocalValue(parseInt(event.target.value, 10));
 	};
 
 	const toggleState = () => {

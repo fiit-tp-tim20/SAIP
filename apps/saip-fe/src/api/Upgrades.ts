@@ -11,15 +11,13 @@ export const getUpgrades = async () => {
 	const rawData = (await response.json()).upgrade;
 
 	// TODO add upgrade DTO
-	const data: Upgrade[] = rawData.map((upgrade: any) => {
-		return {
-			...upgrade,
-			camera: {
-				position: upgrade.camera_pos,
-				rotation: upgrade.camera_rot,
-			},
-		};
-	});
+	const data: Upgrade[] = rawData.map((upgrade: any) => ({
+		...upgrade,
+		camera: {
+			position: upgrade.camera_pos,
+			rotation: upgrade.camera_rot,
+		},
+	}));
 
 	return data;
 };

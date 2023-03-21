@@ -1,11 +1,8 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
 import { getCompanyReport } from "../../api/GetCompanyReport";
 
 function CompanyReport() {
-	const { t } = useTranslation();
-
 	const { isLoading, data } = useQuery(["companyReport"], getCompanyReport);
 
 	return (
