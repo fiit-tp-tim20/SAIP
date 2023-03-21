@@ -9,17 +9,24 @@ const test_games = [{
     "name": "Zatrochova-LS22-UT-1300"
   }]
 
+  
+
+type User = {
+    name: string;
+    id: number;
+}
+
+
+
 function GameSelect() {
 
 
-    const [numOfMembers, setNumOfMembers] = useState('');
-    const [fields, setFields] = useState([]);
     const [games, setGames] = useState(test_games);
-    
-    useEffect(() => {
-        confirm( );
-      }, [])
+    const [users, setUsers] = useState<User[]>([]);
+    const [inputNumbersOfUsers,setInputNumbersOfUsers] = useState(0);
 
+
+    
     
     const confirm = async () => {
 		const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/list_games/`, {
@@ -51,42 +58,39 @@ function GameSelect() {
 		}); 
     }
 
+
+
+    function setNumberOfUsers(numOfPlayers : number) {
+        const obj = [...Array(numOfPlayers).keys()].map((number) => {
+            return {value:"",id:number}
+        })
+        setInputNumbersOfUsers(numOfPlayers)
+        setUsers(obj);
+
+    }
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		//const {data, status} = useQuery('login', login)
-		confirm();
+		// confirm();
+        const arrayOfNames = users.map(user => user.value);
         //setPlayers();
 		//navigate("/dashboard");
 	};
 
 
+    const updateUser = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
+        setUsers((users) =>
+          users.map((user) => {
+            if (user.id === id) {
+              return { ...user, value: e.target.value };
+            }
+            return user;
+          })
+        );
+      };
 
-    const onChangeNumberOfMembers = (e) => {
-        const numOfMembers = e.target.value;
-        setNumOfMembers(numOfMembers);
-
-        if(numOfMembers != null){
-            const generateArrays= Array.from(Array(Number(e.target.value)).keys())
-              setFields(generateArrays);
-          } else {
-            setFields([])
-          }
-    };
-
-    function addFields (){
-        return  fields.map((field) => (
-        <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-                        Celé meno
-                    </label>
-                    <input
-						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-						id="username"
-						type="text"
-						placeholder="Celé meno"
-					/>
-        </div>  ))
-    }
+    
 
     return (
         <div className="w-full  max-w-xs">
@@ -110,22 +114,37 @@ function GameSelect() {
                        )}
                     </select>
                     <label className="block text-gray-700 text-sm font-bold mb-2">Počet ľudí v tíme</label>
-                    <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent-500 focus:border-accent-500 block w-full p-2.5" onChange={onChangeNumberOfMembers}>
-                        <option selected> </option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
+                    <select onChange={e => setNumberOfUsers(+e.target.value)}  value={inputNumbersOfUsers}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent-500 focus:border-accent-500 block w-full p-2.5">
+                        <option key="0" value="0">0</option>
+                        <option key="1" value="1">1</option>
+                        <option key="2" value="2">2</option>
+                        <option key="3" value="3">3</option>
+                        <option key="4" value="4">4</option>
+                        <option key="5" value="5">5</option>
+                        <option key="6" value="6">6</option>
+                    
                     </select>
                 </div>
-                {fields.length ? ( 
+                {users?.length > 0 && ( 
                 <div className="mb-6">
-                    {addFields()}
+                    {users.map(({value,id}) => (
+                    <div>
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+                            Celé meno
+                        </label>
+                        <input
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            id="username"
+                            type="text"
+                            placeholder="Celé meno"
+                            value={value}
+                            onChange={e => updateUser(e,+id)}
+                        />
+                    </div>
+          ))}
                 </div>
-            ) : null
-            }
+            )}
             <div className="flex items-center justify-between">
                 <button
                     className="w-full bg-accent-700 hover:bg-accent-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
