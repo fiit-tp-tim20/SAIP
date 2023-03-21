@@ -35,7 +35,10 @@ function App() {
 
 	useEffect(() => {
 		const savedTurn = localStorage.getItem("turn");
-		if (!savedTurn) {
+		if (!savedTurn && !data) {
+			localStorage.setItem("turn", "0");
+		}
+		if (!savedTurn && data) {
 			localStorage.setItem("turn", data.Number);
 		}
 		if (savedTurn && data && data.Number !== parseInt(savedTurn, 10)) {
