@@ -2,9 +2,16 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import Slider from "../components/slider/Slider";
 import useMarketingStore from "../store/Marketing";
+import { getMarketingStats } from "../api/GetMarketingStats";
+import LineGraph from "../components/statisticsGraph/Graph";
+import { useQuery } from "react-query";
+
 
 function Marketing() {
 	const { t } = useTranslation();
+
+	const { isLoading, data } = useQuery(["getMarketingStats"], getMarketingStats);
+
 	const {
 		viral,
 		viralChecked,
@@ -31,25 +38,14 @@ function Marketing() {
 	return (
 		<div className="flex w-[600px] flex-col md:w-[900px] xl:w-[1280px]">
 			<h1 className="my-4">Štatistiky</h1>
-			<div className="grid gap-6 xl:grid-cols-3">
-				<div className="background-container flex flex-col rounded-2xl p-6">
-					<div className="flex flex-row items-center justify-between py-2">
-						<h2 className="text-accent-700">Placeholder</h2>
-					</div>
-				</div>
-
-				<div className="background-container flex flex-col rounded-2xl p-6">
-					<div className="flex flex-row items-center justify-between py-2">
-						<h2 className="text-accent-700">Placeholder</h2>
-					</div>
-				</div>
-
-				<div className="background-container flex flex-col rounded-2xl p-6">
-					<div className="flex flex-row items-center justify-between py-2">
-						<h2 className="text-accent-700">Placeholder</h2>
-					</div>
-				</div>
+			<div className="background-container my-2 flex flex-col rounded-2xl p-6">
+				{isLoading ? (
+					<div>Loading...</div>
+				) : (
+					<LineGraph data={data?.demand} />
+				)}
 			</div>
+			
 			<div className="flex flex-col">
 				<h1 className="my-4">Typy marketingu</h1>
 				<div className="background-container my-2 flex flex-col rounded-2xl p-6">
