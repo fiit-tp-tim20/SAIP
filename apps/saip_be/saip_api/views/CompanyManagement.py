@@ -33,7 +33,7 @@ class MarketingView(APIView):
             try:
                 state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
                 marketing[turn_num] = state.orders_received
-            except:
+            except (CompaniesState.DoesNotExist, Turn.DoesNotExist):
                  continue
 
         return Response({"demand": marketing}, status=200)
@@ -59,7 +59,7 @@ class CompanyView(APIView):
                 state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
                 manufactured[turn_num] = state.production.volume
                 sold[turn_num] = state.orders_fulfilled
-            except:
+            except (CompaniesState.DoesNotExist, Turn.DoesNotExist):
                 continue
 
         return Response({"manufactured": manufactured, "sold": sold}, status=200)
