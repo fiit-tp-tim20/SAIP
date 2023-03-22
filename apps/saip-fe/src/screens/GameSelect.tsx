@@ -39,14 +39,17 @@ export default function GameSelect() {
 	};
 
 	useEffect(() => {
-		fetch(`${import.meta.env.VITE_BACKEND_URL}/list_games/`)
-			.then((response) => response.json())
-			.then((data) => {
-				setGames(data);
-			})
-			.catch((error) => {
-				console.error("Error fetching data:", error);
+		async () => {
+			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/list_games/`, {
+				method: "GET",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
 			});
+			const games = await response.json();
+			setGames(games);
+		};
 	}, []);
 
 	const setPlayers = async () => {
@@ -77,21 +80,42 @@ export default function GameSelect() {
 		// confirm();
 		const arrayOfNames = users.map((user) => user.value);
 		console.log(arrayOfNames);
-		fetch(`${import.meta.env.VITE_BACKEND_URL}/create_company/`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
-			},
-			body: JSON.stringify({
-				game: games,
-				name: companyName,
-				participants: arrayOfNames,
-			}),
-		})
-			.then((response) => response.json())
-			.then((data) => console.log(data))
-			.catch((error) => console.error(error));
+
+		async () => {
+			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/create_company/`, {
+				method: "POST",
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+				body: JSON.stringify({
+					game: games,
+					name: companyName,
+					participants: arrayOfNames,
+				}),
+			});
+			const data = await response.json();
+			console.log(data);
+
+			// if (response.status === 400) {
+
+			// }
+		};
+		// fetch(`${import.meta.env.VITE_BACKEND_URL}/create_company/`, {
+		// 	method: "POST",
+		// 	headers: {
+		// 		"Content-Type": "application/json",
+		// 		Authorization: `Bearer ${localStorage.getItem("token")}`,
+		// 	},
+		// 	body: JSON.stringify({
+		// 		game: games,
+		// 		name: companyName,
+		// 		participants: arrayOfNames,
+		// 	}),
+		// })
+		// 	.then((response) => response.json())
+		// 	.then((data) => console.log(data))
+		// 	.catch((error) => console.error(error));
 
 		//setPlayers();
 		//navigate("/dashboard");
