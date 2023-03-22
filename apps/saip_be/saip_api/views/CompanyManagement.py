@@ -15,6 +15,55 @@ from saip_simulation.simulation import Simulation
 from django.utils import timezone
 from .GameManagement import create_turn, calculate_man_cost
 
+class MarketingView(APIView):
+
+    def get(self, request) -> Response:
+
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        try:
+            company = Company.objects.get(user=request.user)
+        except Company.DoesNotExist:
+            return Response({"detail": "Company for this user not found"}, status=404)
+
+        marketing = [None] * (company.game.turns - 1)
+        for turn_num in range(company.game.turns - 1):
+            print(turn_num)
+            try:
+                state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
+                marketing[turn_num] = state.orders_received
+            except:
+                 continue
+
+        return Response({"demand": marketing}, status=200)
+
+    
+class CompanyView(APIView):
+
+    def get(self, request) -> Response:
+        
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        try:
+            company = Company.objects.get(user=request.user)
+        except Company.DoesNotExist:
+            return Response({"detail": "Company for this user not found"}, status=404)
+
+        manufactured = [None] * (company.game.turns - 1)
+        sold = [None] * (company.game.turns - 1)
+
+        for turn_num in range(company.game.turns - 1):
+            try:
+                state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
+                manufactured[turn_num] = state.production.volume
+                sold[turn_num] = state.orders_fulfilled
+            except:
+                continue
+
+        return Response({"manufactured": manufactured, "sold": sold}, status=200)
+
 
 def create_upgrade_company_relation(game: Game, company: Company) -> None:
     for upgrade in Upgrade.objects.all():
