@@ -1,32 +1,50 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useState, useEffect } from "react";
+import { useQuery } from "react-query";
+
+const test_games = [
+	{
+		id: 69,
+		name: "Kantrencik-LS22-UT-1300",
+	},
+	{
+		id: 70,
+		name: "Zatrochova-LS22-UT-1300",
+	},
+];
 
 type User = {
 	name: string;
 	id: number;
 };
 
-export default function GameSelect() {
-	const [games, setGames] = useState([]);
+const listGames = async () => {
+	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/list_games/`, {
+		headers: {
+			Authorization: `Bearer ${localStorage.getItem("token")}`,
+			"Content-Type": "application/json",
+		},
+	});
+	const data = await response.json();
+	return data;
+};
+
+function GameSelect() {
 	const [users, setUsers] = useState<User[]>([]);
 	const [inputNumbersOfUsers, setInputNumbersOfUsers] = useState(0);
-	const [companyName, setCompanyName] = useState("");
+	const [selectedGame, setSelectedGame] = useState();
+
+	const teamnameInput = useRef<HTMLInputElement>(null);
+
+	const { data: gameList } = useQuery("listGames", listGames);
 
 	useEffect(() => {
-		async () => {
-			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/list_games/`, {
-				method: "GET",
-				headers: {
-					"Content-type": "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			});
-			const games = await response.json();
-			setGames(games);
-		};
-	}, []);
+		if (gameList.games) {
+			setSelectedGame(gameList.games[0].id);
+		}
+	}, [gameList]);
 
-	function setNumberOfUsers(numOfPlayers: number) {
+	function setNumberOfUsers(numOfPlayers) {
 		const obj = [...Array(numOfPlayers).keys()].map((number) => {
 			return { value: "", id: number };
 		});
@@ -34,31 +52,37 @@ export default function GameSelect() {
 		setUsers(obj);
 	}
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		//const {data, status} = useQuery('login', login)
+		// confirm();
 		const arrayOfNames = users.map((user) => user.value);
-		//console.log(arrayOfNames);
+		console.warn({
+			game: parseInt(selectedGame, 10),
+			name: teamnameInput.current?.value,
+			players: arrayOfNames,
+		});
 
-		async () => {
-			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/create_company/`, {
-				method: "POST",
-				headers: {
-					"Content-type": "application/json",
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-				body: JSON.stringify({
-					game: games,
-					name: companyName,
-					participants: arrayOfNames,
-				}),
-			});
-			const data = await response.json();
-			console.log(data);
+		const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/create_company/`, {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				game: parseInt(selectedGame || "0", 10),
+				name: teamnameInput.current?.value,
+				players: arrayOfNames,
+			}),
+		});
 
-			if (response.status !== 201) {
-				console.log(data.detail);
-			}
-		};
+		if (response.status === 201) {
+			console.log("OK");
+		} else {
+			console.log("NOK");
+		}
+		//setPlayers();
+		//navigate("/dashboard");
 	};
 
 	const updateUser = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
@@ -84,13 +108,17 @@ export default function GameSelect() {
 						id="username"
 						type="text"
 						placeholder="Názov vašej spoločnosti"
-						onChange={(e: any) => setCompanyName(e.target.value)}
+						ref={teamnameInput}
 					/>
 					<label className="block text-gray-700 text-sm font-bold mb-2">Zvoľte vaše cvičenie</label>
-					<select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent-500 focus:border-accent-500 block w-full p-2.5">
-						{games.map(({ id, name }) => (
+					<select
+						className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent-500 focus:border-accent-500 block w-full p-2.5"
+						value={selectedGame}
+						onChange={(e) => setSelectedGame(e.target.value)}
+					>
+						{gameList?.games?.map(({ id, name }) => (
 							<>
-								<option value={name}>{name}</option>
+								<option value={id}>{name}</option>
 							</>
 						))}
 					</select>
@@ -154,3 +182,5 @@ export default function GameSelect() {
 		</div>
 	);
 }
+
+export default GameSelect;

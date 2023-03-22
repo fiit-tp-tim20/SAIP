@@ -34,6 +34,7 @@ function App() {
 	const { reset: resetMarketingState } = useMarketingStore();
 
 	useEffect(() => {
+		console.warn(data);
 		const savedTurn = localStorage.getItem("turn");
 		if (!savedTurn && !data) {
 			localStorage.setItem("turn", "0");
@@ -48,6 +49,11 @@ function App() {
 			resetMarketingState();
 		}
 	}, [data && data.Number]);
+
+	// kompletne dum-dum riešenie PREROBIŤ. Aj tu aj getTurn() !!!!!!!!!!!!!
+	if (token && !data) {
+		return <GameSelect />;
+	}
 
 	if (data && data.Number === 0) {
 		return (
@@ -68,7 +74,6 @@ function App() {
 		<>
 			{token ? (
 				<Suspense>
-					{ error ? (<p>aaaa</p>) : (<></>) }
 					<BrowserRouter>
 						<Navbar />
 						<div className="my-16">
