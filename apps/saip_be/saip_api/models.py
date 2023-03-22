@@ -50,6 +50,7 @@ class Company(models.Model):
     name = models.CharField(max_length=100, null=True)
     user = models.ForeignKey(User, models.DO_NOTHING, null=True, related_name='user_companies')
     game = models.ForeignKey(Game, models.DO_NOTHING, null=True, related_name='game_companies')
+    participants = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return f"{self.game} - {self.name} ({self.user})"
@@ -181,11 +182,11 @@ class CompaniesState(models.Model):
 
 class MarketState(models.Model):
     turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
-    sold = models.PositiveIntegerField(null=True, blank=True)
-    demand = models.PositiveIntegerField(null=True, blank=True)
-    inventory = models.PositiveIntegerField(null=True, blank=True)
-    manufactured = models.PositiveIntegerField(null=True, blank=True)
-    capacity = models.PositiveIntegerField(null=True, blank=True)
+    sold = models.PositiveIntegerField(null=True, default=0)
+    demand = models.PositiveIntegerField(null=True, default=0)
+    inventory = models.PositiveIntegerField(null=True, default=0)
+    manufactured = models.PositiveIntegerField(null=True, default=0)
+    capacity = models.PositiveIntegerField(null=True, default=0)
 
     def __str__(self):
         return f"Market State - {self.turn}"
@@ -204,12 +205,12 @@ class TeacherDecisions(models.Model):
         db_table = 'Teacher Decisions'
         verbose_name_plural = 'Teacher Decisions'
 
-class EmailGroup(models.Model):
-    user = models.ForeignKey(User, models.DO_NOTHING, null=True)
-    email = models.EmailField(null=True)
+# class Participants(models.Model):
+#     user = models.ForeignKey(User, models.DO_NOTHING, null=True)
+#     names = models.CharField(null=True)
 
-    def __str__(self):
-        return f"{self.email}({self.user})"
+#     def __str__(self):
+#         return f"{self.email}({self.user})"
 
-    class Meta:
-        db_table = 'Emails'
+#     class Meta:
+#         db_table = 'Emails'

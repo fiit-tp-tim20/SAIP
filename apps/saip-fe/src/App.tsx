@@ -18,6 +18,7 @@ import { getTurn } from "./api/GetTurn";
 import useCompanyStore from "./store/Company";
 import useUpgradesStore from "./store/Upgrades";
 import useMarketingStore from "./store/Marketing";
+import logout from "./api/logout";
 
 function App() {
 	const { data, isLoading, refetch } = useQuery({
@@ -33,7 +34,10 @@ function App() {
 
 	useEffect(() => {
 		const savedTurn = localStorage.getItem("turn");
-		if (!savedTurn && data && data.Number) {
+		if (!savedTurn && !data) {
+			localStorage.setItem("turn", "0");
+		}
+		if (!savedTurn && data) {
 			localStorage.setItem("turn", data.Number);
 		}
 		if (savedTurn && data && data.Number !== parseInt(savedTurn, 10)) {
@@ -43,6 +47,21 @@ function App() {
 			resetMarketingState();
 		}
 	}, [data && data.Number]);
+
+	if (data && data.Number === 0) {
+		return (
+			<div className="flex flex-col justify-center items-center h-screen">
+				<h1 className="text-4xl font-bold pb-2">Hra sa ešte nezačala</h1>
+				<button
+					type="button"
+					className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 m-0 rounded-lg"
+					onClick={() => logout(resetMarketingState, resetCompanyState, resetUpgradeState)}
+				>
+					Odhlásiť sa
+				</button>
+			</div>
+		);
+	}
 
 	return (
 		<>
