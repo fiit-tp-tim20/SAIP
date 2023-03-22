@@ -1,17 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 
-const test_games = [
-	{
-		id: 69,
-		name: "Kantrencik-LS22-UT-1300",
-	},
-	{
-		id: 70,
-		name: "Zatrochova-LS22-UT-1300",
-	},
-];
-
 type User = {
 	name: string;
 	id: number;
@@ -22,21 +11,6 @@ export default function GameSelect() {
 	const [users, setUsers] = useState<User[]>([]);
 	const [inputNumbersOfUsers, setInputNumbersOfUsers] = useState(0);
 	const [companyName, setCompanyName] = useState("");
-
-	const confirm = async () => {
-		const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/list_games/`, {
-			//treba pridat bearer token
-			method: "GET",
-			headers: {
-				"Content-type": "application/json",
-			},
-			// headers: {
-			//     "Content-Type": "application/json",
-			//     Authorization: `Bearer ${token}`,
-			// },
-		});
-		console.log(response);
-	};
 
 	useEffect(() => {
 		async () => {
@@ -52,20 +26,6 @@ export default function GameSelect() {
 		};
 	}, []);
 
-	const setPlayers = async () => {
-		const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/list_games/`, {
-			//treba pridat bearer token
-			method: "POST",
-			headers: {
-				"Content-type": "application/json",
-			},
-			// headers: {
-			//     "Content-Type": "application/json",
-			//     Authorization: `Bearer ${token}`,
-			// },
-		});
-	};
-
 	function setNumberOfUsers(numOfPlayers: number) {
 		const obj = [...Array(numOfPlayers).keys()].map((number) => {
 			return { value: "", id: number };
@@ -76,10 +36,8 @@ export default function GameSelect() {
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		//const {data, status} = useQuery('login', login)
-		// confirm();
 		const arrayOfNames = users.map((user) => user.value);
-		console.log(arrayOfNames);
+		//console.log(arrayOfNames);
 
 		async () => {
 			const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/create_company/`, {
@@ -97,28 +55,10 @@ export default function GameSelect() {
 			const data = await response.json();
 			console.log(data);
 
-			// if (response.status === 400) {
-
-			// }
+			if (response.status !== 201) {
+				console.log(data.detail);
+			}
 		};
-		// fetch(`${import.meta.env.VITE_BACKEND_URL}/create_company/`, {
-		// 	method: "POST",
-		// 	headers: {
-		// 		"Content-Type": "application/json",
-		// 		Authorization: `Bearer ${localStorage.getItem("token")}`,
-		// 	},
-		// 	body: JSON.stringify({
-		// 		game: games,
-		// 		name: companyName,
-		// 		participants: arrayOfNames,
-		// 	}),
-		// })
-		// 	.then((response) => response.json())
-		// 	.then((data) => console.log(data))
-		// 	.catch((error) => console.error(error));
-
-		//setPlayers();
-		//navigate("/dashboard");
 	};
 
 	const updateUser = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
