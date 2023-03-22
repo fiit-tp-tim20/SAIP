@@ -104,8 +104,10 @@ class IndustryReport(APIView):
             company_info['stock_price'] = state.stock_price
             company_info['sell_price'] = state.production.sell_price
             company_info['net_profit'] = state.net_profit
-            # company_info['market_share'] = state.orders_fulfilled/market_state.sold
-            company_info['market_share'] = 0
+            try:
+                company_info['market_share'] = state.orders_fulfilled/market_state.sold
+            except ZeroDivisionError:
+                company_info['market_share'] = 0
 
             industry[state.company.name] = company_info
 
@@ -113,36 +115,54 @@ class IndustryReport(APIView):
         
         market = dict()
         market['demand'] = market_state.demand
-        # market['demand_difference'] = ((market_state.demand/market_state_previous.demand) - 1)*100
-        market['demand_difference'] = 0
+        try:
+            market['demand_difference'] = ((market_state.demand/market_state_previous.demand) - 1)*100
+        except ZeroDivisionError:
+            market['demand_difference'] = "N/A"
         market['sold_products'] = market_state.sold
-        # market['sold_products_difference'] = ((market_state.sold/market_state_previous.sold) - 1)*100
-        market['sold_products_difference'] = 0
+        try:
+            market['sold_products_difference'] = ((market_state.sold/market_state_previous.sold) - 1)*100
+        except ZeroDivisionError:
+            market['sold_products_difference'] ="N/A"
         market['manufactured'] = market_state.manufactured
-        # market['manufactured_difference'] = ((market_state.manufactured/market_state_previous.manufactured) - 1)*100
-        market['manufactured_difference'] = 0
+        try:
+            market['manufactured_difference'] = ((market_state.manufactured/market_state_previous.manufactured) - 1)*100
+        except ZeroDivisionError:
+            market['manufactured_difference'] = "N/A"
         market['capacity'] = market_state.capacity
-        # market['capacity_difference'] = ((market_state.capacity/market_state_previous.capacity) - 1)*100
-        market['capacity_difference'] = 0
+        try:
+            market['capacity_difference'] = ((market_state.capacity/market_state_previous.capacity) - 1)*100
+        except ZeroDivisionError:
+            market['capacity_difference'] = "N/A"
         market['inventory'] = market_state.inventory
-        # market['inventory_difference'] = ((market_state.inventory/market_state_previous.inventory) - 1)*100
-        market['inventory_difference'] = 0
+        try:
+            market['inventory_difference'] = ((market_state.inventory/market_state_previous.inventory) - 1)*100
+        except ZeroDivisionError:
+            market['inventory_difference'] = "N/A"
 
         teacher_decisions = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=last_turn.number-1))
         teacher_decisions_previous = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=last_turn.number-2))
         economic_parameters = dict()
         economic_parameters['interest_rate'] = teacher_decisions.interest_rate
-        # economic_parameters['interest_rate_difference'] = ((teacher_decisions.interest_rate/teacher_decisions_previous.interest_rate) - 1)*100
-        economic_parameters['interest_rate_difference'] = 0
+        try:
+            economic_parameters['interest_rate_difference'] = ((teacher_decisions.interest_rate/teacher_decisions_previous.interest_rate) - 1)*100
+        except ZeroDivisionError:
+            economic_parameters['interest_rate_difference'] = "N/A"
         economic_parameters['tax_rate'] = teacher_decisions.tax_rate
-        # economic_parameters['tax_rate_difference'] = ((teacher_decisions.tax_rate/teacher_decisions_previous.tax_rate) - 1)*100
-        economic_parameters['tax_rate_difference'] = 0
+        try:
+            economic_parameters['tax_rate_difference'] = ((teacher_decisions.tax_rate/teacher_decisions_previous.tax_rate) - 1)*100
+        except ZeroDivisionError:
+            economic_parameters['tax_rate_difference'] = "N/A"
         economic_parameters['inflation'] = teacher_decisions.inflation
-        # economic_parameters['inflation_difference'] = ((teacher_decisions.inflation/teacher_decisions_previous.inflation) - 1)*100
-        economic_parameters['inflation_difference'] = 0
+        try:
+            economic_parameters['inflation_difference'] = ((teacher_decisions.inflation/teacher_decisions_previous.inflation) - 1)*100
+        except ZeroDivisionError:
+            economic_parameters['inflation_difference'] = "N/A"
         economic_parameters['loan_limit'] = teacher_decisions.loan_limit
-        # economic_parameters['loan_limit_difference'] = ((teacher_decisions.loan_limit/teacher_decisions_previous.loan_limit) - 1)*100
-        economic_parameters['loan_limit_difference'] = 0
+        try:
+            economic_parameters['loan_limit_difference'] = ((teacher_decisions.loan_limit/teacher_decisions_previous.loan_limit) - 1)*100
+        except ZeroDivisionError:
+            economic_parameters['loan_limit_difference'] = "N/A"
 
         return Response({"industry": industry, "market": market, "economic_parameters": economic_parameters}, status=200)
 

@@ -70,14 +70,15 @@ class CompanySerializer(serializers.ModelSerializer):
 
     name = serializers.CharField(required=True, allow_blank=False)
     game = serializers.PrimaryKeyRelatedField(queryset=Game.objects.filter(end__isnull=True))
-
+    participants = serializers.CharField(required=True, allow_blank=False)
     class Meta:
         model = Company
-        fields = ('game', 'name')
+        fields = ('game', 'name', 'participants')
 
     def create(self, validated_data) -> Company:
         name = validated_data.get('name')
         game = validated_data.get('game')
+        participants = validated_data.get('participants')
 
         game_turn = Turn.objects.filter(game=game, end__isnull=True).order_by('-number').first().number
 
@@ -91,7 +92,8 @@ class CompanySerializer(serializers.ModelSerializer):
 
         company = Company.objects.create(
             name=name,
-            game=game
+            game=game,
+            participants=participants
         )
         company.save()
 
