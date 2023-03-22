@@ -24,6 +24,7 @@ function GameSelect() {
     const [games, setGames] = useState(test_games);
     const [users, setUsers] = useState<User[]>([]);
     const [inputNumbersOfUsers,setInputNumbersOfUsers] = useState(0);
+    const [companyName, setCompanyName] = useState('');
 
 
     
@@ -74,6 +75,23 @@ function GameSelect() {
 		//const {data, status} = useQuery('login', login)
 		// confirm();
         const arrayOfNames = users.map(user => user.value);
+        console.log(arrayOfNames);
+        fetch(`${import.meta.env.VITE_BACKEND_URL}/create_company/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                game: games,
+                name: companyName,
+                participants: arrayOfNames,
+            })
+        })
+            .then((response) => response.json())
+            .then((data) => console.log(data))
+            .catch((error) => console.error(error));
+  };
+        
         //setPlayers();
 		//navigate("/dashboard");
 	};
@@ -104,6 +122,7 @@ function GameSelect() {
 						id="username"
 						type="text"
 						placeholder="Názov vašej spoločnosti"
+                        onChange={(e: any) => setCompanyName(e.target.value)}
 					/>
                     <label className="block text-gray-700 text-sm font-bold mb-2">Zvoľte vaše cvičenie</label>
                     <select className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent-500 focus:border-accent-500 block w-full p-2.5">
