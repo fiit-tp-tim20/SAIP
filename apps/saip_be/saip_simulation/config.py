@@ -38,6 +38,8 @@ class FactoryPreset:
     STARTING_INVESTMENT = 30000    #TODO: capacity depends on the capital investment - adjust values so that they makes sense together - and add the investment-to-capacity calculation
     STARTING_CAPACITY = 100
 
+    INVENTORY_CHARGE_PER_UNIT = 5
+
     OPTIMAL_THRESHOLD = 0.9
     OVER_THRESHOLD_MULTIPLIER = 1.015
 

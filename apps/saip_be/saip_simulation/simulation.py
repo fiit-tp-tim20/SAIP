@@ -291,7 +291,7 @@ class Simulation:
 
             ct_companies_states[company_model].new_loans = 0  # TODO: add correct value
 
-            ct_companies_states[company_model].inventory_charge = 0  # TODO: add correct value  #inventory * hodnota uchovania za kus
+            ct_companies_states[company_model].inventory_charge = company_class_object.inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT
 
             ct_companies_states[company_model].sales =  company_class_object.income_per_turn #TODO: check if correct
 
