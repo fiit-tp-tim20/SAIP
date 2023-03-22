@@ -125,9 +125,6 @@ class CompaniesUpgrades(models.Model):
 
 
 class Factory(models.Model):
-    # prod_emp = models.PositiveIntegerField(null=True, default=0)
-    # cont_emp = models.PositiveIntegerField(null=True, default=0)
-    # aux_emp = models.PositiveIntegerField(null=True, default=0)
     capacity = models.PositiveIntegerField(null=True, default=100)
     base_cost = models.FloatField(null=True,default=0)
     capital = models.FloatField(null=True,default=0)

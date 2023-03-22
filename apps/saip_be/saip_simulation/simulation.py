@@ -160,16 +160,11 @@ class Simulation:
 
         # all attributes are positive integer (from model)
         # TODO: types are not consistent: model <-> our class
-        #prod_emp = factory_model.prod_emp
-        #cont_emp = factory_model.cont_emp
-        #aux_emp = factory_model.aux_emp
-
         new_factory.capacity = factory_model.capacity if factory_model.capacity is not None else FactoryPreset.STARTING_CAPACITY
         new_factory.base_energy_cost = factory_model.base_cost if factory_model.base_cost is not None else FactoryPreset.BASE_ENERGY_COST
         new_factory.capital_investment = factory_model.capital_investments if factory_model.capital_investments is not None else FactoryPreset.STARTING_INVESTMENT
         new_factory.capital_investment_this_turn = factory_model.capital if factory_model.capital is not None else 0.0
-        # TODO: solve difference between capital and capital_investments 
-
+    
         return new_factory
 
     def create_product(
@@ -292,7 +287,7 @@ class Simulation:
                 company_class_object.factory.upkeep["writeoff"]
                 if company_class_object.factory.upkeep["writeoff"]
                 else 0
-            )  # TODO: check if correct
+            )
 
             ct_companies_states[company_model].new_loans = 0  # TODO: add correct value
 
