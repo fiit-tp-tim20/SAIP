@@ -6,6 +6,8 @@ from datetime import datetime, timezone
 
 from .models import Game, Company, Production, Marketing, Factory, CompaniesState, Turn
 
+from rest_framework import status
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, allow_blank=False,
@@ -66,8 +68,7 @@ class GameSerializer(serializers.ModelSerializer):
 
 class CompanySerializer(serializers.ModelSerializer):
 
-    name = serializers.CharField(required=True, allow_blank=False, 
-                                 validators=[validators.UniqueValidator(queryset=Company.objects.all())])
+    name = serializers.CharField(required=True, allow_blank=False)
     game = serializers.PrimaryKeyRelatedField(queryset=Game.objects.filter(end__isnull=True))
 
     class Meta:
@@ -82,6 +83,11 @@ class CompanySerializer(serializers.ModelSerializer):
 
         if game_turn != 0:
             raise serializers.ValidationError({"detail": "Game has already started"})
+
+        if name in [c.name for c in Company.objects.filter(game=game)]:
+            err = serializers.ValidationError({"detail": "Company with this name already exists in specified game"})
+            err.status_code = status.HTTP_409_CONFLICT
+            raise err
 
         company = Company.objects.create(
             name=name,
