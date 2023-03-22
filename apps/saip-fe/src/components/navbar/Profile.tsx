@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import getGeneralInfo from "../../api/CompanyInfo";
 import logout from "../../api/logout";
