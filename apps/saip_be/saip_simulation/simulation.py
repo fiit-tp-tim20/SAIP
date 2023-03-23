@@ -237,7 +237,6 @@ class Simulation:
         # load the market state model
         ct_market_state = models.MarketState.objects.get(turn=self.turn_model)
 
-
         # write data from classes to models
         # curent turn
         ct_total_units_sold = 0
@@ -247,19 +246,16 @@ class Simulation:
         ct_total_capacity = 0
         for company_model in ct_companies_states.keys():
             company_class_object = self.companies[company_model.name]
-            # add units produced to overall sum of all units produced
-            ct_total_units_manufactured += company_class_object.production_volume   #TODO: maybe this attribute will change later
+
+            ct_total_units_manufactured += company_class_object.production_volume # add units produced to overall sum of all units produced #TODO: maybe this attribute will change later
             ct_companies_states[company_model].balance = company_class_object.balance
             ct_companies_states[company_model].stock_price = company_class_object.stock_price
             ct_companies_states[company_model].inventory = company_class_object.inventory
-            # add inventory to overall sum of all inventories
-            ct_total_inventory += company_class_object.inventory
+            ct_total_inventory += company_class_object.inventory    # add inventory to overall sum of all inventories
             ct_companies_states[company_model].orders_received = self.market.customer_distribution[company_class_object.brand]["demand"]
-            # add units demanded to overall sum of all units demanded
-            ct_total_units_demanded += self.market.customer_distribution[company_class_object.brand]["demand"]
+            ct_total_units_demanded += self.market.customer_distribution[company_class_object.brand]["demand"]  # add units demanded to overall sum of all units demanded
             ct_companies_states[company_model].orders_fulfilled = company_class_object.units_sold
-            # add units sold to overall sum of all units sold
-            ct_total_units_sold += company_class_object.units_sold
+            ct_total_units_sold += company_class_object.units_sold  # add units sold to overall sum of all units sold
             ct_companies_states[company_model].cash = company_class_object.remaining_budget
             ct_companies_states[company_model].ret_earnings = company_class_object.ret_earnings + company_class_object.income_per_turn #doteraz sales scitane dokopy (? mozno)
             ct_companies_states[company_model].net_profit = company_class_object.profit # TODO: check if correct (income per turn - costs per turn)
@@ -273,12 +269,10 @@ class Simulation:
             ct_companies_states[company_model].sales =  company_class_object.income_per_turn #TODO: check if correct
             ct_companies_states[company_model].manufactured_man_cost = company_class_object.prod_costs_per_turn
             # TODO: add inflation - it should only affect the man cost 
-
             ct_companies_states[company_model].tax = company_class_object.value_paid_in_tax
             ct_companies_states[company_model].profit_before_tax = company_class_object.profit_before_tax
             ct_companies_states[company_model].interest = company_class_object.value_paid_in_interest
             ct_companies_states[company_model].cash_flow_res = 0  # TODO: add correct value  #TODO: taxation    #cash z minuleho kola plus trzby, odratava sa kolko minuli na vyrobu produktov celkovo, odrata sa expenses (investicie do marketingu a rnd, capital), odrata sa interest (iba urok), odrata sa dan (asi z predaja)
-            # z cashflow res mame urcovat ci berieme novu pozicku a kolko cashu mame
             ct_companies_states[company_model].loan_repayment = company_class_object.value_paid_in_loan_repayment
             ct_companies_states[company_model].loans = company_class_object.loans
 
@@ -296,8 +290,7 @@ class Simulation:
                 ct_companies_states[company_model].production.save()
             if ct_companies_states[company_model].factory is not None:
                 ct_companies_states[company_model].factory.capacity = company_class_object.factory.capacity
-                # add factory capacity to overall sum of all capacities
-                ct_total_capacity += company_class_object.factory.capacity
+                ct_total_capacity += company_class_object.factory.capacity  # add factory capacity to overall sum of all capacities
                 ct_companies_states[company_model].factory.save()
             ct_companies_states[company_model].save()
 
@@ -314,9 +307,6 @@ class Simulation:
         for company_model in nt_companies_states.keys():
             company_class_object = self.companies[company_model.name]
             nt_companies_states[company_model].balance = company_class_object.balance
-            #nt_companies_states[
-            #    company_model
-            #].stock_price = company_class_object.stock_price
             nt_companies_states[company_model].inventory = company_class_object.inventory
             nt_companies_states[company_model].loans = company_class_object.loans
             nt_companies_states[company_model].ret_earnings = company_class_object.ret_earnings + company_class_object.income_per_turn
