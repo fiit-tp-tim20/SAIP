@@ -43,7 +43,8 @@ class Factory:
         "salaries": float,  # employees * salary * 3 (length of turn)
         "materials": float,  # this one might be irrelevant
         "writeoff": float,
-    }  # TODO inflation
+    }
+    inflation = FactoryPreset.BASE_INFLATION
 
     def __post_init__(self):
         self.update_upkeep(FactoryPreset.BASE_RENT, 0)
@@ -62,6 +63,11 @@ class Factory:
             self.upkeep["writeoff"] = (
                 self.capital_investment * FactoryPreset.FACTORY_WRITEOFF_RATE
             )
+
+        for key, value in self.upkeep.items():  # apply inflation
+            if key == "writeoff":
+                continue
+            self.upkeep[key] += value * self.inflation
 
     def total_upkeep(self) -> float:
         return (
@@ -155,7 +161,9 @@ class Company:
             self.remaining_budget -= marketing_type.investment
 
     def upgrade_stored_products(self) -> None:
-        self.total_costs_per_turn += self.inventory * self.product.get_upgrade_stored_products_price()
+        self.total_costs_per_turn += (
+            self.inventory * self.product.get_upgrade_stored_products_price()
+        )
 
     def calculate_stock_price(self) -> float:
         self.__update_loans()
