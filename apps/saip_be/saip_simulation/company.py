@@ -143,6 +143,13 @@ class Company:
     income_per_turn: float = 0  # field(init=False)
     prod_costs_per_turn: float = 0  # field(init=False)
     total_costs_per_turn: float = 0  # field(init=False)
+    value_paid_in_tax: float = 0
+    value_paid_in_interest: float = 0
+    value_paid_in_loan_repayment: float = 0
+    new_loans: float = 0
+    profit_before_tax: float = 0
+    ret_earnings: float = 0
+
 
     max_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
     remaining_budget: float = field(init=False)
@@ -228,25 +235,38 @@ class Company:
         return 0
 
     def apply_tax(self):
-        self.profit = self.profit * (1 - CompanyPreset.DEFAULT_TAX_RATE)
+        self.profit_before_tax = self.profit
+        profit_after_tax = self.profit * (1 - CompanyPreset.DEFAULT_TAX_RATE)
+        self.value_paid_in_tax = self.profit - profit_after_tax
+        self.profit = profit_after_tax
 
     def __update_loans(self):
+        self.new_loans = 0
+        self.value_paid_in_interest = self.loans * self.interest_rate
+        self.value_paid_in_loan_repayment = self.value_paid_in_interest
         self.balance -= self.loans * self.interest_rate
         if self.balance < 0:
             self.loans -= self.balance
+            self.new_loans -= self.balance
             self.balance = 0
 
         if self.balance < self.max_budget:
             self.loans += self.max_budget - self.balance
+            self.new_loans += self.max_budget - self.balance
             self.balance = 0
             return
 
         if (self.balance - self.max_budget) > self.loans:
             self.balance -= self.loans + self.max_budget
+            self.value_paid_in_loan_repayment += self.loans
             self.loans = 0
             return
 
         self.loans -= self.balance - self.max_budget
+        if (self.balance - self.max_budget) > 0:
+            self.value_paid_in_loan_repayment += (self.balance - self.max_budget)
+        else:
+            self.new_loans += -(self.balance - self.max_budget)
         self.balance = 0
 
 
