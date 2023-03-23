@@ -140,6 +140,8 @@ class Company:
     profit: float = field(init=False)  # +income -costs | per turn only
     loans: float = FactoryPreset.STARTING_INVESTMENT
     interest_rate: float = CompanyPreset.DEFAULT_INTEREST_RATE
+    tax_rate = CompanyPreset.DEFAULT_TAX_RATE
+
     income_per_turn: float = 0  # field(init=False)
     prod_costs_per_turn: float = 0  # field(init=False)
     total_costs_per_turn: float = 0  # field(init=False)
@@ -228,7 +230,7 @@ class Company:
         return 0
 
     def apply_tax(self):
-        self.profit = self.profit * (1 - CompanyPreset.DEFAULT_TAX_RATE)
+        self.profit = self.profit * (1 - self.tax_rate)
 
     def __update_loans(self):
         self.balance -= self.loans * self.interest_rate
