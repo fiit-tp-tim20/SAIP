@@ -83,7 +83,7 @@ class Factory:
             materials_cost=FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
             * production_this_turn,
             skip=True,
-        )  # TODO make sure this works as intended - are we using the updated man_cost from upgrades???
+        )
         ppu = self.total_upkeep() / production_this_turn
         cap_usage = production_this_turn / self.capacity
 
@@ -251,7 +251,15 @@ class Company:
 
 
 if __name__ == "__main__":
-    com = Company("blank", None, 0, 0, 0, 10000, Factory(), {})
+    com = Company(
+        brand="blank",
+        product=LastingProduct(None, 1200, -1),
+        inventory=0,
+        production_volume=95,
+        balance=0,
+        factory=Factory(),
+        marketing={"ooh": OOH(1500)},
+    )
 
     unitsA = int(FactoryPreset.STARTING_CAPACITY * 0.81)
     unitsB = int(FactoryPreset.STARTING_CAPACITY * 0.9)
