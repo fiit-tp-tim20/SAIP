@@ -112,10 +112,10 @@ class Market:
             if self.customer_distribution.get(customer_choice) is None:
                 self.customer_distribution[customer_choice] = {"demand": 0}
             self.customer_distribution[customer_choice]["demand"] += 1
-        self.calculate_sales_per_company()
+        self.__calculate_sales_per_company()
         return self.customer_distribution
 
-    def calculate_sales_per_company(self):
+    def __calculate_sales_per_company(self):
         for company in self.companies:
             self.customer_distribution[company.brand][
                 "demand_not_met"
