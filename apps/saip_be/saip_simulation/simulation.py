@@ -236,6 +236,7 @@ class Simulation:
                 pass
         # load the market state model
         ct_market_state = models.MarketState.objects.get(turn=self.turn_model)
+        nt_market_state = models.MarketState.objects.get(turn=self.new_turn_model)
 
         # write data from classes to models
         # curent turn
@@ -319,3 +320,4 @@ class Simulation:
                 ct_companies_states[company_model].factory.capital_investments = company_class_object.factory.capital_investment
                 nt_companies_states[company_model].factory.save()
             nt_companies_states[company_model].save()
+        nt_market_state["demand"] = ct_total_units_demanded
