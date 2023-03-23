@@ -46,6 +46,7 @@ class NoProductionError(CompanyError):
 @dataclass
 class Factory:
     capital_investment: float = FactoryPreset.STARTING_INVESTMENT
+    capital_investment_this_turn: float = 0.0
     capacity: int = FactoryPreset.STARTING_CAPACITY
 
     # to be changed to list (or multiple attributes) after we implement different employees
@@ -164,14 +165,14 @@ class Company:
     profit: float = field(init=False)  # +income -costs | per turn only
     loans: float = FactoryPreset.STARTING_INVESTMENT
     interest_rate: float = CompanyPreset.DEFAULT_INTEREST_RATE
-    income_per_turn: float = field(init=False)
-    costs_per_turn: float = field(init=False)
+    income_per_turn: float = 0 #field(init=False)
+    costs_per_turn: float = 0 #field(init=False)
 
     max_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
     remaining_budget: float = field(init=False)
 
-    stock_price: float = field(init=False)  # company score
-    units_sold: int = field(init=False)
+    stock_price: float = 0  # field(init=False)  # company score
+    units_sold: int = 0  # field(init=False)
 
     factory: Factory = None
     marketing: Dict[str, MarketingType] = field(default_factory=dict)
@@ -219,6 +220,8 @@ class Company:
             raise ProductionOVerCapacityError(
                 self.production_volume, self.factory.capacity
             )
+        # TODO: make it so that we produce max capacity if production volume is higher
+        # note: change the production_volume to max capacity value and write
 
         ppu = self.factory.calculate_price_per_unit(self.production_volume)
         total_price = self.production_volume * ppu

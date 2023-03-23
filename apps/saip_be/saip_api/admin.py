@@ -27,7 +27,7 @@ class SpendingAdmin(admin.ModelAdmin):
 
 @admin.register(Factory)
 class FactoryAdmin(admin.ModelAdmin):
-    list_display = ('prod_emp', 'cont_emp', 'aux_emp', 'capacity', 'base_cost', 'capital')
+    list_display = ('capacity', 'base_cost', 'capital', 'capital_investments')
 
 
 @admin.register(CompaniesState)
@@ -39,7 +39,7 @@ class CompaniesStateAdmin(admin.ModelAdmin):
 
 @admin.register(MarketState)
 class MarketStateAdmin(admin.ModelAdmin):
-    list_display = ('turn', 'size', 'demand')
+    list_display = ('turn', 'sold', 'demand', 'inventory')
 
 
 
@@ -56,7 +56,7 @@ class GameAdmin(admin.ModelAdmin):
 
 @admin.register(GameParameters)
 class GameParametersAdmin(admin.ModelAdmin):
-    list_display = ('budget_cap', 'depreciation')
+    list_display = ('budget_cap', 'depreciation', 'base_man_cost')
 
 
 @admin.register(Upgrade)
@@ -66,5 +66,5 @@ class UpgradeAdmin(admin.ModelAdmin):
 
 @admin.register(CompaniesUpgrades)
 class CompaniesUpgradeAdmin(admin.ModelAdmin):
-    list_display = ('company', 'game', 'upgrade', 'status', 'progress')
-    list_filter = ('company__game', 'company', 'upgrade')
+    list_display = ('company', 'game', 'upgrade', 'status', 'progress', 'turn')
+    list_filter = ('company__game', 'company', 'upgrade', 'turn')

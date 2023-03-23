@@ -1,24 +1,30 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
-import { getUpgrades as mockGetUpgrades } from "../mock/product";
 import UpgradeInfo from "../components/product/UpgradeInfo";
 import Canvas from "../components/three/Canvas";
-import { useModal } from "../components/modal/useModal";
+import useModal from "../components/modal/useModal";
 import { Upgrade } from "../types/product";
 import ProductModal from "../components/product/ProductModal";
 import { getUpgrades } from "../api/Upgrades";
+import useUpgradesStore from "../store/Upgrades";
 
 function Product() {
 	const { t } = useTranslation();
 
-	const { Modal, setIsShowing, setElement } = useModal(<></>);
+	const { Modal, isShowing, setIsShowing, setElement } = useModal(<div />);
 
 	const { isLoading, data } = useQuery(["upgrades"], getUpgrades);
 
+	const { upgrades, setUpgrade, setUpgradeCheck } = useUpgradesStore();
+
 	useEffect(() => {
-		console.warn("data", data);
-		console.warn("isLoading", isLoading);
+		if (!data) return;
+		data.forEach((upgrade) => {
+			if (upgrades[upgrade.name]) return;
+			setUpgrade(upgrade.name, 0);
+			setUpgradeCheck(upgrade.name, false);
+		});
 	}, [data, isLoading]);
 
 	const openModal = (feature: Upgrade) => {
@@ -35,7 +41,7 @@ function Product() {
 
 	return (
 		<>
-			<Modal />
+			{isShowing && <Modal />}
 			<div className="max-w-7xl flex flex-col justify-center">
 				<h1 className="p-6 pl-12">{t("product.title") as string}</h1>
 				<div className="grid grid-cols-2 gap-6 px-6 max-w-7xl">
