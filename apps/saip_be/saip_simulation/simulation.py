@@ -321,3 +321,4 @@ class Simulation:
                 nt_companies_states[company_model].factory.save()
             nt_companies_states[company_model].save()
         nt_market_state["demand"] = ct_total_units_demanded
+        nt_market_state.save()
