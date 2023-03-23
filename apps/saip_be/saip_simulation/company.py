@@ -235,10 +235,15 @@ class Company:
         return 0
 
     def apply_tax(self):
-        self.profit_before_tax = self.profit
-        profit_after_tax = self.profit * (1 - CompanyPreset.DEFAULT_TAX_RATE)
-        self.value_paid_in_tax = self.profit - profit_after_tax
-        self.profit = profit_after_tax
+        if self.profit <= 0: 
+            self.profit_before_tax = self.profit
+            self.profit_after_tax = self.profit
+            self.value_paid_in_tax = 0
+        else:
+            self.profit_before_tax = self.profit
+            profit_after_tax = self.profit * (1 - CompanyPreset.DEFAULT_TAX_RATE)
+            self.value_paid_in_tax = self.profit - profit_after_tax
+            self.profit = profit_after_tax
 
     def __update_loans(self):
         self.new_loans = 0
