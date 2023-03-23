@@ -25,24 +25,6 @@ from typing import Dict
 from math import ceil, floor
 
 
-class CompanyError(Exception):
-    def __init__(self, message: str) -> None:
-        self.message = message
-        super().__init__(self.message)
-
-
-class ProductionOVerCapacityError(CompanyError):
-    def __init__(self, production: int, capacity: int) -> None:
-        self.message = f"Production {production} is over current capacity {capacity}"
-        super().__init__(self.message)
-
-
-class NoProductionError(CompanyError):
-    def __init__(self, production: int) -> None:
-        self.message = f"Cannot produce {production} products"
-        super().__init__(self.message)
-
-
 @dataclass
 class Factory:
     capital_investment: float = FactoryPreset.STARTING_INVESTMENT
@@ -54,8 +36,6 @@ class Factory:
     employee_salary: float = FactoryPreset.BASE_SALARY
 
     base_energy_cost: float = FactoryPreset.BASE_ENERGY_COST
-    energy_cost_per_machine: float = FactoryPreset.ENERGY_COST_PER_MACHINE
-    machine_count: int = FactoryPreset.STARTING_MACHINES
 
     upkeep = {
         "rent": float,
@@ -64,6 +44,7 @@ class Factory:
         "materials": float,  # this one might be irrelevant
         "writeoff": float,
     }
+    inflation = FactoryPreset.BASE_INFLATION
 
     def __post_init__(self):
         self.update_upkeep(FactoryPreset.BASE_RENT, 0)
@@ -82,6 +63,12 @@ class Factory:
             self.upkeep["writeoff"] = (
                 self.capital_investment * FactoryPreset.FACTORY_WRITEOFF_RATE
             )
+            return
+
+        for key, value in self.upkeep.items():  # apply inflation
+            if key == "writeoff":
+                continue
+            self.upkeep[key] += value * self.inflation
 
     def total_upkeep(self) -> float:
         return (
@@ -92,14 +79,11 @@ class Factory:
         )
 
     def calculate_price_per_unit(self, production_this_turn: int) -> float:
-        if production_this_turn == 0:
-            raise NoProductionError(production_this_turn)
-
         self.update_upkeep(
             materials_cost=FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
             * production_this_turn,
             skip=True,
-        )   #TODO make sure this works as intended - are we using the updated man_cost from upgrades???
+        )  # TODO make sure this works as intended - are we using the updated man_cost from upgrades???
         ppu = self.total_upkeep() / production_this_turn
         cap_usage = production_this_turn / self.capacity
 
@@ -124,17 +108,8 @@ class Factory:
             self.capital_investment - self.upkeep.get("writeoff"), 2
         )
 
-    def invest_into_machines(self, machine_count_increase: int) -> None:
-        self.machine_count += machine_count_increase
-        self.capacity += floor(
-            machine_count_increase
-            * FactoryPreset.STARTING_CAPACITY
-            / FactoryPreset.STARTING_MACHINES
-        )
-        self.update_upkeep()
-
     def __calculate_energies(self) -> float:
-        return self.base_energy_cost + self.energy_cost_per_machine * self.machine_count
+        return self.base_energy_cost
 
     def __calculate_salaries(self) -> float:
         return self.employee_salary * self.employees * TURN_LENGTH
@@ -158,16 +133,19 @@ class Company:
         0  # assuming that the stored products are upgraded automatically, for a price
     )
     production_volume: int = 0
-    
+    prod_ppu: float = field(init=False)
+    total_ppu: float = field(init=False)
 
-    profit: float = 0  # +income -costs| represents whether or not the company is actually in dept / turning profit
-    loans: float = 0
+    balance: float = 0  # current state of the company finances
+    profit: float = field(init=False)  # +income -costs | per turn only
+    loans: float = FactoryPreset.STARTING_INVESTMENT
     interest_rate: float = CompanyPreset.DEFAULT_INTEREST_RATE
-    income_per_turn: float = 0 #field(init=False)
-    costs_per_turn: float = 0 #field(init=False)
+    income_per_turn: float = 0  # field(init=False)
+    prod_costs_per_turn: float = 0  # field(init=False)
+    total_costs_per_turn: float = 0  # field(init=False)
 
-    max_budget: float = 0
-    remaining_budget: float = 0  # field(init=False)
+    max_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
+    remaining_budget: float = field(init=False)
 
     stock_price: float = 0  # field(init=False)  # company score
     units_sold: int = 0  # field(init=False)
@@ -175,71 +153,101 @@ class Company:
     factory: Factory = None
     marketing: Dict[str, MarketingType] = field(default_factory=dict)
 
+    def __post_init__(self):
+        self.remaining_budget = self.max_budget
+        self.pay_for_marketing()
+
+    def pay_for_marketing(self):
+        for marketing_type in self.marketing.values():
+            self.remaining_budget -= marketing_type.investment
+
     def upgrade_stored_products(self) -> None:
-        self.costs_per_turn += self.inventory * self.product.get_upgrade_price()
+        self.total_costs_per_turn += (
+            self.inventory * self.product.get_upgrade_stored_products_price()
+        )
 
     def calculate_stock_price(self) -> float:
-        self.__update_loan()
-        
+        self.__update_loans()
+
         self.stock_price = (
             self.factory.capital_investment
-            + self.profit * 0.3
-            - self.loans * 0.5
+            + self.balance * 0.2  # long term performance
+            + self.profit * 0.3  # per turn performance
+            - self.loans * 0.5  # log term debt
             + self.yield_agg_marketing_value()
         ) / 1000
-        return self.stock_price
 
     def get_product(self):
         return self.product
 
-    def load_marketing_dict(self) -> None:
-        # TODO some logic here
-        self.marketing = {}
-
     def yield_agg_marketing_value(self) -> float:
-        return self._agg_market_values()
+        return self.__agg_marketing_values()
 
-    def _agg_market_values(self) -> float:
+    def __agg_marketing_values(self) -> float:
         total_investment = 0
         for marketing_type in self.marketing.values():
             total_investment += marketing_type.yield_value()
         return total_investment
 
+    def __agg_marketing_costs(self) -> float:
+        total_investment = 0
+        for marketing_type in self.marketing.values():
+            total_investment += marketing_type.investment
+        return total_investment
+
     def produce_products(self) -> None:
         if self.production_volume > self.factory.capacity:
-            raise ProductionOVerCapacityError(
-                self.production_volume, self.factory.capacity
-            )
-        # TODO: make it so that we produce max capacity if production volume is higher
-        # note: change the production_volume to max capacity value and write
+            self.production_volume = self.factory.capacity
 
-        ppu = self.factory.calculate_price_per_unit(self.production_volume)
-        total_price = self.production_volume * ppu
+        self.prod_ppu = self.factory.calculate_price_per_unit(self.production_volume)
+        self.total_ppu = (
+            self.prod_ppu + self.__agg_marketing_costs() / self.production_volume
+        )
 
         self.inventory += self.production_volume
-        self.costs_per_turn = total_price
+        self.prod_costs_per_turn = self.production_volume * self.prod_ppu
+        self.total_costs_per_turn = self.production_volume * self.total_ppu
 
     def sell_product(self, demand: int) -> int:
         if demand > self.inventory:
             self.income_per_turn = self.inventory * self.product.get_price()
-            self.profit = self.income_per_turn - self.costs_per_turn
+            self.profit = self.income_per_turn - self.total_costs_per_turn
+            self.apply_tax()
+            self.balance += self.profit + self.remaining_budget
             demand_not_met = demand - self.inventory
             self.units_sold = self.inventory
             self.inventory = 0
             return demand_not_met
 
         self.income_per_turn = demand * self.product.get_price()
-        self.profit = self.income_per_turn - self.costs_per_turn
+        self.profit = self.income_per_turn - self.total_costs_per_turn
+        self.apply_tax()
+        self.balance += self.profit + self.remaining_budget
         self.units_sold = demand
         self.inventory -= demand
         return 0
-    
-    def __update_loan(self):    #TODO add loan limit
-        self.loans = self.loans * self.interest_rate
-        if self.profit < 0: 
-            self.loans -= self.profit  # alebo nejaku pravidelnu ciastku napr. 10K?
-            self.profit = 0
-        self.loans -= self.remaining_budget
+
+    def apply_tax(self):
+        self.profit = self.profit * (1 - CompanyPreset.DEFAULT_TAX_RATE)
+
+    def __update_loans(self):
+        self.balance -= self.loans * self.interest_rate
+        if self.balance < 0:
+            self.loans -= self.balance
+            self.balance = 0
+
+        if self.balance < self.max_budget:
+            self.loans += self.max_budget - self.balance
+            self.balance = 0
+            return
+
+        if (self.balance - self.max_budget) > self.loans:
+            self.balance -= self.loans + self.max_budget
+            self.loans = 0
+            return
+
+        self.loans -= self.balance - self.max_budget
+        self.balance = 0
 
 
 if __name__ == "__main__":
@@ -260,15 +268,15 @@ if __name__ == "__main__":
     print("\nTESTING PRODUCTION")
     com.production_volume = unitsA
     com.produce_products()
-    print(com.costs_per_turn, com.factory.total_upkeep())
+    print(com.total_costs_per_turn, com.factory.total_upkeep())
 
     com.production_volume = unitsB
     com.produce_products()
-    print(com.costs_per_turn, com.factory.total_upkeep())
+    print(com.total_costs_per_turn, com.factory.total_upkeep())
 
     com.production_volume = unitsC
     com.produce_products()
-    print(com.costs_per_turn, com.factory.total_upkeep())
+    print(com.total_costs_per_turn, com.factory.total_upkeep())
 
     print("\nTESTING INVESTMENT")
     investment = 10_000
@@ -286,12 +294,12 @@ if __name__ == "__main__":
 
     com.production_volume = unitsA
     com.produce_products()
-    print(com.costs_per_turn, com.factory.total_upkeep())
+    print(com.total_costs_per_turn, com.factory.total_upkeep())
 
     com.production_volume = unitsB
     com.produce_products()
-    print(com.costs_per_turn, com.factory.total_upkeep())
+    print(com.total_costs_per_turn, com.factory.total_upkeep())
 
     com.production_volume = unitsC
     com.produce_products()
-    print(com.costs_per_turn, com.factory.total_upkeep())
+    print(com.total_costs_per_turn, com.factory.total_upkeep())
