@@ -63,6 +63,7 @@ class Factory:
             self.upkeep["writeoff"] = (
                 self.capital_investment * FactoryPreset.FACTORY_WRITEOFF_RATE
             )
+            return
 
         for key, value in self.upkeep.items():  # apply inflation
             if key == "writeoff":
@@ -82,7 +83,7 @@ class Factory:
             materials_cost=FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
             * production_this_turn,
             skip=True,
-        )   #TODO make sure this works as intended - are we using the updated man_cost from upgrades???
+        )  # TODO make sure this works as intended - are we using the updated man_cost from upgrades???
         ppu = self.total_upkeep() / production_this_turn
         cap_usage = production_this_turn / self.capacity
 
