@@ -67,7 +67,7 @@ class Product(ABC):
                 progress=progress,
                 total_cost=total_cost,
                 sales_effect=sales_effect,
-                man_cost_effect=man_cost_effect,
+                man_cost_effect=man_cost_effect
             )
         else:
             pass

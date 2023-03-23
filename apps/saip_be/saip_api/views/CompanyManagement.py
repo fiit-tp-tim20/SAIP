@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn, CompaniesUpgrades, MarketState
+from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn, CompaniesUpgrades, MarketState, TeacherDecisions
 
 from ..serializers import CompanySerializer, ProductionSerializer, SpendingsSerializer, MaketingSerializer, FactorySerializer
 
@@ -14,6 +14,55 @@ from django.core import serializers
 from saip_simulation.simulation import Simulation
 from django.utils import timezone
 from .GameManagement import create_turn, calculate_man_cost
+
+class MarketingView(APIView):
+
+    def get(self, request) -> Response:
+
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        try:
+            company = Company.objects.get(user=request.user)
+        except Company.DoesNotExist:
+            return Response({"detail": "Company for this user not found"}, status=404)
+
+        marketing = [None] * (company.game.turns - 1)
+        for turn_num in range(company.game.turns - 1):
+            print(turn_num)
+            try:
+                state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
+                marketing[turn_num] = state.orders_received
+            except (CompaniesState.DoesNotExist, Turn.DoesNotExist):
+                 continue
+
+        return Response({"demand": marketing}, status=200)
+
+    
+class CompanyView(APIView):
+
+    def get(self, request) -> Response:
+        
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        try:
+            company = Company.objects.get(user=request.user)
+        except Company.DoesNotExist:
+            return Response({"detail": "Company for this user not found"}, status=404)
+
+        manufactured = [None] * (company.game.turns - 1)
+        sold = [None] * (company.game.turns - 1)
+
+        for turn_num in range(company.game.turns - 1):
+            try:
+                state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
+                manufactured[turn_num] = state.production.volume
+                sold[turn_num] = state.orders_fulfilled
+            except (CompaniesState.DoesNotExist, Turn.DoesNotExist):
+                continue
+
+        return Response({"manufactured": manufactured, "sold": sold}, status=200)
 
 
 def create_upgrade_company_relation(game: Game, company: Company) -> None:
@@ -55,18 +104,67 @@ class IndustryReport(APIView):
             company_info['stock_price'] = state.stock_price
             company_info['sell_price'] = state.production.sell_price
             company_info['net_profit'] = state.net_profit
-            company_info['market_share'] = state.orders_fulfilled/market_state.sold
+            try:
+                company_info['market_share'] = state.orders_fulfilled/market_state.sold
+            except ZeroDivisionError:
+                company_info['market_share'] = 0
 
             industry[state.company.name] = company_info
 
-        market_state = MarketState.objects.get(turn=last_turn)
+        market_state_previous = MarketState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1))
+        
         market = dict()
-        market['sold_products'] = market_state.sold
         market['demand'] = market_state.demand
+        try:
+            market['demand_difference'] = ((market_state.demand/market_state_previous.demand) - 1)*100
+        except ZeroDivisionError:
+            market['demand_difference'] = "N/A"
+        market['sold_products'] = market_state.sold
+        try:
+            market['sold_products_difference'] = ((market_state.sold/market_state_previous.sold) - 1)*100
+        except ZeroDivisionError:
+            market['sold_products_difference'] ="N/A"
+        market['manufactured'] = market_state.manufactured
+        try:
+            market['manufactured_difference'] = ((market_state.manufactured/market_state_previous.manufactured) - 1)*100
+        except ZeroDivisionError:
+            market['manufactured_difference'] = "N/A"
+        market['capacity'] = market_state.capacity
+        try:
+            market['capacity_difference'] = ((market_state.capacity/market_state_previous.capacity) - 1)*100
+        except ZeroDivisionError:
+            market['capacity_difference'] = "N/A"
         market['inventory'] = market_state.inventory
+        try:
+            market['inventory_difference'] = ((market_state.inventory/market_state_previous.inventory) - 1)*100
+        except ZeroDivisionError:
+            market['inventory_difference'] = "N/A"
 
+        teacher_decisions = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=last_turn.number-1))
+        teacher_decisions_previous = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=last_turn.number-2))
+        economic_parameters = dict()
+        economic_parameters['interest_rate'] = teacher_decisions.interest_rate
+        try:
+            economic_parameters['interest_rate_difference'] = ((teacher_decisions.interest_rate/teacher_decisions_previous.interest_rate) - 1)*100
+        except ZeroDivisionError:
+            economic_parameters['interest_rate_difference'] = "N/A"
+        economic_parameters['tax_rate'] = teacher_decisions.tax_rate
+        try:
+            economic_parameters['tax_rate_difference'] = ((teacher_decisions.tax_rate/teacher_decisions_previous.tax_rate) - 1)*100
+        except ZeroDivisionError:
+            economic_parameters['tax_rate_difference'] = "N/A"
+        economic_parameters['inflation'] = teacher_decisions.inflation
+        try:
+            economic_parameters['inflation_difference'] = ((teacher_decisions.inflation/teacher_decisions_previous.inflation) - 1)*100
+        except ZeroDivisionError:
+            economic_parameters['inflation_difference'] = "N/A"
+        economic_parameters['loan_limit'] = teacher_decisions.loan_limit
+        try:
+            economic_parameters['loan_limit_difference'] = ((teacher_decisions.loan_limit/teacher_decisions_previous.loan_limit) - 1)*100
+        except ZeroDivisionError:
+            economic_parameters['loan_limit_difference'] = "N/A"
 
-        return Response({"industry": industry, "market": market}, status=200)
+        return Response({"industry": industry, "market": market, "economic_parameters": economic_parameters}, status=200)
 
 
 class CompanyReport(APIView):
@@ -93,7 +191,7 @@ class CompanyReport(APIView):
         production['utilization'] = (company_state_previous.production.volume/company_state_previous.factory.capacity)*100
         production['man_cost'] = company_state_previous.production.man_cost
         production['new_inventory'] = company_state_previous.inventory
-        production['selling_price'] = company_state_previous.production.sell_price
+        production['man_cost_all'] = company_state_previous.production.man_cost_all
 
         sales = dict()
         sales['orders_received'] = company_state_previous.orders_received
@@ -104,19 +202,21 @@ class CompanyReport(APIView):
         balance = dict()
         balance['cash'] = company_state_previous.cash
         balance['inventory_money'] = company_state_previous.inventory * company_state_previous.production.man_cost
-        balance['capital_investments'] = company_state_previous.capital_invesments
+        balance['capital_investments'] = company_state_previous.factory.capital_investments
+        balance['assets_summary'] = company_state_previous.cash + company_state_previous.inventory * company_state_previous.production.man_cost + company_state_previous.factory.capital_investments
 
         #pasiva
         balance['loans'] = company_state_previous.loans
         balance['ret_earnings'] = company_state_previous.ret_earnings
         balance['base_capital'] = company.game.parameters.base_capital
+        balance['liabilities_summary'] = company_state_previous.loans + company_state_previous.ret_earnings + company.game.parameters.base_capital
 
         cash_flow = dict()
-        cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(number=last_turn.number-2), company=company).cash #???
+        cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1), company=company).cash #???
         cash_flow['sales'] =  company_state_previous.sales #plus
-        cash_flow['sold_man_cost'] = company_state_previous.sold_man_cost #minus
+        cash_flow['manufactured_man_cost'] = company_state_previous.manufactured_man_cost #minus
         # vydavky na rozhodnutia - zratane vydavky na marketing r_d a capital s minusovou hodnotou
-        cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.capital
+        cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.factory.capital
         cash_flow['interest'] = company_state_previous.interest # minus
         cash_flow['tax'] = company_state_previous.tax # minus
         # teraz bude stav cash flow aby vedeli či potrebuju pozicku
@@ -131,7 +231,7 @@ class CompanyReport(APIView):
 
         income_statement = dict()
         income_statement['sales'] = company_state_previous.sales
-        income_statement['sold_man_cost'] = company_state_previous.sold_man_cost
+        income_statement['manufactured_man_cost'] = company_state_previous.manufactured_man_cost
         income_statement['marketing'] = marketing
         income_statement['r_d'] = company_state_previous.r_d
         income_statement['depreciation'] = company_state_previous.depreciation
@@ -168,12 +268,13 @@ class CreateCompanyView(APIView):
 
 def checkCommitted(turn: Turn, end: bool = True) -> bool:
     states = CompaniesState.objects.filter(turn=turn)
+    auto_end = turn.game.parameters.end_turn_on_committed
 
     for company in states:
-        if not company.commited:
+        if not company.committed:
             return False
 
-    if end:
+    if end and auto_end:
         end_turn(turn)
     
     return True
