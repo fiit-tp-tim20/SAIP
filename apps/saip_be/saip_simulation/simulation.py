@@ -160,16 +160,11 @@ class Simulation:
 
         # all attributes are positive integer (from model)
         # TODO: types are not consistent: model <-> our class
-        #prod_emp = factory_model.prod_emp
-        #cont_emp = factory_model.cont_emp
-        #aux_emp = factory_model.aux_emp
-
         new_factory.capacity = factory_model.capacity if factory_model.capacity is not None else FactoryPreset.STARTING_CAPACITY
         new_factory.base_energy_cost = factory_model.base_cost if factory_model.base_cost is not None else FactoryPreset.BASE_ENERGY_COST
         new_factory.capital_investment = factory_model.capital_investments if factory_model.capital_investments is not None else FactoryPreset.STARTING_INVESTMENT
         new_factory.capital_investment_this_turn = factory_model.capital if factory_model.capital is not None else 0.0
-        # TODO: solve difference between capital and capital_investments 
-
+    
         return new_factory
 
     def create_product(
@@ -189,7 +184,7 @@ class Simulation:
                 production_model.volume if production_model.volume is not None else 0
             )
         else:
-            company.production_volume = 0  # TODO: remove this - temp fix
+            company.production_volume = 0 # TODO: remove this - temp fix
             print(f"PRODUCTION MODEL WAS NONE FOR COMPANNY {company.brand}")
 
         new_product.upgrades = (
@@ -204,7 +199,6 @@ class Simulation:
                 total_cost=upgrade_model.cost,  # pos integer
                 sales_effect=upgrade_model.sales_effect,  # float
                 man_cost_effect=upgrade_model.man_cost_effect,  # float
-                # TODO: add active-since-turn-X attribute from model and implement functionality
             )
             pass
         new_product.setup_product()
@@ -263,78 +257,45 @@ class Simulation:
         ct_total_capacity = 0
         for company_model in ct_companies_states.keys():
             company_class_object = self.companies[company_model.name]
-
             # add units produced to overall sum of all units produced
             ct_total_units_manufactured += company_class_object.production_volume   #TODO: maybe this attribute will change later
-
             ct_companies_states[company_model].balance = company_class_object.remaining_budget
-
             ct_companies_states[company_model].stock_price = company_class_object.stock_price
-
             ct_companies_states[company_model].inventory = company_class_object.inventory
             # add inventory to overall sum of all inventories
             ct_total_inventory += company_class_object.inventory
-
             ct_companies_states[company_model].orders_received = self.market.customer_distribution[company_class_object.brand]["demand"]
             # add units demanded to overall sum of all units demanded
             ct_total_units_demanded += self.market.customer_distribution[company_class_object.brand]["demand"]
-
             ct_companies_states[company_model].orders_fulfilled = company_class_object.units_sold
             # add units sold to overall sum of all units sold
             ct_total_units_sold += company_class_object.units_sold
-
             ct_companies_states[company_model].cash = company_class_object.remaining_budget # TODO: add correct value (same as budget - one of them probably should be a different value)
-
-            ct_companies_states[company_model].ret_earnings = 0  # TODO: add correct value
-
+            ct_companies_states[company_model].ret_earnings = 0  # TODO: add correct value  #doteraz sales scitane dokopy (? mozno)
             ct_companies_states[company_model].net_profit = company_class_object.profit # TODO: check if correct (income per turn - costs per turn)
-
             ct_companies_states[company_model].depreciation = (
                 company_class_object.factory.upkeep["writeoff"]
                 if company_class_object.factory.upkeep["writeoff"]
                 else 0
-            )  # TODO: check if correct
-
-            ct_companies_states[company_model].new_loans = 0  # TODO: add correct value
-
-            ct_companies_states[company_model].inventory_charge = 0  # TODO: add correct value
-
-            ct_companies_states[company_model].sales =  company_class_object.income_per_turn #TODO: check if correct
-
-            ct_companies_states[company_model].sold_man_cost = (
-                company_class_object.product.get_man_cost()
-                * company_class_object.units_sold
             )
+            ct_companies_states[company_model].new_loans = 0  # TODO: add correct value
+            ct_companies_states[company_model].inventory_charge = company_class_object.inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT
+            ct_companies_states[company_model].sales =  company_class_object.income_per_turn #TODO: check if correct
+            ct_companies_states[company_model].manufactured_man_cost = company_class_object.production_volume * company_class_object.product.get_man_cost() # TODO: add units manufactured attrubute  
+                #TODO possibly add other upkeep costs to the overall manufacturing cost
+                # change to price per one unit and add ((the other costs + man cost) / units produced ) 
+                # change this to produced units instead of sold units
+                # MAN_COST_ALL - cena za jeden kus ale so vsetkymi nakladmi
+                # TODO: Actually... we should have both sold man cost and prod man cost.
 
-            ct_companies_states[company_model].tax = 0  # TODO: add correct value   #TODO: add taxation
-
+                # TODO: add inflation - it should only affect the man cost 
+            ct_companies_states[company_model].tax = 0  # TODO: add correct value   #TODO: add taxation #TODO: value in cash
             ct_companies_states[company_model].profit_before_tax = 0  # TODO: add correct value #TODO: taxation
-
-            ct_companies_states[company_model].interest = company_class_object.interest_rate
-
-            ct_companies_states[company_model].cash_flow_res = 0  # TODO: add correct value  #TODO: taxation
-
+            ct_companies_states[company_model].interest = company_class_object.interest_rate #TODO: change to the value in cash that is deducted after interest
+            ct_companies_states[company_model].cash_flow_res = 0  # TODO: add correct value  #TODO: taxation    #cash z minuleho kola plus trzby, odratava sa kolko minuli na vyrobu produktov celkovo, odrata sa expenses (investicie do marketingu a rnd, capital), odrata sa interest (iba urok), odrata sa dan (asi z predaja)
+            # z cashflow res mame urcovat ci berieme novu pozicku a kolko cashu mame
             ct_companies_states[company_model].loan_repayment = 0  # TODO: add correct value
-
             ct_companies_states[company_model].loans = company_class_object.loans
-
-            # orders_received = models.PositiveIntegerField(null=True, default=0)
-            # orders_fulfilled = models.PositiveIntegerField(null=True, default=0)
-            # cash = models.FloatField(null=True, blank=True) #celkovo dostupných prostriedkov
-            # capital = models.FloatField(null=True, default=0)
-            # ret_earnings = models.FloatField(null=True, blank=True)
-            # net_profit = models.FloatField(null=True, blank=True) #za kolo
-            # depreciation = models.FloatField(null=True, blank=True)
-            # new_loans = models.FloatField(null=True, blank=True)
-            # inventory_charge = models.FloatField(null=True, blank=True)
-            # sales = models.FloatField(null=True, blank=True)
-            # sold_man_cost = models.FloatField(null=True, blank=True)
-            # tax = models.FloatField(null=True, blank=True)
-            # profit_before_tax = models.FloatField(null=True, blank=True)
-            # interest = models.FloatField(null=True, blank=True)
-            # cash_flow_res = models.FloatField(null=True, blank=True)
-            # loan_repayment = models.FloatField(null=True, blank=True)
-            # loans = models.FloatField(null=True, blank=True)
 
             if ct_companies_states[company_model].production is not None:
 

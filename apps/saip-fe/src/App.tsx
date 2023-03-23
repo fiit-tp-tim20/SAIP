@@ -17,20 +17,23 @@ import useCompanyStore from "./store/Company";
 import useUpgradesStore from "./store/Upgrades";
 import useMarketingStore from "./store/Marketing";
 import logout from "./api/logout";
+import GameSelect from "./screens/GameSelect";
+import Register from "./screens/Register";
 
 function App() {
+	const token = localStorage.getItem("token");
 	const { data } = useQuery({
 		queryKey: ["currentTurn"],
-		queryFn: () => getTurn(),
+		queryFn: () => token && getTurn(),
 		refetchInterval: 1000,
 	});
-	const token = localStorage.getItem("token");
 
 	const { reset: resetCompanyState } = useCompanyStore();
 	const { reset: resetUpgradeState } = useUpgradesStore();
 	const { reset: resetMarketingState } = useMarketingStore();
 
 	useEffect(() => {
+		console.warn(data);
 		const savedTurn = localStorage.getItem("turn");
 		if (!savedTurn && !data) {
 			localStorage.setItem("turn", "0");
@@ -45,6 +48,11 @@ function App() {
 			resetMarketingState();
 		}
 	}, [data && data.Number]);
+
+	// kompletne dum-dum riešenie PREROBIŤ. Aj tu aj getTurn() !!!!!!!!!!!!!
+	if (token && !data) {
+		return <GameSelect />;
+	}
 
 	if (data && data.Number === 0) {
 		return (
@@ -69,12 +77,13 @@ function App() {
 						<Navbar />
 						<div className="my-16">
 							<Routes>
-								<Route path="/dashboard" element={<Dashboard />} />
 								<Route path="/product" element={<Product />} />
 								<Route path="/company" element={<Company />} />
 								<Route path="/marketing" element={<Marketing />} />
+								<Route path="/game" element={<GameSelect />} />
 								{/* <Route path="/news" element={<News />} /> */}
-								<Route path="/" element={<Navigate to="/dashboard" replace />} />
+								{/* <Route path="/" element={<Navigate to="/dashboard" replace />} /> */}
+								<Route path="/" element={<Dashboard />} />
 								<Route path="*" element={<NotFound />} />
 							</Routes>
 						</div>
@@ -82,7 +91,13 @@ function App() {
 					</BrowserRouter>
 				</Suspense>
 			) : (
-				<Login />
+				<BrowserRouter>
+					<Routes>
+						<Route path="/register" element={<Register />} />
+						<Route path="/" element={<Login />} />
+						<Route path="*" element={<Navigate to="/" replace />} />
+					</Routes>
+				</BrowserRouter>
 			)}
 			{/* <Devtools /> */}
 			<ReactQueryDevtools initialIsOpen={false} />

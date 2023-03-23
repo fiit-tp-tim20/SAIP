@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import { useQuery } from "react-query";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 import useCompanyStore from "../store/Company";
 import useMarketingStore from "../store/Marketing";
 
@@ -48,6 +52,10 @@ export default function Login() {
 		// navigate("/dashboard");
 	};
 
+	const handleRegister = (e) => {
+		e.preventDefault();
+	};
+
 	return (
 		<div className="w-full  max-w-xs">
 			<form className="bg-white shadow-md rounded px-6 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
@@ -80,12 +88,18 @@ export default function Login() {
 					/>
 					{isInvalid ? <p className="text-red-500 text-xs italic">Nesprávne meno alebo heslo.</p> : null}
 				</div>
-				<div className="flex items-center justify-between">
+				<div className="flex items-center justify-between gap-2">
 					<button
 						className="w-full bg-accent-700 hover:bg-accent-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
 						type="submit"
 					>
 						Prihlásiť sa
+					</button>
+					<button
+						className="w-full bg-accent-700 hover:bg-accent-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+						type="button"
+					>
+						<Link to="/register">Registrácia</Link>
 					</button>
 				</div>
 			</form>
