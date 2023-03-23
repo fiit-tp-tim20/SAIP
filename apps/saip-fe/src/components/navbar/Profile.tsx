@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { getGeneralInfo } from "../../api/CompanyInfo";
+import logout from "../../api/logout";
 import useCompanyStore from "../../store/Company";
 import useMarketingStore from "../../store/Marketing";
 import useUpgradesStore from "../../store/Upgrades";
@@ -13,25 +14,6 @@ function Profile() {
 	const { reset: marketingReset } = useMarketingStore();
 	const { reset: companyReset } = useCompanyStore();
 	const { reset: upgradesReset } = useUpgradesStore();
-
-	//! just for testing, find a better place to do this
-	const logout = async () => {
-		console.log(`${import.meta.env.VITE_BACKEND_URL}/logout/`);
-		await fetch(`${import.meta.env.VITE_BACKEND_URL}/logout/`, {
-			method: "POST",
-			headers: {
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
-				"Content-Type": "application/json",
-			},
-		});
-
-		localStorage.removeItem("token");
-		localStorage.removeItem("expiryDate");
-		marketingReset();
-		companyReset();
-		upgradesReset();
-		window.location.reload();
-	};
 
 	return !isLoading ? (
 		<>
@@ -56,7 +38,7 @@ function Profile() {
 							<button
 								type="button"
 								className="bg-accent-50 transition-all ease-in-out duration-300 rounded-lg min-w-[128px] flex justify-center align-middle bg-transparent py-2 px-3 hover:text-accent-700 hover:bg-accent-300"
-								onClick={logout}
+								onClick={() => logout(marketingReset, companyReset, upgradesReset)}
 							>
 								Logout
 							</button>
