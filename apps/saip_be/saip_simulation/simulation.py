@@ -281,7 +281,7 @@ class Simulation:
                     company_class_object.product.get_man_cost()
                 )
                 ct_companies_states[company_model].production.man_cost = (
-                    company_class_object.total_ppu
+                    company_class_object.prod_ppu
                 )
                 ct_companies_states[company_model].production.volume = company_class_object.production_volume
                 # this is done because the volume of actual products produced could have differed from the one submitted by the company (for instance, because of a lack of funds)
