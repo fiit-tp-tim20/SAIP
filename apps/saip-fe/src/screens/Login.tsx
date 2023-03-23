@@ -1,8 +1,8 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+
 import useCompanyStore from "../store/Company";
 import useMarketingStore from "../store/Marketing";
 
@@ -11,7 +11,6 @@ export default function Login() {
 	const [password, setPassword] = useState(0);
 
 	const [isInvalid, setIsInvalid] = useState(false);
-	const [isValidCredential, setIsValidCredential] = useState();
 
 	const { reset: marketingReset } = useMarketingStore();
 	const { reset: companyReset } = useCompanyStore();
@@ -21,7 +20,7 @@ export default function Login() {
 			method: "POST",
 			body: JSON.stringify({
 				username: email,
-				password: password,
+				password,
 			}),
 			headers: {
 				"Content-type": "application/json",
@@ -43,17 +42,14 @@ export default function Login() {
 
 		//! temporary, find a better way to do this
 		window.location.reload();
+		return response;
 	};
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		// const {data, status} = useQuery('login', login)
 		login();
-		//navigate("/dashboard");
-	};
-
-	const handleRegister = (e) => {
-		e.preventDefault();
+		// navigate("/dashboard");
 	};
 
 	return (

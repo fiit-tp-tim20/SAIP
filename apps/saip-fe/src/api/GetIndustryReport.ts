@@ -19,7 +19,7 @@ type IndustryReportData = {
 		sold_products: number | null;
 		sold_products_difference: number | null;
 	};
-	exonomic_parameters: {
+	economic_parameters: {
 		inflation: number | null;
 		inflation_difference: number | null;
 		interest_rate: number | null;

@@ -32,9 +32,9 @@ function IndustryReport() {
 								</tr>
 							</thead>
 							<tbody>
-								{Object.entries(data?.industry)
-									.sort((a, b) => a[1].stock_price | (0 > b[1].stock_price) | 0)
-									.map((industry, index) => (
+								{/* TODO add sort */}
+								{data &&
+									Object.entries(data?.industry).map((industry, index) => (
 										<tr key={industry[0]} className="hover:bg-stone-100">
 											<td className="border px-4 py-2 text-center">{index + 1}</td>
 											<td className="border px-4 py-2 text-center">{industry[0]}</td>

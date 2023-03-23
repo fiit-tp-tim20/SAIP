@@ -17,7 +17,7 @@ function Slider(props: SliderProps) {
 	const [localValue, setLocalValue] = useState(value);
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setLocalValue(parseInt(event.target.value));
+		setLocalValue(parseInt(event.target.value, 10));
 	};
 
 	const toggleState = () => {
@@ -63,7 +63,7 @@ function Slider(props: SliderProps) {
 						type="button"
 						className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 m-0 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
 						onClick={toggleState}
-						disabled={requiredMin && localValue < requiredMin && localValue !== 0}
+						disabled={!!requiredMin && localValue < requiredMin && localValue !== 0}
 					>
 						{!checked ? "Potvrdiť" : "Zmeniť"}
 					</button>
