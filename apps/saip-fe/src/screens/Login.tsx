@@ -47,7 +47,7 @@ export default function Login() {
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		//const {data, status} = useQuery('login', login)
+		// const {data, status} = useQuery('login', login)
 		login();
 		//navigate("/dashboard");
 	};
