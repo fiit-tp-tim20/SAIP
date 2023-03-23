@@ -20,14 +20,15 @@ import useUpgradesStore from "./store/Upgrades";
 import useMarketingStore from "./store/Marketing";
 import logout from "./api/logout";
 import GameSelect from "./screens/GameSelect";
+import Register from "./screens/Register";
 
 function App() {
-	const { data, isLoading, refetch, error } = useQuery({
+	const token = localStorage.getItem("token");
+	const { data, isLoading, refetch } = useQuery({
 		queryKey: ["currentTurn"],
-		queryFn: () => getTurn(),
+		queryFn: () => token && getTurn(),
 		refetchInterval: 1000,
 	});
-	const token = localStorage.getItem("token");
 
 	const { reset: resetCompanyState } = useCompanyStore();
 	const { reset: resetUpgradeState } = useUpgradesStore();
@@ -78,13 +79,13 @@ function App() {
 						<Navbar />
 						<div className="my-16">
 							<Routes>
-								<Route path="/dashboard" element={<Dashboard />} />
 								<Route path="/product" element={<Product />} />
 								<Route path="/company" element={<Company />} />
 								<Route path="/marketing" element={<Marketing />} />
 								<Route path="/game" element={<GameSelect />} />
 								{/* <Route path="/news" element={<News />} /> */}
-								<Route path="/" element={<Navigate to="/dashboard" replace />} />
+								{/* <Route path="/" element={<Navigate to="/dashboard" replace />} /> */}
+								<Route path="/" element={<Dashboard />} />
 								<Route path="*" element={<NotFound />} />
 							</Routes>
 						</div>
@@ -92,7 +93,13 @@ function App() {
 					</BrowserRouter>
 				</Suspense>
 			) : (
-				<Login />
+				<BrowserRouter>
+					<Routes>
+						<Route path="/register" element={<Register />} />
+						<Route path="/" element={<Login />} />
+						<Route path="*" element={<Navigate to="/" replace />} />
+					</Routes>
+				</BrowserRouter>
 			)}
 			{/* <Devtools /> */}
 			<ReactQueryDevtools initialIsOpen={false} />

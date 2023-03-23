@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Turn, Company, Production, Marketing, Factory, CompaniesState, Game, GameParameters, MarketState,\
-    EmailGroup, Upgrade, CompaniesUpgrades, TeacherDecisions
+    Upgrade, CompaniesUpgrades, TeacherDecisions
 
 from django_object_actions import DjangoObjectActions, action
 
@@ -52,9 +52,9 @@ class TeacherDecisions(admin.ModelAdmin):
     list_display = ('interest_rate', 'tax_rate', 'inflation', 'loan_limit')
 
 
-@admin.register(EmailGroup)
-class EmailGroupAdmin(admin.ModelAdmin):
-    list_display = ('user', 'email')
+# @admin.register(EmailGroup)
+# class EmailGroupAdmin(admin.ModelAdmin):
+#     list_display = ('user', 'email')
 
 
 @admin.register(Game)
