@@ -177,21 +177,24 @@ if __name__ == "__main__":
     print(
         f"\nTOTAL DEMAND: {sum([item.get('demand') for item in mar.customer_distribution.values()])}"
     )
+    total_unmet_demand = sum([item.get('demand_not_met', 0) for item in mar.customer_distribution.values()])
     print(
-        f"REMAINING CUSTOMERS: {sum([item.get('demand_not_met', 0) for item in mar.customer_distribution.values()]) + mar.customer_distribution.get('no_purchase', {}).get('demand', 0)}\n"
+        f"REMAINING CUSTOMERS: {total_unmet_demand + mar.customer_distribution.get('no_purchase', {}).get('demand', 0)}\n"
     )
 
     for company in companies:
         print(
             f"COMPANY {company.brand} \nNet Worth: {company.factory.capital_investment} | Units Sold: {company.units_sold}"
         )
+        ppu = company.factory.calculate_price_per_unit(company.production_volume)
+        ipu = company.product.get_price() - company.factory.calculate_price_per_unit(company.production_volume)
         print(
-            f"Selling Price: {company.product.get_price()} | Costs Per Unit: {company.factory.calculate_price_per_unit(company.production_volume):.2f} | Income Per Unit: {company.product.get_price() - company.factory.calculate_price_per_unit(company.production_volume):.2f}"
+            f"Selling Price: {company.product.get_price()} | Costs Per Unit: {ppu:.2f} | Income Per Unit: {ipu:.2f}"
         )
         print(
-            f"Total Income: {company.income_per_turn:.2f} | Total Costs: {company.costs_per_turn:.2f} | Profit: {company.profit:.2f}"
+            f"Total Income: {company.income_per_turn:.2f} | Total Costs: {company.total_costs_per_turn:.2f} | Profit: {company.profit:.2f}"
         )
         print(f"Balance: {company.balance:.2f} | Loans: {company.loans:.2f}")
         print(
-            f"Marketing: {company.yield_agg_marketing_value():.2f} | Stock price: {company.stock_price:.2f}\n"
+            f"Marketing value: {company.yield_agg_marketing_value():.2f} | Stock price: {company.stock_price:.2f}\n"
         )
