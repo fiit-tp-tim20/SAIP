@@ -98,6 +98,19 @@ class GetRunningGamesView(APIView):
                               for game in games]}
 
         return Response(response)
+    
+class GetNotStartedGamesView(APIView):
+
+    def get(self, request) -> Response:
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        turns = Turn.objects.filter(end__isnull=True, number=0)
+        response = {"games": [{"id": turn.game.id,
+                               "name": turn.game.name}
+                              for turn in turns]}
+
+        return Response(response)
 
 
 def calculate_man_cost(game: Game, turn: Turn) -> None:
