@@ -33,6 +33,9 @@ function GameSelect() {
 	const [users, setUsers] = useState<User[]>([]);
 	const [inputNumbersOfUsers, setInputNumbersOfUsers] = useState(0);
 	const [selectedGame, setSelectedGame] = useState();
+	const [isInvalidName, setIsInvalidName] = useState(false);
+	// TODO research other ways to do this validation
+	const [isNameEmpty, setIsNameEmpty] = useState(false);
 
 	const teamnameInput = useRef<HTMLInputElement>(null);
 
@@ -54,6 +57,14 @@ function GameSelect() {
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+
+		setIsInvalidName(false);
+		setIsNameEmpty(false);
+
+		if (teamnameInput.current?.value === "") {
+			setIsNameEmpty(true);
+			return;
+		}
 		//const {data, status} = useQuery('login', login)
 		// confirm();
 		const arrayOfNames = users.map((user) => user.value);
@@ -79,7 +90,7 @@ function GameSelect() {
 		if (response.status === 201) {
 			console.log("OK");
 		} else {
-			console.log("NOK");
+			setIsInvalidName(true);
 		}
 		//setPlayers();
 		//navigate("/dashboard");
@@ -104,12 +115,16 @@ function GameSelect() {
 						Názov tímu
 					</label>
 					<input
-						className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+						className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+							isInvalidName || isNameEmpty ? "border-red-500" : ""
+						}`}
 						id="username"
 						type="text"
 						placeholder="Názov vašej spoločnosti"
 						ref={teamnameInput}
 					/>
+					{isInvalidName && <p className="text-red-500 text-xs italic">Názov tímu je už obsadený</p>}
+					{isNameEmpty && <p className="text-red-500 text-xs italic">Názov tímu nesmie byť prázdny</p>}
 					<label className="block text-gray-700 text-sm font-bold mb-2">Zvoľte vaše cvičenie</label>
 					<select
 						className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent-500 focus:border-accent-500 block w-full p-2.5"
