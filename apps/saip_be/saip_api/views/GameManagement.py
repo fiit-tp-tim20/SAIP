@@ -3,7 +3,7 @@ from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from saip_api.models import Game, GameParameters, Upgrade, Turn, Company, CompaniesState, Production, Marketing, Factory, CompaniesUpgrades
+from saip_api.models import Game, GameParameters, Upgrade, Turn, Company, CompaniesState, Production, Marketing, Factory, CompaniesUpgrades, MarketState, TeacherDecisions
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
@@ -32,27 +32,34 @@ def create_default_upgrades(game: Game) -> None:
                                    camera_rot=upgrade["camera_rot"]).save()
 
 
+def create_company_state(company: Company, turn: Turn) -> CompaniesState:
+    cs = CompaniesState.objects.create(turn=turn, company=company)
+    production = Production.objects.create()
+    cs.production = production
+    marketing = Marketing.objects.create()
+    cs.marketing = marketing
+    factory = Factory.objects.create()
+    cs.factory = factory
+
+    cs.save()
+
+    return cs
+
 def create_turn(number: int, game: Game) -> Turn:
     turn = Turn.objects.create(number=number, game=game)
+    MarketState.objects.create(turn=turn).save()
+    TeacherDecisions.objects.create(turn=turn).save()
+    
     companies = Company.objects.filter(game=game)
     
     for company in companies:
-        cs = CompaniesState.objects.create(turn=turn, company=company)
-        production = Production.objects.create()
-        cs.production = production
-        marketing = Marketing.objects.create()
-        cs.marketing = marketing
-        factory = Factory.objects.create()
-        cs.factory = factory
-
-        cs.save()
-
+        create_company_state(company, turn)
 
     return turn
 
 
 def get_last_turn(game: Game) -> Turn:
-    return Turn.objects.get(game=game, end__isnull=True)
+    return Turn.objects.filter(game=game, end__isnull=True).order_by('-number').first()
 
 
 class CreateGameView(PermissionRequiredMixin, APIView):
@@ -150,17 +157,41 @@ class EndTurnView(PermissionRequiredMixin, APIView):
 
         if game.admin != request.user:
             return Response({"detail": "User is not admin"}, status=403)
-
-        turn = get_last_turn(game)
-        turn.end = timezone.now()
         
-        turn.save()
+        turn = get_last_turn(game)
+        if turn.number != 0:
+            companies = Company.objects.filter(game=game)
+            for company in companies:
+                state = CompaniesState.objects.get(company=company, turn=turn)
+                if state.committed == False and state.cash >= 10000:
+                    state_prev = CompaniesState.objects.get(company=company, turn=Turn.objects.get(game=company.game, number=turn.number-1))
+                    state.production.volume = state_prev.production.volume
+                    state.production.sell_price = state_prev.production.sell_price
 
-        new_turn = create_turn(turn.number + 1, game)
-        calculate_man_cost(game, new_turn)
+                    state.factory.capital = state_prev.factory.capital
 
-        # start simulation here
-        sim = Simulation(game_model=game, turn_model=turn)
-        sim.write_simulation_results()
+                    state.marketing.viral = state_prev.marketing.viral
+                    state.marketing.podcast = state_prev.marketing.podcast
+                    state.marketing.tv = state_prev.marketing.tv
+                    state.marketing.billboard = state_prev.marketing.billboard
+                    state.marketing.ooh = state_prev.marketing.ooh
+
+        end_turn(turn)
         
         return Response({"detail": "Turn ended, simulation started"}, status=200)
+
+def end_turn(turn: Turn) -> Turn:
+    game = turn.game
+
+    new_turn = create_turn(turn.number + 1, game)
+    calculate_man_cost(game, new_turn)
+
+    # if turn.number != 0:
+        # sim = Simulation(game_model=game, turn_model=turn, new_turn_model=new_turn)
+        # sim.run_simulation()
+        # sim.write_simulation_results()
+
+    turn.end = timezone.now()
+    turn.save()
+
+    return new_turn

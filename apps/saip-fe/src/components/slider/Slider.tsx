@@ -8,15 +8,16 @@ interface SliderProps {
 	checked?: boolean;
 	setChecked?: (value: boolean) => void;
 	step?: number;
+	requiredMin?: number;
 }
 
 function Slider(props: SliderProps) {
-	const { min, max, value, setValue, checked, setChecked, step = 1 } = props;
+	const { min, max, value, setValue, checked, setChecked, step = 1, requiredMin } = props;
 
 	const [localValue, setLocalValue] = useState(value);
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setLocalValue(parseInt(event.target.value));
+		setLocalValue(parseInt(event.target.value, 10));
 	};
 
 	const toggleState = () => {
@@ -60,8 +61,9 @@ function Slider(props: SliderProps) {
 				{checked !== undefined && (
 					<button
 						type="button"
-						className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 m-0 rounded-lg"
+						className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 m-0 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
 						onClick={toggleState}
+						disabled={!!requiredMin && localValue < requiredMin && localValue !== 0}
 					>
 						{!checked ? "Potvrdiť" : "Zmeniť"}
 					</button>

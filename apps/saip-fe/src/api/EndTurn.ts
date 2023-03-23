@@ -1,6 +1,6 @@
 import { GameState } from "../types/gameState";
 
-export const endTurn = async (state: GameState) => {
+const endTurn = async (state: GameState) => {
 	const token = localStorage.getItem("token");
 
 	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/spendings/`, {
@@ -16,15 +16,17 @@ export const endTurn = async (state: GameState) => {
 				volume: state.company.productCount,
 			},
 			factory: {
-				prod_emp: 0,
-				cont_emp: 0,
-				aux_emp: 0,
 				capital: state.company.capitalInvestments,
 			},
-			brakes: state.upgrades.brakes,
-			frame: state.upgrades.frame,
-			battery: state.upgrades.battery,
-			display: state.upgrades.display,
+			brakes: state.upgrades.Brakes,
+			frame: state.upgrades.Frame,
+			battery: state.upgrades.Battery,
+			display: state.upgrades.Display,
 		}),
 	});
+
+	const data = await response.json();
+	return data;
 };
+
+export default endTurn;

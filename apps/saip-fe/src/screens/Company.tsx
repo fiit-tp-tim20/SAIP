@@ -1,7 +1,5 @@
-import { useAtom } from "jotai";
-import React, { useEffect } from "react";
+import React from "react";
 import Slider from "../components/slider/Slider";
-import { totalSpentPersist } from "../store/Atoms";
 import useCompanyStore from "../store/Company";
 
 function Company() {
@@ -55,8 +53,8 @@ function Company() {
 						<h3>Počet kusov</h3>
 						<div>
 							<Slider
-								min={0}
-								max={1000}
+								min={1}
+								max={2000}
 								value={productCount}
 								setValue={setProductCount}
 								checked={productCountChecked}

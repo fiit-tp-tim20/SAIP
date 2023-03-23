@@ -4,7 +4,9 @@ from rest_framework import serializers, validators
 
 from datetime import datetime, timezone
 
-from .models import Game, Company, Production, Marketing, Factory, CompaniesState
+from .models import Game, Company, Production, Marketing, Factory, CompaniesState, Turn
+
+from rest_framework import status
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -68,18 +70,30 @@ class CompanySerializer(serializers.ModelSerializer):
 
     name = serializers.CharField(required=True, allow_blank=False)
     game = serializers.PrimaryKeyRelatedField(queryset=Game.objects.filter(end__isnull=True))
-
+    participants = serializers.CharField(required=True, allow_blank=False)
     class Meta:
         model = Company
-        fields = ('game', 'name')
+        fields = ('game', 'name', 'participants')
 
     def create(self, validated_data) -> Company:
         name = validated_data.get('name')
         game = validated_data.get('game')
+        participants = validated_data.get('participants')
+
+        game_turn = Turn.objects.filter(game=game, end__isnull=True).order_by('-number').first().number
+
+        if game_turn != 0:
+            raise serializers.ValidationError({"detail": "Game has already started"})
+
+        if name in [c.name for c in Company.objects.filter(game=game)]:
+            err = serializers.ValidationError({"detail": "Company with this name already exists in specified game"})
+            err.status_code = status.HTTP_409_CONFLICT
+            raise err
 
         company = Company.objects.create(
             name=name,
-            game=game
+            game=game,
+            participants=participants
         )
         company.save()
 
@@ -143,24 +157,25 @@ class MaketingSerializer(serializers.ModelSerializer):
 
 class FactorySerializer(serializers.ModelSerializer):
 
-    prod_emp = serializers.IntegerField(required=True, min_value=0)
-    cont_emp = serializers.IntegerField(required=True, min_value=0)
-    aux_emp = serializers.IntegerField(required=True, min_value=0)
+    # prod_emp = serializers.IntegerField(required=True, min_value=0)
+    # cont_emp = serializers.IntegerField(required=True, min_value=0)
+    # aux_emp = serializers.IntegerField(required=True, min_value=0)
     capital = serializers.IntegerField(required=True, min_value=0)
     class Meta:
         model = Factory
-        fields = ('prod_emp', 'cont_emp', 'aux_emp', 'capital')
+        # fields = ('prod_emp', 'cont_emp', 'aux_emp', 'capital')
+        fields = ('capital', )
 
     def update(self, instance, validated_data) -> Factory:
-        prod_emp = validated_data.get('prod_emp')
-        cont_emp = validated_data.get('cont_emp')
-        aux_emp = validated_data.get('aux_emp')
+        # prod_emp = validated_data.get('prod_emp')
+        # cont_emp = validated_data.get('cont_emp')
+        # aux_emp = validated_data.get('aux_emp')
         capital = validated_data.get('capital')
 
         
-        instance.prod_emp = prod_emp
-        instance.cont_emp = cont_emp
-        instance.aux_emp = aux_emp
+        # instance.prod_emp = prod_emp
+        # instance.cont_emp = cont_emp
+        # instance.aux_emp = aux_emp
         instance.capital = capital
 
         return instance
