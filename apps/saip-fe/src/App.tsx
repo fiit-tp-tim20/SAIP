@@ -69,8 +69,6 @@ function App() {
 		);
 	}
 
-	console.warn("App.tsx aa aaaa");
-
 	return (
 		<>
 			{token ? (
