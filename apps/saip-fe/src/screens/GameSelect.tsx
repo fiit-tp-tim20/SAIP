@@ -14,7 +14,7 @@ const test_games = [
 ];
 
 type User = {
-	name: string;
+	value: string;
 	id: number;
 };
 
@@ -39,7 +39,7 @@ const listGames = async () => {
 function GameSelect() {
 	const [users, setUsers] = useState<User[]>([]);
 	const [inputNumbersOfUsers, setInputNumbersOfUsers] = useState(0);
-	const [selectedGame, setSelectedGame] = useState();
+	const [selectedGame, setSelectedGame] = useState(0);
 	const [isInvalidName, setIsInvalidName] = useState(false);
 	// TODO research other ways to do this validation
 	const [isNameEmpty, setIsNameEmpty] = useState(false);
@@ -54,7 +54,7 @@ function GameSelect() {
 		}
 	}, [gameList]);
 
-	function setNumberOfUsers(numOfPlayers) {
+	function setNumberOfUsers(numOfPlayers: number) {
 		const obj = [...Array(numOfPlayers).keys()].map((number) => {
 			return { value: "", id: number };
 		});
@@ -75,11 +75,6 @@ function GameSelect() {
 		//const {data, status} = useQuery('login', login)
 		// confirm();
 		const arrayOfNames = users.map((user) => user.value);
-		console.warn({
-			game: parseInt(selectedGame, 10),
-			name: teamnameInput.current?.value,
-			players: arrayOfNames,
-		});
 
 		const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/create_company/`, {
 			method: "POST",
@@ -88,7 +83,7 @@ function GameSelect() {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
-				game: parseInt(selectedGame || "0", 10),
+				game: selectedGame,
 				name: teamnameInput.current?.value,
 				participants: JSON.stringify(arrayOfNames),
 			}),
@@ -136,7 +131,7 @@ function GameSelect() {
 					<select
 						className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-accent-500 focus:border-accent-500 block w-full p-2.5"
 						value={selectedGame}
-						onChange={(e) => setSelectedGame(e.target.value)}
+						onChange={(e) => setSelectedGame(parseInt(e.target.value, 10))}
 					>
 						{gameList?.games?.map(({ id, name }) => (
 							<option value={id} key={id}>
