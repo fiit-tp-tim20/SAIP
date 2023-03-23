@@ -18,6 +18,13 @@ type User = {
 	id: number;
 };
 
+// TODO move to own file with listGames
+
+type Game = {
+	id: number;
+	name: string;
+};
+
 const listGames = async () => {
 	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/list_games/`, {
 		headers: {
@@ -25,7 +32,7 @@ const listGames = async () => {
 			"Content-Type": "application/json",
 		},
 	});
-	const data = await response.json();
+	const data = (await response.json()) as { games: Game[] };
 	return data;
 };
 
@@ -83,7 +90,7 @@ function GameSelect() {
 			body: JSON.stringify({
 				game: parseInt(selectedGame || "0", 10),
 				name: teamnameInput.current?.value,
-				players: arrayOfNames,
+				participants: JSON.stringify(arrayOfNames),
 			}),
 		});
 
@@ -132,9 +139,9 @@ function GameSelect() {
 						onChange={(e) => setSelectedGame(e.target.value)}
 					>
 						{gameList?.games?.map(({ id, name }) => (
-							<>
-								<option value={id}>{name}</option>
-							</>
+							<option value={id} key={id}>
+								{name}
+							</option>
 						))}
 					</select>
 					<label className="block text-gray-700 text-sm font-bold mb-2">Počet ľudí v tíme</label>
