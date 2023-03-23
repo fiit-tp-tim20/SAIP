@@ -1,34 +1,29 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
-import { Chart } from "react-charts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 type LineGraphProps = {
-	data: number[];
+  data: number[];
 };
 
-function LineGraph({ data: data }: LineGraphProps) {
-  const chartData = React.useMemo(
-    () => [
-      {
-        label: 'Values',
-        data: data.map((value, index) => [index, value]),
-      },
-    ],
-    [data]
-  );
-
-  const axes = React.useMemo(
-    () => [
-      { primary: true, type: 'linear', position: 'bottom' },
-      { type: 'linear', position: 'left' },
-    ],
-    []
-  );
-
+function LineGraph({ data }: LineGraphProps) {
+  console.log(data);
   return (
-    <div style={{ width: '400px', height: '300px' }}>
-      <Chart data={chartData} axes={axes} />
+    <div style={{ width: '100%', height: '100%' }}>
+      <LineChart
+        width={500}
+        height={300}
+        data={data}
+        margin={{ top: 5, right: 20, left: 10, bottom: 5 }}
+      >
+        <XAxis dataKey="index" />
+        <YAxis />
+        <CartesianGrid stroke="#f5f5f5" />
+        <Tooltip />
+        <Legend />
+        <Line type="monotone" dataKey="value" stroke="#ff7300" yAxisId={0} />
+      </LineChart>
     </div>
   );
 }

@@ -22,7 +22,6 @@
 		"i18next-xhr-backend": "^3.2.2",
 		"jotai": "^2.0.0",
 		"react": "^18.2.0",
-		"react-charts": "^3.0.0-beta.54",
 		"react-dom": "^18.2.0",
 		"react-feather": "^2.0.10",
 		"react-i18next": "^12.0.0",
