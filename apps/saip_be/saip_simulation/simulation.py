@@ -272,7 +272,7 @@ class Simulation:
             ct_companies_states[company_model].tax = company_class_object.value_paid_in_tax
             ct_companies_states[company_model].profit_before_tax = company_class_object.profit_before_tax
             ct_companies_states[company_model].interest = company_class_object.value_paid_in_interest
-            ct_companies_states[company_model].cash_flow_res = 0  # TODO: add correct value  #TODO: taxation    #cash z minuleho kola plus trzby, odratava sa kolko minuli na vyrobu produktov celkovo, odrata sa expenses (investicie do marketingu a rnd, capital), odrata sa interest (iba urok), odrata sa dan (asi z predaja)
+            ct_companies_states[company_model].cash_flow_res = company_class_object.profit - company_class_object.total_costs_per_turn
             ct_companies_states[company_model].loan_repayment = company_class_object.value_paid_in_loan_repayment
             ct_companies_states[company_model].loans = company_class_object.loans
 
