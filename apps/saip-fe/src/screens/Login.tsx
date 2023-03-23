@@ -52,10 +52,6 @@ export default function Login() {
 		// navigate("/dashboard");
 	};
 
-	const handleRegister = (e) => {
-		e.preventDefault();
-	};
-
 	return (
 		<div className="w-full  max-w-xs">
 			<form className="bg-white shadow-md rounded px-6 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
