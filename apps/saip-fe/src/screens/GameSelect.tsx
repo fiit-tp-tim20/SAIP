@@ -49,7 +49,7 @@ function GameSelect() {
 	const { data: gameList } = useQuery("listGames", listGames);
 
 	useEffect(() => {
-		if (gameList?.games) {
+		if (gameList?.games?.length) {
 			setSelectedGame(gameList.games[0].id);
 		}
 	}, [gameList]);
