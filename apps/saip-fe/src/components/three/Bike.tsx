@@ -38,7 +38,8 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 
 	return (
 		<group {...props} dispose={null}>
-			<a.group name="Wheel_Front" ref={group} position={[0, 0.87, 1.44]} {...spring}>
+			{/* <a.group name="Wheel_Front" ref={group} position={[0, 0.87, 1.44]} {...spring}> */}
+			<a.group name="Wheel_Front" ref={group} position={[0, 0.87, 1.44]}>
 				<mesh
 					name="Hub_front"
 					geometry={(nodes.Hub_front as THREE.Mesh).geometry}
@@ -62,7 +63,8 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 					rotation={[0, 0, -Math.PI / 2]}
 				/>
 			</a.group>
-			<a.group name="Wheel_Back" ref={group} position={[0, 0.87, -1.48]} {...spring}>
+			{/* <a.group name="Wheel_Back" ref={group} position={[0, 0.87, -1.48]} {...spring}> */}
+			<a.group name="Wheel_Back" ref={group} position={[0, 0.87, -1.48]}>
 				<mesh
 					name="Hub_back"
 					geometry={(nodes.Hub_back as THREE.Mesh).geometry}
@@ -86,7 +88,8 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 					rotation={[0, 0, -Math.PI / 2]}
 				/>
 			</a.group>
-			<a.group name="Paddles" position={[0, 0.77, -0.31]} {...spring}>
+			{/* <a.group name="Paddles" position={[0, 0.77, -0.31]} {...spring}> */}
+			<a.group name="Paddles" position={[0, 0.77, -0.31]}>
 				<mesh
 					name="Crank_arm_2"
 					geometry={(nodes.Crank_arm_2 as THREE.Mesh).geometry}
