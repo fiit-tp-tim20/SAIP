@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import React, { useEffect, useRef } from "react";
 import { useGLTF } from "@react-three/drei";
-import { useSpring, a } from "@react-spring/three";
+import { a } from "@react-spring/three";
 import { useThree } from "@react-three/fiber";
 
 type Props = {
@@ -13,18 +13,20 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 	const { nodes, materials } = useGLTF("/bike_v8_test.glb");
 	const group = useRef<THREE.Group>(null!);
 
-	const [spring, api] = useSpring(() => ({ rotation: [0, 0, 0], config: { mass: 5, tension: 100 } }), []);
+	// const [spring, api] = useSpring(() => ({ rotation: [0, 0, 0], config: { mass: 5, tension: 100 } }), []);
 
 	const { cameraPosition, cameraRotation } = props;
 	const { camera } = useThree();
 
 	useEffect(() => {
+		/*
 		let timeout: any;
 		const rotate = () => {
 			api.start({ rotation: [Math.random() * Math.PI * 3, 0, 0] });
 			timeout = setTimeout(rotate, (0.5 + Math.random() * 2) * 1000);
 		};
 		rotate();
+        */
 
 		if (cameraPosition) {
 			camera.position.set(cameraPosition.x, cameraPosition.y, cameraPosition.z);
@@ -33,7 +35,7 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 			camera.rotation.set(cameraRotation.x, cameraRotation.y, cameraRotation.z);
 		}
 
-		return () => clearTimeout(timeout);
+		// return () => clearTimeout(timeout);
 	}, []);
 
 	return (
