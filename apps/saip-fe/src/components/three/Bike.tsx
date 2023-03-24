@@ -41,14 +41,14 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 			<a.group name="Wheel_Front" ref={group} position={[0, 0.87, 1.44]} {...spring}>
 				<mesh
 					name="Hub_front"
-					geometry={nodes.Hub_front.geometry}
+					geometry={(nodes.Hub_front as THREE.Mesh).geometry}
 					material={materials["Material.002"]}
 					// position={[0, 0.87, 1.44]}
 					scale={[1.54, 1, 1]}
 				/>
 				<mesh
 					name="Spoke_1"
-					geometry={nodes.Spoke_1.geometry}
+					geometry={(nodes.Spoke_1 as THREE.Mesh).geometry}
 					material={materials["Material.002"]}
 					// position={[0, 0.87, 1.44]}
 					rotation={[-Math.PI, 0, 0]}
@@ -56,7 +56,7 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 				/>
 				<mesh
 					name="Torus001"
-					geometry={nodes.Torus001.geometry}
+					geometry={(nodes.Torus001 as THREE.Mesh).geometry}
 					material={materials.Saddle}
 					// position={[0, 0.87, 1.44]}
 					rotation={[0, 0, -Math.PI / 2]}
@@ -65,14 +65,14 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 			<a.group name="Wheel_Back" ref={group} position={[0, 0.87, -1.48]} {...spring}>
 				<mesh
 					name="Hub_back"
-					geometry={nodes.Hub_back.geometry}
+					geometry={(nodes.Hub_back as THREE.Mesh).geometry}
 					material={materials["Material.002"]}
 					// position={[0, 0.87, -1.48]}
 					scale={[1.47, 1, 1]}
 				/>
 				<mesh
 					name="Spoke_2"
-					geometry={nodes.Spoke_2.geometry}
+					geometry={(nodes.Spoke_2 as THREE.Mesh).geometry}
 					material={materials["Material.002"]}
 					// position={[0, 0.87, -1.48]}
 					rotation={[-Math.PI, 0, 0]}
@@ -80,7 +80,7 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 				/>
 				<mesh
 					name="Torus002"
-					geometry={nodes.Torus002.geometry}
+					geometry={(nodes.Torus002 as THREE.Mesh).geometry}
 					material={materials.Saddle}
 					// position={[0, 0.87, -1.48]}
 					rotation={[0, 0, -Math.PI / 2]}
@@ -89,7 +89,7 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 			<a.group name="Paddles" position={[0, 0.77, -0.31]} {...spring}>
 				<mesh
 					name="Crank_arm_2"
-					geometry={nodes.Crank_arm_2.geometry}
+					geometry={(nodes.Crank_arm_2 as THREE.Mesh).geometry}
 					material={materials["Material.002"]}
 					// position={[0, 0.77, -0.31]}
 					rotation={[0.29, 0, -1.54]}
@@ -97,7 +97,7 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 				/>
 				<mesh
 					name="Crank_arm_1"
-					geometry={nodes.Crank_arm_1.geometry}
+					geometry={(nodes.Crank_arm_1 as THREE.Mesh).geometry}
 					material={materials["Material.002"]}
 					// position={[0, 0.77, -0.31]}
 					rotation={[0.29, 0, 1.6]}
@@ -105,7 +105,7 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 				/>
 				<mesh
 					name="Paddle_1"
-					geometry={nodes.Paddle_1.geometry}
+					geometry={(nodes.Paddle_1 as THREE.Mesh).geometry}
 					material={materials.Saddle}
 					position={[0.33, -0.37, -0.1]}
 					rotation={[0, 0, 0.03]}
@@ -113,44 +113,57 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 				/>
 				<mesh
 					name="Paddle_2"
-					geometry={nodes.Paddle_2.geometry}
+					geometry={(nodes.Paddle_2 as THREE.Mesh).geometry}
 					material={materials.Saddle}
 					position={[-0.33, 0.32, 0.1]}
 					rotation={[-3.1, 0, -0.03]}
 					scale={[-0.09, -0.11, -0.07]}
 				/>
 			</a.group>
-			<mesh name="Top_Seat_tube" geometry={nodes.Top_Seat_tube.geometry} material={materials.Main} />
-			<mesh name="Fort_Seat_stay" geometry={nodes.Fort_Seat_stay.geometry} material={materials.Main} />
-			<mesh name="Stem" geometry={nodes.Stem.geometry} material={materials.Main} position={[0, 1.97, 0.74]} />
+			<mesh
+				name="Top_Seat_tube"
+				geometry={(nodes.Top_Seat_tube as THREE.Mesh).geometry}
+				material={materials.Main}
+			/>
+			<mesh
+				name="Fort_Seat_stay"
+				geometry={(nodes.Fort_Seat_stay as THREE.Mesh).geometry}
+				material={materials.Main}
+			/>
+			<mesh
+				name="Stem"
+				geometry={(nodes.Stem as THREE.Mesh).geometry}
+				material={materials.Main}
+				position={[0, 1.97, 0.74]}
+			/>
 			<mesh
 				name="Handlebars"
-				geometry={nodes.Handlebars.geometry}
+				geometry={(nodes.Handlebars as THREE.Mesh).geometry}
 				material={materials.Main}
 				position={[0, 1.97, 0.74]}
 			/>
 			<mesh
 				name="Seat_post"
-				geometry={nodes.Seat_post.geometry}
+				geometry={(nodes.Seat_post as THREE.Mesh).geometry}
 				material={materials.Main}
 				position={[0, 1.85, -0.64]}
 			/>
 			<mesh
 				name="Saddle"
-				geometry={nodes.Saddle.geometry}
+				geometry={(nodes.Saddle as THREE.Mesh).geometry}
 				material={materials.Material}
 				position={[0, 2.12, -0.66]}
 				scale={[0.13, 0.13, 0.15]}
 			/>
 			<mesh
 				name="Handles"
-				geometry={nodes.Handles.geometry}
+				geometry={(nodes.Handles as THREE.Mesh).geometry}
 				material={materials.Saddle}
 				position={[0, 1.97, 0.74]}
 			/>
 			<mesh
 				name="Bottom_bracket"
-				geometry={nodes.Bottom_bracket.geometry}
+				geometry={(nodes.Bottom_bracket as THREE.Mesh).geometry}
 				material={materials["Material.002"]}
 				position={[-0.11, 0.77, -0.31]}
 				rotation={[0, 0, -Math.PI / 2]}
@@ -158,7 +171,7 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 			/>
 			<mesh
 				name="Cassette"
-				geometry={nodes.Cassette.geometry}
+				geometry={(nodes.Cassette as THREE.Mesh).geometry}
 				material={materials["Material.002"]}
 				position={[-0.07, 0.87, -1.48]}
 				rotation={[0, 0, -Math.PI / 2]}
@@ -166,7 +179,7 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 			/>
 			<mesh
 				name="Cylinder002"
-				geometry={nodes.Cylinder002.geometry}
+				geometry={(nodes.Cylinder002 as THREE.Mesh).geometry}
 				material={materials["Material.002"]}
 				position={[0, 0.77, -0.31]}
 				rotation={[0, 0, -Math.PI / 2]}
@@ -174,7 +187,7 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 			/>
 			<mesh
 				name="Chain"
-				geometry={nodes.Chain.geometry}
+				geometry={(nodes.Chain as THREE.Mesh).geometry}
 				material={materials["Material.002"]}
 				position={[-0.08, 0.87, -1.48]}
 				rotation={[0, 0, -Math.PI / 2]}
@@ -182,17 +195,21 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 			/>
 			<mesh
 				name="Battery"
-				geometry={nodes.Battery.geometry}
+				geometry={(nodes.Battery as THREE.Mesh).geometry}
 				material={materials.Main}
 				position={[0, 1.79, 0.74]}
 				rotation={[-2.14, 0, 0]}
 				scale={0.06}
 			/>
-			<mesh name="Head_tube" geometry={nodes.Head_tube.geometry} material={materials.Main} />
-			<mesh name="Fort_Seat_stay001" geometry={nodes.Fort_Seat_stay001.geometry} material={materials.Main} />
+			<mesh name="Head_tube" geometry={(nodes.Head_tube as THREE.Mesh).geometry} material={materials.Main} />
+			<mesh
+				name="Fort_Seat_stay001"
+				geometry={(nodes.Fort_Seat_stay001 as THREE.Mesh).geometry}
+				material={materials.Main}
+			/>
 			<mesh
 				name="Screen_body"
-				geometry={nodes.Screen_body.geometry}
+				geometry={(nodes.Screen_body as THREE.Mesh).geometry}
 				material={materials["Material.001"]}
 				position={[-0.23, 2.32, 0.89]}
 				rotation={[-0.6, 0, 0]}
@@ -200,7 +217,7 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 			/>
 			<mesh
 				name="Screen_display"
-				geometry={nodes.Screen_display.geometry}
+				geometry={(nodes.Screen_display as THREE.Mesh).geometry}
 				material={materials.Screen}
 				position={[-0.23, 2.32, 0.89]}
 				rotation={[-0.6, 0, 0]}
