@@ -41,7 +41,7 @@ function Register() {
 
 	return (
 		<div className="w-full  max-w-xs">
-			<form className="bg-white shadow-md rounded px-6 pt-6 pb-8 mb-4">
+			<form className="bg-white shadow-md rounded px-6 pt-6 pb-8 mb-4 dark:bg-[#121212]">
 				<div className="mb-4">
 					{success ? (
 						<div
@@ -61,7 +61,7 @@ function Register() {
 						ref={emailElement}
 						className={`shadow appearance-none border ${
 							isInvalidUsername ? "border-red-500" : ""
-						} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+						} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:text-gray-300`}
 						id="username"
 						type="text"
 						placeholder="Požívateľské meno"
@@ -78,7 +78,7 @@ function Register() {
 						ref={passwordElement}
 						className={`shadow appearance-none border ${
 							isInvalidPassword ? "border-red-500" : ""
-						}  rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+						}  rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:text-gray-300`}
 						id="password"
 						type="password"
 						placeholder="Heslo"
@@ -93,7 +93,7 @@ function Register() {
 						ref={repeatPasswordElement}
 						className={`shadow appearance-none border ${
 							isInvalidPassword ? "border-red-500" : ""
-						}  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline`}
+						}  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline dark:text-gray-300`}
 						id="repeat-password"
 						type="password"
 						placeholder="Heslo"

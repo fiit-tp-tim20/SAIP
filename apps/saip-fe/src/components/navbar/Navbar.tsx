@@ -18,7 +18,7 @@ function Navbar() {
 	const tabs = ["dashboard", "product", "company", "marketing"];
 
 	return (
-		<div className="flex flex-row p-2 top-0 w-screen fixed left-0 z-40 bg-white">
+		<div className="flex flex-row p-2 top-0 w-screen fixed left-0 z-40 bg-white dark:bg-[#121212]">
 			<p className="px-8 normal-case text-xl align-middle font-bold text-accent-800 leading-[40px]">SAIP</p>
 			<div className="flex flex-row justify-between w-screen">
 				<ul className="flex flex-row p-0 m-0">

@@ -75,7 +75,7 @@ export default function BottomBar() {
 			{isShowing && <Modal />}
 			<div className="fixed bottom-2 right-2 z-40">
 				{!isLoading ? (
-					<div className="bg-white px-3 py-1 rounded-lg border-2 border-accent-700">
+					<div className="bg-white px-3 py-1 rounded-lg border-2 border-accent-700 dark:bg-[#121212]">
 						{committed ? (
 							<p className="text-center font-medium p-3">Čaká sa na ostatných hráčov</p>
 						) : (

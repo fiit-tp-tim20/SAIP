@@ -54,7 +54,7 @@ export default function Login() {
 
 	return (
 		<div className="w-full  max-w-xs">
-			<form className="bg-white shadow-md rounded px-6 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
+			<form className="bg-white shadow-md rounded px-6 pt-6 pb-8 mb-4 dark:bg-[#121212]" onSubmit={handleSubmit}>
 				<div className="mb-4">
 					<label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
 						E-mail
@@ -62,7 +62,7 @@ export default function Login() {
 					<input
 						className={`shadow appearance-none border ${
 							isInvalid ? "border-red-500" : ""
-						} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+						} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline dark:text-gray-300`}
 						id="username"
 						type="text"
 						placeholder="E-mail"
@@ -76,7 +76,7 @@ export default function Login() {
 					<input
 						className={`shadow appearance-none border ${
 							isInvalid ? "border-red-500" : ""
-						}  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline`}
+						}  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline dark:text-gray-300`}
 						id="password"
 						type="password"
 						placeholder="Heslo"
