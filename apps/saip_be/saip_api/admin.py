@@ -4,7 +4,7 @@ from .models import Turn, Company, Production, Marketing, Factory, CompaniesStat
 
 from django_object_actions import DjangoObjectActions, action
 
-from .views.GameManagement import end_turn, get_last_turn
+from .views.GameManagement import end_turn, get_last_turn, create_default_upgrades, create_turn
 
 @admin.register(Turn)
 class TurnsAdmin(admin.ModelAdmin):
@@ -69,6 +69,13 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
         if not last_turn or last_turn.end is not None:
             return
         _ = end_turn(last_turn)
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+
+        create_default_upgrades() # checks if upgrades exist and creates them if not
+        if not get_last_turn(obj): # verify that there is no turn for this game (it was just created)
+            create_turn(0, obj)
 
     change_actions = ('EndTurn',)
     list_display = ('name', 'admin', 'start', 'end', 'turns')
