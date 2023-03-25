@@ -19,6 +19,7 @@ import useMarketingStore from "./store/Marketing";
 import logout from "./api/logout";
 import GameSelect from "./screens/GameSelect";
 import Register from "./screens/Register";
+import BugReport from "./components/bugreport/BugReport";
 
 function App() {
 	const token = localStorage.getItem("token");
@@ -88,6 +89,7 @@ function App() {
 							</Routes>
 						</div>
 						<BottomBar />
+						<BugReport />
 					</BrowserRouter>
 				</Suspense>
 			) : (
@@ -100,7 +102,7 @@ function App() {
 				</BrowserRouter>
 			)}
 			{/* <Devtools /> */}
-			<ReactQueryDevtools initialIsOpen={false} />
+			{/* <ReactQueryDevtools initialIsOpen={false} /> */}
 		</>
 	);
 }
