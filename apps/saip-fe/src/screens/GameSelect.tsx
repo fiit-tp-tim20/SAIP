@@ -203,15 +203,20 @@ function GameSelect() {
 						Potvrdiť
 					</button>
 					<p className="mt-8 text-xs font-light text-center text-gray-700">
-						{" "}
 						Prihlásili ste sa pod iným účtom ? Odhláste sa kliknutím{" "}
-						<a
+						{/* <a
 							href="#"
 							className="font-bold text-accent-700 hover:text-accent-500 hover:underline"
 							onClick={() => logout(marketingReset, companyReset, upgradesReset)}
 						>
 							TU
-						</a>
+						</a> */}
+						<button
+							className="button-clear accent-gray-800 hover::underline"
+							onClick={() => logout(marketingReset, companyReset, upgradesReset)}
+						>
+							TU
+						</button>
 					</p>
 				</div>
 			</form>
