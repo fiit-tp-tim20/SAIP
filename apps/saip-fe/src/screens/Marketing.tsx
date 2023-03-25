@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import Slider from "../components/slider/Slider";
 import useMarketingStore from "../store/Marketing";
 import { getMarketingStats } from "../api/GetMarketingStats";
-import LineGraph from "../components/statisticsGraph/Graph";
+import MarketingGraph from "../components/statisticsGraph/MarketingGraph";
 import { useQuery } from "react-query";
 
 
@@ -42,7 +42,7 @@ function Marketing() {
 				{isLoading ? (
 					<div>Loading...</div>
 				) : (
-					<LineGraph data={data?.demand} />
+					<MarketingGraph data={data?.demand} />
 				)}
 			</div>
 			

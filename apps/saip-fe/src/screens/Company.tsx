@@ -3,8 +3,14 @@ import React, { useEffect } from "react";
 import Slider from "../components/slider/Slider";
 import { totalSpentPersist } from "../store/Atoms";
 import useCompanyStore from "../store/Company";
+import { useQuery } from "react-query";
+import { getCompanyStats } from "../api/GetCompanyStats";
+import CompanyGraph from "../components/statisticsGraph/CompanyGraph";
 
 function Company() {
+
+	const { isLoading, data } = useQuery(["getCompanyStats"], getCompanyStats);
+
 	const {
 		productCount,
 		productCountChecked,
@@ -23,24 +29,15 @@ function Company() {
 	return (
 		<div className="flex flex-col xl:w-[1280px] md:w-[900px] w-[600px]">
 			<h1 className="my-4">Štatistiky</h1>
-			<div className="grid xl:grid-cols-3 gap-6">
-				<div className="flex flex-col background-container p-6 rounded-2xl">
-					<div className="py-2 flex flex-row items-center justify-between">
-						<h2 className="text-accent-700">Placeholder</h2>
-					</div>
-				</div>
-
-				<div className="flex flex-col background-container p-6 rounded-2xl">
-					<div className="py-2 flex flex-row items-center justify-between">
-						<h2 className="text-accent-700">Placeholder</h2>
-					</div>
-				</div>
-
-				<div className="flex flex-col background-container p-6 rounded-2xl">
-					<div className="py-2 flex flex-row items-center justify-between">
-						<h2 className="text-accent-700">Placeholder</h2>
-					</div>
-				</div>
+			<div className="background-container my-2 flex flex-col rounded-2xl p-6">
+				{isLoading ? (
+					<div>Loading...</div>
+				) : (
+					<CompanyGraph 
+						manufactured={data?.manufactured}
+						sold={data?.sold}
+					/>
+				)}
 			</div>
 			<div className="flex flex-col">
 				<h1 className="my-4">Rozdelenie financií</h1>
