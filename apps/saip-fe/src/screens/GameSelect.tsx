@@ -195,19 +195,24 @@ function GameSelect() {
 						))}
 					</div>
 				)}
-				<div className="flex items-center justify-between gap-2">
+				<div className="flex flex-col items-center justify-between gap-2">
 					<button
 						className="w-full bg-accent-700 hover:bg-accent-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
 						type="submit"
 					>
 						Potvrdiť
 					</button>
-					<button
-						className="w-full bg-accent-700 hover:bg-accent-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-						onClick={() => logout(marketingReset, companyReset, upgradesReset)}
-					>
-						Odhlásenie
-					</button>
+					<p className="mt-8 text-xs font-light text-center text-gray-700">
+						{" "}
+						Prihlásili ste sa pod iným účtom ? Odhláste sa kliknutím{" "}
+						<a
+							href="#"
+							className="font-bold text-accent-700 hover:text-accent-500 hover:underline"
+							onClick={() => logout(marketingReset, companyReset, upgradesReset)}
+						>
+							TU
+						</a>
+					</p>
 				</div>
 			</form>
 		</div>
