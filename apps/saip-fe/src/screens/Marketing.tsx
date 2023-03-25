@@ -5,9 +5,7 @@ import { getMarketingStats } from "../api/GetMarketingStats";
 import MarketingGraph from "../components/statisticsGraph/MarketingGraph";
 import { useQuery } from "react-query";
 
-
 function Marketing() {
-
 	const { isLoading, data } = useQuery(["getMarketingStats"], getMarketingStats);
 
 	const {
@@ -37,13 +35,9 @@ function Marketing() {
 		<div className="flex w-[600px] flex-col md:w-[900px] xl:w-[1280px]">
 			<h1 className="my-4">Štatistiky</h1>
 			<div className="background-container my-2 flex flex-col rounded-2xl p-6">
-				{isLoading ? (
-					<div>Loading...</div>
-				) : (
-					<MarketingGraph data={data?.demand} />
-				)}
+				{isLoading ? <div>Loading...</div> : <MarketingGraph data={data?.demand} />}
 			</div>
-			
+
 			<div className="flex flex-col">
 				<h1 className="my-4">Typy marketingu</h1>
 				<div className="background-container my-2 flex flex-col rounded-2xl p-6">
