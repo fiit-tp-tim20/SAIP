@@ -11,51 +11,50 @@ class Upgrade:
     sales_effect: float  # modifier for expected value increase
     man_cost_effect: float  # modifier for manufacturing cost increase
 
-
 @dataclass
 class Product(ABC):
     upgrades: Dict[str, Upgrade] = field(default_factory=dict)
-    __price: float = 0
-    __man_cost: float = 0
-    __upgrade_sales_effect_multiplier: float = 1
-    __upgrade_man_cost_effect_multiplier: float = 1
-    __upgrade_stored_products_price: float = 0
+    _price: float = 0
+    _man_cost: float = 0
+    _upgrade_sales_effect_multiplier: float = 1
+    _upgrade_man_cost_effect_multiplier: float = 1
+    _upgrade_stored_products_price: float = 0
 
     def set_price(self, new_price: float) -> None:
-        self.__price = new_price
+        self._price = new_price
 
     def get_price(self) -> float:
-        return self.__price
+        return self._price
 
     def set_man_cost(self, new_man_cost: float) -> None:
-        self.__man_cost = new_man_cost
+        self._man_cost = new_man_cost
 
     def get_man_cost(self) -> float:
-        return self.__man_cost
+        return self._man_cost
 
     def _set_upgrade_sales_effect_multiplier(self):
         sum = 0
         for upgrade in self.upgrades.values():
             sum += upgrade.sales_effect
-        self.__upgrade_sales_effect_multiplier = 1 + sum
+        self._upgrade_sales_effect_multiplier = 1 + sum
 
     def _set_upgrade_man_cost_effect_multiplier(self):
         sum = 0
         for upgrade in self.upgrades.values():
             sum += upgrade.man_cost_effect
-        self.__upgrade_man_cost_effect_multiplier = 1 + sum
+        self._upgrade_man_cost_effect_multiplier = 1 + sum
 
     def get_upgrade_sales_effect_multiplier(self):
-        return self.__upgrade_sales_effect_multiplier
+        return self._upgrade_sales_effect_multiplier
 
     def get_upgrade_man_cost_effect_multiplier(self):
-        return self.__upgrade_man_cost_effect_multiplier
+        return self._upgrade_man_cost_effect_multiplier
 
     def _set_upgrade_stored_products_price(self, new_upgrade_price: float) -> None:
         self._set_upgrade_stored_products_price = new_upgrade_price
 
     def get_upgrade_stored_products_price(self) -> float:
-        return self.__upgrade_stored_products_price
+        return self._upgrade_stored_products_price
 
     def add_upgrade(
         self, name, status, progress, total_cost, sales_effect, man_cost_effect
@@ -68,7 +67,7 @@ class Product(ABC):
                 progress=progress,
                 total_cost=total_cost,
                 sales_effect=sales_effect,
-                man_cost_effect=man_cost_effect,
+                man_cost_effect=man_cost_effect
             )
         else:
             pass
@@ -100,7 +99,7 @@ class LastingProduct(Product):
     # ToDo replace dummy logic (used in testing) witch actual code
 
     def _calculate_upgrade_price(self) -> float:
-        return self.__price / 10
+        return self._price / 10
 
     def _perform_upgrade_logic(self) -> None:
-        self.__price = self.__price * 1.1
+        self._price = self._price * 1.1

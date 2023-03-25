@@ -1,4 +1,4 @@
-export const getGeneralInfo = async () => {
+const getGeneralInfo = async () => {
 	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/company_info/`, {
 		method: "GET",
 		headers: {
@@ -10,3 +10,5 @@ export const getGeneralInfo = async () => {
 
 	return data;
 };
+
+export default getGeneralInfo;

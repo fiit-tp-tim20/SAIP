@@ -98,6 +98,19 @@ class GetRunningGamesView(APIView):
                               for game in games]}
 
         return Response(response)
+    
+class GetNotStartedGamesView(APIView):
+
+    def get(self, request) -> Response:
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        turns = Turn.objects.filter(end__isnull=True, number=0)
+        response = {"games": [{"id": turn.game.id,
+                               "name": turn.game.name}
+                              for turn in turns]}
+
+        return Response(response)
 
 
 def calculate_man_cost(game: Game, turn: Turn) -> None:
@@ -186,10 +199,10 @@ def end_turn(turn: Turn) -> Turn:
     new_turn = create_turn(turn.number + 1, game)
     calculate_man_cost(game, new_turn)
 
-    # if turn.number != 0:
-        # sim = Simulation(game_model=game, turn_model=turn, new_turn_model=new_turn)
-        # sim.run_simulation()
-        # sim.write_simulation_results()
+    if turn.number != 0:
+        sim = Simulation(game_model=game, turn_model=turn, new_turn_model=new_turn)
+        sim.run_simulation()
+        sim.write_simulation_results()
 
     turn.end = timezone.now()
     turn.save()

@@ -81,7 +81,16 @@ class CompanyInfo(APIView):
         except Company.DoesNotExist:
             return Response({"detail": "Company for this user not found"}, status=404)
 
-        return Response({"id": company.id, 'name': company.name, 'budget_cap': company.game.parameters.budget_cap}, status=200)
+        last_turn = get_last_turn(company.game)
+        company_state = CompaniesState.objects.get(turn=last_turn, company=company)
+
+        if company_state.cash >= 10000:
+            print(company_state.cash)
+            budget = 10000
+        else:
+            budget = company_state.cash
+
+        return Response({"id": company.id, 'name': company.name, 'budget_cap': budget}, status=200)
 
 class IndustryReport(APIView):
 

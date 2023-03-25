@@ -13,30 +13,33 @@ class MarketingModifiers:
 
 class MarketingInvestments:
     SOCIAL_MEDIA_MIN = 100
-    SOCIAL_MEDIA_MAX = 5000
+    SOCIAL_MEDIA_MAX = 10_000
     SOCIAL_MEDIA_STEP = 1000
+
     PODCAST_MIN = 1000
-    PODCAST_MAX = 2500
+    PODCAST_MAX = 10_000
+
     OOH_MIN = 500
-    OOH_MAX = 1500
+    OOH_MAX = 10_000
+
     BILLBOARD_MIN = 500
-    BILLBOARD_MAX = 2500
+    BILLBOARD_MAX = 10_000
+
     CABLE_NEWS_MIN = 2000
-    CABLE_NEWS_MAX = 3500
+    CABLE_NEWS_MAX = 10_000
 
 
 class FactoryPreset:
     BASE_RENT = 2000
     BASE_ENERGY_COST = 1500
 
-    ENERGY_COST_PER_MACHINE = 100
-    STARTING_MACHINES = 10
-
     STARTING_EMPLOYEES = 10
     BASE_SALARY = 1500
 
-    STARTING_INVESTMENT = 30000    #TODO: capacity depends on the capital investment - adjust values so that they makes sense together - and add the investment-to-capacity calculation
+    STARTING_INVESTMENT = 50_000
     STARTING_CAPACITY = 100
+
+    INVENTORY_CHARGE_PER_UNIT = 5
 
     OPTIMAL_THRESHOLD = 0.9
     OVER_THRESHOLD_MULTIPLIER = 1.015
@@ -46,6 +49,7 @@ class FactoryPreset:
     )  # yearly maintenance rate * months in turn / months in year
 
     BASE_MATERIAL_COST_PER_UNIT = 250
+    BASE_INFLATION = 0.02 * TURN_LENGTH / YEAR_LENGTH
 
 
 class MarketPreset:
@@ -54,7 +58,9 @@ class MarketPreset:
     INTERESTED_IN_RND = 0.15
     INTERESTED_IN_MARKETING = 0.2
     INTERESTED_IN_PRICE = 0.4
-    
-    
+
+
 class CompanyPreset:
-    DEFAULT_INTEREST_RATE = 1.025
+    DEFAULT_INTEREST_RATE = 0.025
+    DEFAULT_TAX_RATE = 0.21
+    DEFAULT_BUDGET_PER_TURN = 10_000

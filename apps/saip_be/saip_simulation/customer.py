@@ -113,6 +113,6 @@ class InovationsLover(Customer):
             + self.calculate_innovation_weight(product)
         )
 
-    def calculate_innovation_weight(self, product):
-        # ToDo implement some logic here
-        return 1
+    def calculate_innovation_weight(self, product: Product):
+        # TODO the logic here may be subject to change
+        return 1 + product.get_upgrade_sales_effect_multiplier()

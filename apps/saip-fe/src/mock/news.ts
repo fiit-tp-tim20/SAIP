@@ -1,4 +1,4 @@
-export const getTweets = () => [
+const getTweets = () => [
 	{
 		id: 1,
 		username: "Pelec",
@@ -72,3 +72,5 @@ export const getTweets = () => [
 		likesCount: 8,
 	},
 ];
+
+export default getTweets;

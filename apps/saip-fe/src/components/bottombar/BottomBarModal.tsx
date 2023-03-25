@@ -1,9 +1,11 @@
+import React from "react";
+
 type Props = {
 	onAccept: () => void;
 	onDecline: () => void;
 };
 
-const BottomBarModal = (props: Props) => {
+function BottomBarModal(props: Props) {
 	const { onAccept, onDecline } = props;
 
 	return (
@@ -27,6 +29,6 @@ const BottomBarModal = (props: Props) => {
 			</div>
 		</div>
 	);
-};
+}
 
 export default BottomBarModal;

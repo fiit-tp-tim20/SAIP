@@ -122,30 +122,45 @@ class Market:
             ] = company.sell_product(
                 self.customer_distribution.get(company.brand).get("demand")
             )
+            company.calculate_stock_price()
 
 
 if __name__ == "__main__":
-    comA = Company("A", LastingProduct(None, 1000, -1), 0, 85, 0, 10000, Factory(), {})
-    comB = Company("B", LastingProduct(None, 1100, -1), 0, 82, 0, 10000, Factory(), {})
+    comA = Company(
+        brand="A",
+        product=LastingProduct(None, 1000, -1),
+        inventory=0,
+        production_volume=85,
+        balance=0,
+        factory=Factory(),
+        marketing={},
+    )
+    comB = Company(
+        brand="B",
+        product=LastingProduct(None, 1100, -1),
+        inventory=0,
+        production_volume=82,
+        balance=0,
+        factory=Factory(),
+        marketing={},
+    )
     comC = Company(
-        "C",
-        LastingProduct(None, 900, -1),
-        0,
-        90,
-        0,
-        10000,
-        Factory(),
-        {"social": SocialMedia(3000)},
+        brand="C",
+        product=LastingProduct(None, 900, -1),
+        inventory=0,
+        production_volume=90,
+        balance=0,
+        factory=Factory(),
+        marketing={"social": SocialMedia(3000)},
     )
     comD = Company(
-        "D",
-        LastingProduct(None, 1200, -1),
-        0,
-        95,
-        0,
-        10000,
-        Factory(),
-        {"ooh": OOH(1500)},
+        brand="D",
+        product=LastingProduct(None, 1200, -1),
+        inventory=0,
+        production_volume=95,
+        balance=0,
+        factory=Factory(),
+        marketing={"ooh": OOH(1500)},
     )
     companies = [comA, comB, comC, comD]
     for company in companies:
@@ -162,20 +177,24 @@ if __name__ == "__main__":
     print(
         f"\nTOTAL DEMAND: {sum([item.get('demand') for item in mar.customer_distribution.values()])}"
     )
+    total_unmet_demand = sum([item.get('demand_not_met', 0) for item in mar.customer_distribution.values()])
     print(
-        f"REMAINING CUSTOMERS: {sum([item.get('demand_not_met', 0) for item in mar.customer_distribution.values()]) + mar.customer_distribution.get('no_purchase', {}).get('demand', 0)}\n"
+        f"REMAINING CUSTOMERS: {total_unmet_demand + mar.customer_distribution.get('no_purchase', {}).get('demand', 0)}\n"
     )
 
     for company in companies:
         print(
             f"COMPANY {company.brand} \nNet Worth: {company.factory.capital_investment} | Units Sold: {company.units_sold}"
         )
+        ppu = company.factory.calculate_price_per_unit(company.production_volume)
+        ipu = company.product.get_price() - company.factory.calculate_price_per_unit(company.production_volume)
         print(
-            f"Selling Price: {company.product.get_price()} | Costs Per Unit: {company.factory.calculate_price_per_unit(company.production_volume):.2f} | Income Per Unit: {company.product.get_price() - company.factory.calculate_price_per_unit(company.production_volume):.2f}"
+            f"Selling Price: {company.product.get_price()} | Costs Per Unit: {ppu:.2f} | Income Per Unit: {ipu:.2f}"
         )
         print(
-            f"Total Income: {company.income_per_turn:.2f} | Total Costs: {company.costs_per_turn:.2f} | Profit: {company.profit:.2f}"
+            f"Total Income: {company.income_per_turn:.2f} | Total Costs: {company.total_costs_per_turn:.2f} | Profit: {company.profit:.2f}"
         )
+        print(f"Balance: {company.balance:.2f} | Loans: {company.loans:.2f}")
         print(
-            f"Marketing: {company.yield_agg_marketing_value():.2f} | Stock price: {company.calculate_stock_price():.2f}\n"
+            f"Marketing value: {company.yield_agg_marketing_value():.2f} | Stock price: {company.stock_price:.2f}\n"
         )

@@ -1,7 +1,5 @@
-import { useAtom } from "jotai";
-import React, { useEffect } from "react";
+import React from "react";
 import Slider from "../components/slider/Slider";
-import { totalSpentPersist } from "../store/Atoms";
 import useCompanyStore from "../store/Company";
 import { useQuery } from "react-query";
 import { getCompanyStats } from "../api/GetCompanyStats";

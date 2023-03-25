@@ -6,7 +6,7 @@ class GameParameters(models.Model):
     budget_cap = models.PositiveIntegerField(default=10000)
     depreciation = models.FloatField(default=0.1)
     base_man_cost = models.PositiveIntegerField(default=50)
-    base_capital = models.PositiveIntegerField(default=10000)
+    base_capital = models.FloatField(default=22837.5)
     end_turn_on_committed = models.BooleanField(default=True)
 
     class Meta:
@@ -125,13 +125,10 @@ class CompaniesUpgrades(models.Model):
 
 
 class Factory(models.Model):
-    # prod_emp = models.PositiveIntegerField(null=True, default=0)
-    # cont_emp = models.PositiveIntegerField(null=True, default=0)
-    # aux_emp = models.PositiveIntegerField(null=True, default=0)
     capacity = models.PositiveIntegerField(null=True, default=100)
     base_cost = models.FloatField(null=True,default=0)
     capital = models.FloatField(null=True,default=0)
-    capital_investments = models.FloatField(null=True, default=10000)
+    capital_investments = models.FloatField(null=True, default=21000)
 
     # def __str__(self):
     #     return f"Factory - {self.companiesstate.company}"
@@ -156,9 +153,9 @@ class CompaniesState(models.Model):
     #kontrola
     orders_received = models.PositiveIntegerField(null=True, default=0)
     orders_fulfilled = models.PositiveIntegerField(null=True, default=0)
-    cash = models.FloatField(null=True, default=15000) #celkovo dostupných prostriedkov
+    cash = models.FloatField(null=True, default=11908.62) #celkovo dostupných prostriedkov
     #capital = models.FloatField(null=True, default=0)
-    ret_earnings = models.FloatField(null=True, default=0) 
+    ret_earnings = models.FloatField(null=True, default=1394.25) 
     net_profit = models.FloatField(null=True, blank=True) #za kolo
     depreciation = models.FloatField(null=True, blank=True)
     new_loans = models.FloatField(null=True, blank=True)
@@ -170,7 +167,7 @@ class CompaniesState(models.Model):
     interest = models.FloatField(null=True, blank=True)
     cash_flow_res = models.FloatField(null=True, blank=True)
     loan_repayment = models.FloatField(null=True, blank=True)
-    loans = models.FloatField(null=True, default=0)
+    loans = models.FloatField(null=True, default=8677)
 
     def __str__(self):
         return f"{self.company} - {self.turn}"
