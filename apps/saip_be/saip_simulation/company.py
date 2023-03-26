@@ -82,7 +82,7 @@ class Factory:
         self.update_upkeep(
             materials_cost=FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
             * production_this_turn,
-            skip=False, #TODO THIS WAS CHANGED FROM TRUE TO FALSE - FOR A QUICK FIX OF AN ISSUE (MAYBE IT WAS VITAL TO CALL WITH TRUE)
+            skip=True,
         )  # TODO make sure this works as intended - are we using the updated man_cost from upgrades???
         if production_this_turn <= 0:
             return 0.0
