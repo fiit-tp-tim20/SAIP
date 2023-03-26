@@ -53,16 +53,20 @@ class CompanyView(APIView):
 
         manufactured = [None] * (company.game.turns - 1)
         sold = [None] * (company.game.turns - 1)
+        man_cost = [None] * (company.game.turns - 1)
+        sell_price = [None] * (company.game.turns - 1)
 
         for turn_num in range(company.game.turns - 1):
             try:
                 state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
                 manufactured[turn_num] = state.production.volume
                 sold[turn_num] = state.orders_fulfilled
+                man_cost[turn_num] = state.production.man_cost_all
+                sell_price[turn_num] = state.production.sell_price
             except (CompaniesState.DoesNotExist, Turn.DoesNotExist):
                 continue
 
-        return Response({"manufactured": manufactured, "sold": sold}, status=200)
+        return Response({"manufactured": manufactured, "sold": sold, "man_cost": man_cost, "sell_price": sell_price}, status=200)
 
 
 def create_upgrade_company_relation(game: Game, company: Company) -> None:
@@ -115,7 +119,7 @@ class IndustryReport(APIView):
             company_info['net_profit'] = state.net_profit
             try:
                 company_info['market_share'] = state.orders_fulfilled/market_state.sold
-            except ZeroDivisionError:
+            except (ZeroDivisionError, TypeError):
                 company_info['market_share'] = 0
 
             industry[state.company.name] = company_info
@@ -126,27 +130,27 @@ class IndustryReport(APIView):
         market['demand'] = market_state.demand
         try:
             market['demand_difference'] = ((market_state.demand/market_state_previous.demand) - 1)*100
-        except ZeroDivisionError:
+        except (ZeroDivisionError, TypeError):
             market['demand_difference'] = "N/A"
         market['sold_products'] = market_state.sold
         try:
             market['sold_products_difference'] = ((market_state.sold/market_state_previous.sold) - 1)*100
-        except ZeroDivisionError:
+        except (ZeroDivisionError, TypeError):
             market['sold_products_difference'] ="N/A"
         market['manufactured'] = market_state.manufactured
         try:
             market['manufactured_difference'] = ((market_state.manufactured/market_state_previous.manufactured) - 1)*100
-        except ZeroDivisionError:
+        except (ZeroDivisionError, TypeError):
             market['manufactured_difference'] = "N/A"
         market['capacity'] = market_state.capacity
         try:
             market['capacity_difference'] = ((market_state.capacity/market_state_previous.capacity) - 1)*100
-        except ZeroDivisionError:
+        except (ZeroDivisionError, TypeError):
             market['capacity_difference'] = "N/A"
         market['inventory'] = market_state.inventory
         try:
             market['inventory_difference'] = ((market_state.inventory/market_state_previous.inventory) - 1)*100
-        except ZeroDivisionError:
+        except (ZeroDivisionError, TypeError):
             market['inventory_difference'] = "N/A"
 
         teacher_decisions = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=last_turn.number-1))
@@ -155,22 +159,22 @@ class IndustryReport(APIView):
         economic_parameters['interest_rate'] = teacher_decisions.interest_rate
         try:
             economic_parameters['interest_rate_difference'] = ((teacher_decisions.interest_rate/teacher_decisions_previous.interest_rate) - 1)*100
-        except ZeroDivisionError:
+        except (ZeroDivisionError, TypeError):
             economic_parameters['interest_rate_difference'] = "N/A"
         economic_parameters['tax_rate'] = teacher_decisions.tax_rate
         try:
             economic_parameters['tax_rate_difference'] = ((teacher_decisions.tax_rate/teacher_decisions_previous.tax_rate) - 1)*100
-        except ZeroDivisionError:
+        except (ZeroDivisionError, TypeError):
             economic_parameters['tax_rate_difference'] = "N/A"
         economic_parameters['inflation'] = teacher_decisions.inflation
         try:
             economic_parameters['inflation_difference'] = ((teacher_decisions.inflation/teacher_decisions_previous.inflation) - 1)*100
-        except ZeroDivisionError:
+        except (ZeroDivisionError, TypeError):
             economic_parameters['inflation_difference'] = "N/A"
         economic_parameters['loan_limit'] = teacher_decisions.loan_limit
         try:
             economic_parameters['loan_limit_difference'] = ((teacher_decisions.loan_limit/teacher_decisions_previous.loan_limit) - 1)*100
-        except ZeroDivisionError:
+        except (ZeroDivisionError, TypeError):
             economic_parameters['loan_limit_difference'] = "N/A"
 
         return Response({"industry": industry, "market": market, "economic_parameters": economic_parameters}, status=200)
