@@ -178,13 +178,13 @@ class Simulation:
             LastingProduct()
         )  # TODO: add option to create the other kind of product (?)
         if production_model is not None:
-            new_product.set_price(production_model.sell_price if production_model.sell_price is not None else 50)   #TODO change default sell price
+            new_product.set_price(production_model.sell_price if production_model.sell_price is not None else 0)   #TODO change default sell price
             new_product.set_man_cost(production_model.man_cost if production_model.man_cost is not None else FactoryPreset.BASE_MATERIAL_COST_PER_UNIT)
             company.production_volume = (
                 production_model.volume if production_model.volume is not None else 0
             )
         else:
-            new_product.set_price(50)
+            new_product.set_price(0)
             new_product.set_man_cost(FactoryPreset.BASE_MATERIAL_COST_PER_UNIT)
             company.production_volume = 0
             print(f"PRODUCTION MODEL WAS NONE FOR COMPANNY {company.brand}")
