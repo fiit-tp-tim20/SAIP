@@ -84,6 +84,8 @@ class Factory:
             * production_this_turn,
             skip=True,
         )  # TODO make sure this works as intended - are we using the updated man_cost from upgrades???
+        if production_this_turn <= 0:
+            return 0.0
         ppu = self.total_upkeep() / production_this_turn
         cap_usage = production_this_turn / self.capacity
 
@@ -207,9 +209,12 @@ class Company:
             self.production_volume = self.factory.capacity
 
         self.prod_ppu = self.factory.calculate_price_per_unit(self.production_volume)
-        self.total_ppu = (
-            self.prod_ppu + self.__agg_marketing_costs() / self.production_volume
-        )
+        if self.production_volume <= 0:
+            self.total_ppu = 0
+        else:
+            self.total_ppu = (
+                self.prod_ppu + self.__agg_marketing_costs() / self.production_volume
+            )
 
         self.inventory += self.production_volume
         self.prod_costs_per_turn = self.production_volume * self.prod_ppu
