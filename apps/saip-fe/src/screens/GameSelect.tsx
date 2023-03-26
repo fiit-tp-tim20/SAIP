@@ -26,7 +26,7 @@ type Game = {
 };
 
 const listGames = async () => {
-	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/list_games/`, {
+	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/list_games_ns/`, {
 		headers: {
 			Authorization: `Bearer ${localStorage.getItem("token")}`,
 			"Content-Type": "application/json",
