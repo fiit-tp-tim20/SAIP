@@ -107,6 +107,8 @@ class Market:
         return total_investment
 
     def generate_distribution(self) -> Dict:
+        for company in self.companies:
+            self.customer_distribution[company.brand] = {"demand": 0}
         for customer in self.customer_base:
             customer_choice = customer.choose_product()
             if self.customer_distribution.get(customer_choice) is None:
