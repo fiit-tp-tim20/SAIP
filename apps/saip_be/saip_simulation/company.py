@@ -38,12 +38,12 @@ class Factory:
     base_energy_cost: float = FactoryPreset.BASE_ENERGY_COST
 
     upkeep = {
-        "rent": float,
-        "energy": float,
-        "salaries": float,  # employees * salary * 3 (length of turn)
-        "materials": float,  # this one might be irrelevant
-        "writeoff": float,
-    }
+        "rent": 0.0,
+        "energy": 0.0,
+        "salaries": 0.0,  # employees * salary * 3 (length of turn)
+        "materials": 0.0,  # this one might be irrelevant
+        "writeoff": 0.0,    #CHANGED ALL THE VALUES FROM 'float' to '0.0' ... it was not a declaration of type but the assignment of a value of type 'type'
+    }   # TODO: TMP FIX
     inflation = FactoryPreset.BASE_INFLATION
 
     def __post_init__(self):
