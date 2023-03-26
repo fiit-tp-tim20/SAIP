@@ -107,7 +107,7 @@ class InovationsLover(Customer):
         return self.normalise_weights(weights, weight_sum)
 
     def calc_weight_for_product(self, product: Product, average_product_price):
-        if product.get_price() == -1:
+        if product.get_price() == -1 or product.get_price() == 0:
             return 5
         return (
             product.get_price() / average_product_price
