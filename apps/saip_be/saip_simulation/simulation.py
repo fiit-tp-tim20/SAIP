@@ -117,7 +117,8 @@ class Simulation:
                 new_company.factory = self.create_factory(factory_model=factory_model)
             else:
                 print(f"FACTORY WAS NONE FOR COMPANY {company_model.name}")
-                new_company.factory = None
+                new_company.factory = self.create_factory(factory_model=None)
+
             # setup marketing objects in dict
             marketing_model = company_state.marketing
             if marketing_model is not None:
@@ -151,6 +152,11 @@ class Simulation:
 
     def create_factory(self, factory_model: models.Factory) -> Factory:
         new_factory = Factory()
+        if factory_model == None:
+            new_factory.capacity = FactoryPreset.STARTING_CAPACITY
+            new_factory.base_energy_cost = FactoryPreset.BASE_ENERGY_COST
+            new_factory.capital_investment = FactoryPreset.STARTING_INVESTMENT
+            new_factory.capital_investment_this_turn = 0.0
 
         # all attributes are positive integer (from model)
         # TODO: types are not consistent: model <-> our class
@@ -172,13 +178,15 @@ class Simulation:
             LastingProduct()
         )  # TODO: add option to create the other kind of product (?)
         if production_model is not None:
-            new_product.set_price(production_model.sell_price)
-            new_product.set_man_cost(production_model.man_cost)
+            new_product.set_price(production_model.sell_price if production_model.sell_price is not None else 0)   #TODO change default sell price
+            new_product.set_man_cost(production_model.man_cost if production_model.man_cost is not None else FactoryPreset.BASE_MATERIAL_COST_PER_UNIT)
             company.production_volume = (
                 production_model.volume if production_model.volume is not None else 0
             )
         else:
-            company.production_volume = 0 # TODO: remove this - temp fix
+            new_product.set_price(0)
+            new_product.set_man_cost(FactoryPreset.BASE_MATERIAL_COST_PER_UNIT)
+            company.production_volume = 0
             print(f"PRODUCTION MODEL WAS NONE FOR COMPANNY {company.brand}")
 
         new_product.upgrades = (
