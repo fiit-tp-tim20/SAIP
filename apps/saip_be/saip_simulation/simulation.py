@@ -272,7 +272,7 @@ class Simulation:
                 else 0
             )
             ct_companies_states[company_model].new_loans = company_class_object.new_loans
-            ct_companies_states[company_model].inventory_charge = company_class_object.inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT
+            ct_companies_states[company_model].inventory_charge = company_class_object.inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT  #TODO: add inventory charge to actuall writeoffs
             ct_companies_states[company_model].sales =  company_class_object.income_per_turn #TODO: check if correct
             ct_companies_states[company_model].manufactured_man_cost = company_class_object.prod_costs_per_turn
             # TODO: add inflation - it should only affect the man cost 

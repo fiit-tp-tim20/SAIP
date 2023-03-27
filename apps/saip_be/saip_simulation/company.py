@@ -234,9 +234,9 @@ class Company:
         self.income_per_turn = demand * self.product.get_price()
         self.profit = self.income_per_turn - self.total_costs_per_turn
         self.apply_tax()
-        self.balance += self.profit + self.remaining_budget
         self.units_sold = demand
         self.inventory -= demand
+        self.balance += self.profit + self.remaining_budget - (self.inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT)
         return 0
 
     def apply_tax(self):
