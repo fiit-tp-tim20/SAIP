@@ -265,7 +265,7 @@ class Simulation:
             ct_total_units_sold += company_class_object.units_sold  # add units sold to overall sum of all units sold
             ct_companies_states[company_model].cash = company_class_object.remaining_budget
             ct_companies_states[company_model].ret_earnings = company_class_object.ret_earnings + company_class_object.income_per_turn #doteraz sales scitane dokopy (? mozno)
-            ct_companies_states[company_model].net_profit = company_class_object.profit # TODO: check if correct (income per turn - costs per turn)
+            ct_companies_states[company_model].net_profit = company_class_object.profit_after_tax # TODO: check if correct (income per turn - costs per turn)
             ct_companies_states[company_model].depreciation = (
                 company_class_object.factory.upkeep["writeoff"]
                 if company_class_object.factory.upkeep["writeoff"]
@@ -286,10 +286,10 @@ class Simulation:
             if ct_companies_states[company_model].production is not None:
 
                 ct_companies_states[company_model].production.man_cost = (
-                    company_class_object.product.get_man_cost()
+                    company_class_object.prod_ppu   # TODO: maybe this should be .product.get_man()
                 )
-                ct_companies_states[company_model].production.man_cost = (
-                    company_class_object.prod_ppu
+                ct_companies_states[company_model].production.man_cost_all = (
+                    company_class_object.total_ppu
                 )
                 ct_companies_states[company_model].production.volume = company_class_object.production_volume
                 # this is done because the volume of actual products produced could have differed from the one submitted by the company (for instance, because of a lack of funds)
