@@ -6,7 +6,7 @@ class GameParameters(models.Model):
     budget_cap = models.PositiveIntegerField(default=10000)
     depreciation = models.FloatField(default=0.1)
     base_man_cost = models.PositiveIntegerField(default=250)
-    base_capital = models.PositiveIntegerField(default=50000)
+    base_capital = models.PositiveIntegerField(default=10000)
     end_turn_on_committed = models.BooleanField(default=True)
 
     class Meta:
@@ -132,7 +132,7 @@ class Factory(models.Model):
     capacity = models.PositiveIntegerField(null=True, default=100)
     base_cost = models.FloatField(null=True, default=0)
     capital = models.FloatField(null=True, default=0)
-    capital_investments = models.FloatField(null=True, default=10000)
+    capital_investments = models.FloatField(null=True, default=50000)
 
     # def __str__(self):
     #     return f"Factory - {self.companiesstate.company}"
