@@ -279,7 +279,7 @@ class Simulation:
             ct_companies_states[company_model].tax = company_class_object.value_paid_in_tax
             ct_companies_states[company_model].profit_before_tax = company_class_object.profit_before_tax
             ct_companies_states[company_model].interest = company_class_object.value_paid_in_interest
-            ct_companies_states[company_model].cash_flow_res = company_class_object.remaining_budget + company_class_object.profit - company_class_object.total_costs_per_turn  #TODO: change remaining budget to cash from last turn
+            ct_companies_states[company_model].cash_flow_res = company_class_object.remaining_budget + company_class_object.income_per_turn - company_class_object.total_costs_per_turn  #TODO: change remaining budget to cash from last turn
             ct_companies_states[company_model].loan_repayment = company_class_object.value_paid_in_loan_repayment
             ct_companies_states[company_model].loans = company_class_object.loans
 
