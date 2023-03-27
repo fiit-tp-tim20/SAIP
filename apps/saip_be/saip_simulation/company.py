@@ -148,9 +148,11 @@ class Company:
     value_paid_in_tax: float = 0
     value_paid_in_interest: float = 0
     value_paid_in_loan_repayment: float = 0
+    value_paid_in_inventory_charge: float = 0
     new_loans: float = 0
     profit_before_tax: float = 0
     ret_earnings: float = 0
+
 
 
     max_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
@@ -236,7 +238,8 @@ class Company:
         self.apply_tax()
         self.units_sold = demand
         self.inventory -= demand
-        self.balance += self.profit + self.remaining_budget - (self.inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT)
+        self.value_paid_in_inventory_charge = (self.inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT)
+        self.balance += self.profit + self.remaining_budget - self.value_paid_in_inventory_charge
         return 0
 
     def apply_tax(self):
