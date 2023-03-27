@@ -6,7 +6,7 @@ class GameParameters(models.Model):
     budget_cap = models.PositiveIntegerField(default=10000)
     depreciation = models.FloatField(default=0.1)
     base_man_cost = models.PositiveIntegerField(default=250)
-    base_capital = models.PositiveIntegerField(default=10000)
+    base_capital = models.PositiveIntegerField(default=50000)
     end_turn_on_committed = models.BooleanField(default=True)
 
     class Meta:

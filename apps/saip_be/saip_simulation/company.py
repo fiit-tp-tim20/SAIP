@@ -142,6 +142,7 @@ class Company:
     profit: float = field(init=False)  # +income -costs | per turn only
     loans: float = FactoryPreset.STARTING_INVESTMENT
     interest_rate: float = CompanyPreset.DEFAULT_INTEREST_RATE
+    interest_payment: float = field(init=False)
     tax_rate = CompanyPreset.DEFAULT_TAX_RATE
 
     income_per_turn: float = 0  # field(init=False)
@@ -159,6 +160,7 @@ class Company:
 
     def __post_init__(self):
         self.remaining_budget = self.max_budget
+        self.interest_payment = self.loans * self.interest_rate
         self.pay_for_marketing()
 
     def pay_for_marketing(self):
@@ -177,7 +179,7 @@ class Company:
             self.factory.capital_investment
             + self.balance * 0.2  # long term performance
             + self.profit * 0.3  # per turn performance
-            - self.loans * 0.5  # log term debt
+            - self.loans * 0.5  # long term debt
             + self.yield_agg_marketing_value()
         ) / 1000
 
@@ -206,9 +208,14 @@ class Company:
         self.prod_ppu = self.factory.calculate_price_per_unit(
             self.production_volume, self.product.get_man_cost()
         )
-        self.total_ppu = (
-            self.prod_ppu + self.__agg_marketing_costs() / self.production_volume
-        )
+        additional_ppu = (
+            self.__agg_marketing_costs()
+            + self.factory.upkeep.get("writeoff")
+            + self.interest_payment
+            # TODO naklady na zasoby
+        ) / self.production_volume
+        
+        self.total_ppu = self.prod_ppu + additional_ppu
 
         self.inventory += self.production_volume
         self.prod_costs_per_turn = self.production_volume * self.prod_ppu
@@ -239,7 +246,7 @@ class Company:
         self.profit = self.profit * (1 - self.tax_rate)
 
     def __update_loans(self):
-        self.balance -= self.loans * self.interest_rate
+        self.balance -= self.interest_payment
         if self.balance < 0:
             self.loans -= self.balance
             self.balance = 0
@@ -257,7 +264,6 @@ class Company:
         self.loans -= self.balance - self.max_budget
         self.balance = 0
         # TODO loan limits
-        # TODO default TeacherDecisions model (align with current config)
 
 
 if __name__ == "__main__":
