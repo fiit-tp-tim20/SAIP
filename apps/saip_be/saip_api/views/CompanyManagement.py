@@ -114,7 +114,7 @@ class IndustryReport(APIView):
             company_info['sell_price'] = state.production.sell_price
             company_info['net_profit'] = state.net_profit
             try:
-                company_info['market_share'] = state.orders_fulfilled/market_state.sold
+                company_info['market_share'] = (state.orders_fulfilled/market_state.sold)*100
             except ZeroDivisionError:
                 company_info['market_share'] = 0
 
@@ -222,7 +222,7 @@ class CompanyReport(APIView):
         balance['liabilities_summary'] = company_state_previous.loans + company_state_previous.ret_earnings + company.game.parameters.base_capital
 
         cash_flow = dict()
-        cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1), company=company).cash #???
+        cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-2), company=company).cash #???
         cash_flow['sales'] =  company_state_previous.sales #plus
         cash_flow['manufactured_man_cost'] = company_state_previous.manufactured_man_cost #minus
         # vydavky na rozhodnutia - zratane vydavky na marketing r_d a capital s minusovou hodnotou
