@@ -1,17 +1,17 @@
 import { useAtom } from "jotai";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router";
-import { getGeneralInfo } from "../../api/CompanyInfo";
 import { totalSpentPersist } from "../../store/Atoms";
 import useCompanyStore from "../../store/Company";
 import useMarketingStore from "../../store/Marketing";
 import useUpgradesStore from "../../store/Upgrades";
 import { GameState } from "../../types/gameState";
-import { endTurn } from "../../api/EndTurn";
 import useModal from "../modal/useModal";
 import BottomBarModal from "./BottomBarModal";
 import { getCommitted } from "../../api/GetCommitted";
+import getGeneralInfo from "../../api/CompanyInfo";
+import endTurn from "../../api/EndTurn";
 
 export default function BottomBar() {
 	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());

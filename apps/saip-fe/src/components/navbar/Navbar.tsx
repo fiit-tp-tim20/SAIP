@@ -1,5 +1,4 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
 import { useLocation } from "react-router";
 import { getTurn } from "../../api/GetTurn";
@@ -7,7 +6,6 @@ import LinkTab from "./LinkTab";
 import Profile from "./Profile";
 
 function Navbar() {
-	const { t } = useTranslation();
 	const location = useLocation();
 
 	const { data, isLoading } = useQuery({
@@ -15,7 +13,24 @@ function Navbar() {
 		queryFn: () => getTurn(),
 	});
 
-	const tabs = ["dashboard", "product", "company", "marketing"];
+	const tabs = [
+		{
+			title: "Dashboard",
+			path: "/",
+		},
+		{
+			title: "Produkt",
+			path: "/product",
+		},
+		{
+			title: "Spoločnosť",
+			path: "/company",
+		},
+		{
+			title: "Marketing",
+			path: "/marketing",
+		},
+	];
 
 	return (
 		<div className="flex flex-row p-2 top-0 w-screen fixed left-0 z-40 bg-white">
@@ -24,10 +39,10 @@ function Navbar() {
 				<ul className="flex flex-row p-0 m-0">
 					{tabs.map((tab) => (
 						<LinkTab
-							key={tab}
-							title={t(`${tab}.title`) as string}
-							path={`/${tab}`}
-							isActive={`/${tab}` === location.pathname}
+							key={tab.path}
+							title={tab.title}
+							path={tab.path}
+							isActive={tab.path === location.pathname}
 						/>
 					))}
 				</ul>
