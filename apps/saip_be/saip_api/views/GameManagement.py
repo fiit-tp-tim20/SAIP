@@ -11,9 +11,7 @@ from ..serializers import GameSerializer
 
 from saip_simulation.simulation import Simulation
 
-parameters = {"GameParameters": {"budget_cap": 10000,
-                                 "depreciation": 0.1},
-              "Upgrades": [{"name": "Battery", "cost": 15000, "sales_effect": 0.75, "man_cost_effect": 0.3,
+parameters = {"Upgrades": [{"name": "Battery", "cost": 15000, "sales_effect": 0.75, "man_cost_effect": 0.3,
                             "camera_pos": "1,2,3", "camera_rot": "3,2,1"},
                            {"name": "Frame", "cost": 11000, "sales_effect": 0.55, "man_cost_effect": 0.2,
                             "camera_pos": "4,5,6", "camera_rot": "6,5,4"},
@@ -24,7 +22,7 @@ parameters = {"GameParameters": {"budget_cap": 10000,
                            ]}
 
 
-def create_default_upgrades(game: Game) -> None:
+def create_default_upgrades() -> None:
     if not Upgrade.objects.all():
         for upgrade in parameters["Upgrades"]:
             Upgrade.objects.create(name=upgrade["name"], cost=upgrade["cost"], sales_effect=upgrade["sales_effect"],
@@ -72,7 +70,7 @@ class CreateGameView(PermissionRequiredMixin, APIView):
         serializer = GameSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        game_parameters = GameParameters.objects.create(**parameters["GameParameters"])
+        game_parameters = GameParameters.objects.create()
         game_parameters.save()
 
         game = serializer.save()
@@ -80,7 +78,7 @@ class CreateGameView(PermissionRequiredMixin, APIView):
         game.admin = request.user
         game.save()
 
-        create_default_upgrades(game)
+        create_default_upgrades()
         create_turn(0, game)
 
         return Response({"gameID": game.id}, status=201)
@@ -96,6 +94,19 @@ class GetRunningGamesView(APIView):
         response = {"games": [{"id": game.id,
                                "name": game.name}
                               for game in games]}
+
+        return Response(response)
+    
+class GetNotStartedGamesView(APIView):
+
+    def get(self, request) -> Response:
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        turns = Turn.objects.filter(end__isnull=True, number=0)
+        response = {"games": [{"id": turn.game.id,
+                               "name": turn.game.name}
+                              for turn in turns]}
 
         return Response(response)
 
@@ -186,10 +197,10 @@ def end_turn(turn: Turn) -> Turn:
     new_turn = create_turn(turn.number + 1, game)
     calculate_man_cost(game, new_turn)
 
-    # if turn.number != 0:
-        # sim = Simulation(game_model=game, turn_model=turn, new_turn_model=new_turn)
-        # sim.run_simulation()
-        # sim.write_simulation_results()
+    if turn.number != 0:
+        sim = Simulation(game_model=game, turn_model=turn, new_turn_model=new_turn)
+        sim.run_simulation()
+        sim.write_simulation_results()
 
     turn.end = timezone.now()
     turn.save()

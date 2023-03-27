@@ -70,10 +70,11 @@ class Customer(ABC):
         pass
 
 
+# CHANGES - added 'or product_price == 0' condition to all calc_weight_for_product methods
 @dataclass
 class HighBudgetCustomer(Customer):
     def calc_weight_for_product(self, product_price, average_product_price):
-        if product_price == -1:
+        if product_price == -1 or product_price == 0:
             return 5
         return (product_price / average_product_price) ** 2
 
@@ -81,7 +82,7 @@ class HighBudgetCustomer(Customer):
 @dataclass
 class LowBudgetustomer(Customer):
     def calc_weight_for_product(self, product_price, average_product_price):
-        if product_price == -1:
+        if product_price == -1 or product_price == 0:
             return 5
         return (average_product_price / product_price) ** 2
 
@@ -89,7 +90,7 @@ class LowBudgetustomer(Customer):
 @dataclass
 class AverageBudgetCustomer(Customer):
     def calc_weight_for_product(self, product_price, average_product_price):
-        if product_price == -1:
+        if product_price == -1 or product_price == 0:
             return 5
         return product_price / average_product_price
 
@@ -106,7 +107,7 @@ class InovationsLover(Customer):
         return self.normalise_weights(weights, weight_sum)
 
     def calc_weight_for_product(self, product: Product, average_product_price):
-        if product.get_price() == -1:
+        if product.get_price() == -1 or product.get_price() == 0:
             return 5
         return (
             product.get_price() / average_product_price

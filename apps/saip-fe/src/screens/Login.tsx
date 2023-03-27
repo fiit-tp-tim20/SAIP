@@ -1,8 +1,6 @@
-import React from "react";
-import { useState } from "react";
-import { useQuery } from "react-query";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+
 import useCompanyStore from "../store/Company";
 import useMarketingStore from "../store/Marketing";
 
@@ -11,7 +9,6 @@ export default function Login() {
 	const [password, setPassword] = useState(0);
 
 	const [isInvalid, setIsInvalid] = useState(false);
-	const [isValidCredential, setIsValidCredential] = useState();
 
 	const { reset: marketingReset } = useMarketingStore();
 	const { reset: companyReset } = useCompanyStore();
@@ -21,7 +18,7 @@ export default function Login() {
 			method: "POST",
 			body: JSON.stringify({
 				username: email,
-				password: password,
+				password,
 			}),
 			headers: {
 				"Content-type": "application/json",
@@ -43,17 +40,14 @@ export default function Login() {
 
 		//! temporary, find a better way to do this
 		window.location.reload();
+		return response;
 	};
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		//const {data, status} = useQuery('login', login)
+		// const {data, status} = useQuery('login', login)
 		login();
-		//navigate("/dashboard");
-	};
-
-	const handleRegister = (e) => {
-		e.preventDefault();
+		// navigate("/dashboard");
 	};
 
 	return (
@@ -61,7 +55,7 @@ export default function Login() {
 			<form className="bg-white shadow-md rounded px-6 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
 				<div className="mb-4">
 					<label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-						E-mail
+						Prihlasovacie meno
 					</label>
 					<input
 						className={`shadow appearance-none border ${
@@ -69,7 +63,7 @@ export default function Login() {
 						} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
 						id="username"
 						type="text"
-						placeholder="E-mail"
+						placeholder="Prihlasovacie meno"
 						onChange={(e: any) => setEmail(e.target.value)}
 					/>
 				</div>

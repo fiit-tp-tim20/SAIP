@@ -1,12 +1,10 @@
 import React, { Suspense, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import "./i18n";
 import Dashboard from "./screens/Dashboard";
-import News from "./screens/News";
-import Devtools from "./dev/Devtools";
 import Product from "./screens/Product";
 import Navbar from "./components/navbar/Navbar";
 import Company from "./screens/Company";
@@ -19,11 +17,13 @@ import useCompanyStore from "./store/Company";
 import useUpgradesStore from "./store/Upgrades";
 import useMarketingStore from "./store/Marketing";
 import logout from "./api/logout";
+import GameSelect from "./screens/GameSelect";
 import Register from "./screens/Register";
+import BugReport from "./components/bugreport/BugReport";
 
 function App() {
 	const token = localStorage.getItem("token");
-	const { data, isLoading, refetch } = useQuery({
+	const { data } = useQuery({
 		queryKey: ["currentTurn"],
 		queryFn: () => token && getTurn(),
 		refetchInterval: 1000,
@@ -34,6 +34,7 @@ function App() {
 	const { reset: resetMarketingState } = useMarketingStore();
 
 	useEffect(() => {
+		console.warn(data);
 		const savedTurn = localStorage.getItem("turn");
 		if (!savedTurn && !data) {
 			localStorage.setItem("turn", "0");
@@ -48,6 +49,11 @@ function App() {
 			resetMarketingState();
 		}
 	}, [data && data.Number]);
+
+	// kompletne dum-dum riešenie PREROBIŤ. Aj tu aj getTurn() !!!!!!!!!!!!!
+	if (token && !data) {
+		return <GameSelect />;
+	}
 
 	if (data && data.Number === 0) {
 		return (
@@ -75,6 +81,7 @@ function App() {
 								<Route path="/product" element={<Product />} />
 								<Route path="/company" element={<Company />} />
 								<Route path="/marketing" element={<Marketing />} />
+								<Route path="/game" element={<GameSelect />} />
 								{/* <Route path="/news" element={<News />} /> */}
 								{/* <Route path="/" element={<Navigate to="/dashboard" replace />} /> */}
 								<Route path="/" element={<Dashboard />} />
@@ -82,6 +89,7 @@ function App() {
 							</Routes>
 						</div>
 						<BottomBar />
+						<BugReport />
 					</BrowserRouter>
 				</Suspense>
 			) : (
@@ -94,7 +102,7 @@ function App() {
 				</BrowserRouter>
 			)}
 			{/* <Devtools /> */}
-			<ReactQueryDevtools initialIsOpen={false} />
+			{/* <ReactQueryDevtools initialIsOpen={false} /> */}
 		</>
 	);
 }

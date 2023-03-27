@@ -38,12 +38,12 @@ class Factory:
     base_energy_cost: float = FactoryPreset.BASE_ENERGY_COST
 
     upkeep = {
-        "rent": float,
-        "energy": float,
-        "salaries": float,  # employees * salary * 3 (length of turn)
-        "materials": float,  # this one might be irrelevant
-        "writeoff": float,
-    }
+        "rent": 0.0,
+        "energy": 0.0,
+        "salaries": 0.0,  # employees * salary * 3 (length of turn)
+        "materials": 0.0,  # this one might be irrelevant
+        "writeoff": 0.0,    #CHANGED ALL THE VALUES FROM 'float' to '0.0' ... it was not a declaration of type but the assignment of a value of type 'type'
+    }   # TODO: TMP FIX
     inflation = FactoryPreset.BASE_INFLATION
 
     def __post_init__(self):
@@ -87,6 +87,9 @@ class Factory:
             materials_cost=material_cost * production_this_turn,
             skip=True,
         )
+        if production_this_turn <= 0:
+            return 0.0
+            
         ppu = self.total_upkeep() / production_this_turn
         cap_usage = production_this_turn / self.capacity
 
@@ -137,13 +140,21 @@ class Company:
     production_volume: int = 0
     prod_ppu: float = field(init=False)
     total_ppu: float = field(init=False)
+    value_paid_in_inventory_charge: float = field(init=False)
 
     balance: float = 0  # current state of the company finances
     profit: float = field(init=False)  # +income -costs | per turn only
+    profit_before_tax: float = field(init=False)
+    ret_earnings: float = field(init=False)
+    
     loans: float = FactoryPreset.STARTING_INVESTMENT
     interest_rate: float = CompanyPreset.DEFAULT_INTEREST_RATE
-    interest_payment: float = field(init=False)
+    value_paid_in_interest: float = field(init=False)
+    value_paid_in_loan_repayment: float = field(init=False)
+    new_loans: float = field(init=False)
+    
     tax_rate = CompanyPreset.DEFAULT_TAX_RATE
+    value_paid_in_tax: float = field(init=False)
 
     income_per_turn: float = 0  # field(init=False)
     prod_costs_per_turn: float = 0  # field(init=False)
@@ -160,7 +171,6 @@ class Company:
 
     def __post_init__(self):
         self.remaining_budget = self.max_budget
-        self.interest_payment = self.loans * self.interest_rate
         self.pay_for_marketing()
 
     def pay_for_marketing(self):
@@ -208,14 +218,16 @@ class Company:
         self.prod_ppu = self.factory.calculate_price_per_unit(
             self.production_volume, self.product.get_man_cost()
         )
-        additional_ppu = (
-            self.__agg_marketing_costs()
-            + self.factory.upkeep.get("writeoff")
-            + self.interest_payment
-            # TODO naklady na zasoby
-        ) / self.production_volume
-        
-        self.total_ppu = self.prod_ppu + additional_ppu
+        if self.production_volume <= 0:
+            self.total_ppu = 0
+        else:
+            additional_ppu = (
+                self.__agg_marketing_costs()
+                + self.factory.upkeep.get("writeoff")
+                + self.interest_payment
+                # TODO naklady na zasoby
+            ) / self.production_volume
+            self.total_ppu = self.prod_ppu + additional_ppu
 
         self.inventory += self.production_volume
         self.prod_costs_per_turn = self.production_volume * self.prod_ppu
@@ -235,33 +247,58 @@ class Company:
 
         self.income_per_turn = demand * self.product.get_price()
         self.profit = self.income_per_turn - self.total_costs_per_turn
+        
         if self.profit > 0:
             self.apply_tax()
+            
         self.balance += self.profit + self.remaining_budget
         self.units_sold = demand
         self.inventory -= demand
+        self.value_paid_in_inventory_charge = (self.inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT)
+        self.balance += self.profit + self.remaining_budget - self.value_paid_in_inventory_charge
         return 0
 
+
     def apply_tax(self):
-        self.profit = self.profit * (1 - self.tax_rate)
+        if self.profit <= 0: 
+            self.profit_before_tax = self.profit
+            self.profit_after_tax = self.profit
+            self.value_paid_in_tax = 0
+        else:
+            self.profit_before_tax = self.profit
+            profit_after_tax = self.profit * (1 - self.tax_rate)
+            self.value_paid_in_tax = self.profit - profit_after_tax
+            self.profit = profit_after_tax      
+        
 
     def __update_loans(self):
-        self.balance -= self.interest_payment
+        self.new_loans = 0
+        self.value_paid_in_interest = self.loans * self.interest_rate
+        self.value_paid_in_loan_repayment = self.0
+        self.balance -= self.value_paid_in_interest
+
         if self.balance < 0:
             self.loans -= self.balance
+            self.new_loans -= self.balance
             self.balance = 0
 
         if self.balance < self.max_budget:
             self.loans += self.max_budget - self.balance
+            self.new_loans += self.max_budget - self.balance
             self.balance = 0
             return
 
         if (self.balance - self.max_budget) > self.loans:
             self.balance -= self.loans + self.max_budget
+            self.value_paid_in_loan_repayment += self.loans
             self.loans = 0
             return
 
-        self.loans -= self.balance - self.max_budget
+        if (self.balance - self.max_budget) > 0:
+            self.value_paid_in_loan_repayment += (self.balance - self.max_budget)
+        else:
+            self.new_loans -= (self.balance - self.max_budget)
+        self.loans -= (self.balance - self.max_budget)
         self.balance = 0
         # TODO loan limits
 

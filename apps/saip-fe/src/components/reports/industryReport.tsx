@@ -1,6 +1,7 @@
 import React from "react";
 import { useQuery } from "react-query";
 import getIndustryReport from "../../api/GetIndustryReport";
+import numberWithSpaces from "../../utils/numberWithSpaces";
 
 function IndustryReport() {
 	const { data, isLoading } = useQuery("industryReport", getIndustryReport, {
@@ -32,23 +33,23 @@ function IndustryReport() {
 								</tr>
 							</thead>
 							<tbody>
-								{Object.entries(data?.industry)
-									.sort((a, b) => a[1].stock_price | (0 > b[1].stock_price) | 0)
-									.map((industry, index) => (
+								{/* TODO add sort */}
+								{data &&
+									Object.entries(data?.industry).map((industry, index) => (
 										<tr key={industry[0]} className="hover:bg-stone-100">
 											<td className="border px-4 py-2 text-center">{index + 1}</td>
 											<td className="border px-4 py-2 text-center">{industry[0]}</td>
 											<td className="border px-4 py-2 text-center">
-												{industry[1].stock_price || 0} €
+												{numberWithSpaces(industry[1].stock_price)} €
 											</td>
 											<td className="border px-4 py-2 text-center">
-												{industry[1].net_profit || 0} €
+												{numberWithSpaces(industry[1].net_profit)} €
 											</td>
 											<td className="border px-4 py-2 text-center">
-												{industry[1].sell_price} €/ks
+												{numberWithSpaces(industry[1].sell_price)} €/ks
 											</td>
 											<td className="border px-4 py-2 text-center">
-												{industry[1].market_share} %
+												{numberWithSpaces(industry[1].market_share)} %
 											</td>
 										</tr>
 									))}
@@ -69,28 +70,38 @@ function IndustryReport() {
 							<tbody>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Celkové objednávky</td>
-									<td className="border px-4 py-2">{data?.market.demand || 0}</td>
-									<td className="border px-4 py-2">{data?.market.demand_difference || 0} %</td>
+									<td className="border px-4 py-2">{numberWithSpaces(data?.market.demand)}</td>
+									<td className="border px-4 py-2">
+										{numberWithSpaces(data?.market.demand_difference)} %
+									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Celkový predaj</td>
-									<td className="border px-4 py-2">{data?.market.sold_products || 0}</td>
-									<td className="border px-4 py-2">{data?.market.sold_products_difference || 0} %</td>
+									<td className="border px-4 py-2">{numberWithSpaces(data?.market.sold_products)}</td>
+									<td className="border px-4 py-2">
+										{numberWithSpaces(data?.market.sold_products_difference)} %
+									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Celková výroba</td>
-									<td className="border px-4 py-2">{data?.market.manufactured || 0}</td>
-									<td className="border px-4 py-2">{data?.market.manufactured_difference || 0} %</td>
+									<td className="border px-4 py-2">{numberWithSpaces(data?.market.manufactured)}</td>
+									<td className="border px-4 py-2">
+										{numberWithSpaces(data?.market.manufactured_difference)} %
+									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Celková kapacita</td>
-									<td className="border px-4 py-2">{data?.market.capacity || 0}</td>
-									<td className="border px-4 py-2">{data?.market.capacity_difference || 0} %</td>
+									<td className="border px-4 py-2">{numberWithSpaces(data?.market.capacity)}</td>
+									<td className="border px-4 py-2">
+										{numberWithSpaces(data?.market.capacity_difference)} %
+									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Celkové zásoby v odvetví</td>
-									<td className="border px-4 py-2">{data?.market.inventory || 0}</td>
-									<td className="border px-4 py-2">{data?.market.inventory_difference || 0} %</td>
+									<td className="border px-4 py-2">{numberWithSpaces(data?.market.inventory)}</td>
+									<td className="border px-4 py-2">
+										{numberWithSpaces(data?.market.inventory_difference)} %
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -109,30 +120,38 @@ function IndustryReport() {
 							<tbody>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Úroková sadzba</td>
-									<td className="border px-4 py-2">{data?.economic_parameters.interest_rate || 0}</td>
 									<td className="border px-4 py-2">
-										{data?.economic_parameters.interest_rate_difference || 0} %
+										{numberWithSpaces(data?.economic_parameters.interest_rate)}
+									</td>
+									<td className="border px-4 py-2">
+										{numberWithSpaces(data?.economic_parameters.interest_rate_difference)} %
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Úverový limit</td>
-									<td className="border px-4 py-2">{data?.economic_parameters.loan_limit || 0}</td>
 									<td className="border px-4 py-2">
-										{data?.economic_parameters.loan_limit_difference || 0} %
+										{numberWithSpaces(data?.economic_parameters.loan_limit)}
+									</td>
+									<td className="border px-4 py-2">
+										{numberWithSpaces(data?.economic_parameters.loan_limit_difference)} %
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Sazdba dane z prijmu</td>
-									<td className="border px-4 py-2">{data?.economic_parameters.tax_rate || 0}</td>
 									<td className="border px-4 py-2">
-										{data?.economic_parameters.tax_rate_difference || 0} %
+										{numberWithSpaces(data?.economic_parameters.tax_rate)}
+									</td>
+									<td className="border px-4 py-2">
+										{numberWithSpaces(data?.economic_parameters.tax_rate_difference)} %
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Inflácia</td>
-									<td className="border px-4 py-2">{data?.economic_parameters.inflation || 0}</td>
 									<td className="border px-4 py-2">
-										{data?.economic_parameters.inflation_difference || 0} %
+										{numberWithSpaces(data?.economic_parameters.inflation)}
+									</td>
+									<td className="border px-4 py-2">
+										{numberWithSpaces(data?.economic_parameters.inflation_difference)} %
 									</td>
 								</tr>
 							</tbody>
