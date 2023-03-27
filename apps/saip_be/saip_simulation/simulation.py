@@ -63,9 +63,7 @@ class Simulation:
             market_state_model = models.MarketState.objects.get(turn=self.turn_model)
             self.market = Market(
                 companies=self.companies.values(),
-                customer_count=market_state_model.demand
-                if market_state_model is not None
-                else config.MarketPreset.STARTING_CUSTOMER_COUNT,
+                customer_count=market_state_model.demand if market_state_model.demand is not None else config.MarketPreset.STARTING_CUSTOMER_COUNT,
             )  # TODO: take care of the other attributes from the model
         except models.MarketState.DoesNotExist:
             self.market = Market(
@@ -119,7 +117,8 @@ class Simulation:
                 new_company.factory = self.create_factory(factory_model=factory_model)
             else:
                 print(f"FACTORY WAS NONE FOR COMPANY {company_model.name}")
-                new_company.factory = None
+                new_company.factory = self.create_factory(factory_model=None)
+
             # setup marketing objects in dict
             marketing_model = company_state.marketing
             if marketing_model is not None:
@@ -153,6 +152,11 @@ class Simulation:
 
     def create_factory(self, factory_model: models.Factory) -> Factory:
         new_factory = Factory()
+        if factory_model == None:
+            new_factory.capacity = FactoryPreset.STARTING_CAPACITY
+            new_factory.base_energy_cost = FactoryPreset.BASE_ENERGY_COST
+            new_factory.capital_investment = FactoryPreset.STARTING_INVESTMENT
+            new_factory.capital_investment_this_turn = 0.0
 
         # all attributes are positive integer (from model)
         # TODO: types are not consistent: model <-> our class
@@ -174,13 +178,15 @@ class Simulation:
             LastingProduct()
         )  # TODO: add option to create the other kind of product (?)
         if production_model is not None:
-            new_product.set_price(production_model.sell_price)
-            new_product.set_man_cost(production_model.man_cost)
+            new_product.set_price(production_model.sell_price if production_model.sell_price is not None else 0)   #TODO change default sell price
+            new_product.set_man_cost(production_model.man_cost if production_model.man_cost is not None else FactoryPreset.BASE_MATERIAL_COST_PER_UNIT)
             company.production_volume = (
                 production_model.volume if production_model.volume is not None else 0
             )
         else:
-            company.production_volume = 0 # TODO: remove this - temp fix
+            new_product.set_price(0)
+            new_product.set_man_cost(FactoryPreset.BASE_MATERIAL_COST_PER_UNIT)
+            company.production_volume = 0
             print(f"PRODUCTION MODEL WAS NONE FOR COMPANNY {company.brand}")
 
         new_product.upgrades = (
@@ -236,6 +242,7 @@ class Simulation:
                 pass
         # load the market state model
         ct_market_state = models.MarketState.objects.get(turn=self.turn_model)
+        nt_market_state = models.MarketState.objects.get(turn=self.new_turn_model)
 
         # write data from classes to models
         # curent turn
@@ -282,7 +289,7 @@ class Simulation:
                     company_class_object.product.get_man_cost()
                 )
                 ct_companies_states[company_model].production.man_cost = (
-                    company_class_object.total_ppu
+                    company_class_object.prod_ppu
                 )
                 ct_companies_states[company_model].production.volume = company_class_object.production_volume
                 # this is done because the volume of actual products produced could have differed from the one submitted by the company (for instance, because of a lack of funds)
@@ -319,3 +326,5 @@ class Simulation:
                 ct_companies_states[company_model].factory.capital_investments = company_class_object.factory.capital_investment
                 nt_companies_states[company_model].factory.save()
             nt_companies_states[company_model].save()
+        nt_market_state.demand = ct_total_units_demanded
+        nt_market_state.save()

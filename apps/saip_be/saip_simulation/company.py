@@ -38,12 +38,12 @@ class Factory:
     base_energy_cost: float = FactoryPreset.BASE_ENERGY_COST
 
     upkeep = {
-        "rent": float,
-        "energy": float,
-        "salaries": float,  # employees * salary * 3 (length of turn)
-        "materials": float,  # this one might be irrelevant
-        "writeoff": float,
-    }
+        "rent": 0.0,
+        "energy": 0.0,
+        "salaries": 0.0,  # employees * salary * 3 (length of turn)
+        "materials": 0.0,  # this one might be irrelevant
+        "writeoff": 0.0,    #CHANGED ALL THE VALUES FROM 'float' to '0.0' ... it was not a declaration of type but the assignment of a value of type 'type'
+    }   # TODO: TMP FIX
     inflation = FactoryPreset.BASE_INFLATION
 
     def __post_init__(self):
@@ -84,6 +84,8 @@ class Factory:
             * production_this_turn,
             skip=True,
         )  # TODO make sure this works as intended - are we using the updated man_cost from upgrades???
+        if production_this_turn <= 0:
+            return 0.0
         ppu = self.total_upkeep() / production_this_turn
         cap_usage = production_this_turn / self.capacity
 
@@ -207,9 +209,12 @@ class Company:
             self.production_volume = self.factory.capacity
 
         self.prod_ppu = self.factory.calculate_price_per_unit(self.production_volume)
-        self.total_ppu = (
-            self.prod_ppu + self.__agg_marketing_costs() / self.production_volume
-        )
+        if self.production_volume <= 0:
+            self.total_ppu = 0
+        else:
+            self.total_ppu = (
+                self.prod_ppu + self.__agg_marketing_costs() / self.production_volume
+            )
 
         self.inventory += self.production_volume
         self.prod_costs_per_turn = self.production_volume * self.prod_ppu
@@ -235,10 +240,15 @@ class Company:
         return 0
 
     def apply_tax(self):
-        self.profit_before_tax = self.profit
-        profit_after_tax = self.profit * (1 - CompanyPreset.DEFAULT_TAX_RATE)
-        self.value_paid_in_tax = self.profit - profit_after_tax
-        self.profit = profit_after_tax
+        if self.profit <= 0: 
+            self.profit_before_tax = self.profit
+            self.profit_after_tax = self.profit
+            self.value_paid_in_tax = 0
+        else:
+            self.profit_before_tax = self.profit
+            profit_after_tax = self.profit * (1 - CompanyPreset.DEFAULT_TAX_RATE)
+            self.value_paid_in_tax = self.profit - profit_after_tax
+            self.profit = profit_after_tax
 
     def __update_loans(self):
         self.new_loans = 0

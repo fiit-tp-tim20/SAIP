@@ -1,12 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+# def get_default_game_parameters() -> 'GameParameters':
+#     return GameParameters.objects.get_or_create()[0]
 
 class GameParameters(models.Model):
     budget_cap = models.PositiveIntegerField(default=10000)
     depreciation = models.FloatField(default=0.1)
     base_man_cost = models.PositiveIntegerField(default=50)
-    base_capital = models.FloatField(default=22837.5)
+    base_capital = models.FloatField(default=40000)
     end_turn_on_committed = models.BooleanField(default=True)
 
     class Meta:
@@ -16,10 +18,11 @@ class GameParameters(models.Model):
 
 class Game(models.Model):
     start = models.DateTimeField(null=True, auto_now_add=True)
-    end = models.DateTimeField(null=True, blank=True)
+    end = models.DateTimeField(null=True, blank=True, editable=False)
     name = models.CharField(max_length=100, null=True)
-    admin = models.ForeignKey(User, models.DO_NOTHING, null=True)
-    turns = models.PositiveIntegerField(null=True)
+    admin = models.ForeignKey(User, models.PROTECT, null=True)
+    turns = models.PositiveIntegerField(null=True, default=16)
+    # parameters = models.ForeignKey(GameParameters, models.CASCADE, null=True, default=get_default_game_parameters)
     parameters = models.ForeignKey(GameParameters, models.CASCADE, null=True)
 
     def __str__(self):
@@ -34,7 +37,7 @@ class Turn(models.Model):
     number = models.PositiveIntegerField(null=True)
     start = models.DateTimeField(null=True, auto_now_add=True)
     end = models.DateTimeField(null=True, blank=True)
-    game = models.ForeignKey(Game, models.DO_NOTHING, null=True)
+    game = models.ForeignKey(Game, models.CASCADE, null=True)
 
     def __str__(self):
         if self.end:
@@ -50,7 +53,7 @@ class Company(models.Model):
     name = models.CharField(max_length=100, null=True)
     user = models.ForeignKey(User, models.DO_NOTHING, null=True, related_name='user_companies')
     game = models.ForeignKey(Game, models.DO_NOTHING, null=True, related_name='game_companies')
-    participants = models.CharField(max_length=100, null=True)
+    participants = models.CharField(max_length=300, null=True)
 
     def __str__(self):
         return f"{self.game} - {self.name} ({self.user})"
@@ -128,7 +131,7 @@ class Factory(models.Model):
     capacity = models.PositiveIntegerField(null=True, default=100)
     base_cost = models.FloatField(null=True,default=0)
     capital = models.FloatField(null=True,default=0)
-    capital_investments = models.FloatField(null=True, default=21000)
+    capital_investments = models.FloatField(null=True, default=50000)
 
     # def __str__(self):
     #     return f"Factory - {self.companiesstate.company}"
@@ -153,9 +156,9 @@ class CompaniesState(models.Model):
     #kontrola
     orders_received = models.PositiveIntegerField(null=True, default=0)
     orders_fulfilled = models.PositiveIntegerField(null=True, default=0)
-    cash = models.FloatField(null=True, default=11908.62) #celkovo dostupných prostriedkov
+    cash = models.FloatField(null=True, default=10000) #celkovo dostupných prostriedkov
     #capital = models.FloatField(null=True, default=0)
-    ret_earnings = models.FloatField(null=True, default=1394.25) 
+    ret_earnings = models.FloatField(null=True, default=0) 
     net_profit = models.FloatField(null=True, blank=True) #za kolo
     depreciation = models.FloatField(null=True, blank=True)
     new_loans = models.FloatField(null=True, blank=True)
@@ -167,7 +170,7 @@ class CompaniesState(models.Model):
     interest = models.FloatField(null=True, blank=True)
     cash_flow_res = models.FloatField(null=True, blank=True)
     loan_repayment = models.FloatField(null=True, blank=True)
-    loans = models.FloatField(null=True, default=8677)
+    loans = models.FloatField(null=True, default=20000)
 
     def __str__(self):
         return f"{self.company} - {self.turn}"
