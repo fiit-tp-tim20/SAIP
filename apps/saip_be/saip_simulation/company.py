@@ -213,6 +213,7 @@ class Company:
             + self.factory.upkeep.get("writeoff")
             + self.interest_payment
             # TODO naklady na zasoby
+            # TODO upgrade zasob
         ) / self.production_volume
         
         self.total_ppu = self.prod_ppu + additional_ppu
