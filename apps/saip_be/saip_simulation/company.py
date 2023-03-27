@@ -78,10 +78,13 @@ class Factory:
             + self.upkeep.get("materials")
         )
 
-    def calculate_price_per_unit(self, production_this_turn: int) -> float:
+    def calculate_price_per_unit(
+        self,
+        production_this_turn: int,
+        material_cost: float = FactoryPreset.BASE_MATERIAL_COST_PER_UNIT,
+    ) -> float:
         self.update_upkeep(
-            materials_cost=FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
-            * production_this_turn,
+            materials_cost=material_cost * production_this_turn,
             skip=True,
         )
         ppu = self.total_upkeep() / production_this_turn
@@ -201,7 +204,9 @@ class Company:
         if self.production_volume > self.factory.capacity:
             self.production_volume = self.factory.capacity
 
-        self.prod_ppu = self.factory.calculate_price_per_unit(self.production_volume)
+        self.prod_ppu = self.factory.calculate_price_per_unit(
+            self.production_volume, self.product.get_man_cost()
+        )
         self.total_ppu = (
             self.prod_ppu + self.__agg_marketing_costs() / self.production_volume
         )
@@ -214,7 +219,8 @@ class Company:
         if demand > self.inventory:
             self.income_per_turn = self.inventory * self.product.get_price()
             self.profit = self.income_per_turn - self.total_costs_per_turn
-            self.apply_tax()
+            if self.profit > 0:
+                self.apply_tax()
             self.balance += self.profit + self.remaining_budget
             demand_not_met = demand - self.inventory
             self.units_sold = self.inventory
@@ -223,7 +229,8 @@ class Company:
 
         self.income_per_turn = demand * self.product.get_price()
         self.profit = self.income_per_turn - self.total_costs_per_turn
-        self.apply_tax()
+        if self.profit > 0:
+            self.apply_tax()
         self.balance += self.profit + self.remaining_budget
         self.units_sold = demand
         self.inventory -= demand
@@ -250,6 +257,8 @@ class Company:
 
         self.loans -= self.balance - self.max_budget
         self.balance = 0
+        # TODO loan limits
+        # TODO default TeacherDecisions model (align with current config)
 
 
 if __name__ == "__main__":
@@ -268,9 +277,9 @@ if __name__ == "__main__":
     unitsC = int(FactoryPreset.STARTING_CAPACITY * 0.99)
 
     print("TESTING FACTORY")
-    ppuA = com.factory.calculate_price_per_unit(unitsA)
-    ppuB = com.factory.calculate_price_per_unit(unitsB)
-    ppuC = com.factory.calculate_price_per_unit(unitsC)
+    ppuA = com.factory.calculate_price_per_unit(unitsA, com.product.get_man_cost())
+    ppuB = com.factory.calculate_price_per_unit(unitsB, com.product.get_man_cost())
+    ppuC = com.factory.calculate_price_per_unit(unitsC, com.product.get_man_cost())
     print(
         f"A:{unitsA} ppu:{ppuA:.2f} \nB:{unitsB} ppu:{ppuB:.2f} \nC:{unitsC} ppu:{ppuC:.2f}"
     )
@@ -295,9 +304,9 @@ if __name__ == "__main__":
     com.factory.invest_into_factory(investment)
     print(f"new cap: {com.factory.capacity}")
 
-    ppuA = com.factory.calculate_price_per_unit(unitsA)
-    ppuB = com.factory.calculate_price_per_unit(unitsB)
-    ppuC = com.factory.calculate_price_per_unit(unitsC)
+    ppuA = com.factory.calculate_price_per_unit(unitsA, com.product.get_man_cost())
+    ppuB = com.factory.calculate_price_per_unit(unitsB, com.product.get_man_cost())
+    ppuC = com.factory.calculate_price_per_unit(unitsC, com.product.get_man_cost())
     print(
         f"A:{unitsA} ppu:{ppuA:.2f} \nB:{unitsB} ppu:{ppuB:.2f} \nC:{unitsC} ppu:{ppuC:.2f}"
     )
