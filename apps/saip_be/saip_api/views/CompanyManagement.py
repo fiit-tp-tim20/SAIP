@@ -104,7 +104,7 @@ class IndustryReport(APIView):
             return Response({"detail": "Company for this user not found"}, status=404)
 
         last_turn = get_last_turn(company.game)
-        company_states = CompaniesState.objects.filter(turn=last_turn)
+        company_states = CompaniesState.objects.filter(turn=Turn.objects.get(game=company.game, number=last_turn.number-1))
         market_state = MarketState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1))
 
         industry = dict()
