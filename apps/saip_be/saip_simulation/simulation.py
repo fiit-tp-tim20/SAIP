@@ -265,7 +265,7 @@ class Simulation:
             ct_total_units_sold += company_class_object.units_sold  # add units sold to overall sum of all units sold
             ct_companies_states[company_model].cash = company_class_object.remaining_budget
             ct_companies_states[company_model].ret_earnings = company_class_object.ret_earnings + company_class_object.income_per_turn #doteraz sales scitane dokopy (? mozno)
-            ct_companies_states[company_model].net_profit = company_class_object.profit_after_tax # TODO: check if correct (income per turn - costs per turn)
+            ct_companies_states[company_model].net_profit = company_class_object.profit_after_tax
             ct_companies_states[company_model].depreciation = (
                 company_class_object.factory.upkeep["writeoff"]
                 if company_class_object.factory.upkeep["writeoff"]
