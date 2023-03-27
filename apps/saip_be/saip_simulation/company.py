@@ -99,8 +99,7 @@ class Factory:
         self.__devalue_capital()
         self.capital_investment += investment
         self.capacity += floor(
-            self.capital_investment
-            - FactoryPreset.STARTING_INVESTMENT
+            (self.capital_investment - FactoryPreset.STARTING_INVESTMENT)
             / FactoryPreset.STARTING_INVESTMENT
             * FactoryPreset.STARTING_CAPACITY
         )
