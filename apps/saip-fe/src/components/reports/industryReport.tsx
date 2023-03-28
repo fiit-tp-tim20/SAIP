@@ -63,9 +63,11 @@ function IndustryReport() {
 						</div>
 						<table className="table-auto">
 							<thead>
-								<th className="border px-4 py-2 bg-accent-500 text-white">Kategória</th>
-								<th className="border px-4 py-2 bg-accent-500 text-white">Hodnota</th>
-								<th className="border px-4 py-2 bg-accent-500 text-white">Nárast / pokles</th>
+								<tr>
+									<th className="border px-4 py-2 bg-accent-500 text-white">Kategória</th>
+									<th className="border px-4 py-2 bg-accent-500 text-white">Hodnota</th>
+									<th className="border px-4 py-2 bg-accent-500 text-white">Nárast / pokles</th>
+								</tr>
 							</thead>
 							<tbody>
 								<tr className="hover:bg-stone-100">
