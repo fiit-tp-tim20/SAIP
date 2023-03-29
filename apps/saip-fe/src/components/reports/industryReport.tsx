@@ -123,7 +123,7 @@ function IndustryReport() {
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Úroková sadzba</td>
 									<td className="border px-4 py-2">
-										{numberWithSpaces(data?.economic_parameters.interest_rate)}
+										{numberWithSpaces(data?.economic_parameters.interest_rate) } %
 									</td>
 									<td className="border px-4 py-2">
 										{numberWithSpaces(data?.economic_parameters.interest_rate_difference)} %
@@ -132,7 +132,7 @@ function IndustryReport() {
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Úverový limit</td>
 									<td className="border px-4 py-2">
-										{numberWithSpaces(data?.economic_parameters.loan_limit)}
+										{numberWithSpaces(data?.economic_parameters.loan_limit)} €
 									</td>
 									<td className="border px-4 py-2">
 										{numberWithSpaces(data?.economic_parameters.loan_limit_difference)} %
@@ -141,7 +141,7 @@ function IndustryReport() {
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Sazdba dane z prijmu</td>
 									<td className="border px-4 py-2">
-										{numberWithSpaces(data?.economic_parameters.tax_rate)}
+										{numberWithSpaces(data?.economic_parameters.tax_rate)} %
 									</td>
 									<td className="border px-4 py-2">
 										{numberWithSpaces(data?.economic_parameters.tax_rate_difference)} %
@@ -150,7 +150,7 @@ function IndustryReport() {
 								<tr className="hover:bg-stone-100">
 									<td className="border px-4 py-2">Inflácia</td>
 									<td className="border px-4 py-2">
-										{numberWithSpaces(data?.economic_parameters.inflation)}
+										{numberWithSpaces(data?.economic_parameters.inflation)} %
 									</td>
 									<td className="border px-4 py-2">
 										{numberWithSpaces(data?.economic_parameters.inflation_difference)} %
