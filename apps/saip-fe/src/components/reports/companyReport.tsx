@@ -199,6 +199,12 @@ function CompanyReport() {
 									</td>
 								</tr>
 								<tr>
+									<td className="border px-4 py-2">Výdavky na zásoby</td>
+									<td className="border px-4 py-2 whitespace-nowrap">
+										{numberWithSpaces(data.cash_flow.inventory_charge)} €
+									</td>
+								</tr>
+								<tr>
 									<td className="border px-4 py-2">Výdavky na rozhodnutia</td>
 									<td className="border px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data.cash_flow.expenses)} €
@@ -291,6 +297,18 @@ function CompanyReport() {
 									<td className="border px-4 py-2">Dodatočné náklady na nepredané výrobky</td>
 									<td className="border px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data.income_statement.inventory_charge)} €
+									</td>
+								</tr>
+								<tr>
+									<td className="border px-4 py-2">Náklady na upgrade zásob</td>
+									<td className="border px-4 py-2 whitespace-nowrap">
+										{numberWithSpaces(data.income_statement.inventory_upgrade)} €
+									</td>
+								</tr>
+								<tr>
+									<td className="border px-4 py-2">Náklady na precenenie zásob</td>
+									<td className="border px-4 py-2 whitespace-nowrap">
+										{numberWithSpaces(data.income_statement.overcharge_upgrade)} €
 									</td>
 								</tr>
 								<tr>
