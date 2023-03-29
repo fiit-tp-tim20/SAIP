@@ -293,6 +293,7 @@ class Simulation:
             ct_companies_states[company_model].loan_repayment = company_class_object.value_paid_in_loan_repayment
             ct_companies_states[company_model].loans = company_class_object.loans
             ct_companies_states[company_model].inventory_upgrade = company_class_object.value_paid_in_stored_product_upgrades
+            ct_companies_states[company_model].overcharge_upgrade = (pt_companies_states[company_model].inventory * pt_companies_states[company_model].production.man_cost_all) - (company_class_object.inventory * company_class_object.total_ppu)
 
             if ct_companies_states[company_model].production is not None:
 
