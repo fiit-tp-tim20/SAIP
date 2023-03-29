@@ -153,22 +153,22 @@ class IndustryReport(APIView):
         teacher_decisions = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=last_turn.number-1))
         teacher_decisions_previous = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=last_turn.number-2))
         economic_parameters = dict()
-        economic_parameters['interest_rate'] = teacher_decisions.interest_rate
+        economic_parameters['interest_rate'] = teacher_decisions.interest_rate * 100
         try:
             economic_parameters['interest_rate_difference'] = round(((teacher_decisions.interest_rate/teacher_decisions_previous.interest_rate) - 1)*100, 2)
         except ZeroDivisionError:
             economic_parameters['interest_rate_difference'] = "N/A"
-        economic_parameters['tax_rate'] = teacher_decisions.tax_rate
+        economic_parameters['tax_rate'] = teacher_decisions.tax_rate * 100
         try:
             economic_parameters['tax_rate_difference'] = round(((teacher_decisions.tax_rate/teacher_decisions_previous.tax_rate) - 1)*100, 2)
         except ZeroDivisionError:
             economic_parameters['tax_rate_difference'] = "N/A"
-        economic_parameters['inflation'] = teacher_decisions.inflation
+        economic_parameters['inflation'] = teacher_decisions.inflation * 100
         try:
             economic_parameters['inflation_difference'] = round(((teacher_decisions.inflation/teacher_decisions_previous.inflation) - 1)*100, 2)
         except ZeroDivisionError:
             economic_parameters['inflation_difference'] = "N/A"
-        economic_parameters['loan_limit'] = teacher_decisions.loan_limit
+        economic_parameters['loan_limit'] = teacher_decisions.loan_limit * 100
         try:
             economic_parameters['loan_limit_difference'] = round(((teacher_decisions.loan_limit/teacher_decisions_previous.loan_limit) - 1)*100, 2)
         except ZeroDivisionError:
