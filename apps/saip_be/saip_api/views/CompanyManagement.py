@@ -226,6 +226,7 @@ class CompanyReport(APIView):
         cash_flow['sales'] =  company_state_previous.sales #plus
         cash_flow['manufactured_man_cost'] = company_state_previous.manufactured_man_cost #minus
         # vydavky na rozhodnutia - zratane vydavky na marketing r_d a capital s minusovou hodnotou
+        cash_flow['inventory_charge'] = company_state_previous.inventory_charge 
         cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.factory.capital
         cash_flow['interest'] = company_state_previous.interest # minus
         cash_flow['tax'] = company_state_previous.tax # minus
@@ -246,6 +247,8 @@ class CompanyReport(APIView):
         income_statement['r_d'] = company_state_previous.r_d
         income_statement['depreciation'] = company_state_previous.depreciation
         income_statement['inventory_charge'] = company_state_previous.inventory_charge # minus
+        income_statement['inventory_upgrade'] = company_state_previous.inventory_upgrade
+        income_statement['overcharge_upgrade'] = company_state_previous.overcharge_upgrade
         income_statement['interest'] = company_state_previous.interest
         income_statement['profit_before_tax'] = company_state_previous.profit_before_tax
         income_statement['tax'] = company_state_previous.tax
