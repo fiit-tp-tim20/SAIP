@@ -36,14 +36,16 @@ class Simulation:
         self,
         game_model: models.Game,
         turn_model: models.Turn,
-        new_turn_model: models.Turn,
+        next_turn_model: models.Turn,
+        prev_turn_model: models.Turn,
     ) -> None:
 
         self.companies = {}
         self.market = None
         self.game_model = game_model
         self.turn_model = turn_model
-        self.new_turn_model = new_turn_model
+        self.next_turn_model = next_turn_model
+        self.prev_turn_model = prev_turn_model
         self.current_turn = turn_model.number
         self.turn_limit = game_model.turns
         self.setup_simulation()
@@ -235,14 +237,14 @@ class Simulation:
                 pass
             try:  # get company states for the next turn
                 nt_company_state_model = models.CompaniesState.objects.get(
-                    company=company_model, turn=self.new_turn_model
+                    company=company_model, turn=self.next_turn_model
                 )
                 nt_companies_states[company_model] = nt_company_state_model
             except models.CompaniesState.DoesNotExist:
                 pass
         # load the market state model
         ct_market_state = models.MarketState.objects.get(turn=self.turn_model)
-        nt_market_state = models.MarketState.objects.get(turn=self.new_turn_model)
+        nt_market_state = models.MarketState.objects.get(turn=self.next_turn_model)
 
         # write data from classes to models
         # curent turn
