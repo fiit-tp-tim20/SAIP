@@ -149,6 +149,7 @@ class Company:
     value_paid_in_interest: float = 0
     value_paid_in_loan_repayment: float = 0
     value_paid_in_inventory_charge: float = 0
+    value_paid_in_stored_product_upgrades: float = 0
     new_loans: float = 0
     profit_before_tax: float = 0
     ret_earnings: float = 0
@@ -173,9 +174,8 @@ class Company:
             self.remaining_budget -= marketing_type.investment
 
     def upgrade_stored_products(self) -> None:
-        self.total_costs_per_turn += (
-            self.inventory * self.product.get_upgrade_stored_products_price()
-        )
+        self.value_paid_in_stored_product_upgrades = self.inventory * self.product.get_upgrade_stored_products_price()
+        self.total_costs_per_turn += self.value_paid_in_stored_product_upgrades
 
     def calculate_stock_price(self) -> float:
         self.__update_loans()
