@@ -316,6 +316,7 @@ class Simulation:
             ct_companies_states[company_model].loans = company_class_object.loans
             ct_companies_states[company_model].inventory_upgrade = company_class_object.value_paid_in_stored_product_upgrades
             ct_companies_states[company_model].overcharge_upgrade = (pt_companies_states[company_model].inventory * pt_companies_states[company_model].production.man_cost_all) - (company_class_object.inventory * company_class_object.total_ppu)
+            # TODO: hodnota moze byt minusova iba ak boli zasoby v minulom kole nenulove
 
             if ct_companies_states[company_model].production is not None:
 
@@ -353,7 +354,7 @@ class Simulation:
             nt_companies_states[company_model].ret_earnings = company_class_object.ret_earnings + company_class_object.income_per_turn
 
             if nt_companies_states[company_model].production is not None:
-                nt_companies_states[company_model].production.man_cost = company_class_object.product.get_man_cost()
+                nt_companies_states[company_model].production.man_cost = FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
                 nt_companies_states[company_model].production.save()
             if nt_companies_states[company_model].factory is not None:
                 nt_companies_states[company_model].factory.capacity = company_class_object.factory.capacity
