@@ -57,12 +57,13 @@ export default function BottomBar() {
 		};
 
 		await endTurn(gameState);
+		await refetchCommited();
+		window.location.reload();
 	};
 
 	const handleModalSubmit = async () => {
-		await handleEndTurn();
 		setIsShowing(false);
-		refetchCommited();
+		await handleEndTurn();
 	};
 
 	const openModal = () => {
