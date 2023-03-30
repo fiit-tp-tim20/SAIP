@@ -135,9 +135,7 @@ class Company:
     product: Product = None
     previous_ppu: float = field(init=False, default=0.0)
 
-    inventory: int = (
-        0
-    )
+    inventory: int = 0
     production_volume: int = 0
     prod_ppu: float = field(init=False)
     total_ppu: float = field(init=False)
@@ -232,7 +230,6 @@ class Company:
                 + self.__upgrade_stored_products()
             ) / self.production_volume
             self.total_ppu = self.prod_ppu + additional_ppu
-            
 
         self.inventory += self.production_volume
         self.prod_costs_per_turn = self.production_volume * self.prod_ppu
@@ -274,9 +271,9 @@ class Company:
             self.value_paid_in_tax = 0
         else:
             self.profit_before_tax = self.profit
-            profit_after_tax = self.profit * (1 - self.tax_rate)
-            self.value_paid_in_tax = self.profit - profit_after_tax
-            self.profit = profit_after_tax
+            self.profit_after_tax = self.profit * (1 - self.tax_rate)
+            self.value_paid_in_tax = self.profit - self.profit_after_tax
+            self.profit = self.profit_after_tax
 
     def __update_loans(self):
         self.new_loans = 0
