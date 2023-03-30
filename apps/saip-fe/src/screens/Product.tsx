@@ -93,7 +93,7 @@ function Product() {
 				</div>
 				<h1 className="p-6 pl-12">{t("research.title") as string}</h1>
 				<div className="flex flex-col background-container p-6 rounded-2xl mx-6 max-w-7xl">
-					{data && data.filter((feature) => feature.status === "finished").length ? (
+					{data && data.filter((feature) => feature.status === "started").length ? (
 						<div className="py-4">
 							<h2>{t("research.pending.title") as string}</h2>
 							{isLoading ? (
