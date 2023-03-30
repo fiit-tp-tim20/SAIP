@@ -236,7 +236,8 @@ class Simulation:
 
         self.market.generate_distribution()
         for company in self.companies.values():
-            print(company)
+            #print(company)
+            pass
         pass
 
     def write_simulation_results(self) -> None:
