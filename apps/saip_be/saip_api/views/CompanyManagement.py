@@ -114,7 +114,7 @@ class IndustryReport(APIView):
             company_info['sell_price'] = state.production.sell_price
             company_info['net_profit'] = state.net_profit
             try:
-                company_info['market_share'] = state.orders_fulfilled/market_state.sold
+                company_info['market_share'] = (state.orders_fulfilled/market_state.sold)*100
             except ZeroDivisionError:
                 company_info['market_share'] = 0
 
@@ -153,22 +153,22 @@ class IndustryReport(APIView):
         teacher_decisions = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=last_turn.number-1))
         teacher_decisions_previous = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=last_turn.number-2))
         economic_parameters = dict()
-        economic_parameters['interest_rate'] = teacher_decisions.interest_rate
+        economic_parameters['interest_rate'] = teacher_decisions.interest_rate * 100
         try:
             economic_parameters['interest_rate_difference'] = round(((teacher_decisions.interest_rate/teacher_decisions_previous.interest_rate) - 1)*100, 2)
         except ZeroDivisionError:
             economic_parameters['interest_rate_difference'] = "N/A"
-        economic_parameters['tax_rate'] = teacher_decisions.tax_rate
+        economic_parameters['tax_rate'] = teacher_decisions.tax_rate * 100
         try:
             economic_parameters['tax_rate_difference'] = round(((teacher_decisions.tax_rate/teacher_decisions_previous.tax_rate) - 1)*100, 2)
         except ZeroDivisionError:
             economic_parameters['tax_rate_difference'] = "N/A"
-        economic_parameters['inflation'] = teacher_decisions.inflation
+        economic_parameters['inflation'] = teacher_decisions.inflation * 100
         try:
             economic_parameters['inflation_difference'] = round(((teacher_decisions.inflation/teacher_decisions_previous.inflation) - 1)*100, 2)
         except ZeroDivisionError:
             economic_parameters['inflation_difference'] = "N/A"
-        economic_parameters['loan_limit'] = teacher_decisions.loan_limit
+        economic_parameters['loan_limit'] = teacher_decisions.loan_limit * 100
         try:
             economic_parameters['loan_limit_difference'] = round(((teacher_decisions.loan_limit/teacher_decisions_previous.loan_limit) - 1)*100, 2)
         except ZeroDivisionError:
@@ -222,10 +222,11 @@ class CompanyReport(APIView):
         balance['liabilities_summary'] = company_state_previous.loans + company_state_previous.ret_earnings + company.game.parameters.base_capital
 
         cash_flow = dict()
-        cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1), company=company).cash #???
+        cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-2), company=company).cash #???
         cash_flow['sales'] =  company_state_previous.sales #plus
         cash_flow['manufactured_man_cost'] = company_state_previous.manufactured_man_cost #minus
         # vydavky na rozhodnutia - zratane vydavky na marketing r_d a capital s minusovou hodnotou
+        cash_flow['inventory_charge'] = company_state_previous.inventory_charge 
         cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.factory.capital
         cash_flow['interest'] = company_state_previous.interest # minus
         cash_flow['tax'] = company_state_previous.tax # minus
@@ -246,6 +247,8 @@ class CompanyReport(APIView):
         income_statement['r_d'] = company_state_previous.r_d
         income_statement['depreciation'] = company_state_previous.depreciation
         income_statement['inventory_charge'] = company_state_previous.inventory_charge # minus
+        income_statement['inventory_upgrade'] = company_state_previous.inventory_upgrade
+        income_statement['overcharge_upgrade'] = company_state_previous.overcharge_upgrade
         income_statement['interest'] = company_state_previous.interest
         income_statement['profit_before_tax'] = company_state_previous.profit_before_tax
         income_statement['tax'] = company_state_previous.tax

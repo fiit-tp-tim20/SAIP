@@ -36,14 +36,16 @@ class Simulation:
         self,
         game_model: models.Game,
         turn_model: models.Turn,
-        new_turn_model: models.Turn,
+        next_turn_model: models.Turn,
+        prev_turn_model: models.Turn,
     ) -> None:
 
         self.companies = {}
         self.market = None
         self.game_model = game_model
         self.turn_model = turn_model
-        self.new_turn_model = new_turn_model
+        self.next_turn_model = next_turn_model
+        self.prev_turn_model = prev_turn_model
         self.current_turn = turn_model.number
         self.turn_limit = game_model.turns
         self.setup_simulation()
@@ -219,8 +221,9 @@ class Simulation:
     def write_simulation_results(self) -> None:
         # declare lists and dictionaries
         companies_models: models.Company = []
-        ct_companies_states: Dict[models.Company, models.CompaniesState] = {}
-        nt_companies_states: Dict[models.Company, models.CompaniesState] = {}
+        ct_companies_states: Dict[models.Company, models.CompaniesState] = {}   #current turn companies state
+        pt_companies_states: Dict[models.Company, models.CompaniesState] = {}   #previous turn companies state
+        nt_companies_states: Dict[models.Company, models.CompaniesState] = {}   #next turn companies state
 
         # load the company models
         companies_models = models.Company.objects.filter(game=self.game_model)
@@ -235,14 +238,21 @@ class Simulation:
                 pass
             try:  # get company states for the next turn
                 nt_company_state_model = models.CompaniesState.objects.get(
-                    company=company_model, turn=self.new_turn_model
+                    company=company_model, turn=self.next_turn_model
                 )
                 nt_companies_states[company_model] = nt_company_state_model
             except models.CompaniesState.DoesNotExist:
                 pass
+            try:  # get company states for the previous turn
+                pt_company_state_model = models.CompaniesState.objects.get(
+                    company=company_model, turn=self.prev_turn_model
+                )
+                pt_companies_states[company_model] = pt_company_state_model
+            except models.CompaniesState.DoesNotExist:
+                pass
         # load the market state model
         ct_market_state = models.MarketState.objects.get(turn=self.turn_model)
-        nt_market_state = models.MarketState.objects.get(turn=self.new_turn_model)
+        nt_market_state = models.MarketState.objects.get(turn=self.next_turn_model)
 
         # write data from classes to models
         # curent turn
@@ -265,31 +275,33 @@ class Simulation:
             ct_total_units_sold += company_class_object.units_sold  # add units sold to overall sum of all units sold
             ct_companies_states[company_model].cash = company_class_object.remaining_budget
             ct_companies_states[company_model].ret_earnings = company_class_object.ret_earnings + company_class_object.income_per_turn #doteraz sales scitane dokopy (? mozno)
-            ct_companies_states[company_model].net_profit = company_class_object.profit # TODO: check if correct (income per turn - costs per turn)
+            ct_companies_states[company_model].net_profit = company_class_object.profit_after_tax
             ct_companies_states[company_model].depreciation = (
                 company_class_object.factory.upkeep["writeoff"]
                 if company_class_object.factory.upkeep["writeoff"]
                 else 0
             )
             ct_companies_states[company_model].new_loans = company_class_object.new_loans
-            ct_companies_states[company_model].inventory_charge = company_class_object.inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT
+            ct_companies_states[company_model].inventory_charge = company_class_object.value_paid_in_inventory_charge  #TODO: add inventory charge to actuall writeoffs
             ct_companies_states[company_model].sales =  company_class_object.income_per_turn #TODO: check if correct
             ct_companies_states[company_model].manufactured_man_cost = company_class_object.prod_costs_per_turn
             # TODO: add inflation - it should only affect the man cost 
             ct_companies_states[company_model].tax = company_class_object.value_paid_in_tax
             ct_companies_states[company_model].profit_before_tax = company_class_object.profit_before_tax
             ct_companies_states[company_model].interest = company_class_object.value_paid_in_interest
-            ct_companies_states[company_model].cash_flow_res = company_class_object.remaining_budget + company_class_object.profit - company_class_object.total_costs_per_turn  #TODO: change remaining budget to cash from last turn
+            ct_companies_states[company_model].cash_flow_res = company_class_object.remaining_budget + company_class_object.income_per_turn - company_class_object.total_costs_per_turn  #TODO: change remaining budget to cash from last turn
             ct_companies_states[company_model].loan_repayment = company_class_object.value_paid_in_loan_repayment
             ct_companies_states[company_model].loans = company_class_object.loans
+            ct_companies_states[company_model].inventory_upgrade = company_class_object.value_paid_in_stored_product_upgrades
+            ct_companies_states[company_model].overcharge_upgrade = (pt_companies_states[company_model].inventory * pt_companies_states[company_model].production.man_cost_all) - (company_class_object.inventory * company_class_object.total_ppu)
 
             if ct_companies_states[company_model].production is not None:
 
                 ct_companies_states[company_model].production.man_cost = (
-                    company_class_object.product.get_man_cost()
+                    company_class_object.prod_ppu   # TODO: maybe this should be .product.get_man()
                 )
-                ct_companies_states[company_model].production.man_cost = (
-                    company_class_object.prod_ppu
+                ct_companies_states[company_model].production.man_cost_all = (
+                    company_class_object.total_ppu
                 )
                 ct_companies_states[company_model].production.volume = company_class_object.production_volume
                 # this is done because the volume of actual products produced could have differed from the one submitted by the company (for instance, because of a lack of funds)
