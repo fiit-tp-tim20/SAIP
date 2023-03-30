@@ -94,6 +94,7 @@ class Upgrade(models.Model):
     name = models.CharField(max_length=100, null=True)
     camera_pos = models.CharField(max_length=100, null=True)
     camera_rot = models.CharField(max_length=100, null=True)
+    description = models.CharField(max_length=1000, null=True)
 
     def __str__(self):
         return f"{self.name} - {self.cost}"
