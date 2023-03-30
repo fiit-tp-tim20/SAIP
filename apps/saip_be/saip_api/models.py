@@ -8,7 +8,7 @@ class GameParameters(models.Model):
     budget_cap = models.PositiveIntegerField(default=10000)
     depreciation = models.FloatField(default=0.1)
     base_man_cost = models.PositiveIntegerField(default=250)
-    base_capital = models.PositiveIntegerField(default=10000)
+    base_capital = models.PositiveIntegerField(default=40000)
     end_turn_on_committed = models.BooleanField(default=True)
 
     class Meta:
@@ -163,7 +163,7 @@ class CompaniesState(models.Model):
     orders_received = models.PositiveIntegerField(null=True, default=0)
     orders_fulfilled = models.PositiveIntegerField(null=True, default=0)
     cash = models.FloatField(
-        null=True, default=15000
+        null=True, default=10000
     )  # celkovo dostupných prostriedkov
     # capital = models.FloatField(null=True, default=0)
     ret_earnings = models.FloatField(null=True, default=0)
