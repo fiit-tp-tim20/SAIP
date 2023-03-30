@@ -354,7 +354,7 @@ class Simulation:
             nt_companies_states[company_model].ret_earnings = company_class_object.ret_earnings + company_class_object.income_per_turn
 
             if nt_companies_states[company_model].production is not None:
-                nt_companies_states[company_model].production.man_cost = company_class_object.product.get_man_cost()
+                nt_companies_states[company_model].production.man_cost = FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
                 nt_companies_states[company_model].production.save()
             if nt_companies_states[company_model].factory is not None:
                 nt_companies_states[company_model].factory.capacity = company_class_object.factory.capacity
