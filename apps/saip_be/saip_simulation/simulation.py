@@ -98,6 +98,15 @@ class Simulation:
             company_state = None
             # TODO: add error message maybe
 
+        # get previous turn company_state model
+        try:
+            pt_company_state = models.CompaniesState.objects.get(
+                company=company_model, turn=self.prev_turn_model
+            )
+        except models.CompaniesState.DoesNotExist:
+            pt_company_state = None
+            # TODO: add error message maybe
+
         # write company state into the class object
         if company_state is not None:
 
@@ -110,7 +119,9 @@ class Simulation:
             #    if company_state.stock_price is not None
             #    else 0
             #)  # float
-            
+            new_company.prev_turn_total_ppu = pt_company_state.production.man_cost_all
+            new_company.prev_turn_prod_ppu = pt_company_state.production.man_cost
+            new_company.prev_turn_inventory = pt_company_state.inventory
 
             # create objects from models
             # setup factory object

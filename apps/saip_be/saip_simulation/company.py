@@ -154,6 +154,10 @@ class Company:
     profit_before_tax: float = 0
     ret_earnings: float = 0
 
+    prev_turn_inventory: float = 0
+    prev_turn_prod_ppu: float = 0
+    prev_turn_total_ppu: float = 0
+
 
 
     max_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
