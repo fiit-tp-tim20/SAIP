@@ -246,8 +246,7 @@ class Company:
         if demand > self.inventory:
             self.income_per_turn = self.inventory * self.product.get_price()
             self.profit = self.income_per_turn - self.total_costs_per_turn
-            if self.profit > 0:
-                self.apply_tax()
+            self.apply_tax()
             self.balance += self.profit + self.remaining_budget
             demand_not_met = demand - self.inventory
             self.units_sold = self.inventory
@@ -257,8 +256,7 @@ class Company:
         self.income_per_turn = demand * self.product.get_price()
         self.profit = self.income_per_turn - self.total_costs_per_turn
 
-        if self.profit > 0:
-            self.apply_tax()
+        self.apply_tax()
 
         self.balance += self.profit + self.remaining_budget
         self.units_sold = demand
