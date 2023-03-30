@@ -133,7 +133,7 @@ class Factory:
 class Company:
     brand: str = ""
     product: Product = None
-    previous_ppu: float = field(init=False)
+    previous_ppu: float = field(init=False, default=0.0)
 
     inventory: int = (
         0
@@ -183,7 +183,7 @@ class Company:
         return self.inventory * self.product.get_upgrade_stored_products_price()
 
     def __price_diff_stored_products(self) -> float:
-        return (self.total_ppu - self.previous_ppu) * self.inventory
+        return (self.prod_ppu - self.previous_ppu) * self.inventory
 
     def calculate_stock_price(self) -> float:
         self.__update_loans()
@@ -232,6 +232,7 @@ class Company:
                 + self.__upgrade_stored_products()
             ) / self.production_volume
             self.total_ppu = self.prod_ppu + additional_ppu
+            
 
         self.inventory += self.production_volume
         self.prod_costs_per_turn = self.production_volume * self.prod_ppu
