@@ -1,3 +1,4 @@
+import { use } from "i18next";
 import React from "react";
 import { useQuery } from "react-query";
 import getIndustryReport from "../../api/GetIndustryReport";
@@ -5,6 +6,10 @@ import numberWithSpaces from "../../utils/numberWithSpaces";
 
 function IndustryReport() {
 	const { data, isLoading } = useQuery("industryReport", getIndustryReport, {
+		refetchOnWindowFocus: false,
+	});
+
+	const { graphData } = useQuery("graphData", getGraphData, {
 		refetchOnWindowFocus: false,
 	});
 	// poradie
