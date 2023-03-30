@@ -2,16 +2,14 @@ import { use } from "i18next";
 import React from "react";
 import { useQuery } from "react-query";
 import getIndustryReport from "../../api/GetIndustryReport";
+import { getIndustryGraphData } from "../../api/GetIndustryGraphData";
+import IndustryGraph from "../statisticsGraph/IndustryGraph";
 import numberWithSpaces from "../../utils/numberWithSpaces";
 
 function IndustryReport() {
-	const { data, isLoading } = useQuery("industryReport", getIndustryReport, {
-		refetchOnWindowFocus: false,
-	});
+	const { data, isLoading } = useQuery(["getIndustryReport"], getIndustryReport);
+	const { data: graphData, isLoading: isLoading2 } = useQuery(["getIndustryGraphData"], getIndustryGraphData);
 
-	const { graphData } = useQuery("graphData", getGraphData, {
-		refetchOnWindowFocus: false,
-	});
 	// poradie
 	return (
 		<div className="flex w-[600px] flex-col md:w-[900px] xl:w-[1280px]">
@@ -22,7 +20,7 @@ function IndustryReport() {
 				<>
 					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 						<div className="flex flex-row items-center justify-between py-2">
-							<h2>Rebríček všetkých firiem (podľa akcii)</h2>
+							<h2>Rebríček všetkých firiem (podľa akcií)</h2>
 						</div>
 						<table className="table-auto">
 							<thead>
@@ -163,6 +161,13 @@ function IndustryReport() {
 								</tr>
 							</tbody>
 						</table>
+					</div>
+					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
+						{isLoading2 ? (
+							<div>Loading...</div>
+						) : (
+							<IndustryGraph rank={graphData?.rank} stock_price={graphData?.stock_price} />
+						)}
 					</div>
 				</>
 			)}
