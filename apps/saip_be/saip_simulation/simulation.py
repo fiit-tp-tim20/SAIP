@@ -231,7 +231,7 @@ class Simulation:
 
     def run_simulation(self) -> None:
         for company in self.companies.values():
-            company.factory.invest_into_factory(company.factory.capital_investment_this_turn)
+            company.factory.invest_into_factory(company.factory.capital_investment_this_turn)   #TODO: prehodit investovanie do factory po vyrobe
             company.produce_products()
 
         self.market.generate_distribution()
