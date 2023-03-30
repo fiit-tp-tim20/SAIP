@@ -119,9 +119,19 @@ class Simulation:
             #    if company_state.stock_price is not None
             #    else 0
             #)  # float
-            new_company.prev_turn_total_ppu = pt_company_state.production.man_cost_all
-            new_company.prev_turn_prod_ppu = pt_company_state.production.man_cost
-            new_company.prev_turn_inventory = pt_company_state.inventory
+            if pt_company_state is not None:
+                if pt_company_state.production is not None:
+                    new_company.prev_turn_total_ppu = pt_company_state.production.man_cost_all if pt_company_state.production.man_cost_all is not None else 0
+                    new_company.prev_turn_prod_ppu = pt_company_state.production.man_cost if pt_company_state.production.man_cost is not None else 0
+                else:
+                    new_company.prev_turn_total_ppu = 0
+                    new_company.prev_turn_prod_ppu = 0
+                new_company.prev_turn_inventory = pt_company_state.inventory if pt_company_state.inventory is not None else 0
+            else:
+                new_company.prev_turn_total_ppu = 0
+                new_company.prev_turn_prod_ppu = 0
+                new_company.prev_turn_inventory = 0
+            
 
             # create objects from models
             # setup factory object
