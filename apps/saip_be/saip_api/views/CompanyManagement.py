@@ -15,6 +15,33 @@ from saip_simulation.simulation import Simulation
 from django.utils import timezone
 from .GameManagement import create_turn, calculate_man_cost
 
+class IndustryView(APIView):
+    def get(self, request) -> Response:
+
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        try:
+            company = Company.objects.get(user=request.user)
+        except Company.DoesNotExist:
+            return Response({"detail": "Company for this user not found"}, status=404)
+
+        rank = [None] * (company.game.turns - 1)
+        stock_price = [None] * (company.game.turns - 1)
+        last_turn = get_last_turn(company.game)
+       
+        for turn_num in range(last_turn.number):
+            state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
+            stock_price[turn_num] = state.stock_price
+
+            ordered_states = list(CompaniesState.objects.filter(turn=Turn.objects.get(game=company.game, number=turn_num+1)).order_by('-stock_price'))
+            
+
+            for index, one in enumerate(ordered_states):
+                if one.company == company:
+                    rank[turn_num] = index + 1
+
+        return Response({"rank": rank, "stock_price": stock_price}, status=200)
 class MarketingView(APIView):
 
     def get(self, request) -> Response:
@@ -28,13 +55,10 @@ class MarketingView(APIView):
             return Response({"detail": "Company for this user not found"}, status=404)
 
         marketing = [None] * (company.game.turns - 1)
-        for turn_num in range(company.game.turns - 1):
-            print(turn_num)
-            try:
-                state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
-                marketing[turn_num] = state.orders_received
-            except (CompaniesState.DoesNotExist, Turn.DoesNotExist):
-                 continue
+        last_turn = get_last_turn(company.game)
+        for turn_num in range(last_turn.number):
+            state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
+            marketing[turn_num] = state.orders_received
 
         return Response({"demand": marketing}, status=200)
 
@@ -54,13 +78,11 @@ class CompanyView(APIView):
         manufactured = [None] * (company.game.turns - 1)
         sold = [None] * (company.game.turns - 1)
 
-        for turn_num in range(company.game.turns - 1):
-            try:
-                state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
-                manufactured[turn_num] = state.production.volume
-                sold[turn_num] = state.orders_fulfilled
-            except (CompaniesState.DoesNotExist, Turn.DoesNotExist):
-                continue
+        last_turn = get_last_turn(company.game)
+        for turn_num in range(last_turn.number):
+            state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
+            manufactured[turn_num] = state.production.volume
+            sold[turn_num] = state.orders_fulfilled
 
         return Response({"manufactured": manufactured, "sold": sold}, status=200)
 
@@ -153,22 +175,22 @@ class IndustryReport(APIView):
         teacher_decisions = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=last_turn.number-1))
         teacher_decisions_previous = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=last_turn.number-2))
         economic_parameters = dict()
-        economic_parameters['interest_rate'] = teacher_decisions.interest_rate
+        economic_parameters['interest_rate'] = teacher_decisions.interest_rate * 100
         try:
             economic_parameters['interest_rate_difference'] = round(((teacher_decisions.interest_rate/teacher_decisions_previous.interest_rate) - 1)*100, 2)
         except ZeroDivisionError:
             economic_parameters['interest_rate_difference'] = "N/A"
-        economic_parameters['tax_rate'] = teacher_decisions.tax_rate
+        economic_parameters['tax_rate'] = teacher_decisions.tax_rate * 100
         try:
             economic_parameters['tax_rate_difference'] = round(((teacher_decisions.tax_rate/teacher_decisions_previous.tax_rate) - 1)*100, 2)
         except ZeroDivisionError:
             economic_parameters['tax_rate_difference'] = "N/A"
-        economic_parameters['inflation'] = teacher_decisions.inflation
+        economic_parameters['inflation'] = teacher_decisions.inflation * 100
         try:
             economic_parameters['inflation_difference'] = round(((teacher_decisions.inflation/teacher_decisions_previous.inflation) - 1)*100, 2)
         except ZeroDivisionError:
             economic_parameters['inflation_difference'] = "N/A"
-        economic_parameters['loan_limit'] = teacher_decisions.loan_limit
+        economic_parameters['loan_limit'] = teacher_decisions.loan_limit * 100
         try:
             economic_parameters['loan_limit_difference'] = round(((teacher_decisions.loan_limit/teacher_decisions_previous.loan_limit) - 1)*100, 2)
         except ZeroDivisionError:
@@ -226,6 +248,7 @@ class CompanyReport(APIView):
         cash_flow['sales'] =  company_state_previous.sales #plus
         cash_flow['manufactured_man_cost'] = company_state_previous.manufactured_man_cost #minus
         # vydavky na rozhodnutia - zratane vydavky na marketing r_d a capital s minusovou hodnotou
+        cash_flow['inventory_charge'] = company_state_previous.inventory_charge 
         cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.factory.capital
         cash_flow['interest'] = company_state_previous.interest # minus
         cash_flow['tax'] = company_state_previous.tax # minus
@@ -246,6 +269,8 @@ class CompanyReport(APIView):
         income_statement['r_d'] = company_state_previous.r_d
         income_statement['depreciation'] = company_state_previous.depreciation
         income_statement['inventory_charge'] = company_state_previous.inventory_charge # minus
+        income_statement['inventory_upgrade'] = company_state_previous.inventory_upgrade
+        income_statement['overcharge_upgrade'] = company_state_previous.overcharge_upgrade
         income_statement['interest'] = company_state_previous.interest
         income_statement['profit_before_tax'] = company_state_previous.profit_before_tax
         income_statement['tax'] = company_state_previous.tax

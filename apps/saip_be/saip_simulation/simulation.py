@@ -36,14 +36,16 @@ class Simulation:
         self,
         game_model: models.Game,
         turn_model: models.Turn,
-        new_turn_model: models.Turn,
+        next_turn_model: models.Turn,
+        prev_turn_model: models.Turn,
     ) -> None:
 
         self.companies = {}
         self.market = None
         self.game_model = game_model
         self.turn_model = turn_model
-        self.new_turn_model = new_turn_model
+        self.next_turn_model = next_turn_model
+        self.prev_turn_model = prev_turn_model
         self.current_turn = turn_model.number
         self.turn_limit = game_model.turns
         self.setup_simulation()
@@ -219,8 +221,9 @@ class Simulation:
     def write_simulation_results(self) -> None:
         # declare lists and dictionaries
         companies_models: models.Company = []
-        ct_companies_states: Dict[models.Company, models.CompaniesState] = {}
-        nt_companies_states: Dict[models.Company, models.CompaniesState] = {}
+        ct_companies_states: Dict[models.Company, models.CompaniesState] = {}   #current turn companies state
+        pt_companies_states: Dict[models.Company, models.CompaniesState] = {}   #previous turn companies state
+        nt_companies_states: Dict[models.Company, models.CompaniesState] = {}   #next turn companies state
 
         # load the company models
         companies_models = models.Company.objects.filter(game=self.game_model)
@@ -235,14 +238,21 @@ class Simulation:
                 pass
             try:  # get company states for the next turn
                 nt_company_state_model = models.CompaniesState.objects.get(
-                    company=company_model, turn=self.new_turn_model
+                    company=company_model, turn=self.next_turn_model
                 )
                 nt_companies_states[company_model] = nt_company_state_model
             except models.CompaniesState.DoesNotExist:
                 pass
+            try:  # get company states for the previous turn
+                pt_company_state_model = models.CompaniesState.objects.get(
+                    company=company_model, turn=self.prev_turn_model
+                )
+                pt_companies_states[company_model] = pt_company_state_model
+            except models.CompaniesState.DoesNotExist:
+                pass
         # load the market state model
         ct_market_state = models.MarketState.objects.get(turn=self.turn_model)
-        nt_market_state = models.MarketState.objects.get(turn=self.new_turn_model)
+        nt_market_state = models.MarketState.objects.get(turn=self.next_turn_model)
 
         # write data from classes to models
         # curent turn
@@ -282,6 +292,8 @@ class Simulation:
             ct_companies_states[company_model].cash_flow_res = company_class_object.remaining_budget + company_class_object.income_per_turn - company_class_object.total_costs_per_turn  #TODO: change remaining budget to cash from last turn
             ct_companies_states[company_model].loan_repayment = company_class_object.value_paid_in_loan_repayment
             ct_companies_states[company_model].loans = company_class_object.loans
+            ct_companies_states[company_model].inventory_upgrade = company_class_object.value_paid_in_stored_product_upgrades
+            ct_companies_states[company_model].overcharge_upgrade = (pt_companies_states[company_model].inventory * pt_companies_states[company_model].production.man_cost_all) - (company_class_object.inventory * company_class_object.total_ppu)
 
             if ct_companies_states[company_model].production is not None:
 

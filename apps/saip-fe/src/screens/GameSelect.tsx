@@ -1,6 +1,10 @@
 import React, { useRef } from "react";
 import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
+import logout from "../api/logout";
+import useCompanyStore from "../store/Company";
+import useMarketingStore from "../store/Marketing";
+import useUpgradesStore from "../store/Upgrades";
 
 const test_games = [
 	{
@@ -47,6 +51,10 @@ function GameSelect() {
 	const teamnameInput = useRef<HTMLInputElement>(null);
 
 	const { data: gameList } = useQuery("listGames", listGames);
+
+	const { reset: marketingReset } = useMarketingStore();
+	const { reset: companyReset } = useCompanyStore();
+	const { reset: upgradesReset } = useUpgradesStore();
 
 	useEffect(() => {
 		if (gameList?.games?.length) {
@@ -187,13 +195,29 @@ function GameSelect() {
 						))}
 					</div>
 				)}
-				<div className="flex items-center justify-between">
+				<div className="flex flex-col items-center justify-between gap-2">
 					<button
 						className="w-full bg-accent-700 hover:bg-accent-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
 						type="submit"
 					>
 						Potvrdiť
 					</button>
+					<p className="mt-8 text-xs font-light text-center text-gray-700">
+						Prihlásili ste sa pod iným účtom ? Odhláste sa kliknutím{" "}
+						{/* <a
+							href="#"
+							className="font-bold text-accent-700 hover:text-accent-500 hover:underline"
+							onClick={() => logout(marketingReset, companyReset, upgradesReset)}
+						>
+							TU
+						</a> */}
+						<button
+							className="button-clear accent-gray-800 hover::underline"
+							onClick={() => logout(marketingReset, companyReset, upgradesReset)}
+						>
+							TU
+						</button>
+					</p>
 				</div>
 			</form>
 		</div>

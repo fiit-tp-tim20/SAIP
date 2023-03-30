@@ -198,7 +198,8 @@ def end_turn(turn: Turn) -> Turn:
     calculate_man_cost(game, new_turn)
 
     if turn.number != 0:
-        sim = Simulation(game_model=game, turn_model=turn, new_turn_model=new_turn)
+        prev_turn = Turn.objects.get(game=game, number=turn.number - 1)
+        sim = Simulation(game_model=game, turn_model=turn, next_turn_model=new_turn, prev_turn_model=prev_turn)
         sim.run_simulation()
         sim.write_simulation_results()
 

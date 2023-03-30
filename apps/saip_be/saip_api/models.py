@@ -179,6 +179,8 @@ class CompaniesState(models.Model):
     cash_flow_res = models.FloatField(null=True, blank=True)
     loan_repayment = models.FloatField(null=True, blank=True)
     loans = models.FloatField(null=True, default=20000)
+    inventory_upgrade = models.FloatField(null=True, default=0)
+    overcharge_upgrade = models.FloatField(null=True, default=0)
 
     def __str__(self):
         return f"{self.company} - {self.turn}"
