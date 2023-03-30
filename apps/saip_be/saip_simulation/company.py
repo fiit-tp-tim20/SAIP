@@ -139,33 +139,39 @@ class Company:
         0
     )
     production_volume: int = 0
-    prod_ppu: float = field(init=False)
-    total_ppu: float = field(init=False)
-    value_paid_in_inventory_charge: float = field(init=False)
+    prod_ppu: float = 0 #field(init=False)
+    total_ppu: float = 0 #field(init=False)
+    value_paid_in_inventory_charge: float = 0 #field(init=False)
 
     balance: float = 0  # current state of the company finances
-    profit: float = field(init=False)  # +income -costs | per turn only
-    profit_before_tax: float = field(init=False)
-    ret_earnings: float = field(init=False)
+    profit: float = 0 #field(init=False)  # +income -costs | per turn only
+    profit_before_tax: float = 0 #field(init=False)
+    profit_after_tax: float = 0 #field(init=False)
+    ret_earnings: float = 0 #field(init=False)
 
     loans: float = FactoryPreset.STARTING_INVESTMENT
     interest_rate: float = CompanyPreset.DEFAULT_INTEREST_RATE
-    value_paid_in_interest: float = field(init=False)
-    value_paid_in_loan_repayment: float = field(init=False)
-    new_loans: float = field(init=False)
+    value_paid_in_interest: float = 0 #field(init=False)
+    value_paid_in_loan_repayment: float = 0 #field(init=False)
+    value_paid_in_stored_product_upgrades: float = 0
+    new_loans: float = 0 #field(init=False)
 
     tax_rate = CompanyPreset.DEFAULT_TAX_RATE
-    value_paid_in_tax: float = field(init=False)
+    value_paid_in_tax: float = 0 #field(init=False)
 
     income_per_turn: float = 0  # field(init=False)
     prod_costs_per_turn: float = 0  # field(init=False)
     total_costs_per_turn: float = 0  # field(init=False)
 
     max_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
-    remaining_budget: float = field(init=False)
+    remaining_budget: float = 0 #field(init=False)
 
     stock_price: float = 0  # field(init=False)  # company score
     units_sold: int = 0  # field(init=False)
+
+    prev_turn_prod_ppu: float = 0
+    prev_turn_total_ppu: float = 0
+    prev_turn_inventory: float = 0
 
     factory: Factory = None
     marketing: Dict[str, MarketingType] = field(default_factory=dict)
@@ -180,7 +186,8 @@ class Company:
             self.remaining_budget -= marketing_type.investment
 
     def __upgrade_stored_products(self) -> float:
-        return self.inventory * self.product.get_upgrade_stored_products_price()
+        self.value_paid_in_stored_product_upgrades = self.inventory * self.product.get_upgrade_stored_products_price()
+        return self.value_paid_in_stored_product_upgrades
 
     def __price_diff_stored_products(self) -> float:
         return (self.prod_ppu - self.previous_ppu) * self.inventory
