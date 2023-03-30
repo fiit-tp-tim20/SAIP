@@ -41,9 +41,9 @@ class Factory:
         "rent": 0.0,
         "energy": 0.0,
         "salaries": 0.0,  # employees * salary * 3 (length of turn)
-        "materials": 0.0,  # this one might be irrelevant
-        "writeoff": 0.0,    #CHANGED ALL THE VALUES FROM 'float' to '0.0' ... it was not a declaration of type but the assignment of a value of type 'type'
-    }   # TODO: TMP FIX
+        "materials": 0.0,
+        "writeoff": 0.0,
+    }  # TODO: TMP FIX
     inflation = FactoryPreset.BASE_INFLATION
 
     def __post_init__(self):
@@ -78,14 +78,18 @@ class Factory:
             + self.upkeep.get("materials")
         )
 
-    def calculate_price_per_unit(self, production_this_turn: int) -> float:
+    def calculate_price_per_unit(
+        self,
+        production_this_turn: int,
+        material_cost: float = FactoryPreset.BASE_MATERIAL_COST_PER_UNIT,
+    ) -> float:
         self.update_upkeep(
-            materials_cost=FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
-            * production_this_turn,
+            materials_cost=material_cost * production_this_turn,
             skip=True,
-        )  # TODO make sure this works as intended - are we using the updated man_cost from upgrades???
+        )
         if production_this_turn <= 0:
             return 0.0
+
         ppu = self.total_upkeep() / production_this_turn
         cap_usage = production_this_turn / self.capacity
 
@@ -98,8 +102,7 @@ class Factory:
         self.__devalue_capital()
         self.capital_investment += investment
         self.capacity += floor(
-            self.capital_investment
-            - FactoryPreset.STARTING_INVESTMENT
+            (self.capital_investment - FactoryPreset.STARTING_INVESTMENT)
             / FactoryPreset.STARTING_INVESTMENT
             * FactoryPreset.STARTING_CAPACITY
         )
@@ -130,31 +133,33 @@ class Factory:
 class Company:
     brand: str = ""
     product: Product = None
+    previous_ppu: float = field(init=False, default=0.0)
 
     inventory: int = (
-        0  # assuming that the stored products are upgraded automatically, for a price
+        0
     )
     production_volume: int = 0
     prod_ppu: float = field(init=False)
     total_ppu: float = field(init=False)
+    value_paid_in_inventory_charge: float = field(init=False)
 
     balance: float = 0  # current state of the company finances
     profit: float = field(init=False)  # +income -costs | per turn only
+    profit_before_tax: float = field(init=False)
+    ret_earnings: float = field(init=False)
+
     loans: float = FactoryPreset.STARTING_INVESTMENT
     interest_rate: float = CompanyPreset.DEFAULT_INTEREST_RATE
+    value_paid_in_interest: float = field(init=False)
+    value_paid_in_loan_repayment: float = field(init=False)
+    new_loans: float = field(init=False)
+
+    tax_rate = CompanyPreset.DEFAULT_TAX_RATE
+    value_paid_in_tax: float = field(init=False)
+
     income_per_turn: float = 0  # field(init=False)
     prod_costs_per_turn: float = 0  # field(init=False)
     total_costs_per_turn: float = 0  # field(init=False)
-    value_paid_in_tax: float = 0
-    value_paid_in_interest: float = 0
-    value_paid_in_loan_repayment: float = 0
-    value_paid_in_inventory_charge: float = 0
-    value_paid_in_stored_product_upgrades: float = 0
-    new_loans: float = 0
-    profit_before_tax: float = 0
-    ret_earnings: float = 0
-
-
 
     max_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
     remaining_budget: float = field(init=False)
@@ -167,15 +172,18 @@ class Company:
 
     def __post_init__(self):
         self.remaining_budget = self.max_budget
+        self.value_paid_in_interest = self.loans * self.interest_rate
         self.pay_for_marketing()
 
     def pay_for_marketing(self):
         for marketing_type in self.marketing.values():
             self.remaining_budget -= marketing_type.investment
 
-    def upgrade_stored_products(self) -> None:
-        self.value_paid_in_stored_product_upgrades = self.inventory * self.product.get_upgrade_stored_products_price()
-        self.total_costs_per_turn += self.value_paid_in_stored_product_upgrades
+    def __upgrade_stored_products(self) -> float:
+        return self.inventory * self.product.get_upgrade_stored_products_price()
+
+    def __price_diff_stored_products(self) -> float:
+        return (self.prod_ppu - self.previous_ppu) * self.inventory
 
     def calculate_stock_price(self) -> float:
         self.__update_loans()
@@ -184,7 +192,7 @@ class Company:
             self.factory.capital_investment
             + self.balance * 0.2  # long term performance
             + self.profit * 0.3  # per turn performance
-            - self.loans * 0.5  # log term debt
+            - self.loans * 0.5  # long term debt
             + self.yield_agg_marketing_value()
         ) / 1000
 
@@ -210,13 +218,21 @@ class Company:
         if self.production_volume > self.factory.capacity:
             self.production_volume = self.factory.capacity
 
-        self.prod_ppu = self.factory.calculate_price_per_unit(self.production_volume)
-        if self.production_volume <= 0:
+        self.prod_ppu = self.factory.calculate_price_per_unit(
+            self.production_volume, self.product.get_man_cost()
+        )
+        if self.production_volume <= 0:  # fix case where production == 0
             self.total_ppu = 0
         else:
-            self.total_ppu = (
-                self.prod_ppu + self.__agg_marketing_costs() / self.production_volume
-            )
+            additional_ppu = (
+                self.__agg_marketing_costs()
+                + self.factory.upkeep.get("writeoff")
+                + self.value_paid_in_interest
+                + self.__price_diff_stored_products()
+                + self.__upgrade_stored_products()
+            ) / self.production_volume
+            self.total_ppu = self.prod_ppu + additional_ppu
+            
 
         self.inventory += self.production_volume
         self.prod_costs_per_turn = self.production_volume * self.prod_ppu
@@ -226,7 +242,8 @@ class Company:
         if demand > self.inventory:
             self.income_per_turn = self.inventory * self.product.get_price()
             self.profit = self.income_per_turn - self.total_costs_per_turn
-            self.apply_tax()
+            if self.profit > 0:
+                self.apply_tax()
             self.balance += self.profit + self.remaining_budget
             demand_not_met = demand - self.inventory
             self.units_sold = self.inventory
@@ -235,29 +252,37 @@ class Company:
 
         self.income_per_turn = demand * self.product.get_price()
         self.profit = self.income_per_turn - self.total_costs_per_turn
-        self.apply_tax()
+
+        if self.profit > 0:
+            self.apply_tax()
+
+        self.balance += self.profit + self.remaining_budget
         self.units_sold = demand
         self.inventory -= demand
-        self.value_paid_in_inventory_charge = (self.inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT)
-        self.balance += self.profit + self.remaining_budget - self.value_paid_in_inventory_charge
+        self.value_paid_in_inventory_charge = (
+            self.inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT
+        )
+        self.balance += (
+            self.profit + self.remaining_budget - self.value_paid_in_inventory_charge
+        )
         return 0
 
     def apply_tax(self):
-        if self.profit <= 0: 
+        if self.profit <= 0:
             self.profit_before_tax = self.profit
             self.profit_after_tax = self.profit
             self.value_paid_in_tax = 0
         else:
             self.profit_before_tax = self.profit
-            profit_after_tax = self.profit * (1 - CompanyPreset.DEFAULT_TAX_RATE)
+            profit_after_tax = self.profit * (1 - self.tax_rate)
             self.value_paid_in_tax = self.profit - profit_after_tax
             self.profit = profit_after_tax
 
     def __update_loans(self):
         self.new_loans = 0
-        self.value_paid_in_interest = self.loans * self.interest_rate
-        self.value_paid_in_loan_repayment = self.value_paid_in_interest
-        self.balance -= self.loans * self.interest_rate
+        self.value_paid_in_loan_repayment = 0
+        self.balance -= self.value_paid_in_interest
+
         if self.balance < 0:
             self.loans -= self.balance
             self.new_loans -= self.balance
@@ -275,25 +300,34 @@ class Company:
             self.loans = 0
             return
 
-        self.loans -= self.balance - self.max_budget
         if (self.balance - self.max_budget) > 0:
-            self.value_paid_in_loan_repayment += (self.balance - self.max_budget)
+            self.value_paid_in_loan_repayment += self.balance - self.max_budget
         else:
-            self.new_loans += -(self.balance - self.max_budget)
+            self.new_loans -= self.balance - self.max_budget
+        self.loans -= self.balance - self.max_budget
         self.balance = 0
+        # TODO loan limits
 
 
 if __name__ == "__main__":
-    com = Company("blank", None, 0, 0, 0, 10000, Factory(), {})
+    com = Company(
+        brand="blank",
+        product=LastingProduct(None, 1200, -1),
+        inventory=0,
+        production_volume=95,
+        balance=0,
+        factory=Factory(),
+        marketing={"ooh": OOH(1500)},
+    )
 
     unitsA = int(FactoryPreset.STARTING_CAPACITY * 0.81)
     unitsB = int(FactoryPreset.STARTING_CAPACITY * 0.9)
     unitsC = int(FactoryPreset.STARTING_CAPACITY * 0.99)
 
     print("TESTING FACTORY")
-    ppuA = com.factory.calculate_price_per_unit(unitsA)
-    ppuB = com.factory.calculate_price_per_unit(unitsB)
-    ppuC = com.factory.calculate_price_per_unit(unitsC)
+    ppuA = com.factory.calculate_price_per_unit(unitsA, com.product.get_man_cost())
+    ppuB = com.factory.calculate_price_per_unit(unitsB, com.product.get_man_cost())
+    ppuC = com.factory.calculate_price_per_unit(unitsC, com.product.get_man_cost())
     print(
         f"A:{unitsA} ppu:{ppuA:.2f} \nB:{unitsB} ppu:{ppuB:.2f} \nC:{unitsC} ppu:{ppuC:.2f}"
     )
@@ -318,9 +352,9 @@ if __name__ == "__main__":
     com.factory.invest_into_factory(investment)
     print(f"new cap: {com.factory.capacity}")
 
-    ppuA = com.factory.calculate_price_per_unit(unitsA)
-    ppuB = com.factory.calculate_price_per_unit(unitsB)
-    ppuC = com.factory.calculate_price_per_unit(unitsC)
+    ppuA = com.factory.calculate_price_per_unit(unitsA, com.product.get_man_cost())
+    ppuB = com.factory.calculate_price_per_unit(unitsB, com.product.get_man_cost())
+    ppuC = com.factory.calculate_price_per_unit(unitsC, com.product.get_man_cost())
     print(
         f"A:{unitsA} ppu:{ppuA:.2f} \nB:{unitsB} ppu:{ppuB:.2f} \nC:{unitsC} ppu:{ppuC:.2f}"
     )
