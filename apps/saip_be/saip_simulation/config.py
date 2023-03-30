@@ -5,8 +5,8 @@ YEAR_LENGTH = 12  # months
 class MarketingModifiers:
     SOCIAL_MEDIA_BASE = 1.25
     SOCIAL_MEDIA_BONUS = 0.1
-    PODCAST = 1.5
-    OOH = 1.25
+    PODCAST = 1.25
+    OOH = 1.5
     BILLBOARD = 1
     CABLE_NEWS = 1
 
@@ -53,7 +53,7 @@ class FactoryPreset:
 
 
 class MarketPreset:
-    STARTING_CUSTOMER_COUNT = 1000
+    STARTING_CUSTOMER_COUNT = 250
     BASE_MARKETING_INVESTMENT = 10_000
     INTERESTED_IN_RND = 0.15
     INTERESTED_IN_MARKETING = 0.2

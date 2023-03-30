@@ -56,7 +56,7 @@ class Market:
         self.customer_distribution = {}
 
         self.customer_count = (
-            MarketPreset.STARTING_CUSTOMER_COUNT
+            MarketPreset.STARTING_CUSTOMER_COUNT * len(self.companies)
             if customer_count is None
             else customer_count
         )
@@ -73,6 +73,7 @@ class Market:
             total_investment_from_companies
             / base_investment
             * MarketPreset.STARTING_CUSTOMER_COUNT
+            * len(self.companies)
         )
 
         for i in range(self.customer_count):
@@ -114,10 +115,10 @@ class Market:
             if self.customer_distribution.get(customer_choice) is None:
                 self.customer_distribution[customer_choice] = {"demand": 0}
             self.customer_distribution[customer_choice]["demand"] += 1
-        self.calculate_sales_per_company()
+        self.__calculate_sales_per_company()
         return self.customer_distribution
 
-    def calculate_sales_per_company(self):
+    def __calculate_sales_per_company(self):
         for company in self.companies:
             self.customer_distribution[company.brand][
                 "demand_not_met"
@@ -179,7 +180,9 @@ if __name__ == "__main__":
     print(
         f"\nTOTAL DEMAND: {sum([item.get('demand') for item in mar.customer_distribution.values()])}"
     )
-    total_unmet_demand = sum([item.get('demand_not_met', 0) for item in mar.customer_distribution.values()])
+    total_unmet_demand = sum(
+        [item.get("demand_not_met", 0) for item in mar.customer_distribution.values()]
+    )
     print(
         f"REMAINING CUSTOMERS: {total_unmet_demand + mar.customer_distribution.get('no_purchase', {}).get('demand', 0)}\n"
     )
@@ -188,8 +191,12 @@ if __name__ == "__main__":
         print(
             f"COMPANY {company.brand} \nNet Worth: {company.factory.capital_investment} | Units Sold: {company.units_sold}"
         )
-        ppu = company.factory.calculate_price_per_unit(company.production_volume)
-        ipu = company.product.get_price() - company.factory.calculate_price_per_unit(company.production_volume)
+        ppu = company.factory.calculate_price_per_unit(
+            company.production_volume, company.product.get_man_cost()
+        )
+        ipu = company.product.get_price() - company.factory.calculate_price_per_unit(
+            company.production_volume, company.product.get_man_cost()
+        )
         print(
             f"Selling Price: {company.product.get_price()} | Costs Per Unit: {ppu:.2f} | Income Per Unit: {ipu:.2f}"
         )
