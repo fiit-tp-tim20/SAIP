@@ -180,6 +180,7 @@ class Simulation:
             new_factory.base_energy_cost = FactoryPreset.BASE_ENERGY_COST
             new_factory.capital_investment = FactoryPreset.STARTING_INVESTMENT
             new_factory.capital_investment_this_turn = 0.0
+            return new_factory
 
         # all attributes are positive integer (from model)
         # TODO: types are not consistent: model <-> our class
@@ -358,7 +359,7 @@ class Simulation:
                 nt_companies_states[company_model].production.save()
             if nt_companies_states[company_model].factory is not None:
                 nt_companies_states[company_model].factory.capacity = company_class_object.factory.capacity
-                ct_companies_states[company_model].factory.capital_investments = company_class_object.factory.capital_investment
+                nt_companies_states[company_model].factory.capital_investments = company_class_object.factory.capital_investment
                 nt_companies_states[company_model].factory.save()
             nt_companies_states[company_model].save()
         nt_market_state.demand = ct_total_units_demanded
