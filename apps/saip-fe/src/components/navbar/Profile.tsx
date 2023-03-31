@@ -18,7 +18,7 @@ function Profile() {
 	return !isLoading ? (
 		<>
 			<button
-				className="p-0 border-4 border-accent-400 ring-offset-base-100 ring-offset-2 w-10 h-10 rounded-full bg-gray-200"
+				className="p-0 border-4 accent-400-border ring-offset-base-100 ring-offset-2 w-10 h-10 rounded-full bg-gray-200"
 				type="button"
 				onClick={() => setOpen(!open)}
 			>

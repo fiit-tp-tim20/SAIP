@@ -28,19 +28,21 @@ body {
 	min-width: 320px;
 	min-height: 100vh;
 
-	@apply bg-neutral-50;
+	background-color: var(--tertiary, theme("colors.neutral.50"));
 }
 
 h1 {
-	@apply text-accent-800;
 	font-size: 3.2em;
 	line-height: 1.1;
+
+	color: var(--maxContrastColor, theme("colors.accent.800"));
 }
 
 h2 {
-	@apply text-accent-700;
 	font-size: 2.4em;
 	line-height: 1.2;
+
+	color: var(--maxContrastColor, theme("colors.accent.700"));
 }
 
 h3 {
@@ -85,7 +87,8 @@ button {
 }
 
 .background-container {
-	@apply bg-white border-2 border-accent-700;
+	border-color: var(--maxContrastColor, theme("colors.accent.700"));
+	@apply bg-white border-2;
 }
 
 .select {
@@ -105,7 +108,13 @@ canvas {
 }
 
 .active {
-	@apply text-accent-900 bg-accent-500;
+	background-color: var(--maxContrastColor, theme("colors.accent.500"));
+	color: var(--minContrastColor, theme("colors.accent.900"));
+}
+
+.link-inactive:hover {
+	background-color: var(--hover, theme("colors.accent.300"));
+	color: var(--maxContrastColor, theme("colors.accent.700"));
 }
 
 progress[value]::-webkit-progress-bar {
@@ -119,4 +128,67 @@ progress[value]::-webkit-progress-value {
 .button-clear {
 	all: unset;
 	cursor: pointer;
+}
+
+.navbar-bg {
+	background-color: var(--secondary, white);
+}
+
+.button-group-colors {
+	color: var(--maxContrastColor, theme("colors.accent.500"));
+	border-color: var(--maxContrastColor, theme("colors.accent.500"));
+
+	@apply bg-white;
+}
+
+.button-group-colors:hover {
+	color: var(--maxContrastColor, theme("colors.accent.700"));
+	background-color: var(--hover, theme("colors.accent.700"));
+}
+
+.button-group-colors-active {
+	color: var(--minContrastColor, "white");
+	background-color: var(--maxContrastColor, theme("colors.accent.500"));
+}
+
+.button-group-colors-active:hover {
+	color: var(--maxContrastColor, theme("colors.accent.900"));
+	background-color: var(--hover, theme("colors.accent.700"));
+}
+
+.button-dark {
+	background-color: var(--maxContrastColor, theme("colors.accent.500"));
+	color: var(--minContrastColor, theme("colors.accent.50"));
+}
+
+.button-dark:hover {
+	background-color: var(--hover, theme("colors.accent.700"));
+}
+
+.button-dark:disabled {
+	background-color: var(--hover, theme("colors.accent.100"));
+}
+
+.accent-700-bg {
+	background-color: var(--maxContrastColor, theme("colors.accent.700"));
+}
+
+.accent-700-bg-hover:hover {
+	background-color: var(--hover, theme("colors.accent.700"));
+}
+
+.accent-800-color {
+	color: var(--maxContrastColor, theme("colors.accent.800"));
+}
+
+.accent-400-border {
+	border-color: var(--maxContrastColor, theme("colors.accent.400"));
+}
+
+.accent-700-border {
+	border-color: var(--maxContrastColor, theme("colors.accent.700"));
+}
+
+.accent-500-fill {
+	fill: var(--maxContrastColor, theme("colors.accent.500"));
 }

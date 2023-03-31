@@ -33,6 +33,32 @@ function App() {
 	const { reset: resetUpgradeState } = useUpgradesStore();
 	const { reset: resetMarketingState } = useMarketingStore();
 
+	const [enableArc, setEnableArc] = React.useState(true);
+
+	useEffect(() => {
+		document.documentElement.style.setProperty(
+			"--secondary",
+			enableArc ? "var(--arc-palette-foregroundSecondary)" : "",
+		);
+		document.documentElement.style.setProperty(
+			"--primary",
+			enableArc ? "var(--arc-palette-foregroundPrimary)" : "",
+		);
+		document.documentElement.style.setProperty(
+			"--tertiary",
+			enableArc ? "var(--arc-palette-foregroundTertiary)" : "",
+		);
+		document.documentElement.style.setProperty(
+			"--maxContrastColor",
+			enableArc ? "var(--arc-palette-maxContrastColor)" : "",
+		);
+		document.documentElement.style.setProperty(
+			"--minContrastColor",
+			enableArc ? "var(--arc-palette-minContrastColor)" : "",
+		);
+		document.documentElement.style.setProperty("--hover", enableArc ? "var(--arc-palette-hover)" : "");
+	}, [enableArc]);
+
 	useEffect(() => {
 		console.warn(data);
 		const savedTurn = localStorage.getItem("turn");
