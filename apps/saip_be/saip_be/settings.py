@@ -18,9 +18,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
+import json
+
+with open('/etc/saip.json') as f:
+    config = json.load(f)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6*fhta)-nmkd0_+^$1o*+1=5ezem4w)yd(2jqiv8j=a7onp-_j'
+SECRET_KEY = config['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -103,9 +107,10 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'saip',
         'USER': 'saip_user',
-        'PASSWORD': 's4QuJ5gB5QGaSASM',
+        'PASSWORD': config['DB_PASSWORD'],
         'HOST': 'localhost',
         'PORT': '',
+        'CONN_MAX_AGE': 600,
     }
 }
 
@@ -163,9 +168,9 @@ if not DEBUG:
             "rest_framework.renderers.JSONRenderer",
         )
 
-REST_KNOX = {"TOKEN_TTL": timedelta(days=365),
+REST_KNOX = {"TOKEN_TTL": timedelta(minutes=10),
              "AUTO_REFRESH": True,
-             "TOKEN_LIMIT_PER_USER": None,
+             "TOKEN_LIMIT_PER_USER": 7,
              "MIN_REFRESH_INTERVAL": 60,
              "AUTH_HEADER_PREFIX": "Bearer"}
 
@@ -173,21 +178,34 @@ import platform
 if platform.system() == 'Windows':
     LOG_FILE = 'info.log'
 else:
-    LOG_FILE = '/tmp/saip_info.log'
+    LOG_FILE = '/var/log/saip/info.log'
 
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
     'handlers': {
         'file': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': LOG_FILE,
         },
+        'console': {
+            'level': 'ERROR',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        }
     },
     'loggers': {
         'django': {
-            'handlers': ['file'],
+            'handlers': ['file', 'console'],
             'level': 'INFO',
             'propagate': True,
         },
