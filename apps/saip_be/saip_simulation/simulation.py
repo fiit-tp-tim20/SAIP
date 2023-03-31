@@ -232,8 +232,8 @@ class Simulation:
 
     def run_simulation(self) -> None:
         for company in self.companies.values():
-            company.factory.invest_into_factory(company.factory.capital_investment_this_turn)   #TODO: prehodit investovanie do factory po vyrobe
             company.produce_products()
+            company.factory.invest_into_factory(company.factory.capital_investment_this_turn) #TODO: test if this doesnt brake anything ()
 
         self.market.generate_distribution()
         for company in self.companies.values():
@@ -322,7 +322,7 @@ class Simulation:
             if ct_companies_states[company_model].production is not None:
 
                 ct_companies_states[company_model].production.man_cost = (
-                    company_class_object.prod_ppu   # TODO: maybe this should be .product.get_man()
+                    company_class_object.prod_ppu
                 )
                 ct_companies_states[company_model].production.man_cost_all = (
                     company_class_object.total_ppu
