@@ -245,7 +245,6 @@ class Simulation:
         # declare lists and dictionaries
         companies_models: models.Company = []
         ct_companies_states: Dict[models.Company, models.CompaniesState] = {}   #current turn companies state
-        pt_companies_states: Dict[models.Company, models.CompaniesState] = {}   #previous turn companies state
         nt_companies_states: Dict[models.Company, models.CompaniesState] = {}   #next turn companies state
 
         # load the company models
@@ -266,13 +265,7 @@ class Simulation:
                 nt_companies_states[company_model] = nt_company_state_model
             except models.CompaniesState.DoesNotExist:
                 pass
-            try:  # get company states for the previous turn
-                pt_company_state_model = models.CompaniesState.objects.get(
-                    company=company_model, turn=self.prev_turn_model
-                )
-                pt_companies_states[company_model] = pt_company_state_model
-            except models.CompaniesState.DoesNotExist:
-                pass
+
         # load the market state model
         ct_market_state = models.MarketState.objects.get(turn=self.turn_model)
         nt_market_state = models.MarketState.objects.get(turn=self.next_turn_model)
