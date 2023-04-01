@@ -8,14 +8,7 @@ type IndustryGraphProps = {
 
 function IndustryGraph(props: IndustryGraphProps) {
     const { rank, stock_price } = props;
-    const maxPoradie = Math.max(...rank);
-    const maxCena = Math.max(...stock_price);
     const data = rank.map((value, index) => ({ x: index + 1, Poradie: value, Cena: stock_price[index] }));
-    console.log(data);
-    //get max value of poradie
-    //get max value of cena
-    console.log(maxPoradie);
-    console.log(maxCena);
 
     return (
         <div style={{ width: "100%", height: "250px" }}>
