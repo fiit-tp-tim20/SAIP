@@ -13,7 +13,7 @@ function UpgradeInfo(props: Props) {
 
 	return (
 		<li
-			className="w-full bg-gray-200 dark:bg-[#242424] py-2 px-4 my-2 rounded-xl flex flex-row justify-between align-middle h-16"
+			className="w-full bg-gray-200 py-2 px-4 my-2 rounded-xl flex flex-row justify-between align-middle h-16"
 			onClick={onClick}
 		>
 			<div className="flex flex-row align-middle justify-center">

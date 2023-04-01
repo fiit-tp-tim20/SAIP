@@ -118,8 +118,9 @@ function GameSelect() {
 	};
 
 	return (
-		<div className="w-full  max-w-xs">
-			<form className="bg-white shadow-md rounded px-6 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
+		<div className="w-full h-full max-w-xs flex flex-col gap-4 justify-center items-center">
+			<h2 className="font-bold text-center">Vytvorte si svoj vlastný tím</h2>
+			<form className="bg-white rounded-2xl px-6 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
 				<div className="mb-6">
 					<label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
 						Názov tímu
@@ -197,22 +198,16 @@ function GameSelect() {
 				)}
 				<div className="flex flex-col items-center justify-between gap-2">
 					<button
-						className="w-full bg-accent-700 hover:bg-accent-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+						className="w-full button-dark font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
 						type="submit"
 					>
 						Potvrdiť
 					</button>
-					<p className="mt-8 text-xs font-light text-center text-gray-700">
+					<p className="font-light text-center text-gray-700">
 						Prihlásili ste sa pod iným účtom ? Odhláste sa kliknutím{" "}
-						{/* <a
-							href="#"
-							className="font-bold text-accent-700 hover:text-accent-500 hover:underline"
-							onClick={() => logout(marketingReset, companyReset, upgradesReset)}
-						>
-							TU
-						</a> */}
 						<button
-							className="button-clear accent-gray-800 hover::underline"
+							type="button"
+							className="button-clear accent-800-color hover:underline"
 							onClick={() => logout(marketingReset, companyReset, upgradesReset)}
 						>
 							TU
