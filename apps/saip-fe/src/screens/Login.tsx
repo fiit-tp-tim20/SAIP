@@ -53,7 +53,8 @@ export default function Login() {
 	return (
 		<div className="w-full h-full max-w-xs flex flex-col gap-4 justify-center items-center">
 			<h1 className="font-bold">SAIP</h1>
-			<form className="bg-white rounded-2xl px-6 pt-6 pb-8 mb-4 w-full" onSubmit={handleSubmit}>
+			<h2 className="font-bold">Prihlásenie</h2>
+			<form className="bg-white rounded-2xl px-6 pt-6 pb-8 mb-4 mim-w-[300px]" onSubmit={handleSubmit}>
 				<div className="mb-4">
 					<label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
 						Prihlasovacie meno

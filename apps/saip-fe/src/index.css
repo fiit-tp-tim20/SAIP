@@ -211,6 +211,10 @@ progress[value]::-webkit-progress-value {
 	color: var(--maxContrastColor, theme("colors.accent.800"));
 }
 
+.accent-800-color-hover:hover {
+	text-decoration: underline;
+}
+
 .accent-400-border {
 	border-color: var(--maxContrastColor, theme("colors.accent.400"));
 }

@@ -40,15 +40,16 @@ function Register() {
 	};
 
 	return (
-		<div className="w-full  max-w-xs">
-			<form className="bg-white shadow-md rounded px-6 pt-6 pb-8 mb-4">
+		<div className="w-full h-full max-w-xs flex flex-col gap-4 justify-center items-center">
+			<h2 className="font-bold">Registrácia</h2>
+			<form className="bg-white rounded-2xl px-6 pt-6 pb-8 mb-4 min-w-[300px]">
 				<div className="mb-4">
 					{success ? (
 						<div
 							className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
 							role="alert"
 						>
-							<strong className="font-bold">Úspešne ste sa zaregistrovali!</strong>
+							<strong className="font-bold">Úspešne ste sa zaregistrovali!</strong>{" "}
 							<span className="block sm:inline">Teraz sa môžete prihlásiť.</span>
 						</div>
 					) : null}
@@ -100,20 +101,20 @@ function Register() {
 					/>
 					{isInvalidPassword ? <p className="text-red-500 text-xs italic">Heslá sa nezhodujú</p> : null}
 				</div>
-				<div className="flex items-center justify-between gap-2">
+				<div className="flex flex-col items-center justify-between gap-2">
 					<button
-						className="w-full bg-accent-700 hover:bg-accent-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-						type="button"
-					>
-						<Link to="/login">Späť na prihlásenia</Link>
-					</button>
-					<button
-						className="w-full bg-accent-700 hover:bg-accent-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+						className="w-full button-dark font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
 						type="button"
 						onClick={handleSubmit}
 					>
 						Registrácia
 					</button>
+					<p>
+						Už máte účet?{" "}
+						<span className="accent-800-color accent-800-color-hover transition-all duration-300">
+							<Link to="/login">Prihláste sa</Link>
+						</span>
+					</p>
 				</div>
 			</form>
 		</div>
