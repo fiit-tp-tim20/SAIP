@@ -51,8 +51,9 @@ export default function Login() {
 	};
 
 	return (
-		<div className="w-full  max-w-xs">
-			<form className="bg-white shadow-md rounded px-6 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
+		<div className="w-full h-full max-w-xs flex flex-col gap-4 justify-center items-center">
+			<h1 className="font-bold">SAIP</h1>
+			<form className="bg-white rounded-2xl px-6 pt-6 pb-8 mb-4 w-full" onSubmit={handleSubmit}>
 				<div className="mb-4">
 					<label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
 						Prihlasovacie meno
@@ -84,16 +85,16 @@ export default function Login() {
 				</div>
 				<div className="flex items-center justify-between gap-2">
 					<button
-						className="w-full bg-accent-700 hover:bg-accent-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-						type="submit"
-					>
-						Prihlásiť sa
-					</button>
-					<button
-						className="w-full bg-accent-700 hover:bg-accent-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+						className="w-full button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
 						type="button"
 					>
 						<Link to="/register">Registrácia</Link>
+					</button>
+					<button
+						className="w-full button-dark font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+						type="submit"
+					>
+						Prihlásiť sa
 					</button>
 				</div>
 			</form>

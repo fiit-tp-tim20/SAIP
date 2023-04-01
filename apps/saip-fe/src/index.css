@@ -8,7 +8,7 @@
 	line-height: 24px;
 	font-weight: 400;
 
-	color-scheme: light dark;
+	color-scheme: light;
 	color: rgba(255, 255, 255, 0.87);
 	background-color: #242424;
 
@@ -19,6 +19,12 @@
 	-webkit-text-size-adjust: 100%;
 
 	--bg-container-dark: #242424;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		color: #213547;
+	}
 }
 
 body {
@@ -142,27 +148,29 @@ progress[value]::-webkit-progress-value {
 }
 
 .button-group-colors:hover {
-	color: var(--maxContrastColor, theme("colors.accent.700"));
+	color: var(--maxContrastColor, theme("colors.accent.50"));
 	background-color: var(--hover, theme("colors.accent.700"));
 }
 
 .button-group-colors-active {
-	color: var(--minContrastColor, "white");
+	color: var(--minContrastColor, theme("colors.accent.50"));
 	background-color: var(--maxContrastColor, theme("colors.accent.500"));
 }
 
 .button-group-colors-active:hover {
-	color: var(--maxContrastColor, theme("colors.accent.900"));
+	color: var(--maxContrastColor, theme("colors.accent.50"));
 	background-color: var(--hover, theme("colors.accent.700"));
 }
 
 .button-dark {
 	background-color: var(--maxContrastColor, theme("colors.accent.500"));
 	color: var(--minContrastColor, theme("colors.accent.50"));
+	transition: all 0.3s;
 }
 
 .button-dark:hover {
 	background-color: var(--hover, theme("colors.accent.700"));
+	color: var(--maxContrastColor, theme("colors.accent.50"));
 }
 
 .button-dark:disabled {
@@ -177,6 +185,18 @@ progress[value]::-webkit-progress-value {
 .button-light:hover {
 	background-color: var(--hover, theme("colors.accent.300"));
 	color: var(--maxContrastColor, theme("colors.accent.700"));
+}
+
+.table-white tr:nth-child(odd) {
+	background-color: var(--tertiary, theme("colors.accent.50"));
+}
+
+.table-header {
+	background-color: var(--maxContrastColor, theme("colors.accent.500"));
+}
+
+.table-white tr:hover {
+	background-color: var(--hover, theme("colors.accent.300"));
 }
 
 .accent-700-bg {

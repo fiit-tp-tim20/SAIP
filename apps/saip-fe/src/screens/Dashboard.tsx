@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { getTurn } from "../api/GetTurn";
-import CompanyReport from "../components/reports/companyReport";
-import IndustryReport from "../components/reports/industryReport";
+import CompanyReport from "../components/reports/CompanyReport";
+import IndustryReport from "../components/reports/IndustryReport";
 
 function Plan() {
 	const [showCompanyReport, setShowCompanyReport] = useState(true);
