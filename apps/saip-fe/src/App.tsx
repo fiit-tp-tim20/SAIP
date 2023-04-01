@@ -84,10 +84,10 @@ function App() {
 	if (data && data.Number === 0) {
 		return (
 			<div className="flex flex-col justify-center items-center h-screen">
-				<h1 className="text-4xl font-bold pb-2">Hra sa ešte nezačala</h1>
+				<h1 className="text-4xl font-bold pb-4">Hra sa ešte nezačala</h1>
 				<button
 					type="button"
-					className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 m-0 rounded-lg"
+					className="button-dark font-bold py-2 px-4 m-0 rounded-lg"
 					onClick={() => logout(resetMarketingState, resetCompanyState, resetUpgradeState)}
 				>
 					Odhlásiť sa
