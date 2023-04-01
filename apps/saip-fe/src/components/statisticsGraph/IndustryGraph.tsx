@@ -8,7 +8,14 @@ type IndustryGraphProps = {
 
 function IndustryGraph(props: IndustryGraphProps) {
     const { rank, stock_price } = props;
+    const maxPoradie = Math.max(...rank);
+    const maxCena = Math.max(...stock_price);
     const data = rank.map((value, index) => ({ x: index + 1, Poradie: value, Cena: stock_price[index] }));
+    console.log(data);
+    //get max value of poradie
+    //get max value of cena
+    console.log(maxPoradie);
+    console.log(maxCena);
 
     return (
         <div style={{ width: "100%", height: "250px" }}>
@@ -17,13 +24,19 @@ function IndustryGraph(props: IndustryGraphProps) {
                     <XAxis dataKey="x">
                         <Label value="Kolo" offset={-10} position="insideBottom" />
                     </XAxis>
-                    <YAxis>
+                    <YAxis yAxisId="left"  interval={1} reversed >
+                        <Label value="Poradie" offset={0} position="insideLeft" angle={-90} />
                     </YAxis>
+                    <YAxis yAxisId="right" orientation="right">
+                        <Label value="Cena akcie" offset={0} position="insideRight" angle={90} />
+                    </YAxis>
+
                     <CartesianGrid stroke="#f5f5f5" />
+
                     <Tooltip />
                     <Legend verticalAlign="top"/>
-                    <Bar type="monotone" dataKey="Poradie" fill="#8884d8" yAxisId={0} />
-                    <Line type="monotone" dataKey="Cena" stroke="#82ca9d" yAxisId={0} />
+                    <Line type="monotone" dataKey="Poradie" fill="#8884d8" yAxisId="left" />
+                    <Line type="monotone" dataKey="Cena" stroke="#82ca9d" yAxisId="right" />
                 </ComposedChart>
             </ResponsiveContainer>
         </div>
