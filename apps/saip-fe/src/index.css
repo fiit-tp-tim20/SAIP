@@ -169,6 +169,16 @@ progress[value]::-webkit-progress-value {
 	background-color: var(--hover, theme("colors.accent.100"));
 }
 
+.button-light {
+	background-color: var(--tertiary, theme("colors.accent.50"));
+	color: var(--maxContrastColor, theme("colors.accent.500"));
+}
+
+.button-light:hover {
+	background-color: var(--hover, theme("colors.accent.300"));
+	color: var(--maxContrastColor, theme("colors.accent.700"));
+}
+
 .accent-700-bg {
 	background-color: var(--maxContrastColor, theme("colors.accent.700"));
 }

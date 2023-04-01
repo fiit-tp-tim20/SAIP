@@ -32,12 +32,12 @@ function Profile() {
 
 			{open && (
 				<>
-					<div className="absolute right-6 py-2 mt-4 bg-white rounded-xl shadow-xl border-accent-700 border-2 z-20">
+					<div className="absolute right-6 py-2 mt-4 bg-white rounded-xl shadow-xl accent-700-border border-2 z-20">
 						<div className="flex flex-col justify-between px-4 py-2">
 							<h6 className="py-2">{data.name}</h6>
 							<button
 								type="button"
-								className="bg-accent-50 transition-all ease-in-out duration-300 rounded-lg min-w-[128px] flex justify-center align-middle bg-transparent py-2 px-3 hover:text-accent-700 hover:bg-accent-300"
+								className="button-light transition-all ease-in-out duration-300 rounded-lg min-w-[128px] flex justify-center align-middle py-2 px-3"
 								onClick={() => logout(marketingReset, companyReset, upgradesReset)}
 							>
 								Logout
