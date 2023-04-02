@@ -72,9 +72,9 @@ function Product() {
 										{data &&
 											data
 												.filter((feature) => feature.status === "finished")
-												.map((feature) => (
+												.map((feature, index) => (
 													<UpgradeInfo
-														key={feature.id}
+														key={index}
 														name={feature.name}
 														// name={t(`research.features.${feature.id}.title`) as string}
 														researchedAvatars={feature.players}
@@ -103,9 +103,9 @@ function Product() {
 									{data &&
 										data
 											.filter((feature) => feature.status === "started")
-											.map((feature) => (
+											.map((feature, index) => (
 												<UpgradeInfo
-													key={feature.id}
+													key={index}
 													name={feature.name}
 													// name={t(`research.features.${feature.id}.title`) as string}
 													researchedAvatars={feature.players}
