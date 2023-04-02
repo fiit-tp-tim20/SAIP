@@ -1,10 +1,18 @@
-import { use } from "i18next";
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "react-query";
-import getIndustryReport from "../../api/GetIndustryReport";
+import getIndustryReport, { IndustryReport as IndustryReportType } from "../../api/GetIndustryReport";
 import { getIndustryGraphData } from "../../api/GetIndustryGraphData";
 import IndustryGraph from "../statisticsGraph/IndustryGraph";
 import numberWithSpaces from "../../utils/numberWithSpaces";
+
+const sortByStockPrice = (a: IndustryReportType, b: IndustryReportType) => {
+	if (!a.stock_price) return 1;
+	if (!b.stock_price) return -1;
+
+	if (a.stock_price > b.stock_price) return -1;
+	if (a.stock_price < b.stock_price) return 1;
+	return 0;
+};
 
 function IndustryReport() {
 	const { data, isLoading } = useQuery(["getIndustryReport"], getIndustryReport);
@@ -40,20 +48,26 @@ function IndustryReport() {
 							<tbody>
 								{/* TODO add sort */}
 								{data &&
-									Object.entries(data?.industry).map((industry, index) => (
-										<tr key={industry[0]}>
-											<td className="px-4 py-2">{index + 1}</td>
-											<td className="px-4 py-2">{industry[0]}</td>
-											<td className="px-4 py-2">{numberWithSpaces(industry[1].stock_price)} €</td>
-											<td className="px-4 py-2">{numberWithSpaces(industry[1].net_profit)} €</td>
-											<td className="px-4 py-2">
-												{numberWithSpaces(industry[1].sell_price)} €/ks
-											</td>
-											<td className="px-4 py-2">
-												{numberWithSpaces(industry[1].market_share)} %
-											</td>
-										</tr>
-									))}
+									Object.entries(data?.industry)
+										.sort((a, b) => sortByStockPrice(a[1], b[1]))
+										.map((industry, index) => (
+											<tr key={industry[0]}>
+												<td className="px-4 py-2">{index + 1}</td>
+												<td className="px-4 py-2">{industry[0]}</td>
+												<td className="px-4 py-2">
+													{numberWithSpaces(industry[1].stock_price)} €
+												</td>
+												<td className="px-4 py-2">
+													{numberWithSpaces(industry[1].net_profit)} €
+												</td>
+												<td className="px-4 py-2">
+													{numberWithSpaces(industry[1].sell_price)} €/ks
+												</td>
+												<td className="px-4 py-2">
+													{numberWithSpaces(industry[1].market_share)} %
+												</td>
+											</tr>
+										))}
 							</tbody>
 						</table>
 					</div>
