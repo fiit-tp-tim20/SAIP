@@ -20,7 +20,7 @@ from saip_simulation.company import Factory
 from saip_simulation.marketing import Billboard, SocialMedia, CableNews, Podcast, OOH
 from saip_simulation.product import Product, LastingProduct, Upgrade
 
-from saip_simulation.config import FactoryPreset
+from saip_simulation.config import FactoryPreset, CompanyPreset
 import saip_simulation.config as config
 
 import saip_api.models as models
@@ -127,10 +127,13 @@ class Simulation:
                     new_company.prev_turn_total_ppu = 0
                     new_company.prev_turn_prod_ppu = 0
                 new_company.prev_turn_inventory = pt_company_state.inventory if pt_company_state.inventory is not None else 0
+                new_company.prev_turn_cash = pt_company_state.cash if pt_company_state.cash is not None else CompanyPreset.DEFAULT_BUDGET_PER_TURN
             else:
                 new_company.prev_turn_total_ppu = 0
                 new_company.prev_turn_prod_ppu = 0
                 new_company.prev_turn_inventory = 0
+                new_company.prev_turn_cash = CompanyPreset.DEFAULT_BUDGET_PER_TURN
+
             
 
             # create objects from models
@@ -305,7 +308,7 @@ class Simulation:
             ct_companies_states[company_model].tax = company_class_object.value_paid_in_tax
             ct_companies_states[company_model].profit_before_tax = company_class_object.profit_before_tax
             ct_companies_states[company_model].interest = company_class_object.value_paid_in_interest
-            ct_companies_states[company_model].cash_flow_res = company_class_object.remaining_budget + company_class_object.income_per_turn - company_class_object.total_costs_per_turn  #TODO: change remaining budget to cash from last turn
+            ct_companies_states[company_model].cash_flow_res = company_class_object.prev_turn_cash + company_class_object.income_per_turn - company_class_object.total_costs_per_turn
             ct_companies_states[company_model].loan_repayment = company_class_object.value_paid_in_loan_repayment
             ct_companies_states[company_model].loans = company_class_object.loans
             ct_companies_states[company_model].inventory_upgrade = company_class_object.value_paid_in_stored_product_upgrades
