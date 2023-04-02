@@ -264,8 +264,7 @@ class Company:
     ###########################
 
     def __pay_for_marketing(self):
-        for marketing_type in self.marketing.values():
-            self.remaining_budget -= marketing_type.investment
+        self.remaining_budget -= self.__agg_marketing_costs()
 
     def __agg_marketing_values(self) -> float:
         total_investment = 0
