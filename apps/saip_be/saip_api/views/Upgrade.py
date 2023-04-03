@@ -32,6 +32,7 @@ class UpgradeView(APIView):
                 'progress': upgrade.progress,
                 'camera_pos': camera_pos,
                 'camera_rot': camera_rot,
+                'description': upgrade.description
             })
 
         return Response(response)

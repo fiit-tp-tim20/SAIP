@@ -65,11 +65,12 @@ class Simulation:
             market_state_model = models.MarketState.objects.get(turn=self.turn_model)
             self.market = Market(
                 companies=self.companies.values(),
-                customer_count=market_state_model.demand if market_state_model.demand is not None else config.MarketPreset.STARTING_CUSTOMER_COUNT,
+                customer_count=market_state_model.demand if (market_state_model.demand is not None and market_state_model.demand > config.MarketPreset.STARTING_CUSTOMER_COUNT) else config.MarketPreset.STARTING_CUSTOMER_COUNT,
             )  # TODO: take care of the other attributes from the model
         except models.MarketState.DoesNotExist:
             self.market = Market(
-                companies=self.companies.values()
+                companies=self.companies.values(),
+                customer_count= config.MarketPreset.STARTING_CUSTOMER_COUNT
             )  # TODO: companies is aleady a dict, we dont have to generate it in market object
         print("Simulation was set up without any errors!")
 
