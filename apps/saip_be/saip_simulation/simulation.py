@@ -284,44 +284,44 @@ class Simulation:
             company_class_object = self.companies[company_model.name]
 
             ct_total_units_manufactured += company_class_object.production_volume # add units produced to overall sum of all units produced #TODO: maybe this attribute will change later
-            ct_companies_states[company_model].balance = company_class_object.balance
-            ct_companies_states[company_model].stock_price = company_class_object.stock_price
+            ct_companies_states[company_model].balance = round(company_class_object.balance, 2)
+            ct_companies_states[company_model].stock_price = round(company_class_object.stock_price, 2)
             ct_companies_states[company_model].inventory = company_class_object.inventory
             ct_total_inventory += company_class_object.inventory    # add inventory to overall sum of all inventories
             ct_companies_states[company_model].orders_received = self.market.customer_distribution[company_class_object.brand]["demand"]
             ct_total_units_demanded += self.market.customer_distribution[company_class_object.brand]["demand"]  # add units demanded to overall sum of all units demanded
             ct_companies_states[company_model].orders_fulfilled = company_class_object.units_sold
             ct_total_units_sold += company_class_object.units_sold  # add units sold to overall sum of all units sold
-            ct_companies_states[company_model].cash = company_class_object.remaining_budget
-            ct_companies_states[company_model].ret_earnings = company_class_object.ret_earnings + company_class_object.income_per_turn #doteraz sales scitane dokopy (? mozno)
-            ct_companies_states[company_model].net_profit = company_class_object.profit_after_tax
+            ct_companies_states[company_model].cash = round(company_class_object.remaining_budget, 2)
+            ct_companies_states[company_model].ret_earnings = round((company_class_object.ret_earnings + company_class_object.income_per_turn), 2) #doteraz sales scitane dokopy (? mozno)
+            ct_companies_states[company_model].net_profit = round(company_class_object.profit_after_tax, 2)
             ct_companies_states[company_model].depreciation = (
-                company_class_object.factory.upkeep["writeoff"]
+                round(company_class_object.factory.upkeep["writeoff"], 2)
                 if company_class_object.factory.upkeep["writeoff"]
                 else 0
             )
-            ct_companies_states[company_model].new_loans = company_class_object.new_loans
-            ct_companies_states[company_model].inventory_charge = company_class_object.value_paid_in_inventory_charge  #TODO: add inventory charge to actuall writeoffs
-            ct_companies_states[company_model].sales =  company_class_object.income_per_turn #TODO: check if correct
-            ct_companies_states[company_model].manufactured_man_cost = company_class_object.prod_costs_per_turn
+            ct_companies_states[company_model].new_loans = round(company_class_object.new_loans, 2)
+            ct_companies_states[company_model].inventory_charge = round(company_class_object.value_paid_in_inventory_charge, 2)  #TODO: add inventory charge to actuall writeoffs
+            ct_companies_states[company_model].sales =  round(company_class_object.income_per_turn, 2) #TODO: check if correct
+            ct_companies_states[company_model].manufactured_man_cost = round(company_class_object.prod_costs_per_turn, 2)
             # TODO: add inflation - it should only affect the man cost 
-            ct_companies_states[company_model].tax = company_class_object.value_paid_in_tax
-            ct_companies_states[company_model].profit_before_tax = company_class_object.profit_before_tax
-            ct_companies_states[company_model].interest = company_class_object.value_paid_in_interest
-            ct_companies_states[company_model].cash_flow_res = company_class_object.prev_turn_cash + company_class_object.income_per_turn - company_class_object.total_costs_per_turn
-            ct_companies_states[company_model].loan_repayment = company_class_object.value_paid_in_loan_repayment
-            ct_companies_states[company_model].loans = company_class_object.loans
-            ct_companies_states[company_model].inventory_upgrade = company_class_object.value_paid_in_stored_product_upgrades
-            ct_companies_states[company_model].overcharge_upgrade = ((company_class_object.prev_turn_inventory * company_class_object.prev_turn_prod_ppu) - (company_class_object.inventory * company_class_object.prod_ppu)) if company_class_object.prev_turn_inventory > 0 else 0
+            ct_companies_states[company_model].tax = round(company_class_object.value_paid_in_tax, 2)
+            ct_companies_states[company_model].profit_before_tax = round(company_class_object.profit_before_tax, 2)
+            ct_companies_states[company_model].interest = round(company_class_object.value_paid_in_interest, 2)
+            ct_companies_states[company_model].cash_flow_res = round((company_class_object.prev_turn_cash + company_class_object.income_per_turn - company_class_object.total_costs_per_turn), 2)
+            ct_companies_states[company_model].loan_repayment = round(company_class_object.value_paid_in_loan_repayment, 2)
+            ct_companies_states[company_model].loans = round(company_class_object.loans, 2)
+            ct_companies_states[company_model].inventory_upgrade = round(company_class_object.value_paid_in_stored_product_upgrades, 2)
+            ct_companies_states[company_model].overcharge_upgrade = round(((company_class_object.prev_turn_inventory * company_class_object.prev_turn_prod_ppu) - (company_class_object.inventory * company_class_object.prod_ppu)), 2) if company_class_object.prev_turn_inventory > 0 else 0
             # TODO: hodnota moze byt minusova iba ak boli zasoby v minulom kole nenulove
 
             if ct_companies_states[company_model].production is not None:
 
                 ct_companies_states[company_model].production.man_cost = (
-                    company_class_object.prod_ppu
+                    round(company_class_object.prod_ppu, 2)
                 )
                 ct_companies_states[company_model].production.man_cost_all = (
-                    company_class_object.total_ppu
+                    round(company_class_object.total_ppu, 2)
                 )
                 ct_companies_states[company_model].production.volume = company_class_object.production_volume
                 # this is done because the volume of actual products produced could have differed from the one submitted by the company (for instance, because of a lack of funds)
