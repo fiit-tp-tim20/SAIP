@@ -106,7 +106,6 @@ class Factory:
             / FactoryPreset.STARTING_INVESTMENT
             * FactoryPreset.STARTING_CAPACITY
         )
-        self.update_upkeep()
 
     def __devalue_capital(self) -> None:
         self.capital_investment = round(
