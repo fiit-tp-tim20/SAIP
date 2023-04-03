@@ -175,8 +175,7 @@ class Company:
     marketing: Dict[str, MarketingType] = field(default_factory=dict)
 
     def __post_init__(self):
-        self.remaining_budget = self.max_budget
-        self.__pay_for_marketing()
+        self.start_of_turn_cleanup()
 
     ###############################
     #   VISIBLE (CALL IN ORDER)   #
@@ -192,6 +191,7 @@ class Company:
 
         self.__calculate_additional_costs()
         self.inventory += self.production_volume
+        self.previous_ppu = self.prod_ppu
 
         if self.production_volume <= 0:
             self.total_ppu = 0
@@ -258,6 +258,10 @@ class Company:
 
     def yield_agg_marketing_value(self) -> float:
         return self.__agg_marketing_values()
+
+    def start_of_turn_cleanup(self):
+        self.remaining_budget = self.max_budget
+        self.__pay_for_marketing()
 
     ###########################
     #   MARKETING UTILITIES   #

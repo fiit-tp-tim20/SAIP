@@ -227,6 +227,8 @@ if __name__ == "__main__":
     for i in range(TURN_COUNT):
         print(f"TURN {i+1}")
         for company in companies:
+            if i != 0:
+                company.start_of_turn_cleanup()
             if company.brand == "A" or company.brand == "B":
                 company.factory.invest_into_factory(5000)
             elif company.brand == "D":
