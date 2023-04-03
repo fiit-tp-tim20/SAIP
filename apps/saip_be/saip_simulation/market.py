@@ -150,10 +150,10 @@ def print_market_state(mar: Market):
 
 def print_company(company: Company):
 
+    print(f"COMPANY {company.brand} \nNet Worth: {company.factory.capital_investment}")
     print(
-        f"COMPANY {company.brand} \nNet Worth: {company.factory.capital_investment} | Capacity: {company.factory.capacity}"
+        f"Capacity: {company.factory.capacity} | Writeoff: {company.factory.upkeep.get('writeoff')}"
     )
-
     print(
         f"Units Made: {company.production_volume} | Units Sold: {company.units_sold} | Inventory: {company.inventory}"
     )
@@ -183,7 +183,7 @@ def print_company(company: Company):
 
 if __name__ == "__main__":
 
-    TURN_COUNT = 2
+    TURN_COUNT = 1
 
     comA = Company(
         brand="A",
@@ -219,9 +219,9 @@ if __name__ == "__main__":
         production_volume=99,
         balance=0,
         factory=Factory(),
-        marketing={"ooh": OOH(1500)},
+        marketing={"ooh": OOH(10000)},
     )
-    companies = [comA, comB, comC, comD]
+    companies = [comA, comB]  # , comC, comD]
 
     mar = Market(companies)
 
@@ -229,11 +229,14 @@ if __name__ == "__main__":
         print(f"TURN {i+1}")
         for company in companies:
             if i != 0:
+                company.factory.update_upkeep()
                 company.start_of_turn_cleanup()
             if company.brand == "A" or company.brand == "B":
                 company.factory.invest_into_factory(5000)
+                company.remaining_budget -= 5000
             elif company.brand == "D":
                 company.factory.invest_into_factory(2500)
+                company.remaining_budget -= 2500
             else:
                 company.factory.invest_into_factory(0)
             company.produce_products()
