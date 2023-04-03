@@ -15,7 +15,7 @@ function LinkTab(props: Props) {
 			<Link to={path} className="">
 				{/* <li className="border-r-2 last:border-r-0 border-r-neutral-300 px-2"> */}
 				<div
-					className={`transition-all ease-in-out duration-300 rounded-lg border-accent-700 min-w-[128px] flex justify-center align-middle bg-transparent py-2 px-3 hover:text-accent-700 hover:bg-accent-300 ${
+					className={`transition-all ease-in-out duration-300 rounded-lg min-w-[128px] flex justify-center align-middle bg-transparent py-2 px-3 link-inactive ${
 						isActive ? "active" : ""
 					}`}
 				>

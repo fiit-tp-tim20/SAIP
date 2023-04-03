@@ -137,14 +137,15 @@ class Company:
 
     inventory: int = 0
     production_volume: int = 0
-    prod_ppu: float = field(init=False)
-    total_ppu: float = field(init=False)
-    value_paid_in_inventory_charge: float = field(init=False)
+    prod_ppu: float = 0 #field(init=False)
+    total_ppu: float = 0 #field(init=False)
+    value_paid_in_inventory_charge: float = 0 #field(init=False)
 
     balance: float = 0  # current state of the company finances
-    profit: float = field(init=False)  # +income -costs | per turn only
-    profit_before_tax: float = field(init=False)
-    ret_earnings: float = field(init=False)
+    profit: float = 0 #field(init=False)  # +income -costs | per turn only
+    profit_before_tax: float = 0 #field(init=False)
+    profit_after_tax: float = 0 #field(init=False)
+    ret_earnings: float = 0 #field(init=False)
 
     loans: float = 20_000
     loan_limit: float = 20_000
@@ -153,11 +154,11 @@ class Company:
     new_loans: float = field(init=False)
 
     tax_rate = CompanyPreset.DEFAULT_TAX_RATE
-    value_paid_in_tax: float = field(init=False)
+    value_paid_in_tax: float = 0 #field(init=False)
 
     value_paid_in_interest: float = field(init=False)
     price_diff_stored_products: float = field(init=False)
-    price_upgrade_stored_products: float = field(init=False)
+    value_paid_in_stored_product_upgrades: float = field(init=False)
     price_inventory_charge: float = field(init=False)
 
     income_per_turn: float = 0  # field(init=False)
@@ -170,6 +171,11 @@ class Company:
 
     stock_price: float = 0  # field(init=False)  # company score
     units_sold: int = 0  # field(init=False)
+
+    prev_turn_prod_ppu: float = 0
+    prev_turn_total_ppu: float = 0
+    prev_turn_inventory: float = 0
+    prev_turn_cash: float = 0
 
     factory: Factory = None
     marketing: Dict[str, MarketingType] = field(default_factory=dict)
@@ -202,7 +208,7 @@ class Company:
                 + self.marketing_costs
                 + self.value_paid_in_interest
                 + self.price_diff_stored_products
-                + self.price_upgrade_stored_products
+                + self.value_paid_in_stored_product_upgrades
                 + self.price_inventory_charge
             )
         else:
@@ -211,7 +217,7 @@ class Company:
                 + self.marketing_costs
                 + self.value_paid_in_interest
                 + self.price_diff_stored_products
-                + self.price_upgrade_stored_products
+                + self.value_paid_in_stored_product_upgrades
                 + self.price_inventory_charge
             ) / self.production_volume
 
@@ -300,7 +306,7 @@ class Company:
         self.marketing_costs = self.__agg_marketing_costs()
         self.value_paid_in_interest = self.loans * self.interest_rate
         self.price_diff_stored_products = self.__price_diff_stored_products()
-        self.price_upgrade_stored_products = self.__upgrade_stored_products()
+        self.value_paid_in_stored_product_upgrades = self.__upgrade_stored_products()
         self.price_inventory_charge = (
             self.inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT
         )

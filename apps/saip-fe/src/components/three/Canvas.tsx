@@ -2,6 +2,7 @@ import React from "react";
 import { Canvas } from "@react-three/fiber";
 import { PresentationControls } from "@react-three/drei";
 import { Vector3 } from "three";
+import * as THREE from "three";
 import Bike from "./Bike";
 
 type Props = {
@@ -14,6 +15,19 @@ export default function Test(props: Props) {
 
 	return (
 		<Canvas flat dpr={[1, 2]} camera={{ fov: 25, position: [0, 0, 12] }} className="rounded-2xl border-accent-700">
+			{/* fix this pls :( 
+            getComputedStyle(document.documentElement).getPropertyValue("--minContrastColor") === ""
+            ? new THREE.Color(
+                parseInt(
+                    getComputedStyle(document.documentElement)
+                    .getPropertyValue("--minContrastColor")
+                    .slice(0, 8)
+                    .replace("#", "0x"),
+                    16,
+                    ),
+                )
+            : new THREE.Color(0x8eedc7),
+            */}
 			<color attach="background" args={["#8EEDC7"]} />
 			<ambientLight intensity={2} />
 			<pointLight position={[0, 0, 8]} intensity={12} />
