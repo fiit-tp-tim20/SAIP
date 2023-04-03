@@ -5,7 +5,7 @@ function BugReport() {
 	return (
 		<div className="fixed bottom-0 left-0">
 			<a href="https://docs.google.com/forms/d/e/1FAIpQLSfT8VZymF_sTY39ApoRyeDH18oOoZ13jHMzeyp6_wmSwmqCdg/viewform">
-				<Bug className="w-8 h-8 m-4 fill-accent-500" />
+				<Bug className="w-8 h-8 m-4 accent-500-fill" />
 			</a>
 		</div>
 	);

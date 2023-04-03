@@ -11,25 +11,23 @@ from ..serializers import GameSerializer
 
 from saip_simulation.simulation import Simulation
 
-parameters = {"GameParameters": {"budget_cap": 10000,
-                                 "depreciation": 0.1},
-              "Upgrades": [{"name": "Battery", "cost": 15000, "sales_effect": 0.75, "man_cost_effect": 0.3,
-                            "camera_pos": "1,2,3", "camera_rot": "3,2,1"},
+parameters = {"Upgrades": [{"name": "Battery", "cost": 15000, "sales_effect": 0.75, "man_cost_effect": 0.3,
+                            "camera_pos": "1,2,3", "camera_rot": "3,2,1", "description": "Investícia do batérie predlžuje výdrž elektrického bicykla na cestách, a tým zaujme najmä zákazníkov,ktorí si potrpia na väčšej výdrži batérie. Investíciou do tohto vylepšenia sa zvýšia výrobné nákladyo 30%, ale taktiež sa aj efekt na predaje zvýši o 75%."},
                            {"name": "Frame", "cost": 11000, "sales_effect": 0.55, "man_cost_effect": 0.2,
-                            "camera_pos": "4,5,6", "camera_rot": "6,5,4"},
+                            "camera_pos": "4,5,6", "camera_rot": "6,5,4", "description": "Investícia do rámu zaujme najmä zákazníkov, ktorých zaujíma vzhľad a celková konštrukcia bicykla. Táto investícia spôsobí nárast výrobných nákladov o 20% a efekt na predaje sa zvýši o 55%."},
                            {"name": "Brakes", "cost": 9000, "sales_effect": 0.45, "man_cost_effect": 0.1,
-                            "camera_pos": "7,8,9", "camera_rot": "9,8,7"},
+                            "camera_pos": "7,8,9", "camera_rot": "9,8,7", "description": "Investíciou do tohto vylepšenia sa zvýši celková bezpečnosť pri používaní bicykla na cestách, ale aj v inom teréne. Výrobné náklady sa pri tejto investícii zvýšia o 10% a efekt na predaje o 45%."},
                            {"name": "Display", "cost": 17000, "sales_effect": 0.85, "man_cost_effect": 0.4,
-                            "camera_pos": "7,8,9", "camera_rot": "9,8,7"}
+                            "camera_pos": "7,8,9", "camera_rot": "9,8,7", "description": "Displej na elektrobicykli je neodmysliteľnou súčasťou pre celkové ovládanie a lepší pocit z jazdy, keď potrebujeme prehľad o tom akou rýchlosťou ideme, koľko kilometrov sme už na aktuálnej trase prešli a iné štatistiky. Investíciou do tohto vylepšenia sa zvýšia výrobné náklady o 40% a efekt na predaje o 85%."}
                            ]}
 
 
-def create_default_upgrades(game: Game) -> None:
+def create_default_upgrades() -> None:
     if not Upgrade.objects.all():
         for upgrade in parameters["Upgrades"]:
             Upgrade.objects.create(name=upgrade["name"], cost=upgrade["cost"], sales_effect=upgrade["sales_effect"],
                                    man_cost_effect = upgrade['man_cost_effect'], camera_pos=upgrade["camera_pos"],
-                                   camera_rot=upgrade["camera_rot"]).save()
+                                   camera_rot=upgrade["camera_rot"], description=upgrade["description"]).save()
 
 
 def create_company_state(company: Company, turn: Turn) -> CompaniesState:
@@ -72,7 +70,7 @@ class CreateGameView(PermissionRequiredMixin, APIView):
         serializer = GameSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        game_parameters = GameParameters.objects.create(**parameters["GameParameters"])
+        game_parameters = GameParameters.objects.create()
         game_parameters.save()
 
         game = serializer.save()
@@ -80,7 +78,7 @@ class CreateGameView(PermissionRequiredMixin, APIView):
         game.admin = request.user
         game.save()
 
-        create_default_upgrades(game)
+        create_default_upgrades()
         create_turn(0, game)
 
         return Response({"gameID": game.id}, status=201)
@@ -200,7 +198,8 @@ def end_turn(turn: Turn) -> Turn:
     calculate_man_cost(game, new_turn)
 
     if turn.number != 0:
-        sim = Simulation(game_model=game, turn_model=turn, new_turn_model=new_turn)
+        prev_turn = Turn.objects.get(game=game, number=turn.number - 1)
+        sim = Simulation(game_model=game, turn_model=turn, next_turn_model=new_turn, prev_turn_model=prev_turn)
         sim.run_simulation()
         sim.write_simulation_results()
 

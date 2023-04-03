@@ -32,10 +32,6 @@ from saip_simulation.config import MarketPreset
 
 @dataclass
 class Market:
-    # loan_limit: int         #limit on loans (in dollars/euros)
-    # interest_rate: int      #percentage
-    # tax_rate: int           #percentage
-
     marketing_percentage: int  # percentage of market that is interesed in marketing
     rnd_percentage: int  # percentage of market that is interesed in rnd
     price_percentage: int  # percentage of market that is interesed in price
@@ -47,8 +43,6 @@ class Market:
     companies: List[Company]
     products: Dict[str, Product]
 
-    # TODO add sensitivity to attribute(marketing, rnd, price)(maybe)
-
     def __init__(self, companies, customer_count=None) -> None:
         self.companies = companies
         self.customer_base = []
@@ -56,7 +50,7 @@ class Market:
         self.customer_distribution = {}
 
         self.customer_count = (
-            MarketPreset.STARTING_CUSTOMER_COUNT
+            MarketPreset.STARTING_CUSTOMER_COUNT * len(self.companies)
             if customer_count is None
             else customer_count
         )
@@ -73,10 +67,10 @@ class Market:
             total_investment_from_companies
             / base_investment
             * MarketPreset.STARTING_CUSTOMER_COUNT
+            * len(self.companies)
         )
 
         for i in range(self.customer_count):
-            # self.customer_base.append(Customer(self.products))  # only generating basic customer for now
             if i < self.customer_count * self.rnd_percentage:
                 self.customer_base.append(InovationsLover(self.products))
                 continue
@@ -107,15 +101,17 @@ class Market:
         return total_investment
 
     def generate_distribution(self) -> Dict:
+        for company in self.companies:
+            self.customer_distribution[company.brand] = {"demand": 0}
         for customer in self.customer_base:
             customer_choice = customer.choose_product()
             if self.customer_distribution.get(customer_choice) is None:
                 self.customer_distribution[customer_choice] = {"demand": 0}
             self.customer_distribution[customer_choice]["demand"] += 1
-        self.calculate_sales_per_company()
+        self.__calculate_sales_per_company()
         return self.customer_distribution
 
-    def calculate_sales_per_company(self):
+    def __calculate_sales_per_company(self):
         for company in self.companies:
             self.customer_distribution[company.brand][
                 "demand_not_met"
@@ -125,10 +121,73 @@ class Market:
             company.calculate_stock_price()
 
 
+#########################
+#   TESTING UTILITIES   #
+#########################
+
+
+def print_market_state(mar: Market):
+    print(f"\nMARKET STATE: {mar.generate_distribution()}")
+    print(
+        f"\nTOTAL DEMAND: {sum([item.get('demand') for item in mar.customer_distribution.values()])}"
+    )
+    total_unmet_demand = sum(
+        [item.get("demand_not_met", 0) for item in mar.customer_distribution.values()]
+    )
+    print(
+        f"REMAINING CUSTOMERS: {total_unmet_demand + mar.customer_distribution.get('no_purchase', {}).get('demand', 0)}\n"
+    )
+
+    average_price = sum([com.product.get_price() for com in mar.companies]) / len(
+        mar.companies
+    )
+    print(
+        f"AVERAGE PRODUCT PRICE: {average_price} | +25%: {average_price*1.25} | +50%: {average_price*1.5}\n"
+    )
+
+    return total_unmet_demand
+
+
+def print_company(company: Company):
+
+    print(
+        f"COMPANY {company.brand} \nNet Worth: {company.factory.capital_investment} | Capacity: {company.factory.capacity}"
+    )
+
+    print(
+        f"Units Made: {company.production_volume} | Units Sold: {company.units_sold} | Inventory: {company.inventory}"
+    )
+    ipu = company.product.get_price() - company.total_ppu
+    print(
+        f"Selling Price: {company.product.get_price()} | Costs Per Unit: {company.total_ppu:.2f} | Income Per Unit: {ipu:.2f}"
+    )
+    print(
+        f"Total Income: {company.income_per_turn:.2f} | Production Costs: {company.prod_costs_per_turn:.2f} | Total Costs: {company.total_costs_per_turn:.2f}"
+    )
+    print(
+        f"Profit (before tax): {company.profit_before_tax:.2f} | Profit (after tax): {company.profit:.2f} | Tax paid: {company.value_paid_in_tax:.2f}"
+    )
+    print(
+        f"Remaining budget: {company.remaining_budget:.2f} | Next Turn Budget: {company.next_turn_budget:.2f} | Required for next Turn: {company.max_budget - company.remaining_budget}"
+    )
+    print(
+        f"Loan repayment: {company.value_paid_in_loan_repayment:.2f} | New loans: {company.new_loans:.2f} | Remaining loans: {company.loans:.2f}"
+    )
+    print(f"Marketing value: {company.yield_agg_marketing_value()}")
+    print(f"Balance: {company.balance:.2f} | Stock price: {company.stock_price:.2f}\n")
+
+
+########################
+#   TESTING SCENARIO   #
+########################
+
 if __name__ == "__main__":
+
+    TURN_COUNT = 2
+
     comA = Company(
         brand="A",
-        product=LastingProduct(None, 1000, -1),
+        product=LastingProduct(None, 1000, 250),
         inventory=0,
         production_volume=85,
         balance=0,
@@ -137,7 +196,7 @@ if __name__ == "__main__":
     )
     comB = Company(
         brand="B",
-        product=LastingProduct(None, 1100, -1),
+        product=LastingProduct(None, 3100, 250),
         inventory=0,
         production_volume=82,
         balance=0,
@@ -146,7 +205,7 @@ if __name__ == "__main__":
     )
     comC = Company(
         brand="C",
-        product=LastingProduct(None, 900, -1),
+        product=LastingProduct(None, 850, 250),
         inventory=0,
         production_volume=90,
         balance=0,
@@ -155,46 +214,34 @@ if __name__ == "__main__":
     )
     comD = Company(
         brand="D",
-        product=LastingProduct(None, 1200, -1),
+        product=LastingProduct(None, 700, 250),
         inventory=0,
-        production_volume=95,
+        production_volume=99,
         balance=0,
         factory=Factory(),
         marketing={"ooh": OOH(1500)},
     )
     companies = [comA, comB, comC, comD]
-    for company in companies:
-        if company.brand == "A" or company.brand == "B":
-            company.factory.invest_into_factory(5000)
-        elif company.brand == "D":
-            company.factory.invest_into_factory(2500)
-        else:
-            company.factory.invest_into_factory(0)
-        company.produce_products()
 
     mar = Market(companies)
-    print(f"\nMARKET STATE: {mar.generate_distribution()}")
-    print(
-        f"\nTOTAL DEMAND: {sum([item.get('demand') for item in mar.customer_distribution.values()])}"
-    )
-    total_unmet_demand = sum([item.get('demand_not_met', 0) for item in mar.customer_distribution.values()])
-    print(
-        f"REMAINING CUSTOMERS: {total_unmet_demand + mar.customer_distribution.get('no_purchase', {}).get('demand', 0)}\n"
-    )
 
-    for company in companies:
-        print(
-            f"COMPANY {company.brand} \nNet Worth: {company.factory.capital_investment} | Units Sold: {company.units_sold}"
-        )
-        ppu = company.factory.calculate_price_per_unit(company.production_volume)
-        ipu = company.product.get_price() - company.factory.calculate_price_per_unit(company.production_volume)
-        print(
-            f"Selling Price: {company.product.get_price()} | Costs Per Unit: {ppu:.2f} | Income Per Unit: {ipu:.2f}"
-        )
-        print(
-            f"Total Income: {company.income_per_turn:.2f} | Total Costs: {company.total_costs_per_turn:.2f} | Profit: {company.profit:.2f}"
-        )
-        print(f"Balance: {company.balance:.2f} | Loans: {company.loans:.2f}")
-        print(
-            f"Marketing value: {company.yield_agg_marketing_value():.2f} | Stock price: {company.stock_price:.2f}\n"
-        )
+    for i in range(TURN_COUNT):
+        print(f"TURN {i+1}")
+        for company in companies:
+            if i != 0:
+                company.start_of_turn_cleanup()
+            if company.brand == "A" or company.brand == "B":
+                company.factory.invest_into_factory(5000)
+            elif company.brand == "D":
+                company.factory.invest_into_factory(2500)
+            else:
+                company.factory.invest_into_factory(0)
+            company.produce_products()
+
+        next_turn_customers = print_market_state(mar)
+
+        for company in companies:
+            print_company(company)
+
+        mar.customer_count = next_turn_customers
+        mar.generate_demand()

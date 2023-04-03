@@ -33,6 +33,32 @@ function App() {
 	const { reset: resetUpgradeState } = useUpgradesStore();
 	const { reset: resetMarketingState } = useMarketingStore();
 
+	const [enableArc, setEnableArc] = React.useState(true);
+
+	useEffect(() => {
+		document.documentElement.style.setProperty(
+			"--secondary",
+			enableArc ? "var(--arc-palette-foregroundSecondary)" : "",
+		);
+		document.documentElement.style.setProperty(
+			"--primary",
+			enableArc ? "var(--arc-palette-foregroundPrimary)" : "",
+		);
+		document.documentElement.style.setProperty(
+			"--tertiary",
+			enableArc ? "var(--arc-palette-foregroundTertiary)" : "",
+		);
+		document.documentElement.style.setProperty(
+			"--maxContrastColor",
+			enableArc ? "var(--arc-palette-maxContrastColor)" : "",
+		);
+		document.documentElement.style.setProperty(
+			"--minContrastColor",
+			enableArc ? "var(--arc-palette-minContrastColor)" : "",
+		);
+		document.documentElement.style.setProperty("--hover", enableArc ? "var(--arc-palette-hover)" : "");
+	}, [enableArc]);
+
 	useEffect(() => {
 		console.warn(data);
 		const savedTurn = localStorage.getItem("turn");
@@ -58,10 +84,10 @@ function App() {
 	if (data && data.Number === 0) {
 		return (
 			<div className="flex flex-col justify-center items-center h-screen">
-				<h1 className="text-4xl font-bold pb-2">Hra sa ešte nezačala</h1>
+				<h1 className="text-4xl font-bold pb-4">Hra sa ešte nezačala</h1>
 				<button
 					type="button"
-					className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 m-0 rounded-lg"
+					className="button-dark font-bold py-2 px-4 m-0 rounded-lg"
 					onClick={() => logout(resetMarketingState, resetCompanyState, resetUpgradeState)}
 				>
 					Odhlásiť sa

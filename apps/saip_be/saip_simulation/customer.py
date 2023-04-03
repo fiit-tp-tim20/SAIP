@@ -38,13 +38,27 @@ class Customer(ABC):
         except AttributeError as e:
             raise e
 
+    def get_min_product_price(self) -> float:
+        min = -1000
+        for product in self.product_dict.values():
+            price = product.get_price()
+            if price == -1:
+                continue
+            if min == -1000:
+                min = price
+                continue
+            if min > price:
+                min = price
+        return min
+
     def calc_weights_for_all_products(self) -> dict:
         average_price = self.calc_average_product_price()
+        min_price = self.get_min_product_price()
         weights = {}
         weight_sum = 0
         for key, product in self.product_dict.items():
             weights[key] = self.calc_weight_for_product(
-                product.get_price(), average_price
+                product.get_price(), average_price, min_price
             )
             weight_sum += weights.get(key)
         return self.normalise_weights(weights, weight_sum)
@@ -52,6 +66,9 @@ class Customer(ABC):
     def normalise_weights(self, weights: dict, weight_sum) -> dict:
         normalised_weights = {}
         for product, weight in weights.items():
+            if weight_sum == 0:
+                normalised_weights[product] = weight / 1
+                continue
             normalised_weights[product] = weight / weight_sum
         return normalised_weights
 
@@ -59,7 +76,6 @@ class Customer(ABC):
         choice = random()
         prev = 0
         weights = self.calc_weights_for_all_products()
-        # print(weights)
         for key, value in weights.items():
             if choice < (prev + value):
                 return key
@@ -70,46 +86,66 @@ class Customer(ABC):
         pass
 
 
+# CHANGES - added 'or product_price == 0' condition to all calc_weight_for_product methods
 @dataclass
 class HighBudgetCustomer(Customer):
-    def calc_weight_for_product(self, product_price, average_product_price):
-        if product_price == -1:
+    def calc_weight_for_product(self, product_price, average_product_price, min_price):
+        if product_price == -1 or product_price == 0:
             return 5
+        if product_price > min_price * 10:
+            return 0
+        if product_price > average_product_price * 1.5:
+            return (product_price / average_product_price) ** 2 / 1000
         return (product_price / average_product_price) ** 2
 
 
 @dataclass
 class LowBudgetustomer(Customer):
-    def calc_weight_for_product(self, product_price, average_product_price):
-        if product_price == -1:
+    def calc_weight_for_product(self, product_price, average_product_price, min_price):
+        if product_price == -1 or product_price == 0:
             return 5
+        if product_price > min_price * 10:
+            return 0
+        if product_price > average_product_price * 1.25:
+            return 0
         return (average_product_price / product_price) ** 2
 
 
 @dataclass
 class AverageBudgetCustomer(Customer):
-    def calc_weight_for_product(self, product_price, average_product_price):
-        if product_price == -1:
+    def calc_weight_for_product(self, product_price, average_product_price, min_price):
+        if product_price == -1 or product_price == 0:
             return 5
-        return product_price / average_product_price
+        if product_price > min_price * 10:
+            return 0
+        if product_price > average_product_price * 1.5:
+            return 0
+        return average_product_price / product_price
 
 
 @dataclass
 class InovationsLover(Customer):
     def calc_weights_for_all_products(self):
         average_price = self.calc_average_product_price()
+        min_price = self.get_min_product_price()
         weights = {}
         weight_sum = 0
         for key, product in self.product_dict.items():
-            weights[key] = self.calc_weight_for_product(product, average_price)
+            weights[key] = self.calc_weight_for_product(
+                product, average_price, min_price
+            )
             weight_sum += weights.get(key)
         return self.normalise_weights(weights, weight_sum)
 
-    def calc_weight_for_product(self, product: Product, average_product_price):
-        if product.get_price() == -1:
+    def calc_weight_for_product(
+        self, product: Product, average_product_price, min_price
+    ):
+        if product.get_price() == -1 or product.get_price() == 0:
             return 5
+        if product.get_price() > min_price * 10:
+            return 0
         return (
-            product.get_price() / average_product_price
+            average_product_price / product.get_price()
             + self.calculate_innovation_weight(product)
         )
 

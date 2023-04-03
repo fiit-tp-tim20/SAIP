@@ -3,11 +3,13 @@ import Slider from "../components/slider/Slider";
 import useCompanyStore from "../store/Company";
 import { useQuery } from "react-query";
 import { getCompanyStats } from "../api/GetCompanyStats";
+import { getCompanyReport } from "../api/GetCompanyReport";
 import CompanyGraph from "../components/statisticsGraph/CompanyGraph";
 
 function Company() {
-
-	const { isLoading, data } = useQuery(["getCompanyStats"], getCompanyStats);
+	const { isLoading: statsIsLoading, data: statsData } = useQuery(["getCompanyStats"], getCompanyStats);
+	const { isLoading: reportIsLoading, data: reportData } = useQuery(["companyReport"], getCompanyReport);
+	console.log(reportData);
 
 	const {
 		productCount,
@@ -28,13 +30,10 @@ function Company() {
 		<div className="flex flex-col xl:w-[1280px] md:w-[900px] w-[600px]">
 			<h1 className="my-4">Štatistiky</h1>
 			<div className="background-container my-2 flex flex-col rounded-2xl p-6">
-				{isLoading ? (
+				{statsIsLoading ? (
 					<div>Loading...</div>
 				) : (
-					<CompanyGraph 
-						manufactured={data?.manufactured}
-						sold={data?.sold}
-					/>
+					<CompanyGraph manufactured={statsData?.manufactured} sold={statsData?.sold} />
 				)}
 			</div>
 			<div className="flex flex-col">
@@ -51,7 +50,7 @@ function Company() {
 						<div>
 							<Slider
 								min={1}
-								max={2000}
+								max={reportData.production.capacity}
 								value={productCount}
 								setValue={setProductCount}
 								checked={productCountChecked}

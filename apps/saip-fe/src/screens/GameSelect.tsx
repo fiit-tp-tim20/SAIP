@@ -1,6 +1,10 @@
 import React, { useRef } from "react";
 import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
+import logout from "../api/logout";
+import useCompanyStore from "../store/Company";
+import useMarketingStore from "../store/Marketing";
+import useUpgradesStore from "../store/Upgrades";
 
 const test_games = [
 	{
@@ -26,7 +30,7 @@ type Game = {
 };
 
 const listGames = async () => {
-	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/list_games/`, {
+	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/list_games_ns/`, {
 		headers: {
 			Authorization: `Bearer ${localStorage.getItem("token")}`,
 			"Content-Type": "application/json",
@@ -47,6 +51,10 @@ function GameSelect() {
 	const teamnameInput = useRef<HTMLInputElement>(null);
 
 	const { data: gameList } = useQuery("listGames", listGames);
+
+	const { reset: marketingReset } = useMarketingStore();
+	const { reset: companyReset } = useCompanyStore();
+	const { reset: upgradesReset } = useUpgradesStore();
 
 	useEffect(() => {
 		if (gameList?.games?.length) {
@@ -110,8 +118,9 @@ function GameSelect() {
 	};
 
 	return (
-		<div className="w-full  max-w-xs">
-			<form className="bg-white shadow-md rounded px-6 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
+		<div className="w-full h-full max-w-xs flex flex-col gap-4 justify-center items-center">
+			<h2 className="font-bold text-center">Vytvorte si svoj vlastný tím</h2>
+			<form className="bg-white rounded-2xl px-6 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
 				<div className="mb-6">
 					<label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
 						Názov tímu
@@ -187,13 +196,23 @@ function GameSelect() {
 						))}
 					</div>
 				)}
-				<div className="flex items-center justify-between">
+				<div className="flex flex-col items-center justify-between gap-2">
 					<button
-						className="w-full bg-accent-700 hover:bg-accent-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+						className="w-full button-dark font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
 						type="submit"
 					>
 						Potvrdiť
 					</button>
+					<p className="font-light text-center text-gray-700">
+						Prihlásili ste sa pod iným účtom ? Odhláste sa kliknutím{" "}
+						<button
+							type="button"
+							className="button-clear accent-800-color hover:underline"
+							onClick={() => logout(marketingReset, companyReset, upgradesReset)}
+						>
+							TU
+						</button>
+					</p>
 				</div>
 			</form>
 		</div>

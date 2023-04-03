@@ -1,40 +1,43 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+# def get_default_game_parameters() -> 'GameParameters':
+#     return GameParameters.objects.get_or_create()[0]
 
 class GameParameters(models.Model):
     budget_cap = models.PositiveIntegerField(default=10000)
     depreciation = models.FloatField(default=0.1)
-    base_man_cost = models.PositiveIntegerField(default=50)
-    base_capital = models.FloatField(default=22837.5)
+    base_man_cost = models.PositiveIntegerField(default=250)
+    base_capital = models.PositiveIntegerField(default=40000)
     end_turn_on_committed = models.BooleanField(default=True)
 
     class Meta:
-        db_table = 'GameParameters'
-        verbose_name_plural = 'Game Parameters'
+        db_table = "GameParameters"
+        verbose_name_plural = "Game Parameters"
 
 
 class Game(models.Model):
     start = models.DateTimeField(null=True, auto_now_add=True)
-    end = models.DateTimeField(null=True, blank=True)
+    end = models.DateTimeField(null=True, blank=True, editable=False)
     name = models.CharField(max_length=100, null=True)
-    admin = models.ForeignKey(User, models.DO_NOTHING, null=True)
-    turns = models.PositiveIntegerField(null=True)
+    admin = models.ForeignKey(User, models.PROTECT, null=True)
+    turns = models.PositiveIntegerField(null=True, default=16)
+    # parameters = models.ForeignKey(GameParameters, models.CASCADE, null=True, default=get_default_game_parameters)
     parameters = models.ForeignKey(GameParameters, models.CASCADE, null=True)
 
     def __str__(self):
         return self.name
 
     class Meta:
-        db_table = 'Games'
-        get_latest_by = 'start'
+        db_table = "Games"
+        get_latest_by = "start"
 
 
 class Turn(models.Model):
     number = models.PositiveIntegerField(null=True)
     start = models.DateTimeField(null=True, auto_now_add=True)
     end = models.DateTimeField(null=True, blank=True)
-    game = models.ForeignKey(Game, models.DO_NOTHING, null=True)
+    game = models.ForeignKey(Game, models.CASCADE, null=True)
 
     def __str__(self):
         if self.end:
@@ -42,22 +45,26 @@ class Turn(models.Model):
         return f"{self.game} - {self.number}"
 
     class Meta:
-        db_table = 'Turns'
-        get_latest_by = 'start'
+        db_table = "Turns"
+        get_latest_by = "start"
 
 
 class Company(models.Model):
     name = models.CharField(max_length=100, null=True)
-    user = models.ForeignKey(User, models.DO_NOTHING, null=True, related_name='user_companies')
-    game = models.ForeignKey(Game, models.DO_NOTHING, null=True, related_name='game_companies')
+    user = models.ForeignKey(
+        User, models.DO_NOTHING, null=True, related_name="user_companies"
+    )
+    game = models.ForeignKey(
+        Game, models.DO_NOTHING, null=True, related_name="game_companies"
+    )
     participants = models.CharField(max_length=100, null=True)
 
     def __str__(self):
         return f"{self.game} - {self.name} ({self.user})"
 
     class Meta:
-        db_table = 'Companies'
-        verbose_name_plural = 'Companies'
+        db_table = "Companies"
+        verbose_name_plural = "Companies"
 
 
 class Production(models.Model):
@@ -67,7 +74,7 @@ class Production(models.Model):
     volume = models.PositiveIntegerField(null=True, default=0)
 
     class Meta:
-        db_table = 'Productions'
+        db_table = "Productions"
 
 
 class Marketing(models.Model):
@@ -81,7 +88,7 @@ class Marketing(models.Model):
     #     return f"Marketing - {self.companiesstate.company}"
 
     class Meta:
-        db_table = 'Marketings'
+        db_table = "Marketings"
 
 
 class Upgrade(models.Model):
@@ -91,23 +98,24 @@ class Upgrade(models.Model):
     name = models.CharField(max_length=100, null=True)
     camera_pos = models.CharField(max_length=100, null=True)
     camera_rot = models.CharField(max_length=100, null=True)
+    description = models.CharField(max_length=1000, null=True)
 
     def __str__(self):
         return f"{self.name} - {self.cost}"
 
     class Meta:
-        db_table = 'Upgrades'
+        db_table = "Upgrades"
 
 
 class CompaniesUpgrades(models.Model):
-    STARTED = 's'
-    NOT_STARTED = 'ns'
-    FINISHED = 'f'
+    STARTED = "s"
+    NOT_STARTED = "ns"
+    FINISHED = "f"
 
     CHOICES = (
-        (STARTED, 'started'),
-        (NOT_STARTED, 'not started'),
-        (FINISHED, 'finished'),
+        (STARTED, "started"),
+        (NOT_STARTED, "not started"),
+        (FINISHED, "finished"),
     )
     status = models.CharField(max_length=100, choices=CHOICES, default=NOT_STARTED)
     company = models.ForeignKey(Company, models.CASCADE, null=True)
@@ -120,28 +128,30 @@ class CompaniesUpgrades(models.Model):
         return f"{self.company} - {self.upgrade}"
 
     class Meta:
-        db_table = 'Companies_Upgrades'
-        verbose_name_plural = 'Companies Upgrades'
+        db_table = "Companies_Upgrades"
+        verbose_name_plural = "Companies Upgrades"
 
 
 class Factory(models.Model):
     capacity = models.PositiveIntegerField(null=True, default=100)
-    base_cost = models.FloatField(null=True,default=0)
-    capital = models.FloatField(null=True,default=0)
-    capital_investments = models.FloatField(null=True, default=21000)
+    base_cost = models.FloatField(null=True, default=0)
+    capital = models.FloatField(null=True, default=0)
+    capital_investments = models.FloatField(null=True, default=50000)
 
     # def __str__(self):
     #     return f"Factory - {self.companiesstate.company}"
 
     class Meta:
-        db_table = 'Factories'
-        verbose_name_plural = 'Factories'
+        db_table = "Factories"
+        verbose_name_plural = "Factories"
 
 
 class CompaniesState(models.Model):
     company = models.ForeignKey(Company, models.PROTECT, null=True)
     turn = models.ForeignKey(Turn, models.PROTECT, null=True)
-    production = models.OneToOneField(Production, models.SET_NULL, null=True, blank=True)
+    production = models.OneToOneField(
+        Production, models.SET_NULL, null=True, blank=True
+    )
     factory = models.OneToOneField(Factory, models.SET_NULL, null=True, blank=True)
     balance = models.FloatField(null=True, blank=True)
     stock_price = models.FloatField(null=True, blank=True)
@@ -150,13 +160,15 @@ class CompaniesState(models.Model):
     marketing = models.OneToOneField(Marketing, models.SET_NULL, null=True, blank=True)
     committed = models.BooleanField(default=False)
 
-    #kontrola
+    # kontrola
     orders_received = models.PositiveIntegerField(null=True, default=0)
     orders_fulfilled = models.PositiveIntegerField(null=True, default=0)
-    cash = models.FloatField(null=True, default=11908.62) #celkovo dostupných prostriedkov
-    #capital = models.FloatField(null=True, default=0)
-    ret_earnings = models.FloatField(null=True, default=1394.25) 
-    net_profit = models.FloatField(null=True, blank=True) #za kolo
+    cash = models.FloatField(
+        null=True, default=10000
+    )  # celkovo dostupných prostriedkov
+    # capital = models.FloatField(null=True, default=0)
+    ret_earnings = models.FloatField(null=True, default=0)
+    net_profit = models.FloatField(null=True, blank=True)  # za kolo
     depreciation = models.FloatField(null=True, blank=True)
     new_loans = models.FloatField(null=True, blank=True)
     inventory_charge = models.FloatField(null=True, blank=True)
@@ -167,14 +179,16 @@ class CompaniesState(models.Model):
     interest = models.FloatField(null=True, blank=True)
     cash_flow_res = models.FloatField(null=True, blank=True)
     loan_repayment = models.FloatField(null=True, blank=True)
-    loans = models.FloatField(null=True, default=8677)
+    loans = models.FloatField(null=True, default=20000)
+    inventory_upgrade = models.FloatField(null=True, default=0)
+    overcharge_upgrade = models.FloatField(null=True, default=0)
 
     def __str__(self):
         return f"{self.company} - {self.turn}"
 
     class Meta:
-        db_table = 'Companies States'
-        verbose_name_plural = 'Companies States'
+        db_table = "Companies States"
+        verbose_name_plural = "Companies States"
 
 
 class MarketState(models.Model):
@@ -189,7 +203,8 @@ class MarketState(models.Model):
         return f"Market State - {self.turn}"
 
     class Meta:
-        db_table = 'Market States'
+        db_table = "Market States"
+
 
 class TeacherDecisions(models.Model):
     turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
@@ -199,8 +214,9 @@ class TeacherDecisions(models.Model):
     loan_limit = models.FloatField(null=True, default=20000)
 
     class Meta:
-        db_table = 'Teacher Decisions'
-        verbose_name_plural = 'Teacher Decisions'
+        db_table = "Teacher Decisions"
+        verbose_name_plural = "Teacher Decisions"
+
 
 # class Participants(models.Model):
 #     user = models.ForeignKey(User, models.DO_NOTHING, null=True)

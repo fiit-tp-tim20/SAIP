@@ -33,8 +33,8 @@ function Navbar() {
 	];
 
 	return (
-		<div className="flex flex-row p-2 top-0 w-screen fixed left-0 z-40 bg-white">
-			<p className="px-8 normal-case text-xl align-middle font-bold text-accent-800 leading-[40px]">SAIP</p>
+		<div className="flex flex-row p-2 top-0 w-screen fixed left-0 z-40 navbar-bg">
+			<p className="px-8 normal-case text-xl align-middle font-bold accent-800-color leading-[40px]">SAIP</p>
 			<div className="flex flex-row justify-between w-screen">
 				<ul className="flex flex-row p-0 m-0">
 					{tabs.map((tab) => (

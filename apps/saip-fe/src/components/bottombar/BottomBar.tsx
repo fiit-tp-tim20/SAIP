@@ -57,12 +57,12 @@ export default function BottomBar() {
 		};
 
 		await endTurn(gameState);
+		await refetchCommited();
 	};
 
 	const handleModalSubmit = async () => {
-		await handleEndTurn();
 		setIsShowing(false);
-		refetchCommited();
+		await handleEndTurn();
 	};
 
 	const openModal = () => {
@@ -75,7 +75,7 @@ export default function BottomBar() {
 			{isShowing && <Modal />}
 			<div className="fixed bottom-2 right-2 z-40">
 				{!isLoading ? (
-					<div className="bg-white px-3 py-1 rounded-lg border-2 border-accent-700">
+					<div className="bg-white px-3 py-1 rounded-lg border-2 accent-700-border">
 						{committed ? (
 							<p className="text-center font-medium p-3">Čaká sa na ostatných hráčov</p>
 						) : (
@@ -100,7 +100,7 @@ export default function BottomBar() {
 								<button
 									type="button"
 									onClick={openModal}
-									className="bg-accent-500 hover:bg-accent-700 text-white font-bold py-2 px-4 rounded-lg disabled:bg-accent-100 disabled:cursor-not-allowed"
+									className="button-dark font-bold py-2 px-4 rounded-lg disabled:cursor-not-allowed"
 									disabled={
 										totalSpent > data.budget_cap ||
 										!getCheckedCompany() ||
