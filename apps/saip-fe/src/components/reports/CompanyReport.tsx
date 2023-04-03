@@ -334,7 +334,7 @@ function CompanyReport() {
 										<b>Výsledok hospodárenia po zdanení</b>
 									</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										<b>{numberWithSpaces(data.income_statement.sales)} €</b>
+										<b>{numberWithSpaces(data.income_statement.net_profit)} €</b>
 									</td>
 								</tr>
 							</tbody>
