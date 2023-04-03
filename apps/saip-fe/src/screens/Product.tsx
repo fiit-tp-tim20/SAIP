@@ -62,27 +62,29 @@ function Product() {
 								rýchle presuny.
 							</p>
 						</div>
-						<div className="py-4">
-							<h2>{t("research.finished.title") as string}</h2>
-							{isLoading ? (
-								<p>Loading...</p>
-							) : (
-								<ul className="pt-1">
-									{data &&
-										data
-											.filter((feature) => feature.status === "finished")
-											.map((feature) => (
-												<UpgradeInfo
-													key={feature.id}
-													name={feature.name}
-													// name={t(`research.features.${feature.id}.title`) as string}
-													researchedAvatars={feature.players}
-													onClick={() => openModal(feature)}
-												/>
-											))}
-								</ul>
-							)}
-						</div>
+						{data && data.filter((feature) => feature.status === "finished").length ? (
+							<div className="py-4">
+								<h2>{t("research.finished.title") as string}</h2>
+								{isLoading ? (
+									<p>Loading...</p>
+								) : (
+									<ul className="pt-1">
+										{data &&
+											data
+												.filter((feature) => feature.status === "finished")
+												.map((feature, index) => (
+													<UpgradeInfo
+														key={index}
+														name={feature.name}
+														// name={t(`research.features.${feature.id}.title`) as string}
+														researchedAvatars={feature.players}
+														onClick={() => openModal(feature)}
+													/>
+												))}
+									</ul>
+								)}
+							</div>
+						) : null}
 					</div>
 					{/* <div className="max-h-[50vh]"> */}
 					<div className="h-auto">
@@ -91,29 +93,31 @@ function Product() {
 				</div>
 				<h1 className="p-6 pl-12">{t("research.title") as string}</h1>
 				<div className="flex flex-col background-container p-6 rounded-2xl mx-6 max-w-7xl">
-					<div className="py-4">
-						<h2>{t("research.pending.title") as string}</h2>
-						{isLoading ? (
-							<p>Loading...</p>
-						) : (
-							<ul className="pt-1">
-								{data &&
-									data
-										.filter((feature) => feature.status === "started")
-										.map((feature) => (
-											<UpgradeInfo
-												key={feature.id}
-												name={feature.name}
-												// name={t(`research.features.${feature.id}.title`) as string}
-												researchedAvatars={feature.players}
-												progressMax={feature.price}
-												progressValue={feature.progress}
-												onClick={() => openModal(feature)}
-											/>
-										))}
-							</ul>
-						)}
-					</div>
+					{data && data.filter((feature) => feature.status === "started").length ? (
+						<div className="py-4">
+							<h2>{t("research.pending.title") as string}</h2>
+							{isLoading ? (
+								<p>Loading...</p>
+							) : (
+								<ul className="pt-1">
+									{data &&
+										data
+											.filter((feature) => feature.status === "started")
+											.map((feature, index) => (
+												<UpgradeInfo
+													key={index}
+													name={feature.name}
+													// name={t(`research.features.${feature.id}.title`) as string}
+													researchedAvatars={feature.players}
+													progressMax={feature.price}
+													progressValue={feature.progress}
+													onClick={() => openModal(feature)}
+												/>
+											))}
+								</ul>
+							)}
+						</div>
+					) : null}
 					<div className="py-4">
 						<h2>{t("research.available.title") as string}</h2>
 						{isLoading ? (
