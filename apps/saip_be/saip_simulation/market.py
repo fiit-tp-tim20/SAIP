@@ -173,6 +173,7 @@ def print_company(company: Company):
     print(
         f"Loan repayment: {company.value_paid_in_loan_repayment:.2f} | New loans: {company.new_loans:.2f} | Remaining loans: {company.loans:.2f}"
     )
+    print(f"Marketing value: {company.yield_agg_marketing_value()}")
     print(f"Balance: {company.balance:.2f} | Stock price: {company.stock_price:.2f}\n")
 
 
