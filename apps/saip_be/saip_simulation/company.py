@@ -327,33 +327,27 @@ class Company:
         self.value_paid_in_loan_repayment = 0
 
         if self.balance < 0:
-            print(f"{self.brand} CASE 1")
             self.new_loans = -self.balance
             if self.new_loans > self.loan_limit:
                 self.new_loans = self.loan_limit
             self.loans += self.new_loans
             self.balance += self.new_loans
-            print(self.new_loans, self.loans, self.balance)
 
         if self.balance < self.max_budget:
             required_for_next_turn = self.max_budget - self.balance
             remaining_limit = self.loan_limit - self.new_loans
             if remaining_limit > required_for_next_turn:
-                print(f"{self.brand} CASE 2A")
                 self.new_loans += required_for_next_turn
                 self.loans += required_for_next_turn
                 self.next_turn_budget = self.max_budget
             else:
-                print(f"{self.brand} CASE 2B")
                 self.new_loans += remaining_limit
                 self.loans += remaining_limit
                 self.next_turn_budget = remaining_limit
-            print(self.new_loans, self.loans, self.balance, self.next_turn_budget)
             return
 
         balance_over_budget = self.balance - self.max_budget
         if balance_over_budget > self.loans:
-            print(f"{self.brand} CASE 3")
             self.balance -= self.max_budget
             self.next_turn_budget = self.max_budget
             self.balance -= self.loans
@@ -362,7 +356,6 @@ class Company:
             return
 
         if balance_over_budget > 0:
-            print(f"{self.brand} CASE 4")
             self.value_paid_in_loan_repayment += balance_over_budget
             self.loans -= self.value_paid_in_loan_repayment
             self.next_turn_budget = self.max_budget
