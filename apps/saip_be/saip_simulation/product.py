@@ -11,26 +11,27 @@ class Upgrade:
     sales_effect: float  # modifier for expected value increase
     man_cost_effect: float  # modifier for manufacturing cost increase
 
+
 @dataclass
 class Product(ABC):
     upgrades: Dict[str, Upgrade] = field(default_factory=dict)
-    _price: float = 0
-    _man_cost: float = 0
-    _upgrade_sales_effect_multiplier: float = 1
-    _upgrade_man_cost_effect_multiplier: float = 1
-    _upgrade_stored_products_price: float = 0
+    price: float = 0
+    man_cost: float = 0
+    _upgrade_sales_effect_multiplier: float = field(init=False, default=1)
+    _upgrade_man_cost_effect_multiplier: float = field(init=False, default=1)
+    _upgrade_stored_products_price: float = field(init=False, default=0)
 
     def set_price(self, new_price: float) -> None:
-        self._price = new_price
+        self.price = new_price
 
     def get_price(self) -> float:
-        return self._price
+        return self.price
 
     def set_man_cost(self, new_man_cost: float) -> None:
-        self._man_cost = new_man_cost
+        self.man_cost = new_man_cost
 
     def get_man_cost(self) -> float:
-        return self._man_cost
+        return self.man_cost
 
     def _set_upgrade_sales_effect_multiplier(self):
         sum = 0
@@ -67,7 +68,7 @@ class Product(ABC):
                 progress=progress,
                 total_cost=total_cost,
                 sales_effect=sales_effect,
-                man_cost_effect=man_cost_effect
+                man_cost_effect=man_cost_effect,
             )
         else:
             pass
@@ -99,7 +100,7 @@ class LastingProduct(Product):
     # ToDo replace dummy logic (used in testing) witch actual code
 
     def _calculate_upgrade_price(self) -> float:
-        return self._price / 10
+        return self.price / 10
 
     def _perform_upgrade_logic(self) -> None:
-        self._price = self._price * 1.1
+        self.price = self.price * 1.1

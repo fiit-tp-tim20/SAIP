@@ -1,11 +1,13 @@
-type IndustryReportData = {
+export type IndustryReport = {
+	market_share: number;
+	net_profit: number | null;
+	sell_price: number;
+	stock_price: number | null;
+};
+
+export type IndustryReportData = {
 	industry: {
-		[key: string]: {
-			market_share: number;
-			net_profit: number | null;
-			sell_price: number;
-			stock_price: number | null;
-		};
+		[key: string]: IndustryReport;
 	};
 	market: {
 		capacity: number | null;
