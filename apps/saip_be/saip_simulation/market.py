@@ -187,7 +187,7 @@ if __name__ == "__main__":
 
     comA = Company(
         brand="A",
-        product=LastingProduct(None, 1000, 250),
+        product=LastingProduct(None, 1800, 250),
         inventory=0,
         production_volume=85,
         balance=0,
@@ -196,7 +196,7 @@ if __name__ == "__main__":
     )
     comB = Company(
         brand="B",
-        product=LastingProduct(None, 3100, 250),
+        product=LastingProduct(None, 2500, 250),
         inventory=0,
         production_volume=82,
         balance=0,
@@ -205,7 +205,7 @@ if __name__ == "__main__":
     )
     comC = Company(
         brand="C",
-        product=LastingProduct(None, 850, 250),
+        product=LastingProduct(None, 1950, 250),
         inventory=0,
         production_volume=90,
         balance=0,
@@ -214,14 +214,14 @@ if __name__ == "__main__":
     )
     comD = Company(
         brand="D",
-        product=LastingProduct(None, 700, 250),
+        product=LastingProduct(None, 1700, 250),
         inventory=0,
         production_volume=99,
         balance=0,
         factory=Factory(),
         marketing={"ooh": OOH(10000)},
     )
-    companies = [comA, comB]  # , comC, comD]
+    companies = [comA, comB, comC, comD]
 
     mar = Market(companies)
 
