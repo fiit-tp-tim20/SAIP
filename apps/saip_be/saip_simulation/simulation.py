@@ -66,7 +66,7 @@ class Simulation:
             self.market = Market(
                 companies=self.companies.values(),
                 customer_count=market_state_model.demand if (market_state_model.demand is not None and market_state_model.demand > config.MarketPreset.STARTING_CUSTOMER_COUNT) else config.MarketPreset.STARTING_CUSTOMER_COUNT,
-            )  # TODO: take care of the other attributes from the model
+            )
         except models.MarketState.DoesNotExist:
             self.market = Market(
                 companies=self.companies.values(),
@@ -84,7 +84,7 @@ class Simulation:
             company_upgrades = models.CompaniesUpgrades.objects.filter(
                 game=self.game_model,
                 company=company_model,
-                turn=self.turn_model,  # TODO Test the addition of turn
+                turn=self.turn_model,
             )
         except models.CompaniesUpgrades.DoesNotExist:
             company_upgrades = []
@@ -237,7 +237,7 @@ class Simulation:
     def run_simulation(self) -> None:
         for company in self.companies.values():
             company.produce_products()
-            company.factory.invest_into_factory(company.factory.capital_investment_this_turn) #TODO: test if this doesnt brake anything ()
+            company.factory.invest_into_factory(company.factory.capital_investment_this_turn)
 
         self.market.generate_distribution()
         for company in self.companies.values():
@@ -284,7 +284,7 @@ class Simulation:
         for company_model in ct_companies_states.keys():
             company_class_object = self.companies[company_model.name]
 
-            ct_total_units_manufactured += company_class_object.production_volume # add units produced to overall sum of all units produced #TODO: maybe this attribute will change later
+            ct_total_units_manufactured += company_class_object.production_volume # add units produced to overall sum of all units produced
             ct_companies_states[company_model].balance = round(company_class_object.balance, 2)
             ct_companies_states[company_model].stock_price = round(company_class_object.stock_price, 2)
             ct_companies_states[company_model].inventory = company_class_object.inventory
@@ -302,8 +302,8 @@ class Simulation:
                 else 0
             )
             ct_companies_states[company_model].new_loans = round(company_class_object.new_loans, 2)
-            ct_companies_states[company_model].inventory_charge = round(company_class_object.value_paid_in_inventory_charge, 2)  #TODO: add inventory charge to actuall writeoffs
-            ct_companies_states[company_model].sales =  round(company_class_object.income_per_turn, 2) #TODO: check if correct
+            ct_companies_states[company_model].inventory_charge = round(company_class_object.value_paid_in_inventory_charge, 2)
+            ct_companies_states[company_model].sales =  round(company_class_object.income_per_turn, 2)
             ct_companies_states[company_model].manufactured_man_cost = round(company_class_object.prod_costs_per_turn, 2)
             # TODO: add inflation - it should only affect the man cost 
             ct_companies_states[company_model].tax = round(company_class_object.value_paid_in_tax, 2)
