@@ -483,5 +483,6 @@ class TurnInfoView(APIView):
             return Response({"detail": "Company for this user not found"}, status=404)
         
         turn = get_last_turn(company.game)
+        state = CompaniesState.objects.get(turn=turn, company=company)
 
-        return Response({"Number": turn.number, "Start": turn.start})
+        return Response({"Number": turn.number, "Start": turn.start, "Committed": state.committed})
