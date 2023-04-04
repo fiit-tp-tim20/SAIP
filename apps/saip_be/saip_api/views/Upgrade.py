@@ -23,6 +23,7 @@ class UpgradeView(APIView):
             local_upgrade = Upgrade.objects.get(pk=upgrade.upgrade_id)
             camera_pos = local_upgrade.camera_pos.split(",")
             camera_rot = local_upgrade.camera_rot.split(",")
+            description = local_upgrade.description
 
             response['upgrade'].append({
                 'name': local_upgrade.name,
@@ -32,7 +33,7 @@ class UpgradeView(APIView):
                 'progress': upgrade.progress,
                 'camera_pos': camera_pos,
                 'camera_rot': camera_rot,
-                'description': upgrade.description
+                'description': description
             })
 
         return Response(response)
