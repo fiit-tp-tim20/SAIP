@@ -54,6 +54,10 @@ class Factory:
             self.upkeep["rent"] = new_rent
         if materials_cost:
             self.upkeep["materials"] = materials_cost
+            for key, value in self.upkeep.items():  # apply inflation
+                if key == "writeoff":
+                    continue
+                self.upkeep[key] += value * self.inflation
 
         if skip is False:
             self.upkeep["energy"] = self.__calculate_energies()
@@ -62,11 +66,6 @@ class Factory:
                 self.capital_investment * FactoryPreset.FACTORY_WRITEOFF_RATE
             )
             return
-
-        for key, value in self.upkeep.items():  # apply inflation
-            if key == "writeoff":
-                continue
-            self.upkeep[key] += value * self.inflation
 
     def total_upkeep(self) -> float:
         return (
