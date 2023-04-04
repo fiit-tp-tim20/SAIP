@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 class GameParameters(models.Model):
     budget_cap = models.PositiveIntegerField(default=10000)
-    depreciation = models.FloatField(default=0.1)
+    depreciation = models.FloatField(default=0.0125)
     base_man_cost = models.PositiveIntegerField(default=250)
     base_capital = models.PositiveIntegerField(default=40000)
     end_turn_on_committed = models.BooleanField(default=True)
@@ -36,7 +36,7 @@ class Game(models.Model):
 class Turn(models.Model):
     number = models.PositiveIntegerField(null=True)
     start = models.DateTimeField(null=True, auto_now_add=True)
-    end = models.DateTimeField(null=True, blank=True)
+    end = models.DateTimeField(null=True, blank=True, editable=False)
     game = models.ForeignKey(Game, models.CASCADE, null=True)
 
     def __str__(self):
@@ -212,6 +212,9 @@ class TeacherDecisions(models.Model):
     tax_rate = models.FloatField(null=True, default=0.2)
     inflation = models.FloatField(null=True, default=0)
     loan_limit = models.FloatField(null=True, default=20000)
+
+    def __str__(self):
+        return f"Teacher Decisions - {self.turn}"
 
     class Meta:
         db_table = "Teacher Decisions"
