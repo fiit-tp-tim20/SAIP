@@ -232,7 +232,7 @@ class CompanyReport(APIView):
         production['production'] = company_state_previous.production.volume
         production['capacity'] = company_state_previous.factory.capacity
         if (state2ago):
-            production['utilization'] = (state2ago.production.volume/state2ago.factory.capacity)*100
+            production['utilization'] = (company_state_previous.production.volume/state2ago.factory.capacity)*100
         else:
             production['utilization'] = "N/A"
         production['man_cost'] = company_state_previous.production.man_cost
