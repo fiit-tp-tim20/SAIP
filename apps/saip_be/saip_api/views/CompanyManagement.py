@@ -278,7 +278,7 @@ class CompanyReport(APIView):
         cash_flow['loan_repayment'] = company_state_previous.loan_repayment
          
         #zostatok do dalssieho prostredia
-        cash_flow['cash'] = company_state_previous.cash
+        cash_flow['cash'] = company_state_previous.balance #CHANGED VAL FROM cash TO balance    #"Konecny stav"
 
         income_statement = dict()
         income_statement['sales'] = company_state_previous.sales

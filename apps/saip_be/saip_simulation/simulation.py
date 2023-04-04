@@ -310,7 +310,7 @@ class Simulation:
             ct_companies_states[company_model].orders_fulfilled = company_class_object.units_sold
             ct_total_units_sold += company_class_object.units_sold  # add units sold to overall sum of all units sold
             ct_companies_states[company_model].cash = round(company_class_object.remaining_budget, 2)
-            ct_companies_states[company_model].ret_earnings = round((company_class_object.balance + company_class_object.next_turn_budget), 2) #round((company_class_object.ret_earnings + company_class_object.income_per_turn), 2) #doteraz sales scitane dokopy (? mozno)
+            ct_companies_states[company_model].ret_earnings = round((company_class_object.profit_after_tax + company_class_object.next_turn_budget), 2) #round((company_class_object.ret_earnings + company_class_object.income_per_turn), 2) #doteraz sales scitane dokopy (? mozno)
             ct_companies_states[company_model].net_profit = round(company_class_object.profit_after_tax, 2)
             ct_companies_states[company_model].depreciation = (
                 round(company_class_object.factory.upkeep.get("writeoff", 0), 2)
