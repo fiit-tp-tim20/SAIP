@@ -28,7 +28,6 @@ from math import ceil, floor
 @dataclass
 class Factory:
     capital_investment: float = FactoryPreset.STARTING_INVESTMENT
-    capital_investment_this_turn: float = 0.0
     capacity: int = FactoryPreset.STARTING_CAPACITY
 
     employees: int = field(init=False, default=FactoryPreset.STARTING_EMPLOYEES)
@@ -164,7 +163,7 @@ class Company:
     total_costs_per_turn: float = 0  # field(init=False)
 
     max_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
-    remaining_budget: float = field(init=False)
+    remaining_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
     next_turn_budget: float = field(init=False)
 
     stock_price: float = 0  # field(init=False)  # company score
@@ -176,6 +175,7 @@ class Company:
     prev_turn_cash: float = 0
 
     factory: Factory = None
+    capital_investment_this_turn = 0
     marketing: Dict[str, MarketingType] = field(default_factory=dict)
 
     def __post_init__(self):
@@ -263,8 +263,11 @@ class Company:
         return self.__agg_marketing_values()
 
     def start_of_turn_cleanup(self):
-        self.remaining_budget = self.max_budget
         self.__pay_for_marketing()
+        
+    def invest_into_factory(self):
+        self.factory.invest_into_factory(self.capital_investment_this_turn)
+        self.remaining_budget -= self.capital_investment_this_turn
 
     ###########################
     #   MARKETING UTILITIES   #
