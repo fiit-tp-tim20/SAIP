@@ -39,7 +39,7 @@ function UpgradeInfo(props: Props) {
 						</div>
 						<p className="my-auto ml-2">
 							{progressValue}
-							{upgrades[name] && <span className="text-success-300"> + {upgrades[name]}</span>}/
+							{upgrades[name] ? <span className="text-success-300"> + {upgrades[name]}</span> : ""}/
 							{progressMax}
 						</p>
 					</div>
