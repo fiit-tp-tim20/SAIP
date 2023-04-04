@@ -182,6 +182,7 @@ class CompaniesState(models.Model):
     loans = models.FloatField(null=True, default=20000)
     inventory_upgrade = models.FloatField(null=True, default=0)
     overcharge_upgrade = models.FloatField(null=True, default=0)
+    next_turn_budget = models.FloatField(null=True, default=10_000)
 
     def __str__(self):
         return f"{self.company} - {self.turn}"
@@ -211,7 +212,7 @@ class TeacherDecisions(models.Model):
     interest_rate = models.FloatField(null=True, default=0.05)
     tax_rate = models.FloatField(null=True, default=0.21)
     inflation = models.FloatField(null=True, default=0)
-    loan_limit = models.FloatField(null=True, default=20000)
+    loan_limit = models.FloatField(null=True, default=200000)
 
     def __str__(self):
         return f"Teacher Decisions - {self.turn}"

@@ -179,6 +179,11 @@ class Simulation:
                 else:
                     new_company.prev_turn_total_ppu = 0
                     new_company.prev_turn_prod_ppu = 0
+                new_company.max_budget = (
+                    pt_company_state.next_turn_budget
+                    if pt_company_state.next_turn_budget is not None
+                    else CompanyPreset.DEFAULT_BUDGET_PER_TURN
+                )
                 new_company.prev_turn_inventory = (
                     pt_company_state.inventory
                     if pt_company_state.inventory is not None
@@ -190,6 +195,7 @@ class Simulation:
                     else CompanyPreset.DEFAULT_BUDGET_PER_TURN
                 )
             else:
+                new_company.max_budget = CompanyPreset.DEFAULT_BUDGET_PER_TURN
                 new_company.prev_turn_total_ppu = 0
                 new_company.prev_turn_prod_ppu = 0
                 new_company.prev_turn_inventory = 0
@@ -406,10 +412,10 @@ class Simulation:
             ct_companies_states[company_model].ret_earnings = round(
                 (
                     company_class_object.ret_earnings
-                    + company_class_object.income_per_turn
+                    + company_class_object.profit_after_tax
                 ),
                 2,
-            )  # doteraz sales scitane dokopy (? mozno)
+            )  # round((company_class_object.ret_earnings + company_class_object.income_per_turn), 2) #doteraz sales scitane dokopy (? mozno)
             ct_companies_states[company_model].net_profit = round(
                 company_class_object.profit_after_tax, 2
             )
@@ -460,24 +466,12 @@ class Simulation:
             ct_companies_states[company_model].inventory_upgrade = round(
                 company_class_object.value_paid_in_stored_product_upgrades, 2
             )
-            ct_companies_states[company_model].overcharge_upgrade = (
-                round(
-                    (
-                        (
-                            company_class_object.prev_turn_inventory
-                            * company_class_object.prev_turn_prod_ppu
-                        )
-                        - (
-                            company_class_object.inventory
-                            * company_class_object.prod_ppu
-                        )
-                    ),
-                    2,
-                )
-                if company_class_object.prev_turn_inventory > 0
-                else 0
+            ct_companies_states[company_model].overcharge_upgrade = round(
+                company_class_object.price_diff_stored_products, 2
             )
-            # TODO: hodnota moze byt minusova iba ak boli zasoby v minulom kole nenulove
+            ct_companies_states[
+                company_model
+            ].next_turn_budget = company_class_object.next_turn_budget
 
             if ct_companies_states[company_model].production is not None:
 
@@ -528,7 +522,8 @@ class Simulation:
             ].inventory = company_class_object.inventory
             nt_companies_states[company_model].loans = company_class_object.loans
             nt_companies_states[company_model].ret_earnings = (
-                company_class_object.ret_earnings + company_class_object.income_per_turn
+                company_class_object.ret_earnings
+                + company_class_object.profit_after_tax
             )
 
             if nt_companies_states[company_model].production is not None:
