@@ -222,11 +222,19 @@ class CompanyReport(APIView):
         
         company_state_previous = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1), company=company)
         marketing = company_state_previous.marketing.billboard + company_state_previous.marketing.tv + company_state_previous.marketing.viral + company_state_previous.marketing.podcast + company_state_previous.marketing.ooh
+       
+        try:
+            state2ago = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-2), company=company)
+        except (Turn.DoesNotExist, CompaniesState.DoesNotExist):
+            state2ago = False
 
         production = dict()
         production['production'] = company_state_previous.production.volume
         production['capacity'] = company_state_previous.factory.capacity
-        production['utilization'] = (company_state_previous.production.volume/company_state_previous.factory.capacity)*100
+        if (state2ago):
+            production['utilization'] = (state2ago.production.volume/state2ago.factory.capacity)*100
+        else:
+            production['utilization'] = "N/A"
         production['man_cost'] = company_state_previous.production.man_cost
         production['new_inventory'] = company_state_previous.inventory
         production['man_cost_all'] = company_state_previous.production.man_cost_all
