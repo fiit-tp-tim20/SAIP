@@ -131,6 +131,7 @@ function Product() {
 											<UpgradeInfo
 												key={feature.id}
 												name={feature.name}
+												progressMax={feature.price}
 												// name={t(`research.features.${feature.id}.title`) as string}
 												researchedAvatars={feature.players}
 												onClick={() => openModal(feature)}

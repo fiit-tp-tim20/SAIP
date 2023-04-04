@@ -9,7 +9,6 @@ import CompanyGraph from "../components/statisticsGraph/CompanyGraph";
 function Company() {
 	const { isLoading: statsIsLoading, data: statsData } = useQuery(["getCompanyStats"], getCompanyStats);
 	const { isLoading: reportIsLoading, data: reportData } = useQuery(["companyReport"], getCompanyReport);
-	console.log(reportData);
 
 	const {
 		productCount,
@@ -50,12 +49,12 @@ function Company() {
 						<div>
 							<Slider
 								min={1}
-								max={reportData.production.capacity}
+								max={reportData ? reportData.production.capacity : 1000}
 								value={productCount}
 								setValue={setProductCount}
 								checked={productCountChecked}
 								setChecked={setProductCountChecked}
-								step={10}
+								step={1}
 							/>
 						</div>
 					</div>

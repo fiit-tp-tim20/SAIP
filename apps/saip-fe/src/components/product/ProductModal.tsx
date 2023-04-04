@@ -49,7 +49,7 @@ function ProductModal(props: Props) {
 					<h4>{t(`research.price.title`) as string}</h4>
 					<h5>{upgrade.price}€</h5>
 				</div>
-				{upgrade.progress && (
+				{upgrade.price >= upgrade.progress && (
 					<div className="py-2 items-center">
 						<div className="flex flex-row items-center justify-between text-center">
 							<h4>{t(`research.progress.title`) as string}</h4>
@@ -57,14 +57,23 @@ function ProductModal(props: Props) {
 								{upgrade.progress}/{upgrade.price}
 							</p>
 						</div>
-						<progress
-							className="progress progress-primary w-full"
-							value={upgrade.progress}
-							max={upgrade.price}
-						/>
+						<div className="relative pt-1">
+							<div className="overflow-hidden h-4 mb-4 text-xs flex rounded-2xl bg-neutral-300">
+								<div
+									style={{ width: `${(upgrade.progress / upgrade.price) * 100}%` }}
+									className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center accent-700-bg ${
+										!upgrades[upgrade.name] ? "rounded-r-2xl" : ""
+									}`}
+								/>
+								<div
+									style={{ width: `${(upgrades[upgrade.name] / upgrade.price) * 100}%` }}
+									className="shadow-none rounded-r-2xl flex flex-col text-center whitespace-nowrap text-white justify-center bg-success-300"
+								/>
+							</div>
+						</div>
 					</div>
 				)}
-				{upgrade.price !== upgrade.progress && (
+				{upgrade.price >= upgrade.progress && (
 					<div className="py-2">
 						<h4>Investícia</h4>
 						<Slider
