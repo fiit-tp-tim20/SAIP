@@ -170,7 +170,15 @@ class EndTurnView(PermissionRequiredMixin, APIView):
             return Response({"detail": "User is not admin"}, status=403)
         
         turn = get_last_turn(game)
-        if turn.number != 0:
+
+        end_turn(turn)
+        
+        return Response({"detail": "Turn ended, simulation started"}, status=200)
+
+def end_turn(turn: Turn) -> Turn:
+    game = turn.game
+
+    if turn.number != 0:
             companies = Company.objects.filter(game=game)
             for company in companies:
                 state = CompaniesState.objects.get(company=company, turn=turn)
@@ -186,13 +194,6 @@ class EndTurnView(PermissionRequiredMixin, APIView):
                     state.marketing.tv = state_prev.marketing.tv
                     state.marketing.billboard = state_prev.marketing.billboard
                     state.marketing.ooh = state_prev.marketing.ooh
-
-        end_turn(turn)
-        
-        return Response({"detail": "Turn ended, simulation started"}, status=200)
-
-def end_turn(turn: Turn) -> Turn:
-    game = turn.game
 
     new_turn = create_turn(turn.number + 1, game)
     calculate_man_cost(game, new_turn)

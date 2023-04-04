@@ -30,7 +30,7 @@ class IndustryView(APIView):
         stock_price = [None] * (company.game.turns - 1)
         last_turn = get_last_turn(company.game)
        
-        for turn_num in range(last_turn.number):
+        for turn_num in range(last_turn.number - 1):
             state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
             stock_price[turn_num] = state.stock_price
 
@@ -56,7 +56,7 @@ class MarketingView(APIView):
 
         marketing = [None] * (company.game.turns - 1)
         last_turn = get_last_turn(company.game)
-        for turn_num in range(last_turn.number):
+        for turn_num in range(last_turn.number - 1):
             state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
             marketing[turn_num] = state.orders_received
 
@@ -80,7 +80,8 @@ class CompanyView(APIView):
         man_cost = [None] * (company.game.turns - 1)
         sell_price = [None] * (company.game.turns - 1)
 
-        for turn_num in range(company.game.turns - 1):
+        last_turn = get_last_turn(company.game)
+        for turn_num in range(last_turn.number - 1):
             try:
                 state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
                 manufactured[turn_num] = state.production.volume
@@ -142,7 +143,7 @@ class IndustryReport(APIView):
             company_info['sell_price'] = state.production.sell_price
             company_info['net_profit'] = state.net_profit
             try:
-                company_info['market_share'] = (state.orders_fulfilled/market_state.sold)*100
+                company_info['market_share'] = round((state.orders_fulfilled/market_state.sold)*100, 2)
             except (ZeroDivisionError, TypeError):
                 company_info['market_share'] = 0
 
@@ -246,10 +247,10 @@ class CompanyReport(APIView):
         sales['selling_price'] = company_state_previous.production.sell_price
 
         balance = dict()
-        balance['cash'] = company_state_previous.cash
+        balance['cash'] = company_state_previous.balance + company_state_previous.next_turn_budget #CHANGED VAL FROM cash TO balance + next_turn_budget; also did it in assets summary- LEO
         balance['inventory_money'] = company_state_previous.inventory * company_state_previous.production.man_cost
         balance['capital_investments'] = company_state_previous.factory.capital_investments
-        balance['assets_summary'] = company_state_previous.cash + company_state_previous.inventory * company_state_previous.production.man_cost + company_state_previous.factory.capital_investments
+        balance['assets_summary'] = (company_state_previous.balance + company_state_previous.next_turn_budget) + (company_state_previous.inventory * company_state_previous.production.man_cost) + company_state_previous.factory.capital_investments
 
         #pasiva
         balance['loans'] = company_state_previous.loans
