@@ -254,7 +254,7 @@ class CompanyReport(APIView):
         #pasiva
         balance['loans'] = company_state_previous.loans
         balance['ret_earnings'] = company_state_previous.ret_earnings
-        balance['base_capital'] = company_state_previous.factory.capital_investments #company.game.parameters.base_capital #CHANGED val to overall capital investments so far instead of the base investment value
+        balance['base_capital'] = company.game.parameters.base_capital
         balance['liabilities_summary'] = company_state_previous.loans + company_state_previous.ret_earnings + company.game.parameters.base_capital
 
         cash_flow = dict()
