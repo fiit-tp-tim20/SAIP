@@ -48,9 +48,28 @@ class Simulation:
         self.prev_turn_model = prev_turn_model
         self.current_turn = turn_model.number
         self.turn_limit = game_model.turns
+        self.teacher_decisions = {}
         self.setup_simulation()
 
     def setup_simulation(self) -> None:
+        # load teacher decisions
+        try:
+            teacher_decisions_model = models.TeacherDecisions.objects.get(turn=self.turn_model)
+            self.teacher_decisions = {
+                "interest_rate": teacher_decisions_model.interest_rate,
+                "tax_rate": teacher_decisions_model.tax_rate,
+                "inflation": teacher_decisions_model.inflation,
+                "loan_limit": teacher_decisions_model.loan_limit,
+            }
+        except models.TeacherDecisions.DoesNotExist:
+            self.teacher_decisions = {
+                "interest_rate": CompanyPreset.DEFAULT_INTEREST_RATE,
+                "tax_rate": CompanyPreset.DEFAULT_TAX_RATE,
+                "inflation": FactoryPreset.BASE_INFLATION,
+                "loan_limit": CompanyPreset.DEFAULT_LOAN_LIMIT,
+            }
+            pass
+
         # Filter companies that are in this game
         companies_models = models.Company.objects.filter(game=self.game_model)
         # iterate over the companies and create all relevant classes
@@ -108,6 +127,10 @@ class Simulation:
             pt_company_state = None
             # TODO: add error message maybe
 
+        new_company.interest_rate = self.teacher_decisions.get("interest_rate", CompanyPreset.DEFAULT_INTEREST_RATE)
+        new_company.tax_rate = self.teacher_decisions.get("tax_rate", CompanyPreset.DEFAULT_TAX_RATE)
+        new_company.loan_limit = self.teacher_decisions.get("loan_limit", CompanyPreset.DEFAULT_LOAN_LIMIT)
+        new_company.factory.inflation = self.teacher_decisions.get("inflation", FactoryPreset.BASE_INFLATION)
         # write company state into the class object
         if company_state is not None:
 
@@ -115,11 +138,7 @@ class Simulation:
             new_company.inventory = (company_state.inventory if company_state.inventory is not None else 0)  # pos int
             new_company.loans = (company_state.loans if company_state.loans is not None else FactoryPreset.STARTING_INVESTMENT)
             new_company.ret_earnings = (company_state.ret_earnings if company_state.ret_earnings is not None else 0)
-            #new_company.stock_price = (
-            #    company_state.stock_price
-            #    if company_state.stock_price is not None
-            #    else 0
-            #)  # float
+
             if pt_company_state is not None:
                 if pt_company_state.production is not None:
                     new_company.prev_turn_total_ppu = pt_company_state.production.man_cost_all if pt_company_state.production.man_cost_all is not None else 0
