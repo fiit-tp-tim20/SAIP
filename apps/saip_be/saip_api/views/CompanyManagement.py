@@ -232,10 +232,10 @@ class CompanyReport(APIView):
         sales['selling_price'] = company_state_previous.production.sell_price
 
         balance = dict()
-        balance['cash'] = company_state_previous.cash
+        balance['cash'] = company_state_previous.balance   #CHANGED cash to balance
         balance['inventory_money'] = company_state_previous.inventory * company_state_previous.production.man_cost
         balance['capital_investments'] = company_state_previous.factory.capital_investments
-        balance['assets_summary'] = company_state_previous.cash + company_state_previous.inventory * company_state_previous.production.man_cost + company_state_previous.factory.capital_investments
+        balance['assets_summary'] = company_state_previous.balance + company_state_previous.inventory * company_state_previous.production.man_cost + company_state_previous.factory.capital_investments    #CHANGED cash to balance
 
         #pasiva
         balance['loans'] = company_state_previous.loans
