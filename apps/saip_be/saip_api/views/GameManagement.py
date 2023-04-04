@@ -12,13 +12,13 @@ from ..serializers import GameSerializer
 from saip_simulation.simulation import Simulation
 
 parameters = {"Upgrades": [{"name": "Battery", "cost": 15000, "sales_effect": 0.75, "man_cost_effect": 0.3,
-                            "camera_pos": "1,2,3", "camera_rot": "3,2,1"},
+                            "camera_pos": "1,2,3", "camera_rot": "3,2,1", "description": "Investícia do batérie predlžuje výdrž elektrického bicykla na cestách, a tým zaujme najmä zákazníkov,ktorí si potrpia na väčšej výdrži batérie. Investíciou do tohto vylepšenia sa zvýšia výrobné nákladyo 30%, ale taktiež sa aj efekt na predaje zvýši o 75%."},
                            {"name": "Frame", "cost": 11000, "sales_effect": 0.55, "man_cost_effect": 0.2,
-                            "camera_pos": "4,5,6", "camera_rot": "6,5,4"},
+                            "camera_pos": "4,5,6", "camera_rot": "6,5,4", "description": "Investícia do rámu zaujme najmä zákazníkov, ktorých zaujíma vzhľad a celková konštrukcia bicykla. Táto investícia spôsobí nárast výrobných nákladov o 20% a efekt na predaje sa zvýši o 55%."},
                            {"name": "Brakes", "cost": 9000, "sales_effect": 0.45, "man_cost_effect": 0.1,
-                            "camera_pos": "7,8,9", "camera_rot": "9,8,7"},
+                            "camera_pos": "7,8,9", "camera_rot": "9,8,7", "description": "Investíciou do tohto vylepšenia sa zvýši celková bezpečnosť pri používaní bicykla na cestách, ale aj v inom teréne. Výrobné náklady sa pri tejto investícii zvýšia o 10% a efekt na predaje o 45%."},
                            {"name": "Display", "cost": 17000, "sales_effect": 0.85, "man_cost_effect": 0.4,
-                            "camera_pos": "7,8,9", "camera_rot": "9,8,7"}
+                            "camera_pos": "7,8,9", "camera_rot": "9,8,7", "description": "Displej na elektrobicykli je neodmysliteľnou súčasťou pre celkové ovládanie a lepší pocit z jazdy, keď potrebujeme prehľad o tom akou rýchlosťou ideme, koľko kilometrov sme už na aktuálnej trase prešli a iné štatistiky. Investíciou do tohto vylepšenia sa zvýšia výrobné náklady o 40% a efekt na predaje o 85%."}
                            ]}
 
 
@@ -27,7 +27,7 @@ def create_default_upgrades() -> None:
         for upgrade in parameters["Upgrades"]:
             Upgrade.objects.create(name=upgrade["name"], cost=upgrade["cost"], sales_effect=upgrade["sales_effect"],
                                    man_cost_effect = upgrade['man_cost_effect'], camera_pos=upgrade["camera_pos"],
-                                   camera_rot=upgrade["camera_rot"]).save()
+                                   camera_rot=upgrade["camera_rot"], description=upgrade["description"]).save()
 
 
 def create_company_state(company: Company, turn: Turn) -> CompaniesState:
@@ -170,7 +170,15 @@ class EndTurnView(PermissionRequiredMixin, APIView):
             return Response({"detail": "User is not admin"}, status=403)
         
         turn = get_last_turn(game)
-        if turn.number != 0:
+
+        end_turn(turn)
+        
+        return Response({"detail": "Turn ended, simulation started"}, status=200)
+
+def end_turn(turn: Turn) -> Turn:
+    game = turn.game
+
+    if turn.number != 0:
             companies = Company.objects.filter(game=game)
             for company in companies:
                 state = CompaniesState.objects.get(company=company, turn=turn)
@@ -186,13 +194,6 @@ class EndTurnView(PermissionRequiredMixin, APIView):
                     state.marketing.tv = state_prev.marketing.tv
                     state.marketing.billboard = state_prev.marketing.billboard
                     state.marketing.ooh = state_prev.marketing.ooh
-
-        end_turn(turn)
-        
-        return Response({"detail": "Turn ended, simulation started"}, status=200)
-
-def end_turn(turn: Turn) -> Turn:
-    game = turn.game
 
     new_turn = create_turn(turn.number + 1, game)
     calculate_man_cost(game, new_turn)

@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 class GameParameters(models.Model):
     budget_cap = models.PositiveIntegerField(default=10000)
-    depreciation = models.FloatField(default=0.1)
+    depreciation = models.FloatField(default=0.0125)
     base_man_cost = models.PositiveIntegerField(default=250)
     base_capital = models.PositiveIntegerField(default=40000)
     end_turn_on_committed = models.BooleanField(default=True)
@@ -36,7 +36,7 @@ class Game(models.Model):
 class Turn(models.Model):
     number = models.PositiveIntegerField(null=True)
     start = models.DateTimeField(null=True, auto_now_add=True)
-    end = models.DateTimeField(null=True, blank=True)
+    end = models.DateTimeField(null=True, blank=True, editable=False)
     game = models.ForeignKey(Game, models.CASCADE, null=True)
 
     def __str__(self):
@@ -98,6 +98,7 @@ class Upgrade(models.Model):
     name = models.CharField(max_length=100, null=True)
     camera_pos = models.CharField(max_length=100, null=True)
     camera_rot = models.CharField(max_length=100, null=True)
+    description = models.CharField(max_length=1000, null=True)
 
     def __str__(self):
         return f"{self.name} - {self.cost}"
@@ -181,6 +182,7 @@ class CompaniesState(models.Model):
     loans = models.FloatField(null=True, default=20000)
     inventory_upgrade = models.FloatField(null=True, default=0)
     overcharge_upgrade = models.FloatField(null=True, default=0)
+    next_turn_budget = models.FloatField(null=True, default=10_000)
 
     def __str__(self):
         return f"{self.company} - {self.turn}"
@@ -208,9 +210,12 @@ class MarketState(models.Model):
 class TeacherDecisions(models.Model):
     turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
     interest_rate = models.FloatField(null=True, default=0.05)
-    tax_rate = models.FloatField(null=True, default=0.2)
+    tax_rate = models.FloatField(null=True, default=0.21)
     inflation = models.FloatField(null=True, default=0)
-    loan_limit = models.FloatField(null=True, default=20000)
+    loan_limit = models.FloatField(null=True, default=200000)
+
+    def __str__(self):
+        return f"Teacher Decisions - {self.turn}"
 
     class Meta:
         db_table = "Teacher Decisions"
