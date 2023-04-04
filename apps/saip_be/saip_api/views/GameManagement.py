@@ -195,6 +195,8 @@ def end_turn(turn: Turn) -> Turn:
                     state.marketing.billboard = state_prev.marketing.billboard
                     state.marketing.ooh = state_prev.marketing.ooh
 
+                    state.save()
+
     new_turn = create_turn(turn.number + 1, game)
     calculate_man_cost(game, new_turn)
 
