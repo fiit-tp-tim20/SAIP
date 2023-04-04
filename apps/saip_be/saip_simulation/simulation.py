@@ -329,7 +329,7 @@ class Simulation:
             ct_companies_states[company_model].loan_repayment = round(company_class_object.value_paid_in_loan_repayment, 2)
             ct_companies_states[company_model].loans = round(company_class_object.loans, 2)
             ct_companies_states[company_model].inventory_upgrade = round(company_class_object.value_paid_in_stored_product_upgrades, 2)
-            ct_companies_states[company_model].overcharge_upgrade = round(((company_class_object.prev_turn_inventory * company_class_object.prev_turn_prod_ppu) - (company_class_object.inventory * company_class_object.prod_ppu)), 2) if company_class_object.prev_turn_inventory > 0 else 0
+            ct_companies_states[company_model].overcharge_upgrade = round(company_class_object.price_diff_stored_products, 2)
             # TODO: hodnota moze byt minusova iba ak boli zasoby v minulom kole nenulove
 
             if ct_companies_states[company_model].production is not None:
