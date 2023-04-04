@@ -297,8 +297,8 @@ class Simulation:
             ct_companies_states[company_model].ret_earnings = round((company_class_object.ret_earnings + company_class_object.income_per_turn), 2) #doteraz sales scitane dokopy (? mozno)
             ct_companies_states[company_model].net_profit = round(company_class_object.profit_after_tax, 2)
             ct_companies_states[company_model].depreciation = (
-                round(company_class_object.factory.upkeep["writeoff"], 2)
-                if company_class_object.factory.upkeep["writeoff"]
+                round(company_class_object.factory.upkeep.get("writeoff", 0), 2)
+                if company_class_object.factory.upkeep.get("writeoff", 0)
                 else 0
             )
             ct_companies_states[company_model].new_loans = round(company_class_object.new_loans, 2)
@@ -309,7 +309,7 @@ class Simulation:
             ct_companies_states[company_model].tax = round(company_class_object.value_paid_in_tax, 2)
             ct_companies_states[company_model].profit_before_tax = round(company_class_object.profit_before_tax, 2)
             ct_companies_states[company_model].interest = round(company_class_object.value_paid_in_interest, 2)
-            ct_companies_states[company_model].cash_flow_res = round((company_class_object.prev_turn_cash + company_class_object.income_per_turn - company_class_object.total_costs_per_turn), 2)
+            ct_companies_states[company_model].cash_flow_res = round((company_class_object.prev_turn_cash + company_class_object.income_per_turn - company_class_object.total_costs_per_turn - company_class_object.value_paid_in_tax - company_class_object.factory.capital_investment_this_turn + company_class_object.factory.upkeep.get("writeoff", 0)), 2)
             ct_companies_states[company_model].loan_repayment = round(company_class_object.value_paid_in_loan_repayment, 2)
             ct_companies_states[company_model].loans = round(company_class_object.loans, 2)
             ct_companies_states[company_model].inventory_upgrade = round(company_class_object.value_paid_in_stored_product_upgrades, 2)
