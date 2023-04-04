@@ -37,7 +37,6 @@ function Bike(props: JSX.IntrinsicElements["group"] & Props) {
 
 		// return () => clearTimeout(timeout);
 	}, []);
-
 	return (
 		<group {...props} dispose={null}>
 			{/* <a.group name="Wheel_Front" ref={group} position={[0, 0.87, 1.44]} {...spring}> */}

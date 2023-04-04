@@ -41,6 +41,16 @@ After you modify the models, please re-run the makemigrations and migrate comman
 
 Admin interface can be found at http://127.0.0.1:8000/api/admin/
 
+### HTTPS server
+
+Install mkcert and create a certificate. [Guide](https://timonweb.com/django/https-django-development-server-ssl-certificate/)
+
+To run the server use
+
+```python3 manage.py runserver_plus --cert-file cert.pem --key-file cert-key.pem```
+
+with your keys as parameters.
+
 ## Commits
 
 Use ```[FE] - {commit name}``` if committing for Frontend, ```[BE] - {commit name}``` if committing for Backend and ```[GEN] - {commit name}``` for general commits

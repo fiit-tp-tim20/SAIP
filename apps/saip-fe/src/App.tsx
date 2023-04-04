@@ -20,6 +20,7 @@ import logout from "./api/logout";
 import GameSelect from "./screens/GameSelect";
 import Register from "./screens/Register";
 import BugReport from "./components/bugreport/BugReport";
+import { getCommitted } from "./api/GetCommitted";
 
 function App() {
 	const token = localStorage.getItem("token");
@@ -32,6 +33,8 @@ function App() {
 	const { reset: resetCompanyState } = useCompanyStore();
 	const { reset: resetUpgradeState } = useUpgradesStore();
 	const { reset: resetMarketingState } = useMarketingStore();
+
+	const { data: committed, refetch: refetchCommited } = useQuery("committed", () => getCommitted());
 
 	const [enableArc, setEnableArc] = React.useState(true);
 
@@ -70,6 +73,7 @@ function App() {
 		}
 		if (savedTurn && data && data.Number !== parseInt(savedTurn, 10)) {
 			localStorage.setItem("turn", data.Number);
+			refetchCommited();
 			resetCompanyState();
 			resetUpgradeState();
 			resetMarketingState();
