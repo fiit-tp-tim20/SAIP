@@ -6,7 +6,6 @@ import { getCompanyStats } from "../api/GetCompanyStats";
 import CompanyGraph from "../components/statisticsGraph/CompanyGraph";
 
 function Company() {
-
 	const { isLoading, data } = useQuery(["getCompanyStats"], getCompanyStats);
 
 	const {
@@ -31,10 +30,7 @@ function Company() {
 				{isLoading ? (
 					<div>Loading...</div>
 				) : (
-					<CompanyGraph 
-						manufactured={data?.manufactured}
-						sold={data?.sold}
-					/>
+					<CompanyGraph manufactured={data?.manufactured} sold={data?.sold} />
 				)}
 			</div>
 			<div className="flex flex-col">
@@ -78,7 +74,7 @@ function Company() {
 						<div>
 							<Slider
 								min={0}
-								max={1000}
+								max={5000}
 								value={productPrice}
 								setValue={setProductPrice}
 								checked={productPriceChecked}
