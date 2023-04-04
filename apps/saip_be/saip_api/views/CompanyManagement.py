@@ -30,7 +30,7 @@ class IndustryView(APIView):
         stock_price = [None] * (company.game.turns - 1)
         last_turn = get_last_turn(company.game)
        
-        for turn_num in range(last_turn.number):
+        for turn_num in range(last_turn.number - 1):
             state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
             stock_price[turn_num] = state.stock_price
 
@@ -56,7 +56,7 @@ class MarketingView(APIView):
 
         marketing = [None] * (company.game.turns - 1)
         last_turn = get_last_turn(company.game)
-        for turn_num in range(last_turn.number):
+        for turn_num in range(last_turn.number - 1):
             state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
             marketing[turn_num] = state.orders_received
 
@@ -80,7 +80,8 @@ class CompanyView(APIView):
         man_cost = [None] * (company.game.turns - 1)
         sell_price = [None] * (company.game.turns - 1)
 
-        for turn_num in range(company.game.turns - 1):
+        last_turn = get_last_turn(company.game)
+        for turn_num in range(last_turn.number - 1):
             try:
                 state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
                 manufactured[turn_num] = state.production.volume
