@@ -130,7 +130,6 @@ class Simulation:
         new_company.interest_rate = self.teacher_decisions.get("interest_rate", CompanyPreset.DEFAULT_INTEREST_RATE)
         new_company.tax_rate = self.teacher_decisions.get("tax_rate", CompanyPreset.DEFAULT_TAX_RATE)
         new_company.loan_limit = self.teacher_decisions.get("loan_limit", CompanyPreset.DEFAULT_LOAN_LIMIT)
-        new_company.factory.inflation = self.teacher_decisions.get("inflation", FactoryPreset.BASE_INFLATION)
         # write company state into the class object
         if company_state is not None:
 
@@ -154,9 +153,6 @@ class Simulation:
                 new_company.prev_turn_inventory = 0
                 new_company.prev_turn_cash = CompanyPreset.DEFAULT_BUDGET_PER_TURN
 
-            
-
-            # create objects from models
             # setup factory object
             factory_model = company_state.factory
             if factory_model is not None:
@@ -211,6 +207,7 @@ class Simulation:
         new_factory.base_energy_cost = factory_model.base_cost if factory_model.base_cost is not None else FactoryPreset.BASE_ENERGY_COST
         new_factory.capital_investment = factory_model.capital_investments if factory_model.capital_investments is not None else FactoryPreset.STARTING_INVESTMENT
         new_factory.capital_investment_this_turn = factory_model.capital if factory_model.capital is not None else 0.0
+        new_factory.inflation = self.teacher_decisions.get("inflation", FactoryPreset.BASE_INFLATION)
     
         return new_factory
 
