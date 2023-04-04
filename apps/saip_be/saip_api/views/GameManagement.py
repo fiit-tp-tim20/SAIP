@@ -195,6 +195,9 @@ def end_turn(turn: Turn) -> Turn:
                     state.marketing.billboard = state_prev.marketing.billboard
                     state.marketing.ooh = state_prev.marketing.ooh
 
+                    state.factory.save()
+                    state.production.save()
+                    state.marketing.save()
                     state.save()
 
     new_turn = create_turn(turn.number + 1, game)
