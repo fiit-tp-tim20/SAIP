@@ -260,7 +260,7 @@ class CompanyReport(APIView):
         cash_flow = dict()
         try:
             cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-2), company=company).cash #???
-        except Turn.DoesNotExist:
+        except (Turn.DoesNotExist, CompaniesState.DoesNotExist):
             cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1), company=company).cash #???
        
         cash_flow['sales'] =  company_state_previous.sales #plus
