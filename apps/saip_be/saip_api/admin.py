@@ -8,7 +8,7 @@ from .views.GameManagement import end_turn, get_last_turn, create_default_upgrad
 
 @admin.register(Turn)
 class TurnsAdmin(admin.ModelAdmin):
-    list_display = ('number', 'game', 'start', 'end')
+    list_display = ('__str__', 'number', 'game', 'start', 'end')
     list_filter = ('game',)
 
 
@@ -49,7 +49,8 @@ class MarketStateAdmin(admin.ModelAdmin):
 
 @admin.register(TeacherDecisions)
 class TeacherDecisions(admin.ModelAdmin):
-    list_display = ('interest_rate', 'tax_rate', 'inflation', 'loan_limit')
+    list_display = ('__str__', 'interest_rate', 'tax_rate', 'inflation', 'loan_limit')
+    list_filter = ('turn__game', 'turn__game__admin')
 
 
 # @admin.register(EmailGroup)
