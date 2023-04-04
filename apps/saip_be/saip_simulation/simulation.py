@@ -331,6 +331,7 @@ class Simulation:
             if ct_companies_states[company_model].factory is not None:
                 ct_companies_states[company_model].factory.capacity = company_class_object.factory.capacity
                 ct_total_capacity += company_class_object.factory.capacity  # add factory capacity to overall sum of all capacities
+                ct_companies_states[company_model].factory.capital_investments = company_class_object.factory.capital_investment
                 ct_companies_states[company_model].factory.save()
             ct_companies_states[company_model].save()
 
