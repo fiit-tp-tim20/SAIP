@@ -232,7 +232,7 @@ class CompanyReport(APIView):
         production['production'] = company_state_previous.production.volume
         production['capacity'] = company_state_previous.factory.capacity
         if (state2ago):
-            production['utilization'] = (state2ago.production.volume/state2ago.factory.capacity)*100
+            production['utilization'] = (company_state_previous.production.volume/state2ago.factory.capacity)*100
         else:
             production['utilization'] = "N/A"
         production['man_cost'] = company_state_previous.production.man_cost
@@ -254,7 +254,7 @@ class CompanyReport(APIView):
         #pasiva
         balance['loans'] = company_state_previous.loans
         balance['ret_earnings'] = company_state_previous.ret_earnings
-        balance['base_capital'] = company.game.parameters.base_capital
+        balance['base_capital'] = company_state_previous.factory.capital_investments #company.game.parameters.base_capital #CHANGED val to overall capital investments so far instead of the base investment value
         balance['liabilities_summary'] = company_state_previous.loans + company_state_previous.ret_earnings + company.game.parameters.base_capital
 
         cash_flow = dict()
@@ -278,7 +278,7 @@ class CompanyReport(APIView):
         cash_flow['loan_repayment'] = company_state_previous.loan_repayment
          
         #zostatok do dalssieho prostredia
-        cash_flow['cash'] = company_state_previous.cash
+        cash_flow['cash'] = company_state_previous.balance #CHANGED VAL FROM cash TO balance    #"Konecny stav"
 
         income_statement = dict()
         income_statement['sales'] = company_state_previous.sales
