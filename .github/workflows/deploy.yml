@@ -36,6 +36,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd ~/SAIP/apps/saip-fe
+            yarn
             yarn run build
             sudo cp dist /var/www/ -r
             sudo systemctl reload nginx

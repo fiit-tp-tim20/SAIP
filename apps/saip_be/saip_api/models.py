@@ -153,7 +153,7 @@ class CompaniesState(models.Model):
         Production, models.SET_NULL, null=True, blank=True
     )
     factory = models.OneToOneField(Factory, models.SET_NULL, null=True, blank=True)
-    balance = models.FloatField(null=True, blank=True)
+    balance = models.FloatField(null=True, blank=True, default=0)
     stock_price = models.FloatField(null=True, blank=True)
     inventory = models.PositiveIntegerField(null=True, default=0)
     r_d = models.PositiveBigIntegerField(null=True, default=0)
