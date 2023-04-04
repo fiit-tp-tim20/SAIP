@@ -10,5 +10,9 @@ export const getTurn = async () => {
 		return data;
 	}
 
+	if (response.status === 401) {
+		localStorage.removeItem("token");
+	}
+
 	return null;
 };
