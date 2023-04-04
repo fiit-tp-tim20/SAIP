@@ -142,7 +142,7 @@ class IndustryReport(APIView):
             company_info['sell_price'] = state.production.sell_price
             company_info['net_profit'] = state.net_profit
             try:
-                company_info['market_share'] = (state.orders_fulfilled/market_state.sold)*100
+                company_info['market_share'] = round((state.orders_fulfilled/market_state.sold)*100, 2)
             except (ZeroDivisionError, TypeError):
                 company_info['market_share'] = 0
 
