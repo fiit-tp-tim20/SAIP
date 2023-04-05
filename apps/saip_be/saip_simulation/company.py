@@ -133,15 +133,15 @@ class Company:
 
     inventory: int = 0
     production_volume: int = 0
-    prod_ppu: float = 0 #field(init=False)
-    total_ppu: float = 0 #field(init=False)
-    value_paid_in_inventory_charge: float = 0 #field(init=False)
+    prod_ppu: float = 0  # field(init=False)
+    total_ppu: float = 0  # field(init=False)
+    value_paid_in_inventory_charge: float = 0  # field(init=False)
 
     balance: float = 0  # current state of the company finances
-    profit: float = 0 #field(init=False)  # +income -costs | per turn only
-    profit_before_tax: float = 0 #field(init=False)
-    profit_after_tax: float = 0 #field(init=False)
-    ret_earnings: float = 0 #field(init=False)
+    profit: float = 0  # field(init=False)  # +income -costs | per turn only
+    profit_before_tax: float = 0  # field(init=False)
+    profit_after_tax: float = 0  # field(init=False)
+    ret_earnings: float = 0  # field(init=False)
 
     loans: float = 20_000
     loan_limit: float = 20_000
@@ -150,7 +150,7 @@ class Company:
     new_loans: float = field(init=False)
 
     tax_rate = CompanyPreset.DEFAULT_TAX_RATE
-    value_paid_in_tax: float = 0 #field(init=False)
+    value_paid_in_tax: float = 0  # field(init=False)
 
     value_paid_in_interest: float = field(init=False)
     price_diff_stored_products: float = field(init=False)
@@ -203,6 +203,7 @@ class Company:
                 self.prod_costs_per_turn
                 + self.factory.upkeep.get("writeoff")
                 + self.marketing_costs
+                + self.amount_spent_on_upgrades
                 + self.value_paid_in_interest
                 + self.price_diff_stored_products
                 + self.value_paid_in_stored_product_upgrades
@@ -212,6 +213,7 @@ class Company:
             additional_ppu = (
                 self.factory.upkeep.get("writeoff")
                 + self.marketing_costs
+                + self.amount_spent_on_upgrades
                 + self.value_paid_in_interest
                 + self.price_diff_stored_products
                 + self.value_paid_in_stored_product_upgrades
@@ -264,7 +266,8 @@ class Company:
 
     def start_of_turn_cleanup(self):
         self.__pay_for_marketing()
-        
+        self.__pay_for_rnd()
+
     def invest_into_factory(self):
         self.factory.invest_into_factory(self.capital_investment_this_turn)
         self.remaining_budget -= self.capital_investment_this_turn
@@ -275,6 +278,9 @@ class Company:
 
     def __pay_for_marketing(self):
         self.remaining_budget -= self.__agg_marketing_costs()
+
+    def __pay_for_rnd(self):
+        self.remaining_budget -= self.amount_spent_on_upgrades()
 
     def __agg_marketing_values(self) -> float:
         total_investment = 0
