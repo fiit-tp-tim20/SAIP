@@ -244,34 +244,30 @@ class Simulation:
         return new_company
 
     def create_factory(self, factory_model: models.Factory) -> Factory:
-        new_factory = Factory()
-        if factory_model == None:
-            new_factory.capacity = FactoryPreset.STARTING_CAPACITY
-            new_factory.base_energy_cost = FactoryPreset.BASE_ENERGY_COST
-            new_factory.capital_investment = FactoryPreset.STARTING_INVESTMENT
-            return new_factory
+        if factory_model is not None:
+            new_factory = Factory(
+                capacity= factory_model.capacity
+                if factory_model.capacity is not None
+                else FactoryPreset.STARTING_CAPACITY,
 
-        # all attributes are positive integer (from model)
-        # TODO: types are not consistent: model <-> our class
-        new_factory.capacity = (
-            factory_model.capacity
-            if factory_model.capacity is not None
-            else FactoryPreset.STARTING_CAPACITY
-        )
+                capital_investment=factory_model.capital_investments
+                if factory_model.capital_investments is not None
+                else FactoryPreset.STARTING_INVESTMENT,
+
+                inflation=self.teacher_decisions.get("inflation", FactoryPreset.BASE_INFLATION),
+            )
+        else:
+            new_factory = Factory(
+                capacity= FactoryPreset.STARTING_CAPACITY,
+                capital_investment= FactoryPreset.STARTING_INVESTMENT,
+                inflation=self.teacher_decisions.get("inflation", FactoryPreset.BASE_INFLATION),
+            )
+
         new_factory.base_energy_cost = (
             factory_model.base_cost
             if factory_model.base_cost is not None
             else FactoryPreset.BASE_ENERGY_COST
         )
-        new_factory.capital_investment = (
-            factory_model.capital_investments
-            if factory_model.capital_investments is not None
-            else FactoryPreset.STARTING_INVESTMENT
-        )
-        new_factory.inflation = self.teacher_decisions.get(
-            "inflation", FactoryPreset.BASE_INFLATION
-        )
-
         return new_factory
 
     def create_product(
@@ -330,7 +326,7 @@ class Simulation:
 
         self.market.generate_distribution()
         for company in self.companies.values():
-            # print(company)
+            print(company)
             pass
         pass
 

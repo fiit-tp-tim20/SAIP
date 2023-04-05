@@ -35,7 +35,7 @@ class Factory:
     base_energy_cost: float = field(init=False, default=FactoryPreset.BASE_ENERGY_COST)
 
     upkeep: dict[str, float] = field(init=False)
-    inflation = FactoryPreset.BASE_INFLATION
+    inflation: float = FactoryPreset.BASE_INFLATION
 
     def __post_init__(self):
         self.upkeep = {
