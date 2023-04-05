@@ -179,7 +179,7 @@ class Company:
     marketing: Dict[str, MarketingType] = field(default_factory=dict)
 
     def __post_init__(self):
-        self.start_of_turn_cleanup()
+        pass #self.start_of_turn_cleanup()
 
     ###############################
     #   VISIBLE (CALL IN ORDER)   #
