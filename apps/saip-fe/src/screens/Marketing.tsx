@@ -50,9 +50,9 @@ function Marketing() {
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
 						<div className="flex flex-col">
-							<h3>Investícia</h3>
+							<h3>Investícia (€)</h3>
 							<p>
-								Minimum: <span className="font-bold">100</span>
+								Minimum: <span className="font-bold">100€</span> 
 							</p>
 						</div>
 						<div>
@@ -81,9 +81,9 @@ function Marketing() {
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
 						<div className="flex flex-col">
-							<h3>Investícia</h3>
+							<h3>Investícia (€)</h3>
 							<p>
-								Minimum: <span className="font-bold">500</span>
+								Minimum: <span className="font-bold">500€</span>
 							</p>
 						</div>
 						<div>
@@ -109,9 +109,9 @@ function Marketing() {
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
 						<div className="flex flex-col">
-							<h3>Investícia</h3>
+							<h3>Investícia (€)</h3>
 							<p>
-								Minimum: <span className="font-bold">500</span>
+								Minimum: <span className="font-bold">500€</span>
 							</p>
 						</div>
 						<div>
@@ -138,9 +138,9 @@ function Marketing() {
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
 						<div className="flex flex-col">
-							<h3>Investícia</h3>
+							<h3>Investícia (€)</h3>
 							<p>
-								Minimum: <span className="font-bold">2000</span>
+								Minimum: <span className="font-bold">2000€</span>
 							</p>
 						</div>
 						<div>
@@ -167,9 +167,9 @@ function Marketing() {
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
 						<div className="flex flex-col">
-							<h3>Investícia</h3>
+							<h3>Investícia (€)</h3>
 							<p>
-								Minimum: <span className="font-bold">1000</span>
+								Minimum: <span className="font-bold">1000€</span>
 							</p>
 						</div>
 						<div>
