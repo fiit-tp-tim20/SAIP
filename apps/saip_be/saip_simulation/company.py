@@ -280,7 +280,7 @@ class Company:
         self.remaining_budget -= self.__agg_marketing_costs()
 
     def __pay_for_rnd(self):
-        self.remaining_budget -= self.amount_spent_on_upgrades()
+        self.remaining_budget -= self.amount_spent_on_upgrades
 
     def __agg_marketing_values(self) -> float:
         total_investment = 0
