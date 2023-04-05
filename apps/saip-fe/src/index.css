@@ -128,7 +128,8 @@ progress[value]::-webkit-progress-bar {
 }
 
 progress[value]::-webkit-progress-value {
-	@apply rounded-full bg-accent-600;
+	background-color: var(--maxContrastColor, theme("colors.accent.600"));
+	@apply rounded-full;
 }
 
 .button-clear {

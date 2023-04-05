@@ -1,4 +1,5 @@
 import React from "react";
+import useUpgradesStore from "../../store/Upgrades";
 
 type Props = {
 	name: string;
@@ -9,7 +10,9 @@ type Props = {
 };
 
 function UpgradeInfo(props: Props) {
-	const { name, researchedAvatars, progressMax, progressValue, onClick } = props;
+	const { name, researchedAvatars, progressMax, progressValue = 0, onClick } = props;
+
+	const { upgrades } = useUpgradesStore();
 
 	return (
 		<li
@@ -20,9 +23,24 @@ function UpgradeInfo(props: Props) {
 				<p className="font-bold my-auto min-w-[180px]">{name}</p>
 				{progressMax && (
 					<div className="flex flex-row items-center justify-center text-center">
-						<progress className="progress progress-primary w-56" value={progressValue} max={progressMax} />
+						<div className="my-auto w-56">
+							<div className="overflow-hidden h-4 text-xs flex rounded-2xl bg-neutral-300">
+								<div
+									style={{ width: `${(progressValue / progressMax) * 100}%` }}
+									className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center accent-700-bg ${
+										!upgrades[name] ? "rounded-r-2xl" : ""
+									}`}
+								/>
+								<div
+									style={{ width: `${(upgrades[name] / progressMax) * 100}%` }}
+									className="shadow-none rounded-r-2xl flex flex-col text-center whitespace-nowrap text-white justify-center bg-success-300"
+								/>
+							</div>
+						</div>
 						<p className="my-auto ml-2">
-							{progressValue}/{progressMax}
+							{progressValue}
+							{upgrades[name] ? <span className="text-success-300"> + {upgrades[name]}</span> : ""}/
+							{progressMax}
 						</p>
 					</div>
 				)}
