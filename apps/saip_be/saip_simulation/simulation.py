@@ -17,7 +17,7 @@ except ValueError:  # Already removed
 from saip_simulation.company import Company
 from saip_simulation.market import Market
 from saip_simulation.company import Factory
-from saip_simulation.marketing import Billboard, SocialMedia, CableNews, Podcast, OOH
+from saip_simulation.marketing import Billboard, SocialMedia, CableNews, Podcast, OOH, MarketingType
 from saip_simulation.product import Product, LastingProduct, Upgrade
 
 from saip_simulation.config import FactoryPreset, CompanyPreset
@@ -102,177 +102,147 @@ class Simulation:
         print("Simulation was set up without any errors!")
 
     def create_company(self, company_model: models.Company) -> Company:
-        # create new instance of company class, with default values
-        # change the default values based on models
-        new_company = Company(brand=company_model.name)
-
-        # filter models for companies_upgrades that belong to this game and this company
+        # filter CompaniesUpgrades
         try:
             company_upgrades = models.CompaniesUpgrades.objects.filter(
                 game=self.game_model,
                 company=company_model,
-                turn=self.turn_model,
             )
         except models.CompaniesUpgrades.DoesNotExist:
             company_upgrades = []
-            # TODO: add error message maybe
+            print(f"CompaniesUpgrades WAS NONE FOR COMPANY {company_model.name}")
 
-        # get company_state model
+        # get CompaniesState model
         try:
             company_state = models.CompaniesState.objects.get(
                 company=company_model, turn=self.turn_model
             )
         except models.CompaniesState.DoesNotExist:
             company_state = None
-            # TODO: add error message maybe
+            print(f"CompaniesState WAS NONE FOR COMPANY {company_model.name}")
 
-        # get previous turn company_state model
+        # get CompaniesState model for the previous turn
         try:
             pt_company_state = models.CompaniesState.objects.get(
                 company=company_model, turn=self.prev_turn_model
             )
         except models.CompaniesState.DoesNotExist:
             pt_company_state = None
-            # TODO: add error message maybe
+            print(f"CompaniesState FOR PREV TURN WAS NONE FOR COMPANY {company_model.name}")
 
-        new_company.interest_rate = self.teacher_decisions.get(
-            "interest_rate", CompanyPreset.DEFAULT_INTEREST_RATE
-        )
-        new_company.tax_rate = self.teacher_decisions.get(
-            "tax_rate", CompanyPreset.DEFAULT_TAX_RATE
-        )
-        new_company.loan_limit = self.teacher_decisions.get(
-            "loan_limit", CompanyPreset.DEFAULT_LOAN_LIMIT
-        )
-        # write company state into the class object
+        init_brand = company_model.name
         if company_state is not None:
-
-            new_company.balance = (
-                company_state.balance if company_state.balance is not None else 0
-            )  # float
-            new_company.inventory = (
-                company_state.inventory if company_state.inventory is not None else 0
-            )  # pos int
-            new_company.loans = (
-                company_state.loans
-                if company_state.loans is not None
-                else FactoryPreset.STARTING_INVESTMENT
-            )
-            new_company.ret_earnings = (
-                company_state.ret_earnings
-                if company_state.ret_earnings is not None
-                else 0
-            )
-            new_company.amount_spent_on_upgrades = (
-                company_state.r_d if company_state.r_d is not None else 0
-            )
-
-            if pt_company_state is not None:
-                if pt_company_state.production is not None:
-                    new_company.prev_turn_total_ppu = (
-                        pt_company_state.production.man_cost_all
-                        if pt_company_state.production.man_cost_all is not None
-                        else 0
-                    )
-                    new_company.prev_turn_prod_ppu = (
-                        pt_company_state.production.man_cost
-                        if pt_company_state.production.man_cost is not None
-                        else 0
-                    )
-                else:
-                    new_company.prev_turn_total_ppu = 0
-                    new_company.prev_turn_prod_ppu = 0
-                new_company.max_budget = (
-                    pt_company_state.next_turn_budget
-                    if pt_company_state.next_turn_budget is not None
-                    else CompanyPreset.DEFAULT_BUDGET_PER_TURN
-                )
-                new_company.prev_turn_inventory = (
-                    pt_company_state.inventory
-                    if pt_company_state.inventory is not None
-                    else 0
-                )
-                new_company.prev_turn_cash = (
-                    pt_company_state.cash
-                    if pt_company_state.cash is not None
-                    else CompanyPreset.DEFAULT_BUDGET_PER_TURN
-                )
+            init_inventory = company_state.inventory if company_state.inventory is not None else 0
+            init_balance = company_state.balance if company_state.balance is not None else 0
+            init_ret_earnings = company_state.ret_earnings if company_state.ret_earnings is not None else 0
+            init_loans = company_state.loans if company_state.loans is not None else 0
+            init_amount_spent_on_upgrades = company_state.r_d if company_state.r_d is not None else 0
+            if company_state.factory is not None:
+                init_capital_investment_this_turn = company_state.factory.capital if company_state.factory.capital is not None else 0
             else:
-                new_company.max_budget = CompanyPreset.DEFAULT_BUDGET_PER_TURN
-                new_company.prev_turn_total_ppu = 0
-                new_company.prev_turn_prod_ppu = 0
-                new_company.prev_turn_inventory = 0
-                new_company.prev_turn_cash = CompanyPreset.DEFAULT_BUDGET_PER_TURN
+                init_capital_investment_this_turn = 0
+        else:
+            init_inventory = 0
+            init_balance = 0
+            init_ret_earnings = 0
+            init_loans = 0
+            init_amount_spent_on_upgrades = 0
+            init_capital_investment_this_turn = 0
 
-            # setup factory object
-            factory_model = company_state.factory
-            if factory_model is not None:
-                new_company.factory = self.create_factory(factory_model=factory_model)
-                new_company.capital_investment_this_turn = factory_model.capital
+        init_loan_limit = self.teacher_decisions.get("loan_limit", CompanyPreset.DEFAULT_LOAN_LIMIT)
+        init_interest_rate = self.teacher_decisions.get("interest_rate", CompanyPreset.DEFAULT_INTEREST_RATE)
+        init_tax_rate = self.teacher_decisions.get("tax_rate", CompanyPreset.DEFAULT_TAX_RATE)
+
+        if pt_company_state is not None:
+            init_max_budget = pt_company_state.next_turn_budget if pt_company_state.next_turn_budget is not None else CompanyPreset.DEFAULT_BUDGET_PER_TURN
+            init_prev_turn_inventory = pt_company_state.inventory if pt_company_state.inventory is not None else 0
+            init_prev_turn_cash = pt_company_state.cash if pt_company_state.cash is not None else CompanyPreset.DEFAULT_BUDGET_PER_TURN
+            if pt_company_state.production is not None:
+                init_prev_turn_prod_ppu = pt_company_state.production.man_cost if pt_company_state.production.man_cost is not None else 0
+                init_prev_turn_total_ppu = pt_company_state.production.man_cost_all if pt_company_state.production.man_cost_all is not None else 0
             else:
-                print(f"FACTORY WAS NONE FOR COMPANY {company_model.name}")
-                new_company.factory = self.create_factory(factory_model=None)
+                init_prev_turn_prod_ppu = 0
+                init_prev_turn_total_ppu = 0
+        else:
+            init_max_budget = CompanyPreset.DEFAULT_BUDGET_PER_TURN
+            init_prev_turn_prod_ppu = 0
+            init_prev_turn_total_ppu = 0
+            init_prev_turn_inventory = 0
+            init_prev_turn_cash = CompanyPreset.DEFAULT_BUDGET_PER_TURN
 
-            # setup marketing objects in dict
-            marketing_model = company_state.marketing
-            if marketing_model is not None:
-                if (
-                    marketing_model.billboard is not None
-                    and marketing_model.billboard > 0
-                ):
-                    new_company.marketing["billboard"] = Billboard(
-                        marketing_model.billboard
-                    )
-                if marketing_model.ooh is not None and marketing_model.ooh > 0:
-                    new_company.marketing["ooh"] = OOH(marketing_model.ooh)
-                if marketing_model.podcast is not None and marketing_model.podcast > 0:
-                    new_company.marketing["podcast"] = Podcast(marketing_model.podcast)
-                if marketing_model.viral is not None and marketing_model.viral > 0:
-                    new_company.marketing["social media"] = SocialMedia(
-                        marketing_model.viral
-                    )
-                if marketing_model.tv is not None and marketing_model.tv > 0:
-                    new_company.marketing["cable news"] = CableNews(marketing_model.tv)
-            else:
-                pass
-            # setup product
-            new_company.product = self.create_product(
-                company=new_company,
-                production_model=company_state.production,
-                company_upgrades=company_upgrades,
-            )
+        
 
+        init_marketing: Dict[str, MarketingType] = {}
+        marketing_model = company_state.marketing
+        if marketing_model is not None:
+            if marketing_model.billboard is not None and marketing_model.billboard > 0:
+                init_marketing["billboard"] = Billboard(marketing_model.billboard)
+            if marketing_model.ooh is not None and marketing_model.ooh > 0:
+                init_marketing["ooh"] = OOH(marketing_model.ooh)
+            if marketing_model.podcast is not None and marketing_model.podcast > 0:
+                init_marketing["podcast"] = Podcast(marketing_model.podcast)
+            if marketing_model.viral is not None and marketing_model.viral > 0:
+                init_marketing["social media"] = SocialMedia(marketing_model.viral)
+            if marketing_model.tv is not None and marketing_model.tv > 0:
+                init_marketing["cable news"] = CableNews(marketing_model.tv)
+
+        # instantiate the new company with the prepared values
+        new_company = Company(
+            brand = init_brand,
+            inventory = init_inventory,
+            balance = init_balance,
+            ret_earnings = init_ret_earnings,
+            loans = init_loans,
+            amount_spent_on_upgrades = init_amount_spent_on_upgrades,
+
+            loan_limit = init_loan_limit,
+            interest_rate = init_interest_rate,
+            tax_rate = init_tax_rate,
+
+            max_budget = init_max_budget,
+            prev_turn_prod_ppu = init_prev_turn_prod_ppu,
+            prev_turn_total_ppu = init_prev_turn_total_ppu,
+            prev_turn_inventory = init_prev_turn_inventory,
+            prev_turn_cash = init_prev_turn_cash,
+            
+            capital_investment_this_turn = init_capital_investment_this_turn,
+            marketing = init_marketing,
+        )
+
+        new_company.factory = self.create_factory(factory_model=company_state.factory)
+        new_company.product = self.create_product(
+            company=new_company,
+            production_model=company_state.production,
+            company_upgrades=company_upgrades,
+        )
         return new_company
 
-    def create_factory(self, factory_model: models.Factory) -> Factory:
-        new_factory = Factory()
-        if factory_model == None:
-            new_factory.capacity = FactoryPreset.STARTING_CAPACITY
-            new_factory.base_energy_cost = FactoryPreset.BASE_ENERGY_COST
-            new_factory.capital_investment = FactoryPreset.STARTING_INVESTMENT
-            return new_factory
 
-        # all attributes are positive integer (from model)
-        # TODO: types are not consistent: model <-> our class
-        new_factory.capacity = (
-            factory_model.capacity
-            if factory_model.capacity is not None
-            else FactoryPreset.STARTING_CAPACITY
-        )
+    def create_factory(self, factory_model: models.Factory) -> Factory:
+        if factory_model is not None:
+            new_factory = Factory(
+                capacity= factory_model.capacity
+                if factory_model.capacity is not None
+                else FactoryPreset.STARTING_CAPACITY,
+
+                capital_investment=factory_model.capital_investments
+                if factory_model.capital_investments is not None
+                else FactoryPreset.STARTING_INVESTMENT,
+
+                inflation=self.teacher_decisions.get("inflation", FactoryPreset.BASE_INFLATION),
+            )
+        else:
+            new_factory = Factory(
+                capacity= FactoryPreset.STARTING_CAPACITY,
+                capital_investment= FactoryPreset.STARTING_INVESTMENT,
+                inflation=self.teacher_decisions.get("inflation", FactoryPreset.BASE_INFLATION),
+            )
+
         new_factory.base_energy_cost = (
             factory_model.base_cost
             if factory_model.base_cost is not None
             else FactoryPreset.BASE_ENERGY_COST
         )
-        new_factory.capital_investment = (
-            factory_model.capital_investments
-            if factory_model.capital_investments is not None
-            else FactoryPreset.STARTING_INVESTMENT
-        )
-        new_factory.inflation = self.teacher_decisions.get(
-            "inflation", FactoryPreset.BASE_INFLATION
-        )
-
         return new_factory
 
     def create_product(
@@ -310,15 +280,17 @@ class Simulation:
         )  # TODO: maybe this should be in the object constructor
         for company_upgrade_model in company_upgrades:
             upgrade_model = company_upgrade_model.upgrade
-            new_product.add_upgrade(
-                name=upgrade_model.name,  # string
-                status=company_upgrade_model.status,  # string "s", "ns", "f" for "started", "not started", and "finished"
-                progress=company_upgrade_model.progress,  # pos integer
-                total_cost=upgrade_model.cost,  # pos integer
-                sales_effect=upgrade_model.sales_effect,  # float
-                man_cost_effect=upgrade_model.man_cost_effect,  # float
-            )
-            pass
+            if ((company_upgrade_model.status == "f" or company_upgrade_model.status == "finished") and company_upgrade_model.turn is not None and company_upgrade_model.turn.number < self.turn_model.number):
+                new_product.add_upgrade(
+                    name=upgrade_model.name,  # string
+                    status=company_upgrade_model.status,  # string "s", "ns", "f" for "started", "not started", and "finished"
+                    progress=company_upgrade_model.progress,  # pos integer
+                    total_cost=upgrade_model.cost,  # pos integer
+                    sales_effect=upgrade_model.sales_effect,  # float
+                    man_cost_effect=upgrade_model.man_cost_effect,  # float
+                )
+            else:
+                pass
         new_product.setup_product()
         return new_product
 
@@ -329,7 +301,7 @@ class Simulation:
 
         self.market.generate_distribution()
         for company in self.companies.values():
-            # print(company)
+            #print(company)
             pass
         pass
 

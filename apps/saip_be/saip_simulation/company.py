@@ -35,7 +35,7 @@ class Factory:
     base_energy_cost: float = field(init=False, default=FactoryPreset.BASE_ENERGY_COST)
 
     upkeep: dict[str, float] = field(init=False)
-    inflation = FactoryPreset.BASE_INFLATION
+    inflation: float = FactoryPreset.BASE_INFLATION
 
     def __post_init__(self):
         self.upkeep = {
@@ -149,7 +149,7 @@ class Company:
     value_paid_in_loan_repayment: float = field(init=False)
     new_loans: float = field(init=False)
 
-    tax_rate = CompanyPreset.DEFAULT_TAX_RATE
+    tax_rate: float = CompanyPreset.DEFAULT_TAX_RATE
     value_paid_in_tax: float = 0  # field(init=False)
 
     value_paid_in_interest: float = field(init=False)
@@ -175,7 +175,7 @@ class Company:
     amount_spent_on_upgrades: float = 0
 
     factory: Factory = None
-    capital_investment_this_turn = 0
+    capital_investment_this_turn: float = 0
     marketing: Dict[str, MarketingType] = field(default_factory=dict)
 
     def __post_init__(self):
