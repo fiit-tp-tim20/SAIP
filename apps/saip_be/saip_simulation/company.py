@@ -270,7 +270,7 @@ class Company:
 
     def invest_into_factory(self):
         self.factory.invest_into_factory(self.capital_investment_this_turn)
-        self.remaining_budget -= self.capital_investment_this_turn
+        #self.remaining_budget -= self.capital_investment_this_turn
 
     ###########################
     #   MARKETING UTILITIES   #
