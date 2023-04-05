@@ -63,7 +63,6 @@ function App() {
 	}, [enableArc]);
 
 	useEffect(() => {
-		console.warn(data);
 		const savedTurn = localStorage.getItem("turn");
 		if (!savedTurn && !data) {
 			localStorage.setItem("turn", "0");
