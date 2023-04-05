@@ -44,6 +44,7 @@ class Product(ABC):
         for upgrade in self.upgrades.values():
             sum += upgrade.man_cost_effect
         self._upgrade_man_cost_effect_multiplier = 1 + sum
+        self.man_cost = self.man_cost * self.get_upgrade_man_cost_effect_multiplier()
 
     def get_upgrade_sales_effect_multiplier(self):
         return self._upgrade_sales_effect_multiplier
