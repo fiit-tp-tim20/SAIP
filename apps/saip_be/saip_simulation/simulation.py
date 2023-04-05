@@ -163,6 +163,9 @@ class Simulation:
                 if company_state.ret_earnings is not None
                 else 0
             )
+            new_company.amount_spent_on_upgrades = (
+                company_state.r_d if company_state.r_d is not None else 0
+            )
 
             if pt_company_state is not None:
                 if pt_company_state.production is not None:
@@ -446,14 +449,28 @@ class Simulation:
             ct_companies_states[company_model].interest = round(
                 company_class_object.value_paid_in_interest, 2
             )
+            # ct_companies_states[company_model].cash_flow_res = round(
+            #    (
+            #        company_class_object.prev_turn_cash
+            #        + company_class_object.income_per_turn
+            #        - company_class_object.total_costs_per_turn
+            #        - company_class_object.value_paid_in_tax
+            #        - company_class_object.capital_investment_this_turn
+            #        + company_class_object.factory.upkeep.get("writeoff", 0)
+            #    ),
+            #    2,
+            # )
             ct_companies_states[company_model].cash_flow_res = round(
                 (
                     company_class_object.prev_turn_cash
                     + company_class_object.income_per_turn
-                    - company_class_object.total_costs_per_turn
-                    - company_class_object.value_paid_in_tax
+                    - company_class_object.prod_costs_per_turn
+                    - company_class_object.value_paid_in_inventory_charge
+                    - company_class_object.amount_spent_on_upgrades
+                    - company_class_object.marketing_costs
                     - company_class_object.capital_investment_this_turn
-                    + company_class_object.factory.upkeep.get("writeoff", 0)
+                    - company_class_object.value_paid_in_interest
+                    - company_class_object.value_paid_in_tax
                 ),
                 2,
             )

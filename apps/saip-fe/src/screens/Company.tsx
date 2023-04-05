@@ -45,7 +45,7 @@ function Company() {
 						Počet produkovaných kusov je počet kusov, ktoré sa vyrobia v určitom časovom období.
 					</p>
 					<div className="py-2 flex flex-row items-center justify-between">
-						<h3>Počet kusov</h3>
+						<h3>Počet kusov (ks)</h3>
 						<div>
 							<Slider
 								min={1}
@@ -74,7 +74,7 @@ function Company() {
 						nákupe a na celkový úspech podnikania.
 					</p>
 					<div className="py-2 flex flex-row items-center justify-between">
-						<h3>Predajná cena</h3>
+						<h3>Predajná cena (€/ks)</h3>
 						<div>
 							<Slider
 								min={0}
@@ -98,7 +98,7 @@ function Company() {
 						finančná situácia, a perspektíva budúceho vývoja, pred rozhodnutím investovať do kapitálu.
 					</p>
 					<div className="py-2 flex flex-row items-center justify-between">
-						<h3>Investícia</h3>
+						<h3>Investícia (€)</h3>
 						<div>
 							<Slider
 								min={0}
