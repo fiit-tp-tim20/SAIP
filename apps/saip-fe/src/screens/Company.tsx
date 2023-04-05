@@ -55,6 +55,8 @@ function Company() {
 								checked={productCountChecked}
 								setChecked={setProductCountChecked}
 								step={1}
+								limitMin
+								limitMax
 							/>
 						</div>
 					</div>
