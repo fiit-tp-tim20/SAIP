@@ -59,19 +59,15 @@ class Product(ABC):
 
     def add_upgrade(
         self, name, status, progress, total_cost, sales_effect, man_cost_effect
-    ):
-        if (
-            status == "f" or status == "finished"
-        ):  # TODO: add condition (and another argument) - active since turn N + 1
-            self.upgrades[name] = Upgrade(
-                status=status,
-                progress=progress,
-                total_cost=total_cost,
-                sales_effect=sales_effect,
-                man_cost_effect=man_cost_effect,
-            )
-        else:
-            pass
+    ): 
+        self.upgrades[name] = Upgrade(
+            status=status,
+            progress=progress,
+            total_cost=total_cost,
+            sales_effect=sales_effect,
+            man_cost_effect=man_cost_effect,
+        )
+        #print(self.upgrades)
 
     def setup_product(self):
         self._set_upgrade_man_cost_effect_multiplier()

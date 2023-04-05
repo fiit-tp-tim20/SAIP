@@ -111,7 +111,6 @@ class Simulation:
             company_upgrades = models.CompaniesUpgrades.objects.filter(
                 game=self.game_model,
                 company=company_model,
-                turn=self.turn_model,
             )
         except models.CompaniesUpgrades.DoesNotExist:
             company_upgrades = []
@@ -310,15 +309,17 @@ class Simulation:
         )  # TODO: maybe this should be in the object constructor
         for company_upgrade_model in company_upgrades:
             upgrade_model = company_upgrade_model.upgrade
-            new_product.add_upgrade(
-                name=upgrade_model.name,  # string
-                status=company_upgrade_model.status,  # string "s", "ns", "f" for "started", "not started", and "finished"
-                progress=company_upgrade_model.progress,  # pos integer
-                total_cost=upgrade_model.cost,  # pos integer
-                sales_effect=upgrade_model.sales_effect,  # float
-                man_cost_effect=upgrade_model.man_cost_effect,  # float
-            )
-            pass
+            if ((company_upgrade_model.status == "f" or company_upgrade_model.status == "finished") and company_upgrade_model.turn is not None and company_upgrade_model.turn.number < self.turn_model.number):
+                new_product.add_upgrade(
+                    name=upgrade_model.name,  # string
+                    status=company_upgrade_model.status,  # string "s", "ns", "f" for "started", "not started", and "finished"
+                    progress=company_upgrade_model.progress,  # pos integer
+                    total_cost=upgrade_model.cost,  # pos integer
+                    sales_effect=upgrade_model.sales_effect,  # float
+                    man_cost_effect=upgrade_model.man_cost_effect,  # float
+                )
+            else:
+                pass
         new_product.setup_product()
         return new_product
 
