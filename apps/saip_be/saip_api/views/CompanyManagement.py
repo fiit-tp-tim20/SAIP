@@ -247,7 +247,7 @@ class CompanyReport(APIView):
 
         balance = dict()
         balance['cash'] = company_state_previous.balance + company_state_previous.next_turn_budget #CHANGED VAL FROM cash TO balance + next_turn_budget; also did it in assets summary- LEO
-        balance['inventory_money'] = company_state_previous.inventory * company_state_previous.production.man_cost
+        balance['inventory_money'] = round((company_state_previous.inventory * company_state_previous.production.man_cost), 2)
         balance['capital_investments'] = company_state_previous.factory.capital_investments
         balance['assets_summary'] = round(((company_state_previous.balance + company_state_previous.next_turn_budget) + (company_state_previous.inventory * company_state_previous.production.man_cost) + company_state_previous.factory.capital_investments), 2)
 
