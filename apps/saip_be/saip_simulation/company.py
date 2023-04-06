@@ -160,7 +160,7 @@ class Company:
     value_paid_in_interest: float = field(init=False)
     price_diff_stored_products: float = field(init=False)
     value_paid_in_stored_product_upgrades: float = field(init=False)
-    price_inventory_charge: float = field(init=False)
+    #price_inventory_charge: float = field(init=False)
 
     income_per_turn: float = 0  # field(init=False)
     prod_costs_per_turn: float = 0  # field(init=False)
@@ -212,7 +212,7 @@ class Company:
                 + self.value_paid_in_interest
                 + self.price_diff_stored_products
                 + self.value_paid_in_stored_product_upgrades
-                + self.price_inventory_charge
+                + self.value_paid_in_inventory_charge
             )
         else:
             additional_ppu = (
@@ -222,7 +222,7 @@ class Company:
                 + self.value_paid_in_interest
                 + self.price_diff_stored_products
                 + self.value_paid_in_stored_product_upgrades
-                + self.price_inventory_charge
+                + self.value_paid_in_inventory_charge
             ) / self.production_volume
 
             self.total_ppu = self.prod_ppu + additional_ppu
@@ -320,7 +320,7 @@ class Company:
         )
         self.price_diff_stored_products = self.__price_diff_stored_products()
         self.value_paid_in_stored_product_upgrades = self.__upgrade_stored_products()
-        self.price_inventory_charge = (
+        self.value_paid_in_inventory_charge = (
             self.inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT
         )
 
