@@ -140,7 +140,6 @@ class Company:
     production_volume: int = 0
     prod_ppu: float = 0  # field(init=False)
     total_ppu: float = 0  # field(init=False)
-    value_paid_in_inventory_charge: float = 0  # field(init=False)
 
     balance: float = 0  # current state of the company finances
     profit: float = 0  # field(init=False)  # +income -costs | per turn only
@@ -160,6 +159,7 @@ class Company:
     value_paid_in_interest: float = field(init=False)
     price_diff_stored_products: float = field(init=False)
     value_paid_in_stored_product_upgrades: float = field(init=False)
+    value_paid_in_inventory_charge: float = 0  # field(init=False)
     #price_inventory_charge: float = field(init=False)
 
     income_per_turn: float = 0  # field(init=False)
