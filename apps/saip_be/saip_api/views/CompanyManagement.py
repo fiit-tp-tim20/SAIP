@@ -36,12 +36,11 @@ class IndustryView(APIView):
 
             ordered_states = list(CompaniesState.objects.filter(turn=Turn.objects.get(game=company.game, number=turn_num+1)).order_by('-stock_price'))
             
-
             for index, one in enumerate(ordered_states):
                 if one.company == company:
                     rank[turn_num] = index + 1
 
-        return Response({"rank": rank, "stock_price": stock_price}, status=200)
+        return Response({"num_players": len(ordered_states),"rank": rank, "stock_price": stock_price}, status=200)
 class MarketingView(APIView):
 
     def get(self, request) -> Response:
