@@ -53,7 +53,7 @@ class Product(ABC):
         return self._upgrade_man_cost_effect_multiplier
 
     def _set_upgrade_stored_products_price(self, new_upgrade_price: float) -> None:
-        self._set_upgrade_stored_products_price = new_upgrade_price
+        self._upgrade_stored_products_price = new_upgrade_price
 
     def get_upgrade_stored_products_price(self) -> float:
         return self._upgrade_stored_products_price

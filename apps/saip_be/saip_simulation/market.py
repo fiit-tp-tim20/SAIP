@@ -119,6 +119,8 @@ class Market:
                 self.customer_distribution.get(company.brand).get("demand")
             )
             company.calculate_stock_price()
+            sales = self.customer_distribution[company.brand].get("demand", 0) - self.customer_distribution[company.brand].get("demand_not_met", 0)
+            self.customer_count -= sales
 
 
 #########################
@@ -157,7 +159,9 @@ def print_company(company: Company):
     print(
         f"Units Made: {company.production_volume} | Units Sold: {company.units_sold} | Inventory: {company.inventory}"
     )
-    print(f"Rent: {company.factory.upkeep.get('rent')} | Energy: {company.factory.upkeep.get('energy')} | Salaries: {company.factory.upkeep.get('salaries')} | Materials: {company.factory.upkeep.get('materials')}")
+    print(
+        f"Rent: {company.factory.upkeep.get('rent')} | Energy: {company.factory.upkeep.get('energy')} | Salaries: {company.factory.upkeep.get('salaries')} | Materials: {company.factory.upkeep.get('materials')}"
+    )
     ipu = company.product.get_price() - company.total_ppu
     print(
         f"Selling Price: {company.product.get_price()} | Prod PPU: {company.prod_ppu:.2f} | Total PPU: {company.total_ppu:.2f} | Income Per Unit: {ipu:.2f}"
@@ -184,7 +188,7 @@ def print_company(company: Company):
 
 if __name__ == "__main__":
 
-    TURN_COUNT = 1
+    TURN_COUNT = 2
 
     comA = Company(
         brand="A",
