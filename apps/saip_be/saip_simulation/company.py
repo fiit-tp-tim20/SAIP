@@ -18,7 +18,12 @@ from typing import List
 
 from saip_simulation.product import Product, DailyProduct, LastingProduct
 from saip_simulation.marketing import *
-from saip_simulation.config import TURN_LENGTH, FactoryPreset, CompanyPreset
+from saip_simulation.config import (
+    TURN_LENGTH,
+    YEAR_LENGTH,
+    FactoryPreset,
+    CompanyPreset,
+)
 from saip_simulation.marketing import MarketingType
 
 from typing import Dict
@@ -99,7 +104,7 @@ class Factory:
     def invest_into_factory(self, investment: int) -> None:
         self.__devalue_capital()
         self.capital_investment += investment
-        self.capacity += floor(
+        self.capacity = FactoryPreset.STARTING_CAPACITY + floor(
             (self.capital_investment - FactoryPreset.STARTING_INVESTMENT)
             / FactoryPreset.STARTING_INVESTMENT
             * FactoryPreset.STARTING_CAPACITY
@@ -310,7 +315,9 @@ class Company:
 
     def __calculate_additional_costs(self) -> None:
         self.marketing_costs = self.__agg_marketing_costs()
-        self.value_paid_in_interest = self.loans * self.interest_rate
+        self.value_paid_in_interest = (
+            self.loans * self.interest_rate * TURN_LENGTH / YEAR_LENGTH
+        )
         self.price_diff_stored_products = self.__price_diff_stored_products()
         self.value_paid_in_stored_product_upgrades = self.__upgrade_stored_products()
         self.price_inventory_charge = (
