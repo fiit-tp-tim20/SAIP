@@ -395,7 +395,7 @@ class Simulation:
         ct_company_state_model.orders_received = self.market.customer_distribution[company_class_object.brand]["demand"]
         ct_company_state_model.orders_fulfilled = company_class_object.units_sold
         ct_company_state_model.cash = round(
-            company_class_object.remaining_budget, 2
+            company_class_object.prev_balance, 2
         )
         ct_company_state_model.ret_earnings = round(
             (
