@@ -133,7 +133,7 @@ class Simulation:
         init_brand = company_model.name
         if company_state is not None:
             init_inventory = company_state.inventory if company_state.inventory is not None else 0
-            init_balance = company_state.balance if company_state.balance is not None else 0
+            init_balance = company_state.balance if (company_state.balance is not None and self.turn_model.number > 1) else CompanyPreset.DEFAULT_BUDGET_PER_TURN
             init_ret_earnings = company_state.ret_earnings if company_state.ret_earnings is not None else 0
             init_loans = company_state.loans if company_state.loans is not None else 0
             init_amount_spent_on_upgrades = company_state.r_d if company_state.r_d is not None else 0
@@ -436,20 +436,6 @@ class Simulation:
         ct_company_state_model.cash_flow_res = round(
             company_class_object.cashflow_result, 2
         )
-        #ct_company_state_model.cash_flow_res = round(
-        #    (
-        #        company_class_object.prev_turn_cash
-        #        + company_class_object.income_per_turn
-        #        - company_class_object.prod_costs_per_turn
-        #        - company_class_object.value_paid_in_inventory_charge
-        #        - company_class_object.amount_spent_on_upgrades
-        #        - company_class_object.marketing_costs
-        #        - company_class_object.capital_investment_this_turn
-        #        - company_class_object.value_paid_in_interest
-        #        - company_class_object.value_paid_in_tax
-        #    ),
-        #    2,
-        #)
         ct_company_state_model.loan_repayment = round(
             company_class_object.value_paid_in_loan_repayment, 2
         )
