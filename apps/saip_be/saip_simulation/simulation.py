@@ -448,7 +448,7 @@ class Simulation:
         ct_company_state_model.overcharge_upgrade = round(
             company_class_object.price_diff_stored_products, 2
         )
-        ct_company_state_model.next_turn_budget = company_class_object.next_turn_budget
+        ct_company_state_model.next_turn_budget = 0 #TODO: change this
         if ct_company_state_model.production is not None:
             ct_company_state_model.production.man_cost = round(
                 company_class_object.prod_ppu, 2
