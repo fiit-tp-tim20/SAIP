@@ -104,6 +104,7 @@ class Factory:
     def invest_into_factory(self, investment: int) -> None:
         self.__devalue_capital()
         self.capital_investment += investment
+        self.prev_capacity = self.capacity
         self.capacity = FactoryPreset.STARTING_CAPACITY + floor(
             (self.capital_investment - FactoryPreset.STARTING_INVESTMENT)
             / FactoryPreset.STARTING_INVESTMENT
@@ -140,9 +141,8 @@ class Company:
     production_volume: int = 0
     prod_ppu: float = 0  # field(init=False)
     total_ppu: float = 0  # field(init=False)
-    value_paid_in_inventory_charge: float = 0  # field(init=False)
 
-    balance: float = 0  # current state of the company finances
+    balance: float = 10_000  # current state of the company finances
     profit: float = 0  # field(init=False)  # +income -costs | per turn only
     profit_before_tax: float = 0  # field(init=False)
     profit_after_tax: float = 0  # field(init=False)
@@ -160,15 +160,16 @@ class Company:
     value_paid_in_interest: float = field(init=False)
     price_diff_stored_products: float = field(init=False)
     value_paid_in_stored_product_upgrades: float = field(init=False)
-    price_inventory_charge: float = field(init=False)
+    value_paid_in_inventory_charge: float = 0  # field(init=False)
 
     income_per_turn: float = 0  # field(init=False)
     prod_costs_per_turn: float = 0  # field(init=False)
     total_costs_per_turn: float = 0  # field(init=False)
+    cost_of_goods_sold: float = field(init=False)
 
     max_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
     remaining_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
-    next_turn_budget: float = field(init=False)
+    next_turn_budget: float = 0
 
     stock_price: float = 0  # field(init=False)  # company score
     units_sold: int = 0  # field(init=False)
@@ -184,7 +185,7 @@ class Company:
     marketing: Dict[str, MarketingType] = field(default_factory=dict)
 
     def __post_init__(self):
-        pass #self.start_of_turn_cleanup()
+        pass  # self.start_of_turn_cleanup()
 
     ###############################
     #   VISIBLE (CALL IN ORDER)   #
@@ -199,58 +200,48 @@ class Company:
         )
 
         self.__calculate_additional_costs()
-        self.inventory += self.production_volume
 
         if self.production_volume <= 0:
             self.total_ppu = 0
             self.prod_costs_per_turn = self.factory.total_upkeep()
-            self.total_costs_per_turn = (
-                self.prod_costs_per_turn
-                + self.factory.upkeep.get("writeoff")
-                + self.marketing_costs
-                + self.amount_spent_on_upgrades
-                + self.value_paid_in_interest
-                + self.price_diff_stored_products
-                + self.value_paid_in_stored_product_upgrades
-                + self.price_inventory_charge
-            )
-        else:
-            additional_ppu = (
-                self.factory.upkeep.get("writeoff")
-                + self.marketing_costs
-                + self.amount_spent_on_upgrades
-                + self.value_paid_in_interest
-                + self.price_diff_stored_products
-                + self.value_paid_in_stored_product_upgrades
-                + self.price_inventory_charge
-            ) / self.production_volume
+            self.total_costs_per_turn = self.prod_costs_per_turn + self.additional_costs
 
+        else:
+            additional_ppu = self.additional_costs / self.production_volume
             self.total_ppu = self.prod_ppu + additional_ppu
 
             self.prod_costs_per_turn = self.production_volume * self.prod_ppu
             self.total_costs_per_turn = self.production_volume * self.total_ppu
 
     def sell_product(self, demand: int) -> int:  # 2
-        if demand > self.inventory:
+        self.demand = demand
+        if self.demand > self.inventory:
             self.income_per_turn = self.inventory * self.product.get_price()
-            demand_not_met = demand - self.inventory
+            self.demand_not_met = self.demand - self.inventory
             self.units_sold = self.inventory
             self.inventory = 0
         else:
-            self.income_per_turn = demand * self.product.get_price()
-            self.units_sold = demand
-            self.inventory -= demand
-            demand_not_met = 0
+            self.income_per_turn = self.demand * self.product.get_price()
+            self.units_sold = self.demand
+            self.inventory -= self.demand
+            self.demand_not_met = 0
 
-        self.profit = self.income_per_turn - self.total_costs_per_turn
+        self.cost_of_goods_sold = self.units_sold * self.prod_ppu
+
+        self.profit = (
+            self.income_per_turn - self.cost_of_goods_sold - self.additional_costs
+        )
         self.__apply_tax()
-        self.balance += self.profit + self.remaining_budget
+        self.__calculate_negative_cashflow()
 
-        return demand_not_met
-
-    def calculate_stock_price(self) -> float:  # 3
+        self.prev_balance = self.balance
+        self.balance += self.income_per_turn - self.negative_cashflow
+        self.cashflow_result = self.balance
         self.__update_loans()
 
+        return self.demand_not_met
+
+    def calculate_stock_price(self) -> float:  # 3
         self.stock_price = (
             self.factory.capital_investment
             + self.balance * 0.2  # long term performance
@@ -275,7 +266,9 @@ class Company:
 
     def invest_into_factory(self):
         self.factory.invest_into_factory(self.capital_investment_this_turn)
-        self.remaining_budget -= self.capital_investment_this_turn - self.factory.upkeep.get("writeoff", 0)
+        self.remaining_budget -= (
+            self.capital_investment_this_turn - self.factory.upkeep.get("writeoff", 0)
+        )
 
     ###########################
     #   MARKETING UTILITIES   #
@@ -307,7 +300,7 @@ class Company:
         return self.inventory * self.product.get_upgrade_stored_products_price()
 
     def __price_diff_stored_products(self) -> float:
-        return (self.prod_ppu - self.prev_turn_prod_ppu) * self.inventory
+        return (self.prev_turn_prod_ppu - self.prod_ppu) * self.inventory
 
     ###########################
     #   COST CALC UTILITIES   #
@@ -320,8 +313,38 @@ class Company:
         )
         self.price_diff_stored_products = self.__price_diff_stored_products()
         self.value_paid_in_stored_product_upgrades = self.__upgrade_stored_products()
-        self.price_inventory_charge = (
+
+        self.inventory += self.production_volume
+        self.value_paid_in_inventory_charge = (
             self.inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT
+        )
+
+        self.additional_costs = (
+            self.factory.upkeep.get("writeoff")
+            + self.marketing_costs
+            + self.amount_spent_on_upgrades
+            + self.value_paid_in_interest
+            + self.price_diff_stored_products
+            + self.value_paid_in_stored_product_upgrades
+            + self.value_paid_in_inventory_charge
+        )
+
+    def __calculate_negative_cashflow(self) -> None:
+        self.writeoff = self.factory.upkeep.get("writeoff", 0)
+
+        # investment_costs = 0
+        # if self.capital_investment_this_turn > self.writeoff:
+        #     investment_costs = self.capital_investment_this_turn - self.writeoff
+
+        self.decision_costs = (
+            self.marketing_costs + self.amount_spent_on_upgrades + self.capital_investment_this_turn
+        )
+        self.negative_cashflow = (
+            self.prod_costs_per_turn
+            + self.value_paid_in_inventory_charge
+            + self.decision_costs
+            + self.value_paid_in_interest
+            + self.value_paid_in_tax
         )
 
     def __apply_tax(self):
@@ -338,31 +361,21 @@ class Company:
     def __update_loans(self):
         self.new_loans = 0
         self.value_paid_in_loan_repayment = 0
-
-        if self.balance < 0:
-            self.new_loans = -self.balance
-            if self.new_loans > self.loan_limit:
-                self.new_loans = self.loan_limit
-            self.loans += self.new_loans
-            self.balance += self.new_loans
-
+                
         if self.balance < self.max_budget:
             required_for_next_turn = self.max_budget - self.balance
-            remaining_limit = self.loan_limit - self.new_loans
-            if remaining_limit > required_for_next_turn:
+            if self.loan_limit > required_for_next_turn:
                 self.new_loans += required_for_next_turn
                 self.loans += required_for_next_turn
-                self.next_turn_budget = self.max_budget
+                self.balance = self.max_budget
             else:
-                self.new_loans += remaining_limit
-                self.loans += remaining_limit
-                self.next_turn_budget = remaining_limit
+                self.new_loans += self.loan_limit
+                self.loans += self.loan_limit
+                self.balance += self.loan_limit
             return
 
         balance_over_budget = self.balance - self.max_budget
         if balance_over_budget > self.loans:
-            self.balance -= self.max_budget
-            self.next_turn_budget = self.max_budget
             self.balance -= self.loans
             self.value_paid_in_loan_repayment += self.loans
             self.loans = 0
@@ -371,8 +384,7 @@ class Company:
         if balance_over_budget > 0:
             self.value_paid_in_loan_repayment += balance_over_budget
             self.loans -= self.value_paid_in_loan_repayment
-            self.next_turn_budget = self.max_budget
-            self.balance = 0
+            self.balance -= self.value_paid_in_loan_repayment
 
 
 ########################

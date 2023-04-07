@@ -229,70 +229,71 @@ class CompanyReport(APIView):
             state2ago = False
 
         production = dict()
-        production['production'] = company_state_previous.production.volume
-        production['capacity'] = company_state_previous.factory.capacity
+        production['production'] = company_state_previous.production.volume #"Vyrobené množstvo"
+        production['capacity'] = company_state_previous.factory.capacity #"Výrobná kapacita"
         if (state2ago):
             production['utilization'] = round((company_state_previous.production.volume/state2ago.factory.capacity)*100,2)
         else:
             production['utilization'] = "N/A"
-        production['man_cost'] = company_state_previous.production.man_cost
-        production['new_inventory'] = company_state_previous.inventory
-        production['man_cost_all'] = company_state_previous.production.man_cost_all
+        #"Koeficient využitia výrobnej kapacity"
+        production['man_cost'] = company_state_previous.production.man_cost #"Variabilné náklady"
+        production['new_inventory'] = company_state_previous.inventory #"Zásoby"
+        production['man_cost_all'] = company_state_previous.production.man_cost_all #"Celkové náklady"
 
         sales = dict()
-        sales['orders_received'] = company_state_previous.orders_received
-        sales['orders_fulfilled'] = company_state_previous.orders_fulfilled
-        sales['orders_unfulfilled'] = company_state_previous.orders_received - company_state_previous.orders_fulfilled
-        sales['selling_price'] = company_state_previous.production.sell_price
+        sales['orders_received'] = company_state_previous.orders_received #"Prijaté objednávky"
+        sales['orders_fulfilled'] = company_state_previous.orders_fulfilled #"Splnené objednávky"
+        sales['orders_unfulfilled'] = company_state_previous.orders_received - company_state_previous.orders_fulfilled #Nesplnené objednávky
+        sales['selling_price'] = company_state_previous.production.sell_price #"Predajná cena"
 
         balance = dict()
-        balance['cash'] = company_state_previous.balance + company_state_previous.next_turn_budget #CHANGED VAL FROM cash TO balance + next_turn_budget; also did it in assets summary- LEO
-        balance['inventory_money'] = round((company_state_previous.inventory * company_state_previous.production.man_cost), 2)
-        balance['capital_investments'] = company_state_previous.factory.capital_investments
-        balance['assets_summary'] = round(((company_state_previous.balance + company_state_previous.next_turn_budget) + (company_state_previous.inventory * company_state_previous.production.man_cost) + company_state_previous.factory.capital_investments), 2)
+        balance['cash'] = company_state_previous.balance + company_state_previous.next_turn_budget #"Hotovosť"
+        balance['inventory_money'] = round((company_state_previous.inventory * company_state_previous.production.man_cost), 2) #Zásoby
+        balance['capital_investments'] = company_state_previous.factory.capital_investments #"Kapitálové investície"
+        balance['assets_summary'] = round(((company_state_previous.balance + company_state_previous.next_turn_budget) + (company_state_previous.inventory * company_state_previous.production.man_cost) + company_state_previous.factory.capital_investments), 2) #"Súčet aktív"
 
         #pasiva
-        balance['loans'] = company_state_previous.loans
-        balance['ret_earnings'] = company_state_previous.ret_earnings
-        balance['base_capital'] = company.game.parameters.base_capital
-        balance['liabilities_summary'] = round(company_state_previous.loans + company_state_previous.ret_earnings + company.game.parameters.base_capital, 2)
+        balance['loans'] = company_state_previous.loans #"Pôžičky"
+        balance['ret_earnings'] = company_state_previous.ret_earnings #"Výsledok hospodárenia z predchádzajúcich období"
+        balance['base_capital'] = company.game.parameters.base_capital #"Základné ímanie"
+        balance['liabilities_summary'] = round(company_state_previous.loans + company_state_previous.ret_earnings + company.game.parameters.base_capital, 2) #"Súčet pasív"
 
         cash_flow = dict()
         try:
             cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-2), company=company).cash #???
         except (Turn.DoesNotExist, CompaniesState.DoesNotExist):
             cash_flow['beginning_cash'] = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1), company=company).cash #???
-       
-        cash_flow['sales'] =  company_state_previous.sales #plus
-        cash_flow['manufactured_man_cost'] = company_state_previous.manufactured_man_cost #minus
+            #"Počiatočný stav"
+        cash_flow['sales'] =  company_state_previous.sales #plus #"Príjmy z predaja výrobkov"
+        cash_flow['manufactured_man_cost'] = company_state_previous.manufactured_man_cost #minus #"Výdavky na vyrobené výrobky"
         # vydavky na rozhodnutia - zratane vydavky na marketing r_d a capital s minusovou hodnotou
-        cash_flow['inventory_charge'] = company_state_previous.inventory_charge 
-        cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.factory.capital
-        cash_flow['interest'] = company_state_previous.interest # minus
-        cash_flow['tax'] = company_state_previous.tax # minus
+        cash_flow['inventory_charge'] = company_state_previous.inventory_charge #"Výdavky na zásoby"
+        cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.factory.capital #"Výdavky na rozhodnutia" #TODO: change to company.decision_costs - add it to model
+        cash_flow['interest'] = company_state_previous.interest # minus #"Výdavky na úroky"
+        cash_flow['tax'] = company_state_previous.tax # minus # "Zaplatená daň"
         # teraz bude stav cash flow aby vedeli či potrebuju pozicku
-        cash_flow['cash_flow_result'] = company_state_previous.cash_flow_res
+        cash_flow['cash_flow_result'] = company_state_previous.cash_flow_res #"Výsledok finančného toku"
 
         #teraz ak je minus tak novy ubver alebo ak nie tak spatenie uveru
-        cash_flow['new_loans'] = company_state_previous.new_loans
-        cash_flow['loan_repayment'] = company_state_previous.loan_repayment
+        cash_flow['new_loans'] = company_state_previous.new_loans #"Nové úvery"
+        cash_flow['loan_repayment'] = company_state_previous.loan_repayment #"Splátka úveru"
          
         #zostatok do dalssieho prostredia
-        cash_flow['cash'] = company_state_previous.balance + company_state_previous.next_turn_budget #CHANGED VAL FROM cash TO balance + next_turn_budget   #"Konecny stav"
+        cash_flow['cash'] = company_state_previous.balance #"Konecny stav"
 
         income_statement = dict()
-        income_statement['sales'] = company_state_previous.sales
-        income_statement['manufactured_man_cost'] = company_state_previous.manufactured_man_cost
-        income_statement['marketing'] = marketing
-        income_statement['r_d'] = company_state_previous.r_d
-        income_statement['depreciation'] = company_state_previous.depreciation
-        income_statement['inventory_charge'] = company_state_previous.inventory_charge # minus
-        income_statement['inventory_upgrade'] = company_state_previous.inventory_upgrade
-        income_statement['overcharge_upgrade'] = company_state_previous.overcharge_upgrade
-        income_statement['interest'] = company_state_previous.interest
-        income_statement['profit_before_tax'] = company_state_previous.profit_before_tax
-        income_statement['tax'] = company_state_previous.tax
-        income_statement['net_profit'] = company_state_previous.net_profit #???
+        income_statement['sales'] = company_state_previous.sales #"Tržby z predaja výrobkov"
+        income_statement['manufactured_man_cost'] = company_state_previous.manufactured_man_cost #"Výrobné náklady"
+        income_statement['marketing'] = marketing #"Náklady na marketing"
+        income_statement['r_d'] = company_state_previous.r_d #"Náklady na výskum a vývoj"
+        income_statement['depreciation'] = company_state_previous.depreciation #"Odpisy"
+        income_statement['inventory_charge'] = company_state_previous.inventory_charge # minus #"Dodatočné náklady na nepredané výrobky"
+        income_statement['inventory_upgrade'] = company_state_previous.inventory_upgrade #"Náklady na upgrade zásob"
+        income_statement['overcharge_upgrade'] = company_state_previous.overcharge_upgrade #"Náklady na precenenie zásob"
+        income_statement['interest'] = company_state_previous.interest #"Nákladové úroky"
+        income_statement['profit_before_tax'] = company_state_previous.profit_before_tax #"Výsledok hospodárenia pred zdanením"
+        income_statement['tax'] = company_state_previous.tax #"Daň"
+        income_statement['net_profit'] = company_state_previous.net_profit #"Výsledok hospodárenia po zdanení"
 
 
         return Response({"production": production, "sales": sales, 'balance': balance, 'cash_flow': cash_flow, 'income_statement': income_statement}, status=200)
