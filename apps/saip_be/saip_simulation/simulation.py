@@ -154,7 +154,7 @@ class Simulation:
         init_tax_rate = self.teacher_decisions.get("tax_rate", CompanyPreset.DEFAULT_TAX_RATE)
 
         if pt_company_state is not None:
-            init_max_budget = pt_company_state.next_turn_budget if pt_company_state.next_turn_budget is not None else CompanyPreset.DEFAULT_BUDGET_PER_TURN
+            init_max_budget = CompanyPreset.DEFAULT_BUDGET_PER_TURN # TODO change this
             init_prev_turn_inventory = pt_company_state.inventory if pt_company_state.inventory is not None else 0
             init_prev_turn_cash = pt_company_state.cash if pt_company_state.cash is not None else CompanyPreset.DEFAULT_BUDGET_PER_TURN
             if pt_company_state.production is not None:
