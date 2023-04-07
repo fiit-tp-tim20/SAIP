@@ -422,7 +422,7 @@ class Simulation:
             company_class_object.income_per_turn, 2
         )
         ct_company_state_model.manufactured_man_cost = round(
-            company_class_object.prod_costs_per_turn, 2
+            company_class_object.prod_costs_per_turn, 2     #TODO: rozdelit na dve hodnoty v modeloch - vydavky na vyrobenie vsetkych a vydavky na vyrobenie IBA predanych (costs_of_goods_sold)
         )
         ct_company_state_model.tax = round(
             company_class_object.value_paid_in_tax, 2
