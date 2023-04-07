@@ -119,7 +119,9 @@ class Market:
                 self.customer_distribution.get(company.brand).get("demand")
             )
             company.calculate_stock_price()
-            sales = self.customer_distribution[company.brand].get("demand", 0) - self.customer_distribution[company.brand].get("demand_not_met", 0)
+            sales = self.customer_distribution[company.brand].get(
+                "demand", 0
+            ) - self.customer_distribution[company.brand].get("demand_not_met", 0)
             self.customer_count -= sales
 
 
@@ -150,36 +152,81 @@ def print_market_state(mar: Market):
     return total_unmet_demand
 
 
-def print_company(company: Company):
+def print_company_production(company: Company):
+    print("---------- PRODUCTION ----------")
+    print(
+        f"Vyrobenych: {company.production_volume}\nKapacita: {company.factory.capacity}\nVyuzitie: {company.production_volume / company.factory.prev_capacity:.2f}"
+    )
+    print(
+        f"Variabilne naklady: {company.prod_costs_per_turn:.2f}/ks\nZasoby: {company.inventory}\nCelkove naklady: {company.total_ppu:.2f}/ks"
+    )
 
-    print(f"COMPANY {company.brand} \nNet Worth: {company.factory.capital_investment}")
+
+def print_company_sales(company: Company):
+    print("------------ SALES -------------")
     print(
-        f"Capacity: {company.factory.capacity} | Writeoff: {company.factory.upkeep.get('writeoff')}"
+        f"Objednavky: {company.demand}\nSplnene: {company.units_sold}\nNesplnene: {company.demand_not_met}\nPredajna cena: {company.product.get_price()}"
+    )
+
+
+def print_company_cashflow(company: Company):
+    print("----------- CASHFLOW -----------")
+    print(
+        f"Pociatocny stav: {company.prev_balance:.2f}\nPrijmy: {company.income_per_turn}\nVydavky na vyrobu: {company.prod_costs_per_turn:.2f}"
     )
     print(
-        f"Units Made: {company.production_volume} | Units Sold: {company.units_sold} | Inventory: {company.inventory}"
+        f"Vydavky na zasoby: {company.value_paid_in_inventory_charge}\nVydavky na rozhodnutia: {company.decision_costs}"
     )
     print(
-        f"Rent: {company.factory.upkeep.get('rent')} | Energy: {company.factory.upkeep.get('energy')} | Salaries: {company.factory.upkeep.get('salaries')} | Materials: {company.factory.upkeep.get('materials')}"
-    )
-    ipu = company.product.get_price() - company.total_ppu
-    print(
-        f"Selling Price: {company.product.get_price()} | Prod PPU: {company.prod_ppu:.2f} | Total PPU: {company.total_ppu:.2f} | Income Per Unit: {ipu:.2f}"
+        f"Vydavky na uroky: {company.value_paid_in_interest:.2f}\nDan: {company.value_paid_in_tax:.2f}"
     )
     print(
-        f"Total Income: {company.income_per_turn:.2f} | Production Costs: {company.prod_costs_per_turn:.2f} | Total Costs: {company.total_costs_per_turn:.2f}"
+        f"Vysledok financneho toku: {company.cashflow_result:.2f}\nSplatka uveru: {company.value_paid_in_loan_repayment:.2f}\nKonecny stav: {company.balance:.2f}"
+    )
+
+
+def print_company_incomes_and_losses(company: Company):
+    print("------- INCOMES & LOSSES -------")
+    print(
+        f"Prijmy: {company.income_per_turn}\nNaklady na predane vyrobky: {company.cost_of_goods_sold:.2f}\nMarketing: {company.marketing_costs}"
     )
     print(
-        f"Profit (before tax): {company.profit_before_tax:.2f} | Profit (after tax): {company.profit:.2f} | Tax paid: {company.value_paid_in_tax:.2f}"
+        f"RnD: {company.amount_spent_on_upgrades}\nOdpisy: {company.factory.upkeep.get('writeoff'):.2f}\nVydavky na zasoby: {company.value_paid_in_inventory_charge}"
     )
     print(
-        f"Remaining budget: {company.remaining_budget:.2f} | Next Turn Budget: {company.next_turn_budget:.2f} | Required for next Turn: {company.max_budget - company.remaining_budget}"
+        f"Upgrade zasob: {company.value_paid_in_stored_product_upgrades:.2f}\nPrecenenie zasob: {company.price_diff_stored_products:.2f}\nUroky: {company.value_paid_in_interest:.2f}"
     )
     print(
-        f"Loan repayment: {company.value_paid_in_loan_repayment:.2f} | New loans: {company.new_loans:.2f} | Remaining loans: {company.loans:.2f}"
+        f"Vysledok pred zdanenim: {company.profit_before_tax:.2f}\nDan: {company.value_paid_in_tax:.2f}\nVysledok po zdaneni: {company.profit_after_tax:.2f}"
     )
-    print(f"Marketing value: {company.yield_agg_marketing_value()}")
-    print(f"Balance: {company.balance:.2f} | Stock price: {company.stock_price:.2f}\n")
+
+
+def print_company_stats(company: Company):
+    print("------------ SUVAHA ------------")
+
+    print("AKTIVA")
+    print(
+        f"Cash: {company.balance:.2f}\nZasoby: {company.inventory*company.prod_ppu}\nKapitalove investicie: {company.factory.capital_investment:.2f}"
+    )
+    print(
+        f"Sucet aktiv: {company.balance + (company.inventory*company.prod_ppu) + company.factory.capital_investment:.2f}"
+    )
+
+    print("PASIVA")
+    imanie = 40_000
+    print(
+        f"Pozicky: {company.loans:.2f}\nVysledok hospodarenia: {company.profit_after_tax:.2f}\nZakladne imanie: {imanie}"
+    )
+    print(f"Sucet pasiv: {company.loans + company.profit_after_tax + imanie:.2f}\n\n")
+
+
+def print_company(company: Company):
+    print(f"COMPANY {company.brand}")
+    print_company_production(company)
+    print_company_sales(company)
+    print_company_cashflow(company)
+    print_company_incomes_and_losses(company)
+    print_company_stats(company)
 
 
 ########################
@@ -188,32 +235,34 @@ def print_company(company: Company):
 
 if __name__ == "__main__":
 
-    TURN_COUNT = 2
+    TURN_COUNT = 1
 
     comA = Company(
         brand="A",
         product=LastingProduct(None, 1800, 250),
         inventory=0,
         production_volume=85,
-        balance=0,
+        balance=10_000,
         factory=Factory(),
         marketing={},
+        capital_investment_this_turn=5000,
     )
     comB = Company(
         brand="B",
         product=LastingProduct(None, 2500, 250),
         inventory=0,
         production_volume=82,
-        balance=0,
+        balance=10_000,
         factory=Factory(),
         marketing={},
+        capital_investment_this_turn=5000,
     )
     comC = Company(
         brand="C",
         product=LastingProduct(None, 1950, 250),
         inventory=0,
         production_volume=90,
-        balance=0,
+        balance=10_000,
         factory=Factory(),
         marketing={"social": SocialMedia(3000)},
     )
@@ -222,9 +271,10 @@ if __name__ == "__main__":
         product=LastingProduct(None, 1700, 250),
         inventory=0,
         production_volume=99,
-        balance=0,
+        balance=10_000,
         factory=Factory(),
-        marketing={"ooh": OOH(10000)},
+        marketing={"ooh": OOH(7500)},
+        capital_investment_this_turn=2500,
     )
     companies = [comA, comB, comC, comD]
 
@@ -236,15 +286,8 @@ if __name__ == "__main__":
             if i != 0:
                 company.factory.update_upkeep()
                 company.start_of_turn_cleanup()
-            if company.brand == "A" or company.brand == "B":
-                company.factory.invest_into_factory(5000)
-                company.remaining_budget -= 5000
-            elif company.brand == "D":
-                company.factory.invest_into_factory(2500)
-                company.remaining_budget -= 2500
-            else:
-                company.factory.invest_into_factory(0)
             company.produce_products()
+            company.invest_into_factory()
 
         next_turn_customers = print_market_state(mar)
 
