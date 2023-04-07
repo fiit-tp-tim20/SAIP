@@ -104,6 +104,7 @@ class Factory:
     def invest_into_factory(self, investment: int) -> None:
         self.__devalue_capital()
         self.capital_investment += investment
+        self.prev_capacity = self.capacity
         self.capacity = FactoryPreset.STARTING_CAPACITY + floor(
             (self.capital_investment - FactoryPreset.STARTING_INVESTMENT)
             / FactoryPreset.STARTING_INVESTMENT
@@ -141,7 +142,7 @@ class Company:
     prod_ppu: float = 0  # field(init=False)
     total_ppu: float = 0  # field(init=False)
 
-    balance: float = 0  # current state of the company finances
+    balance: float = 10_000  # current state of the company finances
     profit: float = 0  # field(init=False)  # +income -costs | per turn only
     profit_before_tax: float = 0  # field(init=False)
     profit_after_tax: float = 0  # field(init=False)
@@ -213,29 +214,34 @@ class Company:
             self.total_costs_per_turn = self.production_volume * self.total_ppu
 
     def sell_product(self, demand: int) -> int:  # 2
-        if demand > self.inventory:
+        self.demand = demand
+        if self.demand > self.inventory:
             self.income_per_turn = self.inventory * self.product.get_price()
-            demand_not_met = demand - self.inventory
+            self.demand_not_met = self.demand - self.inventory
             self.units_sold = self.inventory
             self.inventory = 0
         else:
-            self.income_per_turn = demand * self.product.get_price()
-            self.units_sold = demand
-            self.inventory -= demand
-            demand_not_met = 0
+            self.income_per_turn = self.demand * self.product.get_price()
+            self.units_sold = self.demand
+            self.inventory -= self.demand
+            self.demand_not_met = 0
 
         self.cost_of_goods_sold = self.units_sold * self.prod_ppu
 
-        self.profit = self.income_per_turn - self.cost_of_goods_sold - self.additional_costs
+        self.profit = (
+            self.income_per_turn - self.cost_of_goods_sold - self.additional_costs
+        )
         self.__apply_tax()
         self.__calculate_negative_cashflow()
-        
-        self.balance += self.income_per_turn - self.negative_cashflow
-        return demand_not_met
 
-    def calculate_stock_price(self) -> float:  # 3
+        self.prev_balance = self.balance
+        self.balance += self.income_per_turn - self.negative_cashflow
+        self.cashflow_result = self.balance
         self.__update_loans()
 
+        return self.demand_not_met
+
+    def calculate_stock_price(self) -> float:  # 3
         self.stock_price = (
             self.factory.capital_investment
             + self.balance * 0.2  # long term performance
@@ -322,16 +328,24 @@ class Company:
             + self.value_paid_in_stored_product_upgrades
             + self.value_paid_in_inventory_charge
         )
-        
+
     def __calculate_negative_cashflow(self) -> None:
-        self.decision_costs = self.marketing_costs + self.amount_spent_on_upgrades + self.capital_investment_this_turn - self.factory.upkeep.get("writeoff", 0)
+        self.writeoff = self.factory.upkeep.get("writeoff", 0)
+
+        investment_costs = 0
+        if self.capital_investment_this_turn > self.writeoff:
+            investment_costs = self.capital_investment_this_turn - self.writeoff
+
+        self.decision_costs = (
+            self.marketing_costs + self.amount_spent_on_upgrades + investment_costs
+        )
         self.negative_cashflow = (
             self.prod_costs_per_turn
             + self.value_paid_in_inventory_charge
             + self.decision_costs
             + self.value_paid_in_interest
             + self.value_paid_in_tax
-        )  
+        )
 
     def __apply_tax(self):
         if self.profit <= 0:
