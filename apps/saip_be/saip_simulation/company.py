@@ -169,7 +169,7 @@ class Company:
 
     max_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
     remaining_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
-    next_turn_budget: float = field(init=False)
+    next_turn_budget: float = 0
 
     stock_price: float = 0  # field(init=False)  # company score
     units_sold: int = 0  # field(init=False)
