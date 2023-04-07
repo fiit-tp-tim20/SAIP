@@ -335,8 +335,8 @@ class Simulation:
                 pass
 
         # load the market state model
-        ct_market_state = models.MarketState.objects.get(turn=self.turn_model)
-        nt_market_state = models.MarketState.objects.get(turn=self.next_turn_model)
+        ct_market_state_model = models.MarketState.objects.get(turn=self.turn_model)
+        nt_market_state_model = models.MarketState.objects.get(turn=self.next_turn_model)
 
         # write data from classes to models
         # curent turn
@@ -347,189 +347,151 @@ class Simulation:
         ct_total_capacity = 0
         for company_model in ct_companies_states.keys():
             company_class_object = self.companies[company_model.name]
-
             ct_total_units_manufactured += (
                 company_class_object.production_volume
             )  # add units produced to overall sum of all units produced
-            ct_companies_states[company_model].balance = round(
-                company_class_object.balance, 2
-            )
-            ct_companies_states[company_model].stock_price = round(
-                company_class_object.stock_price, 2
-            )
-            ct_companies_states[
-                company_model
-            ].inventory = company_class_object.inventory
             ct_total_inventory += (
                 company_class_object.inventory
             )  # add inventory to overall sum of all inventories
-            ct_companies_states[
-                company_model
-            ].orders_received = self.market.customer_distribution[
-                company_class_object.brand
-            ][
-                "demand"
-            ]
-            ct_total_units_demanded += self.market.customer_distribution[
-                company_class_object.brand
-            ][
-                "demand"
-            ]  # add units demanded to overall sum of all units demanded
-            ct_companies_states[
-                company_model
-            ].orders_fulfilled = company_class_object.units_sold
             ct_total_units_sold += (
                 company_class_object.units_sold
             )  # add units sold to overall sum of all units sold
-            ct_companies_states[company_model].cash = round(
-                company_class_object.remaining_budget, 2
-            )
-            ct_companies_states[company_model].ret_earnings = round(
-                (
-                    company_class_object.ret_earnings
-                    + company_class_object.profit_after_tax
-                ),
-                2,
-            )  # round((company_class_object.ret_earnings + company_class_object.income_per_turn), 2) #doteraz sales scitane dokopy (? mozno)
-            ct_companies_states[company_model].net_profit = round(
-                company_class_object.profit_after_tax, 2
-            )
-            ct_companies_states[company_model].depreciation = (
-                round(company_class_object.factory.upkeep.get("writeoff", 0), 2)
-                if company_class_object.factory.upkeep.get("writeoff", 0)
-                else 0
-            )
-            ct_companies_states[company_model].new_loans = round(
-                company_class_object.new_loans, 2
-            )
-            ct_companies_states[company_model].inventory_charge = round(
-                company_class_object.value_paid_in_inventory_charge, 2
-            )
-            ct_companies_states[company_model].sales = round(
-                company_class_object.income_per_turn, 2
-            )
-            ct_companies_states[company_model].manufactured_man_cost = round(
-                company_class_object.prod_costs_per_turn, 2
-            )
-            # TODO: add inflation - it should only affect the man cost
-            ct_companies_states[company_model].tax = round(
-                company_class_object.value_paid_in_tax, 2
-            )
-            ct_companies_states[company_model].profit_before_tax = round(
-                company_class_object.profit_before_tax, 2
-            )
-            ct_companies_states[company_model].interest = round(
-                company_class_object.value_paid_in_interest, 2
-            )
-            # ct_companies_states[company_model].cash_flow_res = round(
-            #    (
-            #        company_class_object.prev_turn_cash
-            #        + company_class_object.income_per_turn
-            #        - company_class_object.total_costs_per_turn
-            #        - company_class_object.value_paid_in_tax
-            #        - company_class_object.capital_investment_this_turn
-            #        + company_class_object.factory.upkeep.get("writeoff", 0)
-            #    ),
-            #    2,
-            # )
-            ct_companies_states[company_model].cash_flow_res = round(
-                (
-                    company_class_object.prev_turn_cash
-                    + company_class_object.income_per_turn
-                    - company_class_object.prod_costs_per_turn
-                    - company_class_object.value_paid_in_inventory_charge
-                    - company_class_object.amount_spent_on_upgrades
-                    - company_class_object.marketing_costs
-                    - company_class_object.capital_investment_this_turn
-                    - company_class_object.value_paid_in_interest
-                    - company_class_object.value_paid_in_tax
-                ),
-                2,
-            )
-            ct_companies_states[company_model].loan_repayment = round(
-                company_class_object.value_paid_in_loan_repayment, 2
-            )
-            ct_companies_states[company_model].loans = round(
-                company_class_object.loans, 2
-            )
-            ct_companies_states[company_model].inventory_upgrade = round(
-                company_class_object.value_paid_in_stored_product_upgrades, 2
-            )
-            ct_companies_states[company_model].overcharge_upgrade = round(
-                company_class_object.price_diff_stored_products, 2
-            )
-            ct_companies_states[
-                company_model
-            ].next_turn_budget = company_class_object.next_turn_budget
-
-            if ct_companies_states[company_model].production is not None:
-
-                ct_companies_states[company_model].production.man_cost = round(
-                    company_class_object.prod_ppu, 2
-                )
-                ct_companies_states[company_model].production.man_cost_all = round(
-                    company_class_object.total_ppu, 2
-                )
-                ct_companies_states[
-                    company_model
-                ].production.volume = company_class_object.production_volume
-                # this is done because the volume of actual products produced could have differed from the one submitted by the company (for instance, because of a lack of funds)
-
-                ct_companies_states[company_model].production.save()
-            if ct_companies_states[company_model].factory is not None:
-                ct_companies_states[
-                    company_model
-                ].factory.capacity = company_class_object.factory.capacity
-                ct_total_capacity += (
-                    company_class_object.factory.capacity
-                )  # add factory capacity to overall sum of all capacities
-                ct_companies_states[
-                    company_model
-                ].factory.capital_investments = (
-                    company_class_object.factory.capital_investment
-                )
-                ct_companies_states[company_model].factory.save()
-            ct_companies_states[company_model].save()
+            ct_total_units_demanded += (
+                self.market.customer_distribution[company_class_object.brand]["demand"]
+            )  # add units demanded to overall sum of all units demanded
+            ct_total_capacity += (
+                company_class_object.factory.capacity
+            )  # add factory capacity to overall sum of all capacities
+            self.write_current_turn_company_state(company_class_object=self.companies[company_model.name], ct_company_state_model=ct_companies_states[company_model])
 
         # write current turn market state
-        ct_market_state.sold = ct_total_units_sold  # sum of all units sold
-        ct_market_state.demand = ct_total_units_demanded  # sum of all units demanded
-        ct_market_state.capacity = ct_total_capacity  # sum of all capacities
-        ct_market_state.inventory = ct_total_inventory  # sum of all inventories
-        ct_market_state.manufactured = (
-            ct_total_units_manufactured  # sum of all units manufactured
-        )
-        ct_market_state.save()
+        ct_market_state_model.sold = ct_total_units_sold  # sum of all units sold
+        ct_market_state_model.demand = ct_total_units_demanded  # sum of all units demanded
+        ct_market_state_model.capacity = ct_total_capacity  # sum of all capacities
+        ct_market_state_model.inventory = ct_total_inventory  # sum of all inventories
+        ct_market_state_model.manufactured = ct_total_units_manufactured  # sum of all units manufactured
+        ct_market_state_model.save()
 
         # write data from classes to models
         # next turn
         for company_model in nt_companies_states.keys():
-            company_class_object = self.companies[company_model.name]
-            nt_companies_states[company_model].balance = company_class_object.balance
-            nt_companies_states[
-                company_model
-            ].inventory = company_class_object.inventory
-            nt_companies_states[company_model].loans = company_class_object.loans
-            nt_companies_states[company_model].ret_earnings = (
+            self.write_next_turn_company_state(
+                company_class_object=self.companies[company_model.name],
+                nt_company_state_model = nt_companies_states[company_model],
+            )
+        nt_market_state_model.demand = ct_total_units_demanded
+        nt_market_state_model.save()
+
+    def write_current_turn_company_state(self, company_class_object: Company, ct_company_state_model: models.CompaniesState) -> None:
+        
+        ct_company_state_model.balance = round(
+            company_class_object.balance, 2
+        )
+        ct_company_state_model.stock_price = round(
+            company_class_object.stock_price, 2
+        )
+        ct_company_state_model.inventory = company_class_object.inventory
+        
+        ct_company_state_model.orders_received = self.market.customer_distribution[company_class_object.brand]["demand"]
+        ct_company_state_model.orders_fulfilled = company_class_object.units_sold
+        ct_company_state_model.cash = round(
+            company_class_object.remaining_budget, 2
+        )
+        ct_company_state_model.ret_earnings = round(
+            (
                 company_class_object.ret_earnings
                 + company_class_object.profit_after_tax
+            ),
+            2,
+        )
+        ct_company_state_model.net_profit = round(
+            company_class_object.profit_after_tax, 2
+        )
+        ct_company_state_model.depreciation = (
+            round(company_class_object.factory.upkeep.get("writeoff", 0), 2)
+            if company_class_object.factory.upkeep.get("writeoff", 0)
+            else 0
+        )
+        ct_company_state_model.new_loans = round(
+            company_class_object.new_loans, 2
+        )
+        ct_company_state_model.inventory_charge = round(
+            company_class_object.value_paid_in_inventory_charge, 2
+        )
+        ct_company_state_model.sales = round(
+            company_class_object.income_per_turn, 2
+        )
+        ct_company_state_model.manufactured_man_cost = round(
+            company_class_object.prod_costs_per_turn, 2
+        )
+        ct_company_state_model.tax = round(
+            company_class_object.value_paid_in_tax, 2
+        )
+        ct_company_state_model.profit_before_tax = round(
+            company_class_object.profit_before_tax, 2
+        )
+        ct_company_state_model.interest = round(
+            company_class_object.value_paid_in_interest, 2
+        )
+        ct_company_state_model.cash_flow_res = round(
+            (
+                company_class_object.prev_turn_cash
+                + company_class_object.income_per_turn
+                - company_class_object.prod_costs_per_turn
+                - company_class_object.value_paid_in_inventory_charge
+                - company_class_object.amount_spent_on_upgrades
+                - company_class_object.marketing_costs
+                - company_class_object.capital_investment_this_turn
+                - company_class_object.value_paid_in_interest
+                - company_class_object.value_paid_in_tax
+            ),
+            2,
+        )
+        ct_company_state_model.loan_repayment = round(
+            company_class_object.value_paid_in_loan_repayment, 2
+        )
+        ct_company_state_model.loans = round(
+            company_class_object.loans, 2
+        )
+        ct_company_state_model.inventory_upgrade = round(
+            company_class_object.value_paid_in_stored_product_upgrades, 2
+        )
+        ct_company_state_model.overcharge_upgrade = round(
+            company_class_object.price_diff_stored_products, 2
+        )
+        ct_company_state_model.next_turn_budget = company_class_object.next_turn_budget
+        if ct_company_state_model.production is not None:
+            ct_company_state_model.production.man_cost = round(
+                company_class_object.prod_ppu, 2
             )
-
-            if nt_companies_states[company_model].production is not None:
-                nt_companies_states[
-                    company_model
-                ].production.man_cost = FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
-                nt_companies_states[company_model].production.save()
-            if nt_companies_states[company_model].factory is not None:
-                nt_companies_states[
-                    company_model
-                ].factory.capacity = company_class_object.factory.capacity
-                nt_companies_states[
-                    company_model
-                ].factory.capital_investments = (
-                    company_class_object.factory.capital_investment
-                )
-                nt_companies_states[company_model].factory.save()
-            nt_companies_states[company_model].save()
-        nt_market_state.demand = ct_total_units_demanded
-        nt_market_state.save()
+            ct_company_state_model.production.man_cost_all = round(
+                company_class_object.total_ppu, 2
+            )
+            ct_company_state_model.production.volume = company_class_object.production_volume
+            ct_company_state_model.production.save()
+        if ct_company_state_model.factory is not None:
+            ct_company_state_model.factory.capacity = company_class_object.factory.capacity 
+            ct_company_state_model.factory.capital_investments = (
+                company_class_object.factory.capital_investment
+            )
+            ct_company_state_model.factory.save()
+        ct_company_state_model.save()
+    
+    def write_next_turn_company_state(self, company_class_object: Company, nt_company_state_model: models.CompaniesState) -> None:
+        nt_company_state_model.balance = company_class_object.balance
+        nt_company_state_model.inventory = company_class_object.inventory
+        nt_company_state_model.loans = company_class_object.loans
+        nt_company_state_model.ret_earnings = (
+            company_class_object.ret_earnings
+            + company_class_object.profit_after_tax
+        )
+        if nt_company_state_model.production is not None:
+            nt_company_state_model.production.man_cost = FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
+            nt_company_state_model.production.save()
+        if nt_company_state_model.factory is not None:
+            nt_company_state_model.factory.capacity = company_class_object.factory.capacity
+            nt_company_state_model.factory.capital_investments = (
+                company_class_object.factory.capital_investment
+            )
+            nt_company_state_model.factory.save()
+        nt_company_state_model.save()
