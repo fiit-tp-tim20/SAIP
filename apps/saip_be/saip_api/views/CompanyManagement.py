@@ -268,7 +268,7 @@ class CompanyReport(APIView):
         cash_flow['manufactured_man_cost'] = company_state_previous.manufactured_man_cost #minus #"Výdavky na vyrobené výrobky"
         # vydavky na rozhodnutia - zratane vydavky na marketing r_d a capital s minusovou hodnotou
         cash_flow['inventory_charge'] = company_state_previous.inventory_charge #"Výdavky na zásoby"
-        cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.factory.capital #"Výdavky na rozhodnutia"
+        cash_flow['expenses'] = company_state_previous.r_d + marketing + company_state_previous.factory.capital #"Výdavky na rozhodnutia" #TODO: change to company.decision_costs - add it to model
         cash_flow['interest'] = company_state_previous.interest # minus #"Výdavky na úroky"
         cash_flow['tax'] = company_state_previous.tax # minus # "Zaplatená daň"
         # teraz bude stav cash flow aby vedeli či potrebuju pozicku

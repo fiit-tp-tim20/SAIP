@@ -434,19 +434,22 @@ class Simulation:
             company_class_object.value_paid_in_interest, 2
         )
         ct_company_state_model.cash_flow_res = round(
-            (
-                company_class_object.prev_turn_cash
-                + company_class_object.income_per_turn
-                - company_class_object.prod_costs_per_turn
-                - company_class_object.value_paid_in_inventory_charge
-                - company_class_object.amount_spent_on_upgrades
-                - company_class_object.marketing_costs
-                - company_class_object.capital_investment_this_turn
-                - company_class_object.value_paid_in_interest
-                - company_class_object.value_paid_in_tax
-            ),
-            2,
+            company_class_object.cashflow_result, 2
         )
+        #ct_company_state_model.cash_flow_res = round(
+        #    (
+        #        company_class_object.prev_turn_cash
+        #        + company_class_object.income_per_turn
+        #        - company_class_object.prod_costs_per_turn
+        #        - company_class_object.value_paid_in_inventory_charge
+        #        - company_class_object.amount_spent_on_upgrades
+        #        - company_class_object.marketing_costs
+        #        - company_class_object.capital_investment_this_turn
+        #        - company_class_object.value_paid_in_interest
+        #        - company_class_object.value_paid_in_tax
+        #    ),
+        #    2,
+        #)
         ct_company_state_model.loan_repayment = round(
             company_class_object.value_paid_in_loan_repayment, 2
         )
