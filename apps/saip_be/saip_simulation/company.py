@@ -332,12 +332,12 @@ class Company:
     def __calculate_negative_cashflow(self) -> None:
         self.writeoff = self.factory.upkeep.get("writeoff", 0)
 
-        investment_costs = 0
-        if self.capital_investment_this_turn > self.writeoff:
-            investment_costs = self.capital_investment_this_turn - self.writeoff
+        # investment_costs = 0
+        # if self.capital_investment_this_turn > self.writeoff:
+        #     investment_costs = self.capital_investment_this_turn - self.writeoff
 
         self.decision_costs = (
-            self.marketing_costs + self.amount_spent_on_upgrades + investment_costs
+            self.marketing_costs + self.amount_spent_on_upgrades + self.capital_investment_this_turn
         )
         self.negative_cashflow = (
             self.prod_costs_per_turn
@@ -361,31 +361,21 @@ class Company:
     def __update_loans(self):
         self.new_loans = 0
         self.value_paid_in_loan_repayment = 0
-
-        if self.balance < 0:
-            self.new_loans = -self.balance
-            if self.new_loans > self.loan_limit:
-                self.new_loans = self.loan_limit
-            self.loans += self.new_loans
-            self.balance += self.new_loans
-
+                
         if self.balance < self.max_budget:
             required_for_next_turn = self.max_budget - self.balance
-            remaining_limit = self.loan_limit - self.new_loans
-            if remaining_limit > required_for_next_turn:
+            if self.loan_limit > required_for_next_turn:
                 self.new_loans += required_for_next_turn
                 self.loans += required_for_next_turn
                 self.next_turn_budget = self.max_budget
             else:
-                self.new_loans += remaining_limit
-                self.loans += remaining_limit
-                self.next_turn_budget = remaining_limit
+                self.new_loans += self.loan_limit
+                self.loans += self.loan_limit
+                self.balance += self.loan_limit
             return
 
         balance_over_budget = self.balance - self.max_budget
         if balance_over_budget > self.loans:
-            self.balance -= self.max_budget
-            self.next_turn_budget = self.max_budget
             self.balance -= self.loans
             self.value_paid_in_loan_repayment += self.loans
             self.loans = 0
@@ -394,8 +384,7 @@ class Company:
         if balance_over_budget > 0:
             self.value_paid_in_loan_repayment += balance_over_budget
             self.loans -= self.value_paid_in_loan_repayment
-            self.next_turn_budget = self.max_budget
-            self.balance = 0
+            self.balance -= self.value_paid_in_loan_repayment
 
 
 ########################

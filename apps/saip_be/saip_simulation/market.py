@@ -181,7 +181,7 @@ def print_company_cashflow(company: Company):
         f"Vydavky na uroky: {company.value_paid_in_interest:.2f}\nDan: {company.value_paid_in_tax:.2f}"
     )
     print(
-        f"Vysledok financneho toku: {company.cashflow_result:.2f}\nSplatka uveru: {company.value_paid_in_loan_repayment:.2f}\n Konecny stav: {company.balance:.2f}"
+        f"Vysledok financneho toku: {company.cashflow_result:.2f}\nSplatka uveru: {company.value_paid_in_loan_repayment:.2f}\nKonecny stav: {company.balance:.2f}"
     )
 
 
@@ -286,7 +286,7 @@ if __name__ == "__main__":
             if i != 0:
                 company.factory.update_upkeep()
                 company.start_of_turn_cleanup()
-            company.produce_products()    
+            company.produce_products()
             company.invest_into_factory()
 
         next_turn_customers = print_market_state(mar)
