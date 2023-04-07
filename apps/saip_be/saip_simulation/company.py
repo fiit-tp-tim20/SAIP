@@ -241,6 +241,8 @@ class Company:
             self.units_sold = demand
             self.inventory -= demand
             demand_not_met = 0
+            
+        self.cost_of_goods_sold = self.units_sold * self.prod_ppu
 
         self.profit = self.income_per_turn - self.total_costs_per_turn
         self.__apply_tax()
