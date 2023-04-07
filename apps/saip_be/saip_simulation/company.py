@@ -367,7 +367,7 @@ class Company:
             if self.loan_limit > required_for_next_turn:
                 self.new_loans += required_for_next_turn
                 self.loans += required_for_next_turn
-                self.next_turn_budget = self.max_budget
+                self.balance = self.max_budget
             else:
                 self.new_loans += self.loan_limit
                 self.loans += self.loan_limit
