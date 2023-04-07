@@ -40,7 +40,7 @@ class Factory:
     base_energy_cost: float = field(init=False, default=FactoryPreset.BASE_ENERGY_COST)
 
     upkeep: dict[str, float] = field(init=False)
-    inflation = FactoryPreset.BASE_INFLATION
+    inflation: float = FactoryPreset.BASE_INFLATION
 
     def __post_init__(self):
         self.upkeep = {
@@ -140,7 +140,6 @@ class Company:
     production_volume: int = 0
     prod_ppu: float = 0  # field(init=False)
     total_ppu: float = 0  # field(init=False)
-    value_paid_in_inventory_charge: float = 0  # field(init=False)
 
     balance: float = 0  # current state of the company finances
     profit: float = 0  # field(init=False)  # +income -costs | per turn only
@@ -154,13 +153,14 @@ class Company:
     value_paid_in_loan_repayment: float = field(init=False)
     new_loans: float = field(init=False)
 
-    tax_rate = CompanyPreset.DEFAULT_TAX_RATE
+    tax_rate: float = CompanyPreset.DEFAULT_TAX_RATE
     value_paid_in_tax: float = 0  # field(init=False)
 
     value_paid_in_interest: float = field(init=False)
     price_diff_stored_products: float = field(init=False)
     value_paid_in_stored_product_upgrades: float = field(init=False)
-    price_inventory_charge: float = field(init=False)
+    value_paid_in_inventory_charge: float = 0  # field(init=False)
+    #price_inventory_charge: float = field(init=False)
 
     income_per_turn: float = 0  # field(init=False)
     prod_costs_per_turn: float = 0  # field(init=False)
@@ -180,11 +180,11 @@ class Company:
     amount_spent_on_upgrades: float = 0
 
     factory: Factory = None
-    capital_investment_this_turn = 0
+    capital_investment_this_turn: float = 0
     marketing: Dict[str, MarketingType] = field(default_factory=dict)
 
     def __post_init__(self):
-        self.start_of_turn_cleanup()
+        pass #self.start_of_turn_cleanup()
 
     ###############################
     #   VISIBLE (CALL IN ORDER)   #
@@ -212,7 +212,7 @@ class Company:
                 + self.value_paid_in_interest
                 + self.price_diff_stored_products
                 + self.value_paid_in_stored_product_upgrades
-                + self.price_inventory_charge
+                + self.value_paid_in_inventory_charge
             )
         else:
             additional_ppu = (
@@ -222,7 +222,7 @@ class Company:
                 + self.value_paid_in_interest
                 + self.price_diff_stored_products
                 + self.value_paid_in_stored_product_upgrades
-                + self.price_inventory_charge
+                + self.value_paid_in_inventory_charge
             ) / self.production_volume
 
             self.total_ppu = self.prod_ppu + additional_ppu
@@ -277,7 +277,7 @@ class Company:
 
     def invest_into_factory(self):
         self.factory.invest_into_factory(self.capital_investment_this_turn)
-        self.remaining_budget -= self.capital_investment_this_turn
+        self.remaining_budget -= self.capital_investment_this_turn - self.factory.upkeep.get("writeoff", 0)
 
     ###########################
     #   MARKETING UTILITIES   #
@@ -322,7 +322,7 @@ class Company:
         )
         self.price_diff_stored_products = self.__price_diff_stored_products()
         self.value_paid_in_stored_product_upgrades = self.__upgrade_stored_products()
-        self.price_inventory_charge = (
+        self.value_paid_in_inventory_charge = (
             self.inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT
         )
 

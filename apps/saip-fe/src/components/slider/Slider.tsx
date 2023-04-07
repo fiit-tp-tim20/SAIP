@@ -9,14 +9,24 @@ interface SliderProps {
 	setChecked?: (value: boolean) => void;
 	step?: number;
 	requiredMin?: number;
+	limitMin?: boolean;
+	limitMax?: boolean;
 }
 
 function Slider(props: SliderProps) {
-	const { min, max, value, setValue, checked, setChecked, step = 1, requiredMin } = props;
+	const { min, max, value, setValue, checked, setChecked, step = 1, requiredMin, limitMin, limitMax } = props;
 
 	const [localValue, setLocalValue] = useState(value);
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		if (limitMax && parseInt(event.target.value, 10) > max) {
+			setLocalValue(max);
+			return;
+		}
+		if ((limitMin && parseInt(event.target.value, 10) < min) || event.target.value === "") {
+			setLocalValue(min);
+			return;
+		}
 		setLocalValue(parseInt(event.target.value, 10));
 	};
 
@@ -24,8 +34,8 @@ function Slider(props: SliderProps) {
 		if (setChecked) setChecked(!checked);
 		if (!checked) setValue(localValue);
 		if (checked) {
-			setLocalValue(0);
-			setValue(0);
+			setLocalValue(min);
+			setValue(min);
 		}
 	};
 

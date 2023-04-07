@@ -44,6 +44,7 @@ class Product(ABC):
         for upgrade in self.upgrades.values():
             sum += upgrade.man_cost_effect
         self._upgrade_man_cost_effect_multiplier = 1 + sum
+        self.man_cost = self.man_cost * self.get_upgrade_man_cost_effect_multiplier()
 
     def get_upgrade_sales_effect_multiplier(self):
         return self._upgrade_sales_effect_multiplier
@@ -52,26 +53,22 @@ class Product(ABC):
         return self._upgrade_man_cost_effect_multiplier
 
     def _set_upgrade_stored_products_price(self, new_upgrade_price: float) -> None:
-        self._set_upgrade_stored_products_price = new_upgrade_price
+        self._upgrade_stored_products_price = new_upgrade_price
 
     def get_upgrade_stored_products_price(self) -> float:
         return self._upgrade_stored_products_price
 
     def add_upgrade(
         self, name, status, progress, total_cost, sales_effect, man_cost_effect
-    ):
-        if (
-            status == "f" or status == "finished"
-        ):  # TODO: add condition (and another argument) - active since turn N + 1
-            self.upgrades[name] = Upgrade(
-                status=status,
-                progress=progress,
-                total_cost=total_cost,
-                sales_effect=sales_effect,
-                man_cost_effect=man_cost_effect,
-            )
-        else:
-            pass
+    ): 
+        self.upgrades[name] = Upgrade(
+            status=status,
+            progress=progress,
+            total_cost=total_cost,
+            sales_effect=sales_effect,
+            man_cost_effect=man_cost_effect,
+        )
+        #print(self.upgrades)
 
     def setup_product(self):
         self._set_upgrade_man_cost_effect_multiplier()
