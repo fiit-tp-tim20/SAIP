@@ -160,11 +160,11 @@ class Company:
     price_diff_stored_products: float = field(init=False)
     value_paid_in_stored_product_upgrades: float = field(init=False)
     value_paid_in_inventory_charge: float = 0  # field(init=False)
-    #price_inventory_charge: float = field(init=False)
 
     income_per_turn: float = 0  # field(init=False)
     prod_costs_per_turn: float = 0  # field(init=False)
     total_costs_per_turn: float = 0  # field(init=False)
+    cost_of_goods_sold: float = field(init=False)
 
     max_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
     remaining_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
@@ -184,7 +184,7 @@ class Company:
     marketing: Dict[str, MarketingType] = field(default_factory=dict)
 
     def __post_init__(self):
-        pass #self.start_of_turn_cleanup()
+        pass  # self.start_of_turn_cleanup()
 
     ###############################
     #   VISIBLE (CALL IN ORDER)   #
@@ -199,32 +199,14 @@ class Company:
         )
 
         self.__calculate_additional_costs()
-        self.inventory += self.production_volume
 
         if self.production_volume <= 0:
             self.total_ppu = 0
             self.prod_costs_per_turn = self.factory.total_upkeep()
-            self.total_costs_per_turn = (
-                self.prod_costs_per_turn
-                + self.factory.upkeep.get("writeoff")
-                + self.marketing_costs
-                + self.amount_spent_on_upgrades
-                + self.value_paid_in_interest
-                + self.price_diff_stored_products
-                + self.value_paid_in_stored_product_upgrades
-                + self.value_paid_in_inventory_charge
-            )
-        else:
-            additional_ppu = (
-                self.factory.upkeep.get("writeoff")
-                + self.marketing_costs
-                + self.amount_spent_on_upgrades
-                + self.value_paid_in_interest
-                + self.price_diff_stored_products
-                + self.value_paid_in_stored_product_upgrades
-                + self.value_paid_in_inventory_charge
-            ) / self.production_volume
+            self.total_costs_per_turn = self.prod_costs_per_turn + self.additional_costs
 
+        else:
+            additional_ppu = self.additional_costs / self.production_volume
             self.total_ppu = self.prod_ppu + additional_ppu
 
             self.prod_costs_per_turn = self.production_volume * self.prod_ppu
@@ -241,13 +223,14 @@ class Company:
             self.units_sold = demand
             self.inventory -= demand
             demand_not_met = 0
-            
+
         self.cost_of_goods_sold = self.units_sold * self.prod_ppu
 
-        self.profit = self.income_per_turn - self.total_costs_per_turn
+        self.profit = self.income_per_turn - self.cost_of_goods_sold - self.additional_costs
         self.__apply_tax()
-        self.balance += self.profit + self.remaining_budget
-
+        self.__calculate_negative_cashflow()
+        
+        self.balance += self.income_per_turn - self.negative_cashflow
         return demand_not_met
 
     def calculate_stock_price(self) -> float:  # 3
@@ -277,7 +260,9 @@ class Company:
 
     def invest_into_factory(self):
         self.factory.invest_into_factory(self.capital_investment_this_turn)
-        self.remaining_budget -= self.capital_investment_this_turn - self.factory.upkeep.get("writeoff", 0)
+        self.remaining_budget -= (
+            self.capital_investment_this_turn - self.factory.upkeep.get("writeoff", 0)
+        )
 
     ###########################
     #   MARKETING UTILITIES   #
@@ -322,9 +307,31 @@ class Company:
         )
         self.price_diff_stored_products = self.__price_diff_stored_products()
         self.value_paid_in_stored_product_upgrades = self.__upgrade_stored_products()
+
+        self.inventory += self.production_volume
         self.value_paid_in_inventory_charge = (
             self.inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT
         )
+
+        self.additional_costs = (
+            self.factory.upkeep.get("writeoff")
+            + self.marketing_costs
+            + self.amount_spent_on_upgrades
+            + self.value_paid_in_interest
+            + self.price_diff_stored_products
+            + self.value_paid_in_stored_product_upgrades
+            + self.value_paid_in_inventory_charge
+        )
+        
+    def __calculate_negative_cashflow(self) -> None:
+        self.decision_costs = self.marketing_costs + self.amount_spent_on_upgrades + self.capital_investment_this_turn - self.factory.upkeep.get("writeoff", 0)
+        self.negative_cashflow = (
+            self.prod_costs_per_turn
+            + self.value_paid_in_inventory_charge
+            + self.decision_costs
+            + self.value_paid_in_interest
+            + self.value_paid_in_tax
+        )  
 
     def __apply_tax(self):
         if self.profit <= 0:
