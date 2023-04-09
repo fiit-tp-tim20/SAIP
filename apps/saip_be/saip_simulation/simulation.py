@@ -408,7 +408,6 @@ class Simulation:
         ct_company_state_model.loans = company_class_object.loans #round(company_class_object.loans, 2)
         ct_company_state_model.inventory_upgrade = company_class_object.value_paid_in_stored_product_upgrades #round(company_class_object.value_paid_in_stored_product_upgrades, 2)
         ct_company_state_model.overcharge_upgrade = company_class_object.price_diff_stored_products #round(company_class_object.price_diff_stored_products, 2)
-        ct_company_state_model.next_turn_budget = 0 #TODO: change this
 
         if ct_company_state_model.production is not None:
             ct_company_state_model.production.man_cost = company_class_object.prod_ppu #round(company_class_object.prod_ppu, 2)
