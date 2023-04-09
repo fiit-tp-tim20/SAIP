@@ -301,7 +301,7 @@ class Simulation:
 
         self.market.generate_distribution()
         for company in self.companies.values():
-            #print(company)
+            print(company)
             pass
         pass
 
@@ -398,7 +398,8 @@ class Simulation:
         ct_company_state_model.inventory_charge = company_class_object.value_paid_in_inventory_charge #round(company_class_object.value_paid_in_inventory_charge, 2)
         ct_company_state_model.sales = company_class_object.income_per_turn #round(company_class_object.income_per_turn, 2)
         ct_company_state_model.manufactured_man_cost = company_class_object.prod_costs_per_turn #round(company_class_object.prod_costs_per_turn, 2)
-        #TODO: rozdelit na dve hodnoty v modeloch - vydavky na vyrobenie vsetkych a vydavky na vyrobenie IBA predanych (costs_of_goods_sold)
+        ct_company_state_model.sold_man_cost = company_class_object.cost_of_goods_sold
+        
         ct_company_state_model.tax = company_class_object.value_paid_in_tax #round(company_class_object.value_paid_in_tax, 2)
         ct_company_state_model.profit_before_tax = company_class_object.profit_before_tax #round(company_class_object.profit_before_tax, 2)
         ct_company_state_model.interest = company_class_object.value_paid_in_interest #round(company_class_object.value_paid_in_interest, 2)

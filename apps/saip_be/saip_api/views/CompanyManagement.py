@@ -286,7 +286,7 @@ class CompanyReport(APIView):
 
         income_statement = dict()
         income_statement['sales'] = round(company_state_previous.sales, 2) if company_state_previous.sales is not None else "N/A" #"Tržby z predaja výrobkov"
-        income_statement['manufactured_man_cost'] = round(company_state_previous.manufactured_man_cost, 2) if company_state_previous.manufactured_man_cost is not None else "N/A" #"Výrobné náklady"
+        income_statement['manufactured_man_cost'] = round(company_state_previous.sold_man_cost, 2) if company_state_previous.sold_man_cost is not None else "N/A" #"Náklady na predaný tovar" #TODO: pridal som do modelov hodnotu sold_man_cost - mozno by bolo dobre zmenit aj nazov tejto hodnoty v dictionary na nieco ine ako manufactured_man_cost kedze to je nazov ineho atributu - to treba potom aj na FE, zmenit z coho to taha, preto to sem pisem
         income_statement['marketing'] = round(marketing, 2) if marketing is not None else "N/A" #"Náklady na marketing"
         income_statement['r_d'] = round(company_state_previous.r_d, 2) if company_state_previous.r_d is not None else "N/A" #"Náklady na výskum a vývoj"
         income_statement['depreciation'] = round(company_state_previous.depreciation,2) if company_state_previous.depreciation is not None else "N/A" #"Odpisy"
