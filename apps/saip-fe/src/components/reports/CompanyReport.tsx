@@ -34,13 +34,13 @@ function CompanyReport() {
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Koeficient využitia výrobnej kapacity</td>
+									<td className="px-4 py-2">Koeficient využitia výrobnej kapacity (minulé kolo)</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data.production.utilization)} %
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Variabilné náklady</td>
+									<td className="px-4 py-2">Výrobné náklady</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data.production.man_cost)} €/ks
 									</td>
@@ -150,7 +150,7 @@ function CompanyReport() {
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Základné ímanie</td>
+									<td className="px-4 py-2">Základné imanie</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data.balance.base_capital)} €
 									</td>
@@ -268,7 +268,7 @@ function CompanyReport() {
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Výrobné náklady</td>
+									<td className="px-4 py-2">Náklady na predaný tovar</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data.income_statement.manufactured_man_cost)} €
 									</td>
