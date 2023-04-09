@@ -138,9 +138,9 @@ class IndustryReport(APIView):
         industry = dict()
         for state in company_states:
             company_info = dict()
-            company_info['stock_price'] = round(state.stock_price, 2)
-            company_info['sell_price'] = state.production.sell_price
-            company_info['net_profit'] = round(state.net_profit, 2)
+            company_info['stock_price'] = round(state.stock_price, 2) if state.stock_price is not None else "N/A"
+            company_info['sell_price'] = state.production.sell_price if state.production.sell_price is not None else "N/A"
+            company_info['net_profit'] = round(state.net_profit, 2) if state.stock_price is not None else "N/A"
             try:
                 company_info['market_share'] = round((state.orders_fulfilled/market_state.sold)*100, 2)
             except (ZeroDivisionError, TypeError):
@@ -236,64 +236,67 @@ class CompanyReport(APIView):
         else:
             production['utilization'] = "N/A"
         #"Koeficient využitia výrobnej kapacity"
-        production['man_cost'] = round(company_state_previous.production.man_cost, 2) #"Variabilné náklady"
-        production['new_inventory'] = company_state_previous.inventory #"Zásoby"
-        production['man_cost_all'] = round(company_state_previous.production.man_cost_all, 2) #"Celkové náklady"
+        production['man_cost'] = round(company_state_previous.production.man_cost, 2) if company_state_previous.production.man_cost is not None else "N/A" #"Variabilné náklady"
+        production['new_inventory'] = company_state_previous.inventory if company_state_previous.inventory is not None else "N/A" #"Zásoby"
+        production['man_cost_all'] = round(company_state_previous.production.man_cost_all, 2) if company_state_previous.production.man_cost_all is not None else "N/A" #"Celkové náklady"
 
         sales = dict()
-        sales['orders_received'] = company_state_previous.orders_received #"Prijaté objednávky"
-        sales['orders_fulfilled'] = company_state_previous.orders_fulfilled #"Splnené objednávky"
-        sales['orders_unfulfilled'] = company_state_previous.orders_received - company_state_previous.orders_fulfilled #Nesplnené objednávky
-        sales['selling_price'] = company_state_previous.production.sell_price #"Predajná cena"
+        sales['orders_received'] = company_state_previous.orders_received if company_state_previous.orders_received is not None else "N/A"#"Prijaté objednávky"
+        sales['orders_fulfilled'] = company_state_previous.orders_fulfilled if company_state_previous.orders_fulfilled is not None else "N/A" #"Splnené objednávky"
+        sales['orders_unfulfilled'] = (company_state_previous.orders_received - company_state_previous.orders_fulfilled) if (company_state_previous.orders_fulfilled is not None and company_state_previous.orders_received is not None) else "N/A" #Nesplnené objednávky
+        sales['selling_price'] = company_state_previous.production.sell_price if company_state_previous.production.sell_price is not None else "N/A" #"Predajná cena"
 
         balance = dict()
-        balance['cash'] = round(company_state_previous.cash, 2) #"Hotovosť"
-        balance['inventory_money'] = round((company_state_previous.inventory * company_state_previous.production.man_cost), 2) #Zásoby
-        balance['capital_investments'] = round(company_state_previous.factory.capital_investments, 2) #"Kapitálové investície"
-        balance['assets_summary'] = round(((company_state_previous.balance + company_state_previous.next_turn_budget) + (company_state_previous.inventory * company_state_previous.production.man_cost) + company_state_previous.factory.capital_investments), 2) #"Súčet aktív"
+        balance['cash'] = round(company_state_previous.cash, 2) if company_state_previous.cash is not None else "N/A" #"Hotovosť"
+        balance['inventory_money'] = round((company_state_previous.inventory * company_state_previous.production.man_cost), 2) if (company_state_previous.inventory is not None and company_state_previous.production.man_cost is not None) else "N/A" #Zásoby
+        balance['capital_investments'] = round(company_state_previous.factory.capital_investments, 2) if company_state_previous.factory.capital_investments is not None else "N/A" #"Kapitálové investície"
+        balance['assets_summary'] = round((company_state_previous.cash + (company_state_previous.inventory * company_state_previous.production.man_cost) + company_state_previous.factory.capital_investments), 2) if (company_state_previous.cash is not None and company_state_previous.inventory is not None and company_state_previous.production.man_cost is not None and company_state_previous.factory.capital_investments is not None) else "N/A" #"Súčet aktív"
 
         #pasiva
-        balance['loans'] = round(company_state_previous.loans, 2) #"Pôžičky"
-        balance['ret_earnings'] = round(company_state_previous.ret_earnings, 2) #"Výsledok hospodárenia z predchádzajúcich období"
-        balance['base_capital'] = round(company.game.parameters.base_capital, 2) #"Základné ímanie"
-        balance['liabilities_summary'] = round(company_state_previous.loans + company_state_previous.ret_earnings + company.game.parameters.base_capital, 2) #"Súčet pasív"
+        balance['loans'] = round(company_state_previous.loans, 2) if company_state_previous.loans is not None else "N/A" #"Pôžičky"
+        balance['ret_earnings'] = round(company_state_previous.ret_earnings, 2) if company_state_previous.ret_earnings is not None else "N/A" #"Výsledok hospodárenia z predchádzajúcich období"
+        balance['base_capital'] = round(company.game.parameters.base_capital, 2) if company.game.parameters.base_capital is not None else "N/A" #"Základné ímanie"
+        balance['liabilities_summary'] = round(company_state_previous.loans + company_state_previous.ret_earnings + company.game.parameters.base_capital, 2) if (company_state_previous.loans is not None and company_state_previous.ret_earnings is not None and company.game.parameters.base_capital is not None) else "N/A" #"Súčet pasív"
 
         cash_flow = dict()
         try:
-            cash_flow['beginning_cash'] = round(CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-2), company=company).cash, 2) #???
+            tmp_beginning_cash = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-2), company=company).cash
+            cash_flow['beginning_cash'] = round(tmp_beginning_cash, 2) if tmp_beginning_cash is not None else "N/A" #???
         except (Turn.DoesNotExist, CompaniesState.DoesNotExist):
-            cash_flow['beginning_cash'] = round(CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1), company=company).cash, 2) #???
+            tmp_beginning_cash = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1), company=company).cash
+            cash_flow['beginning_cash'] = round(tmp_beginning_cash, 2) if tmp_beginning_cash is not None else "N/A" #???
             #"Počiatočný stav"  #TODO: zmenit na prev_balance
-        cash_flow['sales'] =  round(company_state_previous.sales, 2) #plus #"Príjmy z predaja výrobkov"
-        cash_flow['manufactured_man_cost'] = round(company_state_previous.manufactured_man_cost, 2) #minus #"Výdavky na vyrobené výrobky"
+
+        cash_flow['sales'] =  round(company_state_previous.sales, 2) if company_state_previous.sales is not None else "N/A" #plus #"Príjmy z predaja výrobkov"
+        cash_flow['manufactured_man_cost'] = round(company_state_previous.manufactured_man_cost, 2) if company_state_previous.manufactured_man_cost is not None else "N/A" #minus #"Výdavky na vyrobené výrobky"
         # vydavky na rozhodnutia - zratane vydavky na marketing r_d a capital s minusovou hodnotou
-        cash_flow['inventory_charge'] = round(company_state_previous.inventory_charge, 2) #"Výdavky na zásoby"
-        cash_flow['expenses'] = round(company_state_previous.r_d + marketing + company_state_previous.factory.capital, 2) #"Výdavky na rozhodnutia" #TODO: change to company.decision_costs - add it to model
-        cash_flow['interest'] = round(company_state_previous.interest, 2) # minus #"Výdavky na úroky"
-        cash_flow['tax'] = round(company_state_previous.tax, 2) # minus # "Zaplatená daň"
+        cash_flow['inventory_charge'] = round(company_state_previous.inventory_charge, 2) if company_state_previous.inventory_charge is not None else "N/A" #"Výdavky na zásoby"
+        cash_flow['expenses'] = round(company_state_previous.r_d + marketing + company_state_previous.factory.capital, 2) if (company_state_previous.r_d is not None and marketing is not None and company_state_previous.factory.capital is not None) else "N/A" #"Výdavky na rozhodnutia" #TODO: change to company.decision_costs - add it to model
+        cash_flow['interest'] = round(company_state_previous.interest, 2) if company_state_previous.interest is not None else "N/A" # minus #"Výdavky na úroky"
+        cash_flow['tax'] = round(company_state_previous.tax, 2) if company_state_previous.tax is not None else "N/A" # minus # "Zaplatená daň"
         # teraz bude stav cash flow aby vedeli či potrebuju pozicku
-        cash_flow['cash_flow_result'] = round(company_state_previous.cash_flow_res, 2) #"Výsledok finančného toku"
+        cash_flow['cash_flow_result'] = round(company_state_previous.cash_flow_res, 2) if company_state_previous.cash_flow_res is not None else "N/A" #"Výsledok finančného toku"
 
         #teraz ak je minus tak novy ubver alebo ak nie tak spatenie uveru
-        cash_flow['new_loans'] = round(company_state_previous.new_loans, 2) #"Nové úvery"
-        cash_flow['loan_repayment'] = round(company_state_previous.loan_repayment, 2) #"Splátka úveru"
+        cash_flow['new_loans'] = round(company_state_previous.new_loans, 2) if company_state_previous.new_loans is not None else "N/A" #"Nové úvery"
+        cash_flow['loan_repayment'] = round(company_state_previous.loan_repayment, 2) if company_state_previous.loan_repayment is not None else "N/A" #"Splátka úveru"
          
         #zostatok do dalssieho prostredia
-        cash_flow['cash'] = round(company_state_previous.balance, 2) #"Konecny stav"
+        cash_flow['cash'] = round(company_state_previous.balance, 2) if company_state_previous.balance is not None else "N/A" #"Konecny stav"
 
         income_statement = dict()
-        income_statement['sales'] = round(company_state_previous.sales, 2) #"Tržby z predaja výrobkov"
-        income_statement['manufactured_man_cost'] = round(company_state_previous.manufactured_man_cost, 2) #"Výrobné náklady"
-        income_statement['marketing'] = round(marketing, 2) #"Náklady na marketing"
-        income_statement['r_d'] = round(company_state_previous.r_d, 2) #"Náklady na výskum a vývoj"
-        income_statement['depreciation'] = round(company_state_previous.depreciation,2) #"Odpisy"
-        income_statement['inventory_charge'] = round(company_state_previous.inventory_charge, 2) # minus #"Dodatočné náklady na nepredané výrobky"
-        income_statement['inventory_upgrade'] = round(company_state_previous.inventory_upgrade, 2) #"Náklady na upgrade zásob"
-        income_statement['overcharge_upgrade'] = round(company_state_previous.overcharge_upgrade, 2) #"Náklady na precenenie zásob"
-        income_statement['interest'] = round(company_state_previous.interest, 2) #"Nákladové úroky"
-        income_statement['profit_before_tax'] = round(company_state_previous.profit_before_tax, 2) #"Výsledok hospodárenia pred zdanením"
-        income_statement['tax'] = round(company_state_previous.tax, 2) #"Daň"
-        income_statement['net_profit'] = round(company_state_previous.net_profit, 2) #"Výsledok hospodárenia po zdanení"
+        income_statement['sales'] = round(company_state_previous.sales, 2) if company_state_previous.sales is not None else "N/A" #"Tržby z predaja výrobkov"
+        income_statement['manufactured_man_cost'] = round(company_state_previous.manufactured_man_cost, 2) if company_state_previous.manufactured_man_cost is not None else "N/A" #"Výrobné náklady"
+        income_statement['marketing'] = round(marketing, 2) if marketing is not None else "N/A" #"Náklady na marketing"
+        income_statement['r_d'] = round(company_state_previous.r_d, 2) if company_state_previous.r_d is not None else "N/A" #"Náklady na výskum a vývoj"
+        income_statement['depreciation'] = round(company_state_previous.depreciation,2) if company_state_previous.depreciation is not None else "N/A" #"Odpisy"
+        income_statement['inventory_charge'] = round(company_state_previous.inventory_charge, 2) if company_state_previous.inventory_charge is not None else "N/A" # minus #"Dodatočné náklady na nepredané výrobky"
+        income_statement['inventory_upgrade'] = round(company_state_previous.inventory_upgrade, 2) if company_state_previous.inventory_upgrade is not None else "N/A" #"Náklady na upgrade zásob"
+        income_statement['overcharge_upgrade'] = round(company_state_previous.overcharge_upgrade, 2) if company_state_previous.inventory_upgrade is not None else "N/A" #"Náklady na precenenie zásob"
+        income_statement['interest'] = round(company_state_previous.interest, 2) if company_state_previous.interest is not None else "N/A" #"Nákladové úroky"
+        income_statement['profit_before_tax'] = round(company_state_previous.profit_before_tax, 2) if company_state_previous.profit_before_tax is not None else "N/A" #"Výsledok hospodárenia pred zdanením"
+        income_statement['tax'] = round(company_state_previous.tax, 2) if company_state_previous.tax is not None else "N/A" #"Daň"
+        income_statement['net_profit'] = round(company_state_previous.net_profit, 2) if company_state_previous.net_profit is not None else "N/A" #"Výsledok hospodárenia po zdanení"
 
 
         return Response({"production": production, "sales": sales, 'balance': balance, 'cash_flow': cash_flow, 'income_statement': income_statement}, status=200)
