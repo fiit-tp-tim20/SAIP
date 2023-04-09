@@ -196,7 +196,7 @@ class IndustryReport(APIView):
             economic_parameters['inflation_difference'] = round(((teacher_decisions.inflation/teacher_decisions_previous.inflation) - 1)*100, 2)
         except (ZeroDivisionError, TypeError):
             economic_parameters['inflation_difference'] = "N/A"
-        economic_parameters['loan_limit'] = teacher_decisions.loan_limit * 100
+        economic_parameters['loan_limit'] = teacher_decisions.loan_limit
         try:
             economic_parameters['loan_limit_difference'] = round(((teacher_decisions.loan_limit/teacher_decisions_previous.loan_limit) - 1)*100, 2)
         except (ZeroDivisionError, TypeError):
