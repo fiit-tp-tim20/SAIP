@@ -300,9 +300,9 @@ class Simulation:
             company.invest_into_factory()
 
         self.market.generate_distribution()
-        for company in self.companies.values():
-            #print(company)
-            pass
+        #for company in self.companies.values():
+        #    print(company)
+        #    pass
         pass
 
     def write_simulation_results(self) -> None:
@@ -398,7 +398,8 @@ class Simulation:
         ct_company_state_model.inventory_charge = company_class_object.value_paid_in_inventory_charge #round(company_class_object.value_paid_in_inventory_charge, 2)
         ct_company_state_model.sales = company_class_object.income_per_turn #round(company_class_object.income_per_turn, 2)
         ct_company_state_model.manufactured_man_cost = company_class_object.prod_costs_per_turn #round(company_class_object.prod_costs_per_turn, 2)
-        #TODO: rozdelit na dve hodnoty v modeloch - vydavky na vyrobenie vsetkych a vydavky na vyrobenie IBA predanych (costs_of_goods_sold)
+        ct_company_state_model.sold_man_cost = company_class_object.cost_of_goods_sold
+        
         ct_company_state_model.tax = company_class_object.value_paid_in_tax #round(company_class_object.value_paid_in_tax, 2)
         ct_company_state_model.profit_before_tax = company_class_object.profit_before_tax #round(company_class_object.profit_before_tax, 2)
         ct_company_state_model.interest = company_class_object.value_paid_in_interest #round(company_class_object.value_paid_in_interest, 2)
@@ -407,7 +408,6 @@ class Simulation:
         ct_company_state_model.loans = company_class_object.loans #round(company_class_object.loans, 2)
         ct_company_state_model.inventory_upgrade = company_class_object.value_paid_in_stored_product_upgrades #round(company_class_object.value_paid_in_stored_product_upgrades, 2)
         ct_company_state_model.overcharge_upgrade = company_class_object.price_diff_stored_products #round(company_class_object.price_diff_stored_products, 2)
-        ct_company_state_model.next_turn_budget = 0 #TODO: change this
 
         if ct_company_state_model.production is not None:
             ct_company_state_model.production.man_cost = company_class_object.prod_ppu #round(company_class_object.prod_ppu, 2)

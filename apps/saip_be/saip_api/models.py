@@ -182,7 +182,7 @@ class CompaniesState(models.Model):
     loans = models.FloatField(null=True, default=20000)
     inventory_upgrade = models.FloatField(null=True, default=0)
     overcharge_upgrade = models.FloatField(null=True, default=0)
-    next_turn_budget = models.FloatField(null=True, default=10_000)
+    sold_man_cost = models.FloatField(null=True, default=0) # vyrobne naklady na predane vyrobky
 
     def __str__(self):
         return f"{self.company} - {self.turn}"
