@@ -300,9 +300,9 @@ class Simulation:
             company.invest_into_factory()
 
         self.market.generate_distribution()
-        for company in self.companies.values():
-            print(company)
-            pass
+        #for company in self.companies.values():
+        #    print(company)
+        #    pass
         pass
 
     def write_simulation_results(self) -> None:
