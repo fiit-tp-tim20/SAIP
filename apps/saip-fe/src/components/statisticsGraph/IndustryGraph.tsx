@@ -4,11 +4,11 @@ import { Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveCont
 type IndustryGraphProps = {
 	rank: number[];
 	stock_price: number[];
+    num_players: number;
 };
 
 function IndustryGraph(props: IndustryGraphProps) {
-    const { rank, stock_price } = props;
-    const maxPoradie = Math.max(...rank);
+    const { rank, stock_price, num_players } = props;
     const data = rank.map((value, index) => ({ x: index + 1, Poradie: value, Cena: stock_price[index] }));
 
     return (
@@ -18,7 +18,7 @@ function IndustryGraph(props: IndustryGraphProps) {
                     <XAxis dataKey="x">
                         <Label value="Kolo" offset={-10} position="insideBottom" />
                     </XAxis>
-                    <YAxis yAxisId="left" domain={[1, maxPoradie]} tickCount={maxPoradie} reversed >
+                    <YAxis yAxisId="left" domain={[1, num_players]} tickCount={num_players} reversed >
                         <Label value="Poradie" offset={0} position="insideLeft" angle={-90} />
                     </YAxis>
                     <YAxis yAxisId="right" orientation="right">
