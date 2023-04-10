@@ -146,7 +146,6 @@ class Company:
     profit: float = 0  # field(init=False)  # +income -costs | per turn only
     profit_before_tax: float = 0  # field(init=False)
     profit_after_tax: float = 0  # field(init=False)
-    profit_agg: float = 0
     ret_earnings: float = 0  # field(init=False)
 
     loans: float = 20_000
@@ -233,7 +232,6 @@ class Company:
             self.income_per_turn - self.cost_of_goods_sold - self.additional_costs
         )
         self.__apply_tax()
-        self.profit_agg += self.profit
         self.__calculate_negative_cashflow()
 
         self.prev_balance = self.balance
@@ -247,7 +245,7 @@ class Company:
         self.stock_price = (
             self.factory.capital_investment
             + self.balance * 0.2  # financial state
-            + self.profit_agg * 0.3  # total profits
+            + (self.ret_earnings + self.profit) * 0.3  # total profits
             - self.loans * 0.5  # long term debt
             + self.yield_agg_marketing_value()
         ) / 1000
