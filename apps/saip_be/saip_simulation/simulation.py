@@ -132,6 +132,7 @@ class Simulation:
 
         init_brand = company_model.name
         if company_state is not None:
+            init_max_budget = CompanyPreset.DEFAULT_BUDGET_PER_TURN if company_state.cash > CompanyPreset.DEFAULT_BUDGET_PER_TURN else (company_state.cash if company_state.cash > 0 else 0)
             init_inventory = company_state.inventory if company_state.inventory is not None else 0
             init_balance = company_state.cash if company_state.cash is not None else CompanyPreset.DEFAULT_BUDGET_PER_TURN #CHANGED after balance became cash (in models)
             init_ret_earnings = company_state.ret_earnings if company_state.ret_earnings is not None else 0
@@ -142,6 +143,7 @@ class Simulation:
             else:
                 init_capital_investment_this_turn = 0
         else:
+            init_max_budget = CompanyPreset.DEFAULT_BUDGET_PER_TURN
             init_inventory = 0
             init_balance = CompanyPreset.DEFAULT_BUDGET_PER_TURN
             init_ret_earnings = 0
@@ -154,7 +156,6 @@ class Simulation:
         init_tax_rate = self.teacher_decisions.get("tax_rate", CompanyPreset.DEFAULT_TAX_RATE)
 
         if pt_company_state is not None:
-            init_max_budget = CompanyPreset.DEFAULT_BUDGET_PER_TURN # TODO change this
             init_prev_turn_inventory = pt_company_state.inventory if pt_company_state.inventory is not None else 0
             if pt_company_state.production is not None:
                 init_prev_turn_prod_ppu = pt_company_state.production.man_cost if pt_company_state.production.man_cost is not None else 0
@@ -163,7 +164,6 @@ class Simulation:
                 init_prev_turn_prod_ppu = 0
                 init_prev_turn_total_ppu = 0
         else:
-            init_max_budget = CompanyPreset.DEFAULT_BUDGET_PER_TURN
             init_prev_turn_prod_ppu = 0
             init_prev_turn_total_ppu = 0
             init_prev_turn_inventory = 0
