@@ -176,7 +176,6 @@ class Company:
     prev_turn_prod_ppu: float = 0
     prev_turn_total_ppu: float = 0
     prev_turn_inventory: float = 0
-    prev_turn_cash: float = 0
     amount_spent_on_upgrades: float = 0
 
     factory: Factory = None

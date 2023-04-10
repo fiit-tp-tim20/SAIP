@@ -133,7 +133,7 @@ class Simulation:
         init_brand = company_model.name
         if company_state is not None:
             init_inventory = company_state.inventory if company_state.inventory is not None else 0
-            init_balance = company_state.balance if (company_state.balance is not None and self.turn_model.number > 1) else CompanyPreset.DEFAULT_BUDGET_PER_TURN
+            init_balance = company_state.cash if company_state.cash is not None else CompanyPreset.DEFAULT_BUDGET_PER_TURN #CHANGED after balance became cash (in models)
             init_ret_earnings = company_state.ret_earnings if company_state.ret_earnings is not None else 0
             init_loans = company_state.loans if company_state.loans is not None else 0
             init_amount_spent_on_upgrades = company_state.r_d if company_state.r_d is not None else 0
@@ -143,7 +143,7 @@ class Simulation:
                 init_capital_investment_this_turn = 0
         else:
             init_inventory = 0
-            init_balance = 0
+            init_balance = CompanyPreset.DEFAULT_BUDGET_PER_TURN
             init_ret_earnings = 0
             init_loans = 0
             init_amount_spent_on_upgrades = 0
@@ -156,7 +156,6 @@ class Simulation:
         if pt_company_state is not None:
             init_max_budget = CompanyPreset.DEFAULT_BUDGET_PER_TURN # TODO change this
             init_prev_turn_inventory = pt_company_state.inventory if pt_company_state.inventory is not None else 0
-            init_prev_turn_cash = pt_company_state.cash if pt_company_state.cash is not None else CompanyPreset.DEFAULT_BUDGET_PER_TURN
             if pt_company_state.production is not None:
                 init_prev_turn_prod_ppu = pt_company_state.production.man_cost if pt_company_state.production.man_cost is not None else 0
                 init_prev_turn_total_ppu = pt_company_state.production.man_cost_all if pt_company_state.production.man_cost_all is not None else 0
@@ -168,7 +167,6 @@ class Simulation:
             init_prev_turn_prod_ppu = 0
             init_prev_turn_total_ppu = 0
             init_prev_turn_inventory = 0
-            init_prev_turn_cash = CompanyPreset.DEFAULT_BUDGET_PER_TURN
 
         
 
@@ -203,7 +201,6 @@ class Simulation:
             prev_turn_prod_ppu = init_prev_turn_prod_ppu,
             prev_turn_total_ppu = init_prev_turn_total_ppu,
             prev_turn_inventory = init_prev_turn_inventory,
-            prev_turn_cash = init_prev_turn_cash,
             
             capital_investment_this_turn = init_capital_investment_this_turn,
             marketing = init_marketing,
@@ -384,13 +381,13 @@ class Simulation:
 
     def write_current_turn_company_state(self, company_class_object: Company, ct_company_state_model: models.CompaniesState) -> None:
         
-        ct_company_state_model.balance = company_class_object.balance #round(company_class_object.balance, 2)
+        ct_company_state_model.cash = company_class_object.balance #round(company_class_object.balance, 2)  #CHANGED after balance became cash (in models)
         ct_company_state_model.stock_price = company_class_object.stock_price #round(company_class_object.stock_price, 2)
         ct_company_state_model.inventory = company_class_object.inventory
         
         ct_company_state_model.orders_received = self.market.customer_distribution[company_class_object.brand]["demand"]
         ct_company_state_model.orders_fulfilled = company_class_object.units_sold
-        ct_company_state_model.cash = company_class_object.prev_balance #round(company_class_object.prev_balance, 2)
+        #ct_company_state_model.cash = company_class_object.prev_balance #round(company_class_object.prev_balance, 2)
         ct_company_state_model.ret_earnings = company_class_object.ret_earnings + company_class_object.profit_after_tax #round((company_class_object.ret_earnings+ company_class_object.profit_after_tax),2)
         ct_company_state_model.net_profit = company_class_object.profit_after_tax #round(company_class_object.profit_after_tax, 2)
         ct_company_state_model.depreciation = company_class_object.factory.upkeep.get("writeoff", 0) #(round(company_class_object.factory.upkeep.get("writeoff", 0), 2)
@@ -421,7 +418,7 @@ class Simulation:
         ct_company_state_model.save()
     
     def write_next_turn_company_state(self, company_class_object: Company, nt_company_state_model: models.CompaniesState) -> None:
-        nt_company_state_model.balance = company_class_object.balance
+        nt_company_state_model.cash = company_class_object.balance #CHANGED after balance became cash (in models)
         nt_company_state_model.inventory = company_class_object.inventory
         nt_company_state_model.loans = company_class_object.loans
         nt_company_state_model.ret_earnings = (
