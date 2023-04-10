@@ -239,7 +239,7 @@ if __name__ == "__main__":
 
     comA = Company(
         brand="A",
-        product=LastingProduct(None, 1800, 250),
+        product=LastingProduct(price=1800, man_cost=250),
         inventory=0,
         production_volume=85,
         balance=10_000,
@@ -249,7 +249,7 @@ if __name__ == "__main__":
     )
     comB = Company(
         brand="B",
-        product=LastingProduct(None, 2500, 250),
+        product=LastingProduct(price=2500, man_cost=250),
         inventory=0,
         production_volume=82,
         balance=10_000,
@@ -259,7 +259,7 @@ if __name__ == "__main__":
     )
     comC = Company(
         brand="C",
-        product=LastingProduct(None, 1950, 250),
+        product=LastingProduct(price=1950, man_cost=250),
         inventory=0,
         production_volume=90,
         balance=10_000,
@@ -268,7 +268,7 @@ if __name__ == "__main__":
     )
     comD = Company(
         brand="D",
-        product=LastingProduct(None, 1700, 250),
+        product=LastingProduct(price=1700, man_cost=250),
         inventory=0,
         production_volume=99,
         balance=10_000,

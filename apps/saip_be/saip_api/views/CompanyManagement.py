@@ -247,10 +247,10 @@ class CompanyReport(APIView):
         sales['selling_price'] = company_state_previous.production.sell_price if company_state_previous.production.sell_price is not None else "N/A" #"Predajná cena"
 
         balance = dict()
-        balance['cash'] = round(company_state_previous.balance, 2) if company_state_previous.balance is not None else "N/A" #"Hotovosť" #TODO: CHANGED from cash to balance !!!!!MIND THE SUMMARY AS WELL
+        balance['cash'] = round(company_state_previous.cash, 2) if company_state_previous.cash is not None else "N/A" #"Hotovosť" #TODO: CHANGED from cash to balance !!!!!MIND THE SUMMARY AS WELL
         balance['inventory_money'] = round((company_state_previous.inventory * company_state_previous.production.man_cost), 2) if (company_state_previous.inventory is not None and company_state_previous.production.man_cost is not None) else "N/A" #Zásoby
         balance['capital_investments'] = round(company_state_previous.factory.capital_investments, 2) if company_state_previous.factory.capital_investments is not None else "N/A" #"Kapitálové investície"
-        balance['assets_summary'] = round((company_state_previous.balance+ (company_state_previous.inventory * company_state_previous.production.man_cost) + company_state_previous.factory.capital_investments), 2) if (company_state_previous.balance is not None and company_state_previous.inventory is not None and company_state_previous.production.man_cost is not None and company_state_previous.factory.capital_investments is not None) else "N/A" #"Súčet aktív"
+        balance['assets_summary'] = round((company_state_previous.cash+ (company_state_previous.inventory * company_state_previous.production.man_cost) + company_state_previous.factory.capital_investments), 2) if (company_state_previous.cash is not None and company_state_previous.inventory is not None and company_state_previous.production.man_cost is not None and company_state_previous.factory.capital_investments is not None) else "N/A" #"Súčet aktív"
 
         #pasiva
         balance['loans'] = round(company_state_previous.loans, 2) if company_state_previous.loans is not None else "N/A" #"Pôžičky"
@@ -259,14 +259,13 @@ class CompanyReport(APIView):
         balance['liabilities_summary'] = round(company_state_previous.loans + company_state_previous.ret_earnings + company.game.parameters.base_capital, 2) if (company_state_previous.loans is not None and company_state_previous.ret_earnings is not None and company.game.parameters.base_capital is not None) else "N/A" #"Súčet pasív"
 
         cash_flow = dict()
-        #try:
-        #    tmp_beginning_cash = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-2), company=company).cash
-        #    cash_flow['beginning_cash'] = round(tmp_beginning_cash, 2) if tmp_beginning_cash is not None else "N/A" #???
-        #except (Turn.DoesNotExist, CompaniesState.DoesNotExist):
-        #    tmp_beginning_cash = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1), company=company).cash
-        #    cash_flow['beginning_cash'] = round(tmp_beginning_cash, 2) if tmp_beginning_cash is not None else "N/A" #???
-        #    #"Počiatočný stav"  #TODO: zmenit na prev_balance
-        cash_flow['beginning_cash'] = company_state_previous.cash if company_state_previous.cash is not None else "N/A" #"Počiatočný stav"
+        try:
+            tmp_beginning_cash = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-2), company=company).cash
+            cash_flow['beginning_cash'] = round(tmp_beginning_cash, 2) if tmp_beginning_cash is not None else "N/A" #???
+        except (Turn.DoesNotExist, CompaniesState.DoesNotExist):
+            tmp_beginning_cash = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1), company=company).cash
+            cash_flow['beginning_cash'] = round(tmp_beginning_cash, 2) if tmp_beginning_cash is not None else "N/A" #???
+            #"Počiatočný stav"
 
         cash_flow['sales'] =  round(company_state_previous.sales, 2) if company_state_previous.sales is not None else "N/A" #plus #"Príjmy z predaja výrobkov"
         cash_flow['manufactured_man_cost'] = round(company_state_previous.manufactured_man_cost, 2) if company_state_previous.manufactured_man_cost is not None else "N/A" #minus #"Výdavky na vyrobené výrobky"
@@ -283,7 +282,7 @@ class CompanyReport(APIView):
         cash_flow['loan_repayment'] = round(company_state_previous.loan_repayment, 2) if company_state_previous.loan_repayment is not None else "N/A" #"Splátka úveru"
          
         #zostatok do dalssieho prostredia
-        cash_flow['cash'] = round(company_state_previous.balance, 2) if company_state_previous.balance is not None else "N/A" #"Konecny stav"
+        cash_flow['cash'] = round(company_state_previous.cash, 2) if company_state_previous.cash is not None else "N/A" #"Konecny stav" #CHANGED after balance became cash
 
         income_statement = dict()
         income_statement['sales'] = round(company_state_previous.sales, 2) if company_state_previous.sales is not None else "N/A" #"Tržby z predaja výrobkov"

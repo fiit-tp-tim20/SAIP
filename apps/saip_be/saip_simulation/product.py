@@ -5,11 +5,12 @@ from typing import Dict
 
 @dataclass
 class Upgrade:
-    status: bool
+    status: str
     progress: int
     total_cost: int
     sales_effect: float  # modifier for expected value increase
     man_cost_effect: float  # modifier for manufacturing cost increase
+    upgraded_this_turn: bool
 
 
 @dataclass
@@ -59,7 +60,7 @@ class Product(ABC):
         return self._upgrade_stored_products_price
 
     def add_upgrade(
-        self, name, status, progress, total_cost, sales_effect, man_cost_effect
+        self, name, status, progress, total_cost, sales_effect, man_cost_effect, upgraded_this_turn
     ): 
         self.upgrades[name] = Upgrade(
             status=status,
@@ -67,6 +68,7 @@ class Product(ABC):
             total_cost=total_cost,
             sales_effect=sales_effect,
             man_cost_effect=man_cost_effect,
+            upgraded_this_turn = upgraded_this_turn # True/False
         )
         #print(self.upgrades)
 
@@ -97,7 +99,10 @@ class LastingProduct(Product):
     # ToDo replace dummy logic (used in testing) witch actual code
 
     def _calculate_upgrade_price(self) -> float:
-        return self.price / 10
+        upgrade_multiplier = 0
+        for upgrade in self.upgrades.values():
+            upgrade_multiplier += upgrade.man_cost_effect if upgrade.upgraded_this_turn is True else 0
+        return self.man_cost * upgrade_multiplier
 
     def _perform_upgrade_logic(self) -> None:
-        self.price = self.price * 1.1
+        pass
