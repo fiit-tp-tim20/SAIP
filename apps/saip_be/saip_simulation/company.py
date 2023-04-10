@@ -296,6 +296,7 @@ class Company:
     ###########################
 
     def __upgrade_stored_products(self) -> float:
+        self.product.upgrade_stored_products()
         return self.inventory * self.product.get_upgrade_stored_products_price()
 
     def __price_diff_stored_products(self) -> float:
@@ -329,6 +330,10 @@ class Company:
     def __calculate_negative_cashflow(self) -> None:
         self.writeoff = self.factory.upkeep.get("writeoff", 0)
 
+        self.inventory_costs = (
+            self.value_paid_in_inventory_charge
+            + self.value_paid_in_stored_product_upgrades
+        )
         self.decision_costs = (
             self.marketing_costs
             + self.amount_spent_on_upgrades
@@ -336,7 +341,7 @@ class Company:
         )
         self.negative_cashflow = (
             self.prod_costs_per_turn
-            + self.value_paid_in_inventory_charge
+            + self.inventory_costs
             + self.decision_costs
             + self.value_paid_in_interest
             + self.value_paid_in_tax

@@ -99,7 +99,10 @@ class LastingProduct(Product):
     # ToDo replace dummy logic (used in testing) witch actual code
 
     def _calculate_upgrade_price(self) -> float:
-        return self.price / 10
+        upgrade_multiplier = 0
+        for upgrade in self.upgrades.values():
+            upgrade_multiplier += upgrade.man_cost_effect if upgrade.upgraded_this_turn is True else 0
+        return self.man_cost * upgrade_multiplier
 
     def _perform_upgrade_logic(self) -> None:
-        self.price = self.price * 1.1
+        pass
