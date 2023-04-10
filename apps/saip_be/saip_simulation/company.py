@@ -199,6 +199,7 @@ class Company:
         )
 
         self.__calculate_additional_costs()
+        self.inventory += self.production_volume
 
         if self.production_volume <= 0:
             self.total_ppu = 0
@@ -243,8 +244,8 @@ class Company:
     def calculate_stock_price(self) -> float:  # 3
         self.stock_price = (
             self.factory.capital_investment
-            + self.balance * 0.2  # long term performance
-            + self.profit * 0.3  # per turn performance
+            + self.balance * 0.2  # financial state
+            + (self.ret_earnings + self.profit) * 0.3  # total profits
             - self.loans * 0.5  # long term debt
             + self.yield_agg_marketing_value()
         ) / 1000
@@ -312,8 +313,6 @@ class Company:
         )
         self.price_diff_stored_products = self.__price_diff_stored_products()
         self.value_paid_in_stored_product_upgrades = self.__upgrade_stored_products()
-
-        self.inventory += self.production_volume
         self.value_paid_in_inventory_charge = (
             self.inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT
         )
@@ -331,12 +330,10 @@ class Company:
     def __calculate_negative_cashflow(self) -> None:
         self.writeoff = self.factory.upkeep.get("writeoff", 0)
 
-        # investment_costs = 0
-        # if self.capital_investment_this_turn > self.writeoff:
-        #     investment_costs = self.capital_investment_this_turn - self.writeoff
-
         self.decision_costs = (
-            self.marketing_costs + self.amount_spent_on_upgrades + self.capital_investment_this_turn
+            self.marketing_costs
+            + self.amount_spent_on_upgrades
+            + self.capital_investment_this_turn
         )
         self.negative_cashflow = (
             self.prod_costs_per_turn
@@ -360,7 +357,7 @@ class Company:
     def __update_loans(self):
         self.new_loans = 0
         self.value_paid_in_loan_repayment = 0
-                
+
         if self.balance < self.max_budget:
             required_for_next_turn = self.max_budget - self.balance
             if self.loan_limit > required_for_next_turn:
