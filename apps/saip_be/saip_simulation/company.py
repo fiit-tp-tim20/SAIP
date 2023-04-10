@@ -332,7 +332,6 @@ class Company:
 
         self.inventory_costs = (
             self.value_paid_in_inventory_charge
-            + self.price_diff_stored_products
             + self.value_paid_in_stored_product_upgrades
         )
         self.decision_costs = (
