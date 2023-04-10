@@ -285,6 +285,7 @@ class Simulation:
                     total_cost=upgrade_model.cost,  # pos integer
                     sales_effect=upgrade_model.sales_effect,  # float
                     man_cost_effect=upgrade_model.man_cost_effect,  # float
+                    upgraded_this_turn = True if (company_upgrade_model.turn.number == (self.turn_model.number - 1)) else False
                 )
             else:
                 pass
