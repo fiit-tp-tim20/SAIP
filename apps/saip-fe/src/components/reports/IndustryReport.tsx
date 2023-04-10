@@ -176,7 +176,7 @@ function IndustryReport() {
 						{isLoading2 ? (
 							<div>Loading...</div>
 						) : (
-							<IndustryGraph rank={graphData?.rank} stock_price={graphData?.stock_price} />
+							<IndustryGraph rank={graphData?.rank} stock_price={graphData?.stock_price} num_players={graphData?.num_players} />
 						)}
 					</div>
 				</>

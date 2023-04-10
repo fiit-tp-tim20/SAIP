@@ -10,6 +10,7 @@ export type Upgrade = {
 	players: string[];
 	// TODO edit be to return player as player object
 	// players: Player[];
+	description: string;
 	status: "finished" | "started" | "not started";
 	price: number;
 	progress: number;
