@@ -110,11 +110,14 @@ class CompanyInfo(APIView):
             return Response({"detail": "Company for this user not found"}, status=404)
 
         last_turn = get_last_turn(company.game)
-        company_state = CompaniesState.objects.get(turn=last_turn, company=company)
+        previous_turn = Turn.objects.get(game=company.game, number=last_turn.number-1)
+        company_state = CompaniesState.objects.get(turn=previous_turn, company=company)
 
         if company_state.cash >= 10000:
             print(company_state.cash)
             budget = 10000
+        elif company_state.cash < 0:
+            budget = 0
         else:
             budget = company_state.cash
 
