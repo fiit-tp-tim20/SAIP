@@ -102,7 +102,7 @@ function Company() {
 						<div>
 							<Slider
 								min={0}
-								max={1000}
+								max={10000}
 								value={capitalInvestments}
 								setValue={setCapitalInvestments}
 								checked={capitalInvestmentsChecked}
