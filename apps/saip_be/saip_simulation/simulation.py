@@ -50,10 +50,9 @@ class Simulation:
         self.turn_limit = game_model.turns
         self.teacher_decisions = {}
         self.game_parameters = {}
-        self.setup_simulation()
+        self.__setup_simulation()
 
-    def setup_simulation(self) -> None:
-        # load teacher decisions
+    def __setup_teacher_decisions(self) -> None:
         try:
             teacher_decisions_model = models.TeacherDecisions.objects.get(
                 turn = self.prev_turn_model
@@ -71,8 +70,9 @@ class Simulation:
                 "inflation": FactoryPreset.BASE_INFLATION,
                 "loan_limit": CompanyPreset.DEFAULT_LOAN_LIMIT,
             }
-            pass
-
+        return
+    
+    def __setup_game_parameters(self) -> None:
         game_parameters_model = self.game_model.parameters
         if game_parameters_model is not None:
             self.game_parameters = {
@@ -90,8 +90,15 @@ class Simulation:
                 "base_capital": FactoryPreset.STARTING_INVESTMENT,
                 "end_turn_on_committed": True,
             }
+        return
 
 
+    def __setup_simulation(self) -> None:
+
+        # load teacher decisions and game parameters
+        self.__setup_teacher_decisions()
+        self.__setup_game_parameters()
+        
         print(self.teacher_decisions)
         print(self.game_parameters)
 
@@ -100,7 +107,7 @@ class Simulation:
         # iterate over the companies and create all relevant classes
         for company_model in companies_models:
             # add the company to the companies dictionary
-            self.companies[company_model.name] = self.create_company(
+            self.companies[company_model.name] = self.__create_company(
                 company_model=company_model
             )
 
@@ -123,8 +130,9 @@ class Simulation:
                 customer_count=config.MarketPreset.STARTING_CUSTOMER_COUNT,
             )  # TODO: companies is aleady a dict, we dont have to generate it in market object
         print("Simulation was set up without any errors!")
+        return
 
-    def create_company(self, company_model: models.Company) -> Company:
+    def __create_company(self, company_model: models.Company) -> Company:
         # filter CompaniesUpgrades
         try:
             company_upgrades = models.CompaniesUpgrades.objects.filter(
@@ -229,8 +237,8 @@ class Simulation:
             marketing = init_marketing,
         )
 
-        new_company.factory = self.create_factory(factory_model=company_state.factory)
-        new_company.product = self.create_product(
+        new_company.factory = self.__create_factory(factory_model=company_state.factory)
+        new_company.product = self.__create_product(
             company=new_company,
             production_model=company_state.production,
             company_upgrades=company_upgrades,
@@ -238,7 +246,7 @@ class Simulation:
         return new_company
 
 
-    def create_factory(self, factory_model: models.Factory) -> Factory:
+    def __create_factory(self, factory_model: models.Factory) -> Factory:
         if factory_model is not None:
             new_factory = Factory(
                 capacity= factory_model.capacity
@@ -265,7 +273,7 @@ class Simulation:
         )
         return new_factory
 
-    def create_product(
+    def __create_product(
         self,
         company: Company,
         production_model: models.Production,
@@ -325,6 +333,7 @@ class Simulation:
         #    print(company)
         #    pass
         pass
+        return
 
     def write_simulation_results(self) -> None:
         # declare lists and dictionaries
@@ -402,6 +411,7 @@ class Simulation:
             )
         nt_market_state_model.demand = ct_total_units_demanded
         nt_market_state_model.save()
+        return
 
     def write_current_turn_company_state(self, company_class_object: Company, ct_company_state_model: models.CompaniesState) -> None:
         
@@ -440,6 +450,7 @@ class Simulation:
             ct_company_state_model.factory.capital_investments = company_class_object.factory.capital_investment
             ct_company_state_model.factory.save()
         ct_company_state_model.save()
+        return
     
     def write_next_turn_company_state(self, company_class_object: Company, nt_company_state_model: models.CompaniesState) -> None:
         nt_company_state_model.cash = company_class_object.balance #CHANGED after balance became cash (in models)
@@ -459,3 +470,4 @@ class Simulation:
             )
             nt_company_state_model.factory.save()
         nt_company_state_model.save()
+        return
