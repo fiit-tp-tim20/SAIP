@@ -49,19 +49,20 @@ class Simulation:
         self.current_turn = turn_model.number
         self.turn_limit = game_model.turns
         self.teacher_decisions = {}
+        self.game_parameters = {}
         self.setup_simulation()
 
     def setup_simulation(self) -> None:
         # load teacher decisions
         try:
             teacher_decisions_model = models.TeacherDecisions.objects.get(
-                turn=self.turn_model
+                turn = self.prev_turn_model
             )
             self.teacher_decisions = {
-                "interest_rate": teacher_decisions_model.interest_rate,
-                "tax_rate": teacher_decisions_model.tax_rate,
-                "inflation": teacher_decisions_model.inflation,
-                "loan_limit": teacher_decisions_model.loan_limit,
+                "interest_rate": teacher_decisions_model.interest_rate if teacher_decisions_model.interest_rate is not None else CompanyPreset.DEFAULT_INTEREST_RATE,
+                "tax_rate": teacher_decisions_model.tax_rate if teacher_decisions_model.tax_rate is not None else CompanyPreset.DEFAULT_TAX_RATE,
+                "inflation": teacher_decisions_model.inflation if teacher_decisions_model.inflation is not None else FactoryPreset.BASE_INFLATION,
+                "loan_limit": teacher_decisions_model.loan_limit if teacher_decisions_model.loan_limit is not None else CompanyPreset.DEFAULT_LOAN_LIMIT,
             }
         except models.TeacherDecisions.DoesNotExist:
             self.teacher_decisions = {
@@ -71,6 +72,28 @@ class Simulation:
                 "loan_limit": CompanyPreset.DEFAULT_LOAN_LIMIT,
             }
             pass
+
+        game_parameters_model = self.game_model.parameters
+        if game_parameters_model is not None:
+            self.game_parameters = {
+                "budget_cap": game_parameters_model.budget_cap if game_parameters_model.budget_cap is not None else CompanyPreset.DEFAULT_BUDGET_PER_TURN,
+                "depreciation": game_parameters_model.depreciation if game_parameters_model.depreciation is not None else FactoryPreset.FACTORY_WRITEOFF_RATE,
+                "base_man_cost": game_parameters_model.base_man_cost if game_parameters_model.base_man_cost is not None else FactoryPreset.BASE_MATERIAL_COST_PER_UNIT,
+                "base_capital": game_parameters_model.base_capital if game_parameters_model.base_capital is not None else FactoryPreset.STARTING_INVESTMENT,
+                "end_turn_on_committed": game_parameters_model.end_turn_on_committed if game_parameters_model.end_turn_on_committed is not None else True,
+            }
+        else:
+            self.game_parameters = {
+                "budget_cap": CompanyPreset.DEFAULT_BUDGET_PER_TURN,
+                "depreciation": FactoryPreset.FACTORY_WRITEOFF_RATE,
+                "base_man_cost": FactoryPreset.BASE_MATERIAL_COST_PER_UNIT,
+                "base_capital": FactoryPreset.STARTING_INVESTMENT,
+                "end_turn_on_committed": True,
+            }
+
+
+        print(self.teacher_decisions)
+        print(self.game_parameters)
 
         # Filter companies that are in this game
         companies_models = models.Company.objects.filter(game=self.game_model)
