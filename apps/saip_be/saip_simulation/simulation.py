@@ -86,7 +86,7 @@ class Simulation:
             self.game_parameters = {
                 "budget_cap": CompanyPreset.DEFAULT_BUDGET_PER_TURN,
                 "depreciation": FactoryPreset.FACTORY_WRITEOFF_RATE,
-                "base_man_cost": FactoryPreset.BASE_MATERIAL_COST_PER_UNIT,
+                "base_man_cost": FactoryPreset.BASE_MATERIAL_COST_PER_UNIT, #TODO: finish these paramaters
                 "base_capital": FactoryPreset.STARTING_INVESTMENT,
                 "end_turn_on_committed": True,
             }
