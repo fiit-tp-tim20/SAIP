@@ -163,9 +163,9 @@ class Simulation:
 
         init_brand = company_model.name
         if company_state is not None:
-            init_max_budget = CompanyPreset.DEFAULT_BUDGET_PER_TURN if company_state.cash > CompanyPreset.DEFAULT_BUDGET_PER_TURN else (company_state.cash if company_state.cash > 0 else 0)
+            init_max_budget = self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN) if company_state.cash > self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN) else (company_state.cash if company_state.cash > 0 else 0)
             init_inventory = company_state.inventory if company_state.inventory is not None else 0
-            init_balance = company_state.cash if company_state.cash is not None else CompanyPreset.DEFAULT_BUDGET_PER_TURN #CHANGED after balance became cash (in models)
+            init_balance = company_state.cash if company_state.cash is not None else self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN) #CHANGED after balance became cash (in models)
             init_ret_earnings = company_state.ret_earnings if company_state.ret_earnings is not None else 0
             init_loans = company_state.loans if company_state.loans is not None else 0
             init_amount_spent_on_upgrades = company_state.r_d if company_state.r_d is not None else 0
@@ -174,9 +174,9 @@ class Simulation:
             else:
                 init_capital_investment_this_turn = 0
         else:
-            init_max_budget = CompanyPreset.DEFAULT_BUDGET_PER_TURN
+            init_max_budget = self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN)
             init_inventory = 0
-            init_balance = CompanyPreset.DEFAULT_BUDGET_PER_TURN
+            init_balance = self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN)
             init_ret_earnings = 0
             init_loans = 0
             init_amount_spent_on_upgrades = 0
@@ -258,12 +258,14 @@ class Simulation:
                 else FactoryPreset.STARTING_INVESTMENT,
 
                 inflation=self.teacher_decisions.get("inflation", FactoryPreset.BASE_INFLATION),
+                depreciation_rate=self.game_parameters.get("depreciation", FactoryPreset.FACTORY_WRITEOFF_RATE),
             )
         else:
             new_factory = Factory(
                 capacity= FactoryPreset.STARTING_CAPACITY,
                 capital_investment= FactoryPreset.STARTING_INVESTMENT,
                 inflation=self.teacher_decisions.get("inflation", FactoryPreset.BASE_INFLATION),
+                depreciation_rate=self.game_parameters.get("depreciation", FactoryPreset.FACTORY_WRITEOFF_RATE),
             )
 
         new_factory.base_energy_cost = (

@@ -39,6 +39,8 @@ class Factory:
     employee_salary: float = field(init=False, default=FactoryPreset.BASE_SALARY)
     base_energy_cost: float = field(init=False, default=FactoryPreset.BASE_ENERGY_COST)
 
+    depreciation_rate: float = field(init=True, default=FactoryPreset.FACTORY_WRITEOFF_RATE)
+
     upkeep: dict[str, float] = field(init=False)
     inflation: float = FactoryPreset.BASE_INFLATION
 
@@ -68,7 +70,7 @@ class Factory:
             self.upkeep["energy"] = self.__calculate_energies()
             self.upkeep["salaries"] = self.__calculate_salaries()
             self.upkeep["writeoff"] = (
-                self.capital_investment * FactoryPreset.FACTORY_WRITEOFF_RATE
+                self.capital_investment * self.depreciation_rate #CHANGED TO depreciation_rate FROM FactoryPreset.FACTORY_WRITEOFF_RATE
             )
             return
 
