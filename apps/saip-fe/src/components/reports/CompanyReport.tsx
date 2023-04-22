@@ -15,7 +15,7 @@ function CompanyReport() {
 	});
 
 	const [turn, setTurn] = useState<number>(_turn.Number - 1);
-	const { isLoading, data, refetch } = useQuery(["companyReport", turn], () => getCompanyReport(turn));
+	const { isLoading, data } = useQuery(["companyReport", turn], () => getCompanyReport(turn));
 
 	return (
 		// TODO - breakpoint values
@@ -24,10 +24,11 @@ function CompanyReport() {
 			<div className="flex flex-row justify-between">
 				<h1 className="my-4">Správa o spoločnosti</h1>
 				<div>
-					<label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+					<label htmlFor="turn" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
 						Pre kolo
 					</label>
 					<select
+						id="turn"
 						className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
 						value={turn}
 						onChange={(e) => setTurn(parseInt(e.target.value, 10))}

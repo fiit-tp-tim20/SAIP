@@ -38,7 +38,7 @@ const getIndustryReport = async (turn: number) => {
 		return;
 	}
 
-	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/industry_report/?turn=${turn - 1}`, {
+	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/industry_report/?turn=${turn}`, {
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${localStorage.getItem("token")}`,

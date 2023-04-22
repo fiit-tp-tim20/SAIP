@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import getIndustryReport, { IndustryReport as IndustryReportType } from "../../api/GetIndustryReport";
 import { getIndustryGraphData } from "../../api/GetIndustryGraphData";
@@ -19,11 +19,14 @@ const sortByStockPrice = (a: IndustryReportType, b: IndustryReportType) => {
 
 function IndustryReport() {
 	const token = localStorage.getItem("token");
-	const { data: turn } = useQuery({
+	const { data: _turn } = useQuery({
 		queryKey: ["currentTurn"],
 		queryFn: () => token && getTurn(),
 	});
-	const { data, isLoading } = useQuery(["getIndustryReport"], () => getIndustryReport(turn.Number));
+
+	const [turn, setTurn] = useState<number>(_turn.Number - 1);
+
+	const { data, isLoading } = useQuery(["getIndustryReport", turn], () => getIndustryReport(turn));
 	const { data: graphData, isLoading: isLoading2 } = useQuery(["getIndustryGraphData"], getIndustryGraphData);
 
 	if (!isLoading && !data) {
@@ -33,7 +36,25 @@ function IndustryReport() {
 	// poradie
 	return (
 		<div className="flex w-[600px] flex-col md:w-[900px] xl:w-[1280px]">
-			<h1 className="my-4">Industry report</h1>
+			<div className="flex flex-row justify-between">
+				<h1 className="my-4">Industry Report</h1>
+				<div>
+					<label htmlFor="turn" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+						Pre kolo
+					</label>
+					<select
+						id="turn"
+						className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+						value={turn}
+						onChange={(e) => setTurn(parseInt(e.target.value, 10))}
+					>
+						{[...Array(_turn.Number).keys()].map((o) => {
+							if (o === 0) return null;
+							return <option value={o}>{o}</option>;
+						})}
+					</select>
+				</div>
+			</div>
 			{isLoading ? (
 				<p>a</p>
 			) : (
