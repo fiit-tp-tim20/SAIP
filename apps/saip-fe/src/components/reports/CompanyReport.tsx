@@ -1,10 +1,17 @@
+import { useAtom } from "jotai";
 import React from "react";
 import { useQuery } from "react-query";
 import { getCompanyReport } from "../../api/GetCompanyReport";
+import { currentTurn } from "../../store/Atoms";
 import numberWithSpaces from "../../utils/numberWithSpaces";
 
 function CompanyReport() {
-	const { isLoading, data } = useQuery(["companyReport"], getCompanyReport);
+	const token = localStorage.getItem("token");
+	const { data: turn } = useQuery({
+		queryKey: ["currentTurn"],
+		queryFn: () => token && getTurn(),
+	});
+	const { isLoading, data } = useQuery(["companyReport"], () => getCompanyReport(turn.Number));
 
 	return (
 		// TODO - breakpoint values
@@ -24,7 +31,7 @@ function CompanyReport() {
 								<tr>
 									<td className="px-4 py-2">Vyrobené množstvo</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.production.production)} ks
+										{numberWithSpaces(data.production?.production)} ks
 									</td>
 								</tr>
 								<tr>

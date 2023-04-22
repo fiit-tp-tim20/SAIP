@@ -4,6 +4,9 @@ import getIndustryReport, { IndustryReport as IndustryReportType } from "../../a
 import { getIndustryGraphData } from "../../api/GetIndustryGraphData";
 import IndustryGraph from "../statisticsGraph/IndustryGraph";
 import numberWithSpaces from "../../utils/numberWithSpaces";
+import { useAtom } from "jotai";
+import { currentTurn } from "../../store/Atoms";
+import { getTurn } from "../../api/GetTurn";
 
 const sortByStockPrice = (a: IndustryReportType, b: IndustryReportType) => {
 	if (!a.stock_price) return 1;
@@ -15,8 +18,17 @@ const sortByStockPrice = (a: IndustryReportType, b: IndustryReportType) => {
 };
 
 function IndustryReport() {
-	const { data, isLoading } = useQuery(["getIndustryReport"], getIndustryReport);
+	const token = localStorage.getItem("token");
+	const { data: turn } = useQuery({
+		queryKey: ["currentTurn"],
+		queryFn: () => token && getTurn(),
+	});
+	const { data, isLoading } = useQuery(["getIndustryReport"], () => getIndustryReport(turn.Number));
 	const { data: graphData, isLoading: isLoading2 } = useQuery(["getIndustryGraphData"], getIndustryGraphData);
+
+	if (!isLoading && !data) {
+		return <p>Industry report is not available yet</p>;
+	}
 
 	// poradie
 	return (
@@ -176,7 +188,11 @@ function IndustryReport() {
 						{isLoading2 ? (
 							<div>Loading...</div>
 						) : (
-							<IndustryGraph rank={graphData?.rank} stock_price={graphData?.stock_price} num_players={graphData?.num_players} />
+							<IndustryGraph
+								rank={graphData?.rank}
+								stock_price={graphData?.stock_price}
+								num_players={graphData?.num_players}
+							/>
 						)}
 					</div>
 				</>

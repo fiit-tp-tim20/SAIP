@@ -9,4 +9,6 @@ const totalSpentPersist = atom(
 	},
 );
 
-export { totalSpent, totalSpentPersist };
+const currentTurn = atom(-1);
+
+export { totalSpent, totalSpentPersist, currentTurn };
