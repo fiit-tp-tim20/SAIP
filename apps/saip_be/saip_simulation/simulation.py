@@ -98,9 +98,6 @@ class Simulation:
         # load teacher decisions and game parameters
         self.__setup_teacher_decisions()
         self.__setup_game_parameters()
-        
-        #print(self.teacher_decisions)
-        #print(self.game_parameters)
 
         # Filter companies that are in this game
         companies_models = models.Company.objects.filter(game=self.game_model)
@@ -161,6 +158,7 @@ class Simulation:
             pt_company_state = None
             print(f"CompaniesState FOR PREV TURN WAS NONE FOR COMPANY {company_model.name}")
 
+        # setup values that are passed into the company constructor 
         init_brand = company_model.name
         if company_state is not None:
             init_max_budget = self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN) if company_state.cash > self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN) else (company_state.cash if company_state.cash > 0 else 0)
@@ -199,8 +197,7 @@ class Simulation:
             init_prev_turn_total_ppu = 0
             init_prev_turn_inventory = 0
 
-        
-
+        # setup marketing investments
         init_marketing: Dict[str, MarketingType] = {}
         marketing_model = company_state.marketing
         if marketing_model is not None:
@@ -293,17 +290,11 @@ class Simulation:
                 if production_model.sell_price is not None
                 else 0
             )  # TODO change default sell price
-            #new_product.set_man_cost(
-            #    #production_model.man_cost
-            #    #if production_model.man_cost is not None
-            #    #else FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
-            #)
             company.production_volume = (
                 production_model.volume if production_model.volume is not None else 0
             )
         else:
             new_product.set_price(0)
-            #new_product.set_man_cost(FactoryPreset.BASE_MATERIAL_COST_PER_UNIT)
             company.production_volume = 0
             print(f"PRODUCTION MODEL WAS NONE FOR COMPANNY {company.brand}")
 
@@ -460,9 +451,6 @@ class Simulation:
             company_class_object.ret_earnings
             + company_class_object.profit_after_tax
         )
-        #if nt_company_state_model.production is not None:
-        #    nt_company_state_model.production.man_cost = self.game_parameters.get("base_man_cost", FactoryPreset.BASE_MATERIAL_COST_PER_UNIT)
-        #    nt_company_state_model.production.save()
         if nt_company_state_model.factory is not None:
             nt_company_state_model.factory.capacity = company_class_object.factory.capacity
             nt_company_state_model.factory.capital_investments = (
