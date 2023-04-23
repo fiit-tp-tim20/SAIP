@@ -86,7 +86,7 @@ class Simulation:
             self.game_parameters = {
                 "budget_cap": CompanyPreset.DEFAULT_BUDGET_PER_TURN,
                 "depreciation": FactoryPreset.FACTORY_WRITEOFF_RATE,
-                "base_man_cost": FactoryPreset.BASE_MATERIAL_COST_PER_UNIT, #TODO: finish these paramaters
+                "base_man_cost": FactoryPreset.BASE_MATERIAL_COST_PER_UNIT,
                 "base_capital": FactoryPreset.STARTING_INVESTMENT,
                 "end_turn_on_committed": True,
             }
@@ -255,7 +255,7 @@ class Simulation:
 
                 capital_investment=factory_model.capital_investments
                 if factory_model.capital_investments is not None
-                else FactoryPreset.STARTING_INVESTMENT,
+                else self.game_parameters.get("base_capital", FactoryPreset.STARTING_INVESTMENT),
 
                 inflation=self.teacher_decisions.get("inflation", FactoryPreset.BASE_INFLATION),
                 depreciation_rate=self.game_parameters.get("depreciation", FactoryPreset.FACTORY_WRITEOFF_RATE),
@@ -263,7 +263,7 @@ class Simulation:
         else:
             new_factory = Factory(
                 capacity= FactoryPreset.STARTING_CAPACITY,
-                capital_investment= FactoryPreset.STARTING_INVESTMENT,
+                capital_investment= self.game_parameters.get("base_capital", FactoryPreset.STARTING_INVESTMENT),
                 inflation=self.teacher_decisions.get("inflation", FactoryPreset.BASE_INFLATION),
                 depreciation_rate=self.game_parameters.get("depreciation", FactoryPreset.FACTORY_WRITEOFF_RATE),
             )
@@ -291,20 +291,21 @@ class Simulation:
                 if production_model.sell_price is not None
                 else 0
             )  # TODO change default sell price
-            new_product.set_man_cost(
-                production_model.man_cost
-                if production_model.man_cost is not None
-                else FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
-            )
+            #new_product.set_man_cost(
+            #    #production_model.man_cost
+            #    #if production_model.man_cost is not None
+            #    #else FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
+            #)
             company.production_volume = (
                 production_model.volume if production_model.volume is not None else 0
             )
         else:
             new_product.set_price(0)
-            new_product.set_man_cost(FactoryPreset.BASE_MATERIAL_COST_PER_UNIT)
+            #new_product.set_man_cost(FactoryPreset.BASE_MATERIAL_COST_PER_UNIT)
             company.production_volume = 0
             print(f"PRODUCTION MODEL WAS NONE FOR COMPANNY {company.brand}")
 
+        new_product.set_man_cost(self.game_parameters.get("base_man_cost", FactoryPreset.BASE_MATERIAL_COST_PER_UNIT))
         new_product.upgrades = (
             {}
         )  # TODO: maybe this should be in the object constructor
@@ -457,9 +458,9 @@ class Simulation:
             company_class_object.ret_earnings
             + company_class_object.profit_after_tax
         )
-        if nt_company_state_model.production is not None:
-            nt_company_state_model.production.man_cost = FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
-            nt_company_state_model.production.save()
+        #if nt_company_state_model.production is not None:
+        #    nt_company_state_model.production.man_cost = self.game_parameters.get("base_man_cost", FactoryPreset.BASE_MATERIAL_COST_PER_UNIT)
+        #    nt_company_state_model.production.save()
         if nt_company_state_model.factory is not None:
             nt_company_state_model.factory.capacity = company_class_object.factory.capacity
             nt_company_state_model.factory.capital_investments = (
