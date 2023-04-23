@@ -21,6 +21,8 @@ import GameSelect from "./screens/GameSelect";
 import Register from "./screens/Register";
 import BugReport from "./components/bugreport/BugReport";
 import { getCommitted } from "./api/GetCommitted";
+import { useAtom } from "jotai";
+import { currentTurn } from "./store/Atoms";
 
 function App() {
 	const token = localStorage.getItem("token");
@@ -37,6 +39,8 @@ function App() {
 	const { data: committed, refetch: refetchCommited } = useQuery("committed", () => getCommitted());
 
 	const [enableArc, setEnableArc] = React.useState(true);
+
+	const [turn, setTurn] = useAtom(currentTurn);
 
 	useEffect(() => {
 		document.documentElement.style.setProperty(
@@ -77,6 +81,8 @@ function App() {
 			resetUpgradeState();
 			resetMarketingState();
 		}
+
+		setTurn(data?.Number || -1);
 	}, [data && data.Number]);
 
 	// kompletne dum-dum riešenie PREROBIŤ. Aj tu aj getTurn() !!!!!!!!!!!!!

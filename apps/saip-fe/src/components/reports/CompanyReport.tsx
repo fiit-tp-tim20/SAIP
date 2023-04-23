@@ -1,16 +1,44 @@
-import React from "react";
+import { useAtom } from "jotai";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { getCompanyReport } from "../../api/GetCompanyReport";
+import { getTurn } from "../../api/GetTurn";
+import { currentTurn } from "../../store/Atoms";
 import numberWithSpaces from "../../utils/numberWithSpaces";
 
 function CompanyReport() {
-	const { isLoading, data } = useQuery(["companyReport"], getCompanyReport);
+	const token = localStorage.getItem("token");
+
+	const { data: _turn } = useQuery({
+		queryKey: ["currentTurn"],
+		queryFn: () => token && getTurn(),
+	});
+
+	const [turn, setTurn] = useState<number>(_turn.Number - 1);
+	const { isLoading, data } = useQuery(["companyReport", turn], () => getCompanyReport(turn));
 
 	return (
 		// TODO - breakpoint values
 
 		<div className="flex w-[600px] flex-col md:w-[900px] xl:w-[1280px]">
-			<h1 className="my-4">Správa o spoločnosti</h1>
+			<div className="flex flex-row justify-between">
+				<h1 className="my-4">Správa o spoločnosti</h1>
+				<div>
+					<label htmlFor="turn" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+						Pre kolo
+					</label>
+					<select
+						id="turn"
+						className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+						value={turn}
+						onChange={(e) => setTurn(parseInt(e.target.value, 10))}
+					>
+						{[...Array(_turn.Number).keys()].map((o) => (
+							<option value={o}>{o}</option>
+						))}
+					</select>
+				</div>
+			</div>
 			{isLoading ? (
 				<p>Loading...</p>
 			) : (
@@ -24,7 +52,7 @@ function CompanyReport() {
 								<tr>
 									<td className="px-4 py-2">Vyrobené množstvo</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.production.production)} ks
+										{numberWithSpaces(data.production?.production)} ks
 									</td>
 								</tr>
 								<tr>

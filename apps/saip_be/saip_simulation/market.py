@@ -66,7 +66,7 @@ class Market:
         self.customer_count += floor(
             total_investment_from_companies
             / base_investment
-            * MarketPreset.STARTING_CUSTOMER_COUNT
+            * MarketPreset.STARTING_CUSTOMER_COUNT * 0.35
             * len(self.companies)
         )
 
@@ -102,6 +102,7 @@ class Market:
 
     def generate_distribution(self) -> Dict:
         for company in self.companies:
+            company.product.attach_company(company)
             self.customer_distribution[company.brand] = {"demand": 0}
         for customer in self.customer_base:
             customer_choice = customer.choose_product()

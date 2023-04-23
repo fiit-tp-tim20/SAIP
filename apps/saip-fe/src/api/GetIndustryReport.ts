@@ -33,8 +33,12 @@ export type IndustryReportData = {
 	};
 };
 
-const getIndustryReport = async () => {
-	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/industry_report/`, {
+const getIndustryReport = async (turn: number) => {
+	if (turn === -1 || turn === 0) {
+		return;
+	}
+
+	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/industry_report/?turn=${turn}`, {
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${localStorage.getItem("token")}`,

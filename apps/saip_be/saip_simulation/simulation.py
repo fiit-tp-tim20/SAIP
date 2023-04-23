@@ -29,8 +29,8 @@ import saip_api.models as models
 class Simulation:
     companies: Dict[str, Company]
     market: Market
-    current_turn: int  # the current turn being evaluated
-    turn_limit: int  # maximum number of turns
+    current_turn: int
+    turn_limit: int
 
     def __init__(
         self,
@@ -49,19 +49,19 @@ class Simulation:
         self.current_turn = turn_model.number
         self.turn_limit = game_model.turns
         self.teacher_decisions = {}
-        self.setup_simulation()
+        self.game_parameters = {}
+        self.__setup_simulation()
 
-    def setup_simulation(self) -> None:
-        # load teacher decisions
+    def __setup_teacher_decisions(self) -> None:
         try:
             teacher_decisions_model = models.TeacherDecisions.objects.get(
-                turn=self.turn_model
+                turn = self.prev_turn_model
             )
             self.teacher_decisions = {
-                "interest_rate": teacher_decisions_model.interest_rate,
-                "tax_rate": teacher_decisions_model.tax_rate,
-                "inflation": teacher_decisions_model.inflation,
-                "loan_limit": teacher_decisions_model.loan_limit,
+                "interest_rate": teacher_decisions_model.interest_rate if teacher_decisions_model.interest_rate is not None else CompanyPreset.DEFAULT_INTEREST_RATE,
+                "tax_rate": teacher_decisions_model.tax_rate if teacher_decisions_model.tax_rate is not None else CompanyPreset.DEFAULT_TAX_RATE,
+                "inflation": teacher_decisions_model.inflation if teacher_decisions_model.inflation is not None else FactoryPreset.BASE_INFLATION,
+                "loan_limit": teacher_decisions_model.loan_limit if teacher_decisions_model.loan_limit is not None else CompanyPreset.DEFAULT_LOAN_LIMIT,
             }
         except models.TeacherDecisions.DoesNotExist:
             self.teacher_decisions = {
@@ -70,14 +70,41 @@ class Simulation:
                 "inflation": FactoryPreset.BASE_INFLATION,
                 "loan_limit": CompanyPreset.DEFAULT_LOAN_LIMIT,
             }
-            pass
+        return
+    
+    def __setup_game_parameters(self) -> None:
+        game_parameters_model = self.game_model.parameters
+        if game_parameters_model is not None:
+            self.game_parameters = {
+                "budget_cap": game_parameters_model.budget_cap if game_parameters_model.budget_cap is not None else CompanyPreset.DEFAULT_BUDGET_PER_TURN,
+                "depreciation": game_parameters_model.depreciation if game_parameters_model.depreciation is not None else FactoryPreset.FACTORY_WRITEOFF_RATE,
+                "base_man_cost": game_parameters_model.base_man_cost if game_parameters_model.base_man_cost is not None else FactoryPreset.BASE_MATERIAL_COST_PER_UNIT,
+                "base_capital": game_parameters_model.base_capital if game_parameters_model.base_capital is not None else FactoryPreset.STARTING_INVESTMENT,
+                "end_turn_on_committed": game_parameters_model.end_turn_on_committed if game_parameters_model.end_turn_on_committed is not None else True,
+            }
+        else:
+            self.game_parameters = {
+                "budget_cap": CompanyPreset.DEFAULT_BUDGET_PER_TURN,
+                "depreciation": FactoryPreset.FACTORY_WRITEOFF_RATE,
+                "base_man_cost": FactoryPreset.BASE_MATERIAL_COST_PER_UNIT,
+                "base_capital": FactoryPreset.STARTING_INVESTMENT,
+                "end_turn_on_committed": True,
+            }
+        return
+
+
+    def __setup_simulation(self) -> None:
+
+        # load teacher decisions and game parameters
+        self.__setup_teacher_decisions()
+        self.__setup_game_parameters()
 
         # Filter companies that are in this game
         companies_models = models.Company.objects.filter(game=self.game_model)
         # iterate over the companies and create all relevant classes
         for company_model in companies_models:
             # add the company to the companies dictionary
-            self.companies[company_model.name] = self.create_company(
+            self.companies[company_model.name] = self.__create_company(
                 company_model=company_model
             )
 
@@ -100,8 +127,9 @@ class Simulation:
                 customer_count=config.MarketPreset.STARTING_CUSTOMER_COUNT,
             )  # TODO: companies is aleady a dict, we dont have to generate it in market object
         print("Simulation was set up without any errors!")
+        return
 
-    def create_company(self, company_model: models.Company) -> Company:
+    def __create_company(self, company_model: models.Company) -> Company:
         # filter CompaniesUpgrades
         try:
             company_upgrades = models.CompaniesUpgrades.objects.filter(
@@ -130,11 +158,12 @@ class Simulation:
             pt_company_state = None
             print(f"CompaniesState FOR PREV TURN WAS NONE FOR COMPANY {company_model.name}")
 
+        # setup values that are passed into the company constructor 
         init_brand = company_model.name
         if company_state is not None:
-            init_max_budget = CompanyPreset.DEFAULT_BUDGET_PER_TURN if company_state.cash > CompanyPreset.DEFAULT_BUDGET_PER_TURN else (company_state.cash if company_state.cash > 0 else 0)
+            init_max_budget = self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN) if company_state.cash > self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN) else (company_state.cash if company_state.cash > 0 else 0)
             init_inventory = company_state.inventory if company_state.inventory is not None else 0
-            init_balance = company_state.cash if company_state.cash is not None else CompanyPreset.DEFAULT_BUDGET_PER_TURN #CHANGED after balance became cash (in models)
+            init_balance = company_state.cash if company_state.cash is not None else self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN) #CHANGED after balance became cash (in models)
             init_ret_earnings = company_state.ret_earnings if company_state.ret_earnings is not None else 0
             init_loans = company_state.loans if company_state.loans is not None else 0
             init_amount_spent_on_upgrades = company_state.r_d if company_state.r_d is not None else 0
@@ -143,9 +172,9 @@ class Simulation:
             else:
                 init_capital_investment_this_turn = 0
         else:
-            init_max_budget = CompanyPreset.DEFAULT_BUDGET_PER_TURN
+            init_max_budget = self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN)
             init_inventory = 0
-            init_balance = CompanyPreset.DEFAULT_BUDGET_PER_TURN
+            init_balance = self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN)
             init_ret_earnings = 0
             init_loans = 0
             init_amount_spent_on_upgrades = 0
@@ -168,8 +197,7 @@ class Simulation:
             init_prev_turn_total_ppu = 0
             init_prev_turn_inventory = 0
 
-        
-
+        # setup marketing investments
         init_marketing: Dict[str, MarketingType] = {}
         marketing_model = company_state.marketing
         if marketing_model is not None:
@@ -206,8 +234,8 @@ class Simulation:
             marketing = init_marketing,
         )
 
-        new_company.factory = self.create_factory(factory_model=company_state.factory)
-        new_company.product = self.create_product(
+        new_company.factory = self.__create_factory(factory_model=company_state.factory)
+        new_company.product = self.__create_product(
             company=new_company,
             production_model=company_state.production,
             company_upgrades=company_upgrades,
@@ -215,7 +243,7 @@ class Simulation:
         return new_company
 
 
-    def create_factory(self, factory_model: models.Factory) -> Factory:
+    def __create_factory(self, factory_model: models.Factory) -> Factory:
         if factory_model is not None:
             new_factory = Factory(
                 capacity= factory_model.capacity
@@ -224,15 +252,19 @@ class Simulation:
 
                 capital_investment=factory_model.capital_investments
                 if factory_model.capital_investments is not None
-                else FactoryPreset.STARTING_INVESTMENT,
+                else self.game_parameters.get("base_capital", FactoryPreset.STARTING_INVESTMENT),
 
                 inflation=self.teacher_decisions.get("inflation", FactoryPreset.BASE_INFLATION),
+                depreciation_rate=self.game_parameters.get("depreciation", FactoryPreset.FACTORY_WRITEOFF_RATE),
+                base_capital_investment=self.game_parameters.get("base_capital", FactoryPreset.STARTING_INVESTMENT),
             )
         else:
             new_factory = Factory(
                 capacity= FactoryPreset.STARTING_CAPACITY,
-                capital_investment= FactoryPreset.STARTING_INVESTMENT,
+                capital_investment= self.game_parameters.get("base_capital", FactoryPreset.STARTING_INVESTMENT),
                 inflation=self.teacher_decisions.get("inflation", FactoryPreset.BASE_INFLATION),
+                depreciation_rate=self.game_parameters.get("depreciation", FactoryPreset.FACTORY_WRITEOFF_RATE),
+                base_capital_investment=self.game_parameters.get("base_capital", FactoryPreset.STARTING_INVESTMENT),
             )
 
         new_factory.base_energy_cost = (
@@ -242,7 +274,7 @@ class Simulation:
         )
         return new_factory
 
-    def create_product(
+    def __create_product(
         self,
         company: Company,
         production_model: models.Production,
@@ -258,20 +290,15 @@ class Simulation:
                 if production_model.sell_price is not None
                 else 0
             )  # TODO change default sell price
-            new_product.set_man_cost(
-                production_model.man_cost
-                if production_model.man_cost is not None
-                else FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
-            )
             company.production_volume = (
                 production_model.volume if production_model.volume is not None else 0
             )
         else:
             new_product.set_price(0)
-            new_product.set_man_cost(FactoryPreset.BASE_MATERIAL_COST_PER_UNIT)
             company.production_volume = 0
             print(f"PRODUCTION MODEL WAS NONE FOR COMPANNY {company.brand}")
 
+        new_product.set_man_cost(self.game_parameters.get("base_man_cost", FactoryPreset.BASE_MATERIAL_COST_PER_UNIT))
         new_product.upgrades = (
             {}
         )  # TODO: maybe this should be in the object constructor
@@ -302,6 +329,7 @@ class Simulation:
         #    print(company)
         #    pass
         pass
+        return
 
     def write_simulation_results(self) -> None:
         # declare lists and dictionaries
@@ -336,8 +364,7 @@ class Simulation:
         ct_market_state_model = models.MarketState.objects.get(turn=self.turn_model)
         nt_market_state_model = models.MarketState.objects.get(turn=self.next_turn_model)
 
-        # write data from classes to models
-        # curent turn
+        # write current turn
         ct_total_units_sold = 0
         ct_total_units_demanded = 0
         ct_total_units_manufactured = 0
@@ -370,8 +397,7 @@ class Simulation:
         ct_market_state_model.manufactured = ct_total_units_manufactured  # sum of all units manufactured
         ct_market_state_model.save()
 
-        # write data from classes to models
-        # next turn
+        # write next turn
         for company_model in nt_companies_states.keys():
             self.write_next_turn_company_state(
                 company_class_object=self.companies[company_model.name],
@@ -379,37 +405,35 @@ class Simulation:
             )
         nt_market_state_model.demand = ct_total_units_demanded
         nt_market_state_model.save()
+        return
 
     def write_current_turn_company_state(self, company_class_object: Company, ct_company_state_model: models.CompaniesState) -> None:
         
-        ct_company_state_model.cash = company_class_object.balance #round(company_class_object.balance, 2)  #CHANGED after balance became cash (in models)
-        ct_company_state_model.stock_price = company_class_object.stock_price #round(company_class_object.stock_price, 2)
+        ct_company_state_model.cash = company_class_object.balance
+        ct_company_state_model.stock_price = company_class_object.stock_price
         ct_company_state_model.inventory = company_class_object.inventory
-        
         ct_company_state_model.orders_received = self.market.customer_distribution[company_class_object.brand]["demand"]
         ct_company_state_model.orders_fulfilled = company_class_object.units_sold
-        #ct_company_state_model.cash = company_class_object.prev_balance #round(company_class_object.prev_balance, 2)
-        ct_company_state_model.ret_earnings = company_class_object.ret_earnings + company_class_object.profit_after_tax #round((company_class_object.ret_earnings+ company_class_object.profit_after_tax),2)
-        ct_company_state_model.net_profit = company_class_object.profit_after_tax #round(company_class_object.profit_after_tax, 2)
-        ct_company_state_model.depreciation = company_class_object.factory.upkeep.get("writeoff", 0) #(round(company_class_object.factory.upkeep.get("writeoff", 0), 2)
-        ct_company_state_model.new_loans = company_class_object.new_loans #round(company_class_object.new_loans, 2)
-        ct_company_state_model.inventory_charge = company_class_object.value_paid_in_inventory_charge #round(company_class_object.value_paid_in_inventory_charge, 2)
-        ct_company_state_model.sales = company_class_object.income_per_turn #round(company_class_object.income_per_turn, 2)
-        ct_company_state_model.manufactured_man_cost = company_class_object.prod_costs_per_turn #round(company_class_object.prod_costs_per_turn, 2)
+        ct_company_state_model.ret_earnings = company_class_object.ret_earnings + company_class_object.profit_after_tax
+        ct_company_state_model.net_profit = company_class_object.profit_after_tax 
+        ct_company_state_model.depreciation = company_class_object.factory.upkeep.get("writeoff", 0)
+        ct_company_state_model.new_loans = company_class_object.new_loans
+        ct_company_state_model.inventory_charge = company_class_object.value_paid_in_inventory_charge
+        ct_company_state_model.sales = company_class_object.income_per_turn
+        ct_company_state_model.manufactured_man_cost = company_class_object.prod_costs_per_turn
         ct_company_state_model.sold_man_cost = company_class_object.cost_of_goods_sold
-        
-        ct_company_state_model.tax = company_class_object.value_paid_in_tax #round(company_class_object.value_paid_in_tax, 2)
-        ct_company_state_model.profit_before_tax = company_class_object.profit_before_tax #round(company_class_object.profit_before_tax, 2)
-        ct_company_state_model.interest = company_class_object.value_paid_in_interest #round(company_class_object.value_paid_in_interest, 2)
-        ct_company_state_model.cash_flow_res = company_class_object.cashflow_result #round(company_class_object.cashflow_result, 2)
-        ct_company_state_model.loan_repayment = company_class_object.value_paid_in_loan_repayment #round(company_class_object.value_paid_in_loan_repayment, 2)
-        ct_company_state_model.loans = company_class_object.loans #round(company_class_object.loans, 2)
-        ct_company_state_model.inventory_upgrade = company_class_object.value_paid_in_stored_product_upgrades #round(company_class_object.value_paid_in_stored_product_upgrades, 2)
-        ct_company_state_model.overcharge_upgrade = company_class_object.price_diff_stored_products #round(company_class_object.price_diff_stored_products, 2)
+        ct_company_state_model.tax = company_class_object.value_paid_in_tax
+        ct_company_state_model.profit_before_tax = company_class_object.profit_before_tax
+        ct_company_state_model.interest = company_class_object.value_paid_in_interest
+        ct_company_state_model.cash_flow_res = company_class_object.cashflow_result
+        ct_company_state_model.loan_repayment = company_class_object.value_paid_in_loan_repayment
+        ct_company_state_model.loans = company_class_object.loans
+        ct_company_state_model.inventory_upgrade = company_class_object.value_paid_in_stored_product_upgrades
+        ct_company_state_model.overcharge_upgrade = company_class_object.price_diff_stored_products
 
         if ct_company_state_model.production is not None:
-            ct_company_state_model.production.man_cost = company_class_object.prod_ppu #round(company_class_object.prod_ppu, 2)
-            ct_company_state_model.production.man_cost_all = company_class_object.total_ppu #round(company_class_object.total_ppu, 2)
+            ct_company_state_model.production.man_cost = company_class_object.prod_ppu
+            ct_company_state_model.production.man_cost_all = company_class_object.total_ppu
             ct_company_state_model.production.volume = company_class_object.production_volume
             ct_company_state_model.production.save()
         if ct_company_state_model.factory is not None:
@@ -417,6 +441,7 @@ class Simulation:
             ct_company_state_model.factory.capital_investments = company_class_object.factory.capital_investment
             ct_company_state_model.factory.save()
         ct_company_state_model.save()
+        return
     
     def write_next_turn_company_state(self, company_class_object: Company, nt_company_state_model: models.CompaniesState) -> None:
         nt_company_state_model.cash = company_class_object.balance #CHANGED after balance became cash (in models)
@@ -426,9 +451,6 @@ class Simulation:
             company_class_object.ret_earnings
             + company_class_object.profit_after_tax
         )
-        if nt_company_state_model.production is not None:
-            nt_company_state_model.production.man_cost = FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
-            nt_company_state_model.production.save()
         if nt_company_state_model.factory is not None:
             nt_company_state_model.factory.capacity = company_class_object.factory.capacity
             nt_company_state_model.factory.capital_investments = (
@@ -436,3 +458,4 @@ class Simulation:
             )
             nt_company_state_model.factory.save()
         nt_company_state_model.save()
+        return
