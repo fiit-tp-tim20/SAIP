@@ -43,6 +43,16 @@ class Factory:
 
     upkeep: dict[str, float] = field(init=False)
     inflation: float = FactoryPreset.BASE_INFLATION
+    
+    #game_parameters: dict[str, float] = field(init=True)
+    # a dict of values:
+    #"budget_cap": default - CompanyPreset.DEFAULT_BUDGET_PER_TURN,
+    #"depreciation": default - FactoryPreset.FACTORY_WRITEOFF_RATE,
+    #"base_man_cost": default - FactoryPreset.BASE_MATERIAL_COST_PER_UNIT,
+    #"base_capital": default - FactoryPreset.STARTING_INVESTMENT,
+    #"end_turn_on_committed": default - True,
+    base_capital_investment: float = field(init=True, default=FactoryPreset.STARTING_INVESTMENT)   # Added so that we can correctly calculate capacity in invest_into_factory - changed FactoryPreset.STARTING_INVESTMENT to this
+    # TODO: maybe we want to add a full dict instead if we decide that things are configurable...........
 
     def __post_init__(self):
         self.upkeep = {
@@ -108,8 +118,8 @@ class Factory:
         self.capital_investment += investment
         self.prev_capacity = self.capacity
         self.capacity = FactoryPreset.STARTING_CAPACITY + floor(
-            (self.capital_investment - FactoryPreset.STARTING_INVESTMENT)
-            / FactoryPreset.STARTING_INVESTMENT
+            (self.capital_investment - self.base_capital_investment)
+            / self.base_capital_investment
             * FactoryPreset.STARTING_CAPACITY
         )
 
