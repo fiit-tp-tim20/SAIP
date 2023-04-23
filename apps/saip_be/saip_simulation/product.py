@@ -1,7 +1,23 @@
+import sys
+from pathlib import Path
+
+file = Path(__file__).resolve()
+parent, root = file.parent, file.parents[1]
+
+if str(root) not in sys.path:
+    sys.path.append(str(root))
+
+# Additionally remove the current file's directory from sys.path
+try:
+    sys.path.remove(str(parent))
+except ValueError:  # Already removed
+    pass
+
+
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from typing import Dict
-
+from saip_simulation.company import Company
 
 @dataclass
 class Upgrade:
@@ -21,6 +37,8 @@ class Product(ABC):
     _upgrade_sales_effect_multiplier: float = field(init=False, default=1)
     _upgrade_man_cost_effect_multiplier: float = field(init=False, default=1)
     _upgrade_stored_products_price: float = field(init=False, default=0)
+    company: Company = field(init=False, default=None)
+    marketing_value: float = field(init=False, default=0.0)
 
     def set_price(self, new_price: float) -> None:
         self.price = new_price
@@ -79,6 +97,10 @@ class Product(ABC):
     def upgrade_stored_products(self):
         self._perform_upgrade_logic()
         self._set_upgrade_stored_products_price(self._calculate_upgrade_price())
+        
+    def attach_company(self, company: Company):
+        self.company = company
+        self.marketing_value += company.yield_agg_marketing_value()
 
     @abstractmethod
     def _calculate_upgrade_price(self) -> float:
