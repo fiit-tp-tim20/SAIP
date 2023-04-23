@@ -2,7 +2,6 @@ from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from typing import Dict
 
-
 @dataclass
 class Upgrade:
     status: str
@@ -21,6 +20,8 @@ class Product(ABC):
     _upgrade_sales_effect_multiplier: float = field(init=False, default=1)
     _upgrade_man_cost_effect_multiplier: float = field(init=False, default=1)
     _upgrade_stored_products_price: float = field(init=False, default=0)
+    company: object = field(init=False, default=None)
+    marketing_value: float = field(init=False, default=0.0)
 
     def set_price(self, new_price: float) -> None:
         self.price = new_price
@@ -79,6 +80,10 @@ class Product(ABC):
     def upgrade_stored_products(self):
         self._perform_upgrade_logic()
         self._set_upgrade_stored_products_price(self._calculate_upgrade_price())
+        
+    def attach_company(self, company):
+        self.company = company
+        self.marketing_value += company.yield_agg_marketing_value()
 
     @abstractmethod
     def _calculate_upgrade_price(self) -> float:
