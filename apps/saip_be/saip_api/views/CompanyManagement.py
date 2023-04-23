@@ -133,10 +133,16 @@ class IndustryReport(APIView):
             company = Company.objects.get(user=request.user)
         except Company.DoesNotExist:
             return Response({"detail": "Company for this user not found"}, status=404)
+        
+        try:
+            turn = Turn.objects.get(game=company.game, number=request.GET.get("turn"))
+        except Turn.DoesNotExist:
+            return Response({"detail": "Turn not found"}, status=404)
 
-        last_turn = get_last_turn(company.game)
-        company_states = CompaniesState.objects.filter(turn=Turn.objects.get(game=company.game, number=last_turn.number-1))
-        market_state = MarketState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1))
+        #last_turn = get_last_turn(company.game)
+        
+        company_states = CompaniesState.objects.filter(turn=Turn.objects.get(game=company.game, number=turn.number))
+        market_state = MarketState.objects.get(turn=Turn.objects.get(game=company.game, number=turn.number))
 
         industry = dict()
         for state in company_states:
@@ -151,7 +157,7 @@ class IndustryReport(APIView):
 
             industry[state.company.name] = company_info
 
-        market_state_previous = MarketState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-2))
+        market_state_previous = MarketState.objects.get(turn=Turn.objects.get(game=company.game, number=turn.number-1))
         
         market = dict()
         market['demand'] = market_state.demand
@@ -181,8 +187,8 @@ class IndustryReport(APIView):
         except (ZeroDivisionError, TypeError):
             market['inventory_difference'] = "N/A"
 
-        teacher_decisions = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=last_turn.number-1))
-        teacher_decisions_previous = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=last_turn.number-2))
+        teacher_decisions = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=turn.number))
+        teacher_decisions_previous = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=turn.number-1))
         economic_parameters = dict()
         economic_parameters['interest_rate'] = teacher_decisions.interest_rate * 100
         try:
@@ -219,15 +225,20 @@ class CompanyReport(APIView):
             company = Company.objects.get(user=request.user)
         except Company.DoesNotExist:
             return Response({"detail": "Company for this user not found"}, status=404)
+        
+        try:
+            turn = Turn.objects.get(game=company.game, number=request.GET.get("turn"))
+        except Turn.DoesNotExist:
+            return Response({"detail": "Turn not found"}, status=404)
 
-        last_turn = get_last_turn(company.game)
+        #last_turn = get_last_turn(company.game)
         #company_state = CompaniesState.objects.get(turn=last_turn, company=company)
         
-        company_state_previous = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1), company=company)
+        company_state_previous = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn.number), company=company)
         marketing = company_state_previous.marketing.billboard + company_state_previous.marketing.tv + company_state_previous.marketing.viral + company_state_previous.marketing.podcast + company_state_previous.marketing.ooh
        
         try:
-            state2ago = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-2), company=company)
+            state2ago = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn.number-1), company=company)
         except (Turn.DoesNotExist, CompaniesState.DoesNotExist):
             state2ago = False
 
@@ -263,10 +274,10 @@ class CompanyReport(APIView):
 
         cash_flow = dict()
         try:
-            tmp_beginning_cash = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-2), company=company).cash
+            tmp_beginning_cash = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn.number-1), company=company).cash
             cash_flow['beginning_cash'] = round(tmp_beginning_cash, 2) if tmp_beginning_cash is not None else "N/A" #???
         except (Turn.DoesNotExist, CompaniesState.DoesNotExist):
-            tmp_beginning_cash = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=last_turn.number-1), company=company).cash
+            tmp_beginning_cash = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn.number), company=company).cash
             cash_flow['beginning_cash'] = round(tmp_beginning_cash, 2) if tmp_beginning_cash is not None else "N/A" #???
             #"Počiatočný stav"
 
