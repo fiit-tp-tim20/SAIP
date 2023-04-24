@@ -1,4 +1,8 @@
 from django.contrib import admin
+from django.http import HttpResponse
+import csv
+import io
+
 from .models import Turn, Company, Production, Marketing, Factory, CompaniesState, Game, GameParameters, MarketState,\
     Upgrade, CompaniesUpgrades, TeacherDecisions
 
@@ -78,7 +82,24 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
         if not get_last_turn(obj): # verify that there is no turn for this game (it was just created)
             create_turn(0, obj)
 
-    change_actions = ('EndTurn',)
+    @action(label='Download export', description='Download export for this game')
+    def Download(modeladmin, request, queryset):
+        if request.user != queryset.admin:
+            # print("You are not the admin of this game")
+            return
+
+        f = io.StringIO()
+        writer = csv.writer(f)
+
+        writer.writerow(['start', 'end', 'name', 'admin', 'turns'])
+        writer.writerow([queryset.start, queryset.end, queryset.name, queryset.admin, queryset.turns])
+
+        f.seek(0)
+        response = HttpResponse(f, content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="{queryset.name}.csv"'
+        return response
+
+    change_actions = ('EndTurn', 'Download')
     list_display = ('name', 'admin', 'start', 'end', 'turns')
     list_filter = ('admin',)
 
