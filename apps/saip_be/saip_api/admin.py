@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.http import HttpResponse
-import csv
-import io
+
+from .Exports import create_game_export
 
 from .models import Turn, Company, Production, Marketing, Factory, CompaniesState, Game, GameParameters, MarketState,\
     Upgrade, CompaniesUpgrades, TeacherDecisions
@@ -67,12 +67,13 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
     @action(label='End Turn', description='Ends the turn if you are admin for this game')
     def EndTurn(modeladmin, request, queryset):
         if request.user != queryset.admin or queryset.end is not None:
-            # print("You are not the admin of this game")
-            return
+            return HttpResponse("You are not the admin of this game", status=403)
 
         last_turn = get_last_turn(queryset)
-        if not last_turn or last_turn.end is not None:
-            return
+        if not last_turn:
+            return HttpResponse("Last turn not found", status=404)
+        if last_turn.end is not None:
+            return HttpResponse("Last turn is already ended", status=500)
         _ = end_turn(last_turn)
 
     def save_model(self, request, obj, form, change):
@@ -85,18 +86,12 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
     @action(label='Download export', description='Download export for this game')
     def Download(modeladmin, request, queryset):
         if request.user != queryset.admin:
-            # print("You are not the admin of this game")
-            return
+            return HttpResponse("You are not the admin of this game", status=403)
 
-        f = io.StringIO()
-        writer = csv.writer(f)
+        f = create_game_export(queryset)
 
-        writer.writerow(['start', 'end', 'name', 'admin', 'turns'])
-        writer.writerow([queryset.start, queryset.end, queryset.name, queryset.admin, queryset.turns])
-
-        f.seek(0)
-        response = HttpResponse(f, content_type='text/csv')
-        response['Content-Disposition'] = f'attachment; filename="{queryset.name}.csv"'
+        response = HttpResponse(f.getvalue(), content_type='application/zip')
+        response['Content-Disposition'] = f'attachment; filename="{queryset.name}.zip"'
         return response
 
     change_actions = ('EndTurn', 'Download')
