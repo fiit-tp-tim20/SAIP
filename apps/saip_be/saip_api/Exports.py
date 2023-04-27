@@ -14,7 +14,7 @@ def create_game_export(game: Game) -> io.BytesIO:
     companies_writer.writerow(['turn', 'name', 'man_cost', 'sell_price', 'volume', 'marketing_viral',
                                'marketing_podcast', 'marketing_ooh', 'marketing_tv', 'marketing_billboard',
                                'factory_capacity', 'factory_capital', 'factory_capital_investments',
-                               'r_d', 'balance', 'inventory', 'orders_received', 'orders_fulfilled',
+                               'r_d', 'cash', 'inventory', 'orders_received', 'orders_fulfilled',
                                'ret_earnings', 'net_profit', 'cash_flow_res', 'stock_price'])
 
     market_writer.writerow(['turn', 'sold', 'demand', 'inventory', 'manufactured', 'capacity'])
@@ -31,7 +31,7 @@ def create_game_export(game: Game) -> io.BytesIO:
             companies_writer.writerow([turn.number, company.name, prod.man_cost, prod.sell_price, prod.volume,
                                         mark.viral, mark.podcast, mark.ooh, mark.tv, mark.billboard,
                                         fact.capacity, fact.capital, fact.capital_investments,
-                                        cs.r_d, cs.balance, cs.inventory, cs.orders_received, cs.orders_fulfilled,
+                                        cs.r_d, cs.cash, cs.inventory, cs.orders_received, cs.orders_fulfilled,
                                         cs.ret_earnings, cs.net_profit, cs.cash_flow_res, cs.stock_price])
 
     with ZipFile(f, 'w', zipfile.ZIP_DEFLATED) as zip_file:
