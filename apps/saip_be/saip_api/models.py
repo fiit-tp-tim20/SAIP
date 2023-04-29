@@ -20,7 +20,7 @@ class Game(models.Model):
     start = models.DateTimeField(null=True, auto_now_add=True)
     end = models.DateTimeField(null=True, blank=True, editable=False)
     name = models.CharField(max_length=100, null=True)
-    admin = models.ForeignKey(User, models.PROTECT, null=True)
+    admin = models.ForeignKey(User, models.PROTECT, null=True, limit_choices_to={'is_staff': True})
     turns = models.PositiveIntegerField(null=True, default=16)
     # parameters = models.ForeignKey(GameParameters, models.CASCADE, null=True, default=get_default_game_parameters)
     parameters = models.ForeignKey(GameParameters, models.CASCADE, null=True)
