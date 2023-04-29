@@ -52,7 +52,15 @@ def create_company_state(company: Company, turn: Turn) -> CompaniesState:
 def create_turn(number: int, game: Game) -> Turn:
     turn = Turn.objects.create(number=number, game=game)
     MarketState.objects.create(turn=turn).save()
-    TeacherDecisions.objects.create(turn=turn).save()
+
+    try:
+        prev_td = TeacherDecisions.objects.get(turn__game=game, turn__number=number-1)
+    except TeacherDecisions.DoesNotExist:
+        TeacherDecisions.objects.create(turn=turn).save()
+    else:
+        prev_td.pk = None
+        prev_td.turn = turn
+        prev_td.save()
     
     companies = Company.objects.filter(game=game)
     

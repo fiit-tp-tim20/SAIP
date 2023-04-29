@@ -42,7 +42,7 @@ class FactoryAdmin(admin.ModelAdmin):
 
 @admin.register(CompaniesState)
 class CompaniesStateAdmin(admin.ModelAdmin):
-    list_display = ('company', 'turn', 'production', 'marketing', 'factory', 'balance', 'stock_price', 'r_d',
+    list_display = ('company', 'turn', 'production', 'marketing', 'factory', 'cash', 'stock_price', 'r_d',
                     'inventory', 'manufactured_man_cost')
     list_filter = ('turn', 'company__game')
 
@@ -50,6 +50,7 @@ class CompaniesStateAdmin(admin.ModelAdmin):
 @admin.register(MarketState)
 class MarketStateAdmin(admin.ModelAdmin):
     list_display = ('turn', 'sold', 'demand', 'inventory', 'manufactured', 'capacity')
+    list_filter = ('turn__game',)
 
 @admin.register(TeacherDecisions)
 class TeacherDecisions(admin.ModelAdmin):
@@ -102,6 +103,7 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
 @admin.register(GameParameters)
 class GameParametersAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'budget_cap', 'depreciation', 'base_man_cost')
+    list_filter = ('game',)
 
 
 @admin.register(Upgrade)
