@@ -1,4 +1,8 @@
 from django.contrib import admin
+from django.http import HttpResponse
+
+from .Exports import create_game_export
+
 from .models import Turn, Company, Production, Marketing, Factory, CompaniesState, Game, GameParameters, MarketState,\
     Upgrade, CompaniesUpgrades, TeacherDecisions
 
@@ -63,12 +67,13 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
     @action(label='End Turn', description='Ends the turn if you are admin for this game')
     def EndTurn(modeladmin, request, queryset):
         if request.user != queryset.admin or queryset.end is not None:
-            # print("You are not the admin of this game")
-            return
+            return HttpResponse("You are not the admin of this game", status=403)
 
         last_turn = get_last_turn(queryset)
-        if not last_turn or last_turn.end is not None:
-            return
+        if not last_turn:
+            return HttpResponse("Last turn not found", status=404)
+        if last_turn.end is not None:
+            return HttpResponse("Last turn is already ended", status=500)
         _ = end_turn(last_turn)
 
     def save_model(self, request, obj, form, change):
@@ -78,7 +83,18 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
         if not get_last_turn(obj): # verify that there is no turn for this game (it was just created)
             create_turn(0, obj)
 
-    change_actions = ('EndTurn',)
+    @action(label='Download export', description='Download export for this game')
+    def Download(modeladmin, request, queryset):
+        if request.user != queryset.admin:
+            return HttpResponse("You are not the admin of this game", status=403)
+
+        f = create_game_export(queryset)
+
+        response = HttpResponse(f.getvalue(), content_type='application/zip')
+        response['Content-Disposition'] = f'attachment; filename="{queryset.name}.zip"'
+        return response
+
+    change_actions = ('EndTurn', 'Download')
     list_display = ('name', 'admin', 'start', 'end', 'turns')
     list_filter = ('admin',)
 
