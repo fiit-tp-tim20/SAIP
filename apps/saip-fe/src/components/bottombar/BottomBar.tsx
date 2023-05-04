@@ -19,6 +19,8 @@ export default function BottomBar() {
 
 	const { Modal, isShowing, setIsShowing, setElement } = useModal(<div />);
 
+	const { reset: resetUpgradeState } = useUpgradesStore();
+
 	const {
 		getSum: getSumMarketing,
 		getChecked: getCheckedMarketing,
@@ -58,6 +60,7 @@ export default function BottomBar() {
 
 		await endTurn(gameState);
 		await refetchCommited();
+		resetUpgradeState();
 	};
 
 	const handleModalSubmit = async () => {
