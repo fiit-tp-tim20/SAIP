@@ -9,9 +9,9 @@ import useUpgradesStore from "../../store/Upgrades";
 import { GameState } from "../../types/gameState";
 import useModal from "../modal/useModal";
 import BottomBarModal from "./BottomBarModal";
-import { getCommitted } from "../../api/GetCommitted";
 import getGeneralInfo from "../../api/CompanyInfo";
 import endTurn from "../../api/EndTurn";
+import getCommitted from "../../api/GetCommitted";
 
 export default function BottomBar() {
 	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());

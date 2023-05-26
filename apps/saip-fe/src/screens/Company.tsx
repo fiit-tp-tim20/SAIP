@@ -1,24 +1,22 @@
 import React from "react";
+import { useQuery } from "react-query";
 import Slider from "../components/slider/Slider";
 import useCompanyStore from "../store/Company";
-import { useQuery } from "react-query";
 import { getCompanyStats } from "../api/GetCompanyStats";
-import { getCompanyReport } from "../api/GetCompanyReport";
 import CompanyGraph from "../components/statisticsGraph/CompanyGraph";
 import { getTurn } from "../api/GetTurn";
+import getCompanyReport from "../api/GetCompanyReport";
 
 function Company() {
 	const token = localStorage.getItem("token");
 
-	const { data: _turn } = useQuery({
+	const { data: turn } = useQuery({
 		queryKey: ["currentTurn"],
 		queryFn: () => token && getTurn(),
 	});
 
 	const { isLoading: statsIsLoading, data: statsData } = useQuery(["getCompanyStats"], getCompanyStats);
-	const { isLoading: reportIsLoading, data: reportData } = useQuery(["companyReport", _turn], () =>
-		getCompanyReport(_turn.Number - 1),
-	);
+	const { data: reportData } = useQuery(["companyReport", turn], () => getCompanyReport(turn.Number - 1));
 
 	const {
 		productCount,

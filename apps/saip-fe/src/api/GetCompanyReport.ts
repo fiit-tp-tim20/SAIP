@@ -1,6 +1,6 @@
-export const getCompanyReport = async (turn: number) => {
+const getCompanyReport = async (turn: number) => {
 	if (turn === -1) {
-		return;
+		return null;
 	}
 
 	const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/company_report/?turn=${turn}`, {
@@ -14,3 +14,5 @@ export const getCompanyReport = async (turn: number) => {
 
 	return data;
 };
+
+export default getCompanyReport;

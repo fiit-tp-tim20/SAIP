@@ -1,20 +1,18 @@
-import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { getCompanyReport } from "../../api/GetCompanyReport";
+import getCompanyReport from "../../api/GetCompanyReport";
 import { getTurn } from "../../api/GetTurn";
-import { currentTurn } from "../../store/Atoms";
 import numberWithSpaces from "../../utils/numberWithSpaces";
 
 function CompanyReport() {
 	const token = localStorage.getItem("token");
 
-	const { data: _turn } = useQuery({
+	const { data: TURN } = useQuery({
 		queryKey: ["currentTurn"],
 		queryFn: () => token && getTurn(),
 	});
 
-	const [turn, setTurn] = useState<number>(_turn.Number - 1);
+	const [turn, setTurn] = useState<number>(TURN.Number - 1);
 	const { isLoading, data } = useQuery(["companyReport", turn], () => getCompanyReport(turn));
 
 	return (
@@ -33,7 +31,7 @@ function CompanyReport() {
 						value={turn}
 						onChange={(e) => setTurn(parseInt(e.target.value, 10))}
 					>
-						{[...Array(_turn.Number).keys()].map((o) => (
+						{[...Array(TURN.Number).keys()].map((o) => (
 							<option value={o}>{o}</option>
 						))}
 					</select>
@@ -199,12 +197,6 @@ function CompanyReport() {
 							<h2>Cashflow</h2>
 						</div>
 						<table className="table-auto table-white">
-							{/* <thead>
-									<tr>
-									<th className="px-4 py-2">Column 1</th>
-									<th className="px-4 py-2">Column 2</th>
-									</tr>
-								</thead> */}
 							<tbody>
 								<tr>
 									<td className="px-4 py-2">Počiatočný stav</td>
@@ -248,7 +240,6 @@ function CompanyReport() {
 										{numberWithSpaces(data.cash_flow.tax)} €
 									</td>
 								</tr>
-								{/* Sem hrubá čiara a výsledok */}
 								<tr>
 									<td className="px-4 py-2">
 										<b>Výsledok finančného toku</b>
