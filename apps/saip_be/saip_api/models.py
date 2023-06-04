@@ -208,12 +208,12 @@ class MarketState(models.Model):
 
 class Inventory(models.Model):
     company = models.ForeignKey(Company, models.PROTECT, null=True)
-    unit_count = models.PositiveIntegerField(null=True, blank=True)
-    price_per_unit = models.PositiveIntegerField(null=True, blank=True)
-    turn_num = models.PositiveIntegerField(null=True, blank=True)
+    unit_count = models.PositiveIntegerField(null=True)
+    price_per_unit = models.PositiveIntegerField(null=True)
+    turn_num = models.PositiveIntegerField(null=True)
 
     def __str__(self):
-        return f"Inventories - {self.turn}"
+        return f"Inventories - {self.company}"
 
     class Meta:
         db_table = "Inventories"
