@@ -20,7 +20,7 @@ class Game(models.Model):
     start = models.DateTimeField(null=True, auto_now_add=True)
     end = models.DateTimeField(null=True, blank=True, editable=False)
     name = models.CharField(max_length=100, null=True)
-    admin = models.ForeignKey(User, models.PROTECT, null=True)
+    admin = models.ForeignKey(User, models.PROTECT, null=True, limit_choices_to={'is_staff': True})
     turns = models.PositiveIntegerField(null=True, default=16)
     # parameters = models.ForeignKey(GameParameters, models.CASCADE, null=True, default=get_default_game_parameters)
     parameters = models.ForeignKey(GameParameters, models.CASCADE, null=True)
@@ -57,7 +57,7 @@ class Company(models.Model):
     game = models.ForeignKey(
         Game, models.DO_NOTHING, null=True, related_name="game_companies"
     )
-    participants = models.CharField(max_length=100, null=True)
+    participants = models.CharField(max_length=1000, null=True)
 
     def __str__(self):
         return f"{self.game} - {self.name} ({self.user})"
@@ -153,7 +153,7 @@ class CompaniesState(models.Model):
         Production, models.SET_NULL, null=True, blank=True
     )
     factory = models.OneToOneField(Factory, models.SET_NULL, null=True, blank=True)
-    balance = models.FloatField(null=True, blank=True, default=0)
+    # balance = models.FloatField(null=True, blank=True, default=0)
     stock_price = models.FloatField(null=True, blank=True)
     inventory = models.PositiveIntegerField(null=True, default=0)
     r_d = models.PositiveBigIntegerField(null=True, default=0)

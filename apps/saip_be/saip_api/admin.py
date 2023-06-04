@@ -42,7 +42,7 @@ class FactoryAdmin(admin.ModelAdmin):
 
 @admin.register(CompaniesState)
 class CompaniesStateAdmin(admin.ModelAdmin):
-    list_display = ('company', 'turn', 'production', 'marketing', 'factory', 'balance', 'stock_price', 'r_d',
+    list_display = ('company', 'turn', 'production', 'marketing', 'factory', 'cash', 'stock_price', 'r_d',
                     'inventory', 'manufactured_man_cost')
     list_filter = ('turn', 'company__game')
 
@@ -50,6 +50,7 @@ class CompaniesStateAdmin(admin.ModelAdmin):
 @admin.register(MarketState)
 class MarketStateAdmin(admin.ModelAdmin):
     list_display = ('turn', 'sold', 'demand', 'inventory', 'manufactured', 'capacity')
+    list_filter = ('turn__game',)
 
 @admin.register(TeacherDecisions)
 class TeacherDecisions(admin.ModelAdmin):
@@ -66,8 +67,10 @@ class TeacherDecisions(admin.ModelAdmin):
 class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
     @action(label='End Turn', description='Ends the turn if you are admin for this game')
     def EndTurn(modeladmin, request, queryset):
-        if request.user != queryset.admin or queryset.end is not None:
+        if request.user != queryset.admin and not request.user.is_superuser:
             return HttpResponse("You are not the admin of this game", status=403)
+        if queryset.end is not None:
+            return HttpResponse("Game is already ended", status=400)
 
         last_turn = get_last_turn(queryset)
         if not last_turn:
@@ -85,7 +88,7 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
 
     @action(label='Download export', description='Download export for this game')
     def Download(modeladmin, request, queryset):
-        if request.user != queryset.admin:
+        if request.user != queryset.admin and not request.user.is_superuser:
             return HttpResponse("You are not the admin of this game", status=403)
 
         f = create_game_export(queryset)
@@ -102,6 +105,7 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
 @admin.register(GameParameters)
 class GameParametersAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'budget_cap', 'depreciation', 'base_man_cost')
+    list_filter = ('game',)
 
 
 @admin.register(Upgrade)
