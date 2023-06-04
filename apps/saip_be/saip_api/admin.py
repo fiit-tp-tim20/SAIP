@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from .Exports import create_game_export
 
 from .models import Turn, Company, Production, Marketing, Factory, CompaniesState, Game, GameParameters, MarketState,\
-    Upgrade, CompaniesUpgrades, TeacherDecisions
+    Upgrade, CompaniesUpgrades, TeacherDecisions, Inventory
 
 from django_object_actions import DjangoObjectActions, action
 
@@ -117,3 +117,8 @@ class UpgradeAdmin(admin.ModelAdmin):
 class CompaniesUpgradeAdmin(admin.ModelAdmin):
     list_display = ('company', 'game', 'upgrade', 'status', 'progress', 'turn')
     list_filter = ('company__game', 'company', 'upgrade', 'turn')
+
+@admin.register(Inventory)
+class InventoryAdmin(admin.ModelAdmin):
+    list_display = ('company', 'unit_count', 'price_per_unit', 'turn_num')
+    list_filter = ('company__game', 'company', 'turn_num')

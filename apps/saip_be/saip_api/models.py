@@ -206,6 +206,19 @@ class MarketState(models.Model):
     class Meta:
         db_table = "Market States"
 
+class Inventory(models.Model):
+    company = models.ForeignKey(Company, models.PROTECT, null=True)
+    unit_count = models.PositiveIntegerField(null=True)
+    price_per_unit = models.PositiveIntegerField(null=True)
+    turn_num = models.PositiveIntegerField(null=True)
+
+    def __str__(self):
+        return f"Inventories - {self.company}"
+
+    class Meta:
+        db_table = "Inventories"
+        verbose_name_plural = "Inventories"
+
 
 class TeacherDecisions(models.Model):
     turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
