@@ -88,7 +88,7 @@ export default function BottomBar() {
 										totalSpent > data.budget_cap ? "text-red-600" : ""
 									}`}
 								>
-									Budget: {totalSpent}/{data.budget_cap}€
+									Rozpočet: {totalSpent}/{data.budget_cap}€
 								</p>
 								<button type="button" onClick={() => navigate("/product")} className="button-clear">
 									{/* TODO create state */}

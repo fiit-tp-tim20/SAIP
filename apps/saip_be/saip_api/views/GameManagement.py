@@ -11,17 +11,17 @@ from ..serializers import GameSerializer
 
 from saip_simulation.simulation import Simulation
 
-parameters = {"Upgrades": [{"name": "Battery", "cost": 30000, "sales_effect": 0.75, "man_cost_effect": 0.3,
+parameters = {"Upgrades": [{"name": "Batéria", "cost": 30000, "sales_effect": 0.75, "man_cost_effect": 0.3,
                             "camera_pos": "-0.1, 0.5, 3", "camera_rot": "3,2,1", "description": "Investícia do batérie predlžuje výdrž elektrického bicykla na cestách, a tým zaujme najmä zákazníkov, \
                             ktorí si potrpia na väčšej výdrži batérie. Investíciou do tohto vylepšenia sa zvýšia výrobné náklady \
                             o 30%, ale taktiež sa aj zvýši záujem u zákazníkov, ktorých zaujímajú vylepšenia o 75%."},
-                           {"name": "Frame", "cost": 22000, "sales_effect": 0.55, "man_cost_effect": 0.2,
+                           {"name": "Rám", "cost": 22000, "sales_effect": 0.55, "man_cost_effect": 0.2,
                             "camera_pos": "0, 0.5, 5", "camera_rot": "6,5,4", "description": "Investícia do rámu zaujme najmä zákazníkov, ktorých zaujíma vzhľad a celková konštrukcia bicykla. \
                             Táto investícia spôsobí nárast výrobných nákladov o 20% a záujem zákazníkov zameraných na vylepšenia o 55%."},
-                           {"name": "Brakes", "cost": 18000, "sales_effect": 0.45, "man_cost_effect": 0.1,
+                           {"name": "Brzdy", "cost": 18000, "sales_effect": 0.45, "man_cost_effect": 0.1,
                             "camera_pos": "-0.7, 1.5, 3", "camera_rot": "9,8,7", "description": "Investíciou do tohto vylepšenia sa zvýši celková bezpečnosť pri používaní bicykla na cestách, ale aj \
                             v inom teréne. Výrobné náklady sa pri tejto investícii zvýšia o 10% a záujem zákazníkov zameraných na vylepšenia o 45%."},
-                           {"name": "Display", "cost": 34000, "sales_effect": 0.85, "man_cost_effect": 0.4,
+                           {"name": "Displej", "cost": 34000, "sales_effect": 0.85, "man_cost_effect": 0.4,
                             "camera_pos": "-0.7, 1.5, 3", "camera_rot": "9,8,7", "description": "Displej na elektrobicykli je neodmysliteľnou súčasťou pre celkové ovládanie a lepší pocit z jazdy, keď \
                             potrebujeme prehľad o tom akou rýchlosťou ideme, koľko kilometrov sme už na aktuálnej trase prešli a iné \
                             štatistiky. Investíciou do tohto vylepšenia sa zvýšia výrobné náklady o 40% a záujem zákazníkov zameraných na vylepšenia o 85%."}

@@ -88,7 +88,7 @@ function Company() {
 						<div>
 							<Slider
 								min={0}
-								max={5000}
+								max={15000}
 								value={productPrice}
 								setValue={setProductPrice}
 								checked={productPriceChecked}
