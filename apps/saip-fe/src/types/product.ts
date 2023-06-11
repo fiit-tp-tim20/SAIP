@@ -5,7 +5,6 @@ export type Player = {
 };
 
 export type Upgrade = {
-	id: number;
 	name: string;
 	players: string[];
 	description: string;

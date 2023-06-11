@@ -22,7 +22,6 @@ function Profile() {
 				type="button"
 				onClick={() => setOpen(!open)}
 			>
-				{/* TODO replace with real avatar */}
 				<img
 					className="rounded-full"
 					src={`https://avatars.dicebear.com/api/miniavs/${data.id}a.png`}

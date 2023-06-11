@@ -88,7 +88,6 @@ export default function BottomBar() {
 									Budget: {totalSpent}/{data.budget_cap}€
 								</p>
 								<button type="button" onClick={() => navigate("/product")} className="button-clear">
-									{/* TODO create state */}
 									Produkt: ✅
 								</button>
 								<button type="button" onClick={() => navigate("/company")} className="button-clear">

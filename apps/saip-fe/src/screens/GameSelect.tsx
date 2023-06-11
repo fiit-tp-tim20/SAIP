@@ -1,28 +1,14 @@
-import React, { useRef } from "react";
-import { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import logout from "../api/logout";
 import useCompanyStore from "../store/Company";
 import useMarketingStore from "../store/Marketing";
 import useUpgradesStore from "../store/Upgrades";
 
-const test_games = [
-	{
-		id: 69,
-		name: "Kantrencik-LS22-UT-1300",
-	},
-	{
-		id: 70,
-		name: "Zatrochova-LS22-UT-1300",
-	},
-];
-
 type User = {
 	value: string;
 	id: number;
 };
-
-// TODO move to own file with listGames
 
 type Game = {
 	id: number;
@@ -45,7 +31,6 @@ function GameSelect() {
 	const [inputNumbersOfUsers, setInputNumbersOfUsers] = useState(0);
 	const [selectedGame, setSelectedGame] = useState(0);
 	const [isInvalidName, setIsInvalidName] = useState(false);
-	// TODO research other ways to do this validation
 	const [isNameEmpty, setIsNameEmpty] = useState(false);
 
 	const teamnameInput = useRef<HTMLInputElement>(null);
@@ -63,9 +48,7 @@ function GameSelect() {
 	}, [gameList]);
 
 	function setNumberOfUsers(numOfPlayers: number) {
-		const obj = [...Array(numOfPlayers).keys()].map((number) => {
-			return { value: "", id: number };
-		});
+		const obj = [...Array(numOfPlayers).keys()].map((number) => ({ value: "", id: number }));
 		setInputNumbersOfUsers(numOfPlayers);
 		setUsers(obj);
 	}
@@ -80,8 +63,6 @@ function GameSelect() {
 			setIsNameEmpty(true);
 			return;
 		}
-		//const {data, status} = useQuery('login', login)
-		// confirm();
 		const arrayOfNames = users.map((user) => user.value);
 
 		const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/create_company/`, {
@@ -97,18 +78,14 @@ function GameSelect() {
 			}),
 		});
 
-		if (response.status === 201) {
-			console.log("OK");
-		} else {
+		if (response.status !== 201) {
 			setIsInvalidName(true);
 		}
-		//setPlayers();
-		//navigate("/dashboard");
 	};
 
 	const updateUser = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
-		setUsers((users) =>
-			users.map((user) => {
+		setUsers((prevUsers) =>
+			prevUsers.map((user) => {
 				if (user.id === id) {
 					return { ...user, value: e.target.value };
 				}

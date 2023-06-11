@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import getCompanyReport from "../../api/GetCompanyReport";
 import { getTurn } from "../../api/GetTurn";
@@ -16,8 +16,6 @@ function CompanyReport() {
 	const { isLoading, data } = useQuery(["companyReport", turn], () => getCompanyReport(turn));
 
 	return (
-		// TODO - breakpoint values
-
 		<div className="flex w-[600px] flex-col md:w-[900px] xl:w-[1280px]">
 			<div className="flex flex-row justify-between">
 				<h1 className="my-4">Správa o spoločnosti</h1>

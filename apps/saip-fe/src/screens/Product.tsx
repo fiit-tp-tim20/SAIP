@@ -6,7 +6,7 @@ import Canvas from "../components/three/Canvas";
 import useModal from "../components/modal/useModal";
 import { Upgrade } from "../types/product";
 import ProductModal from "../components/product/ProductModal";
-import { getUpgrades } from "../api/Upgrades";
+import getUpgrades from "../api/Upgrades";
 import useUpgradesStore from "../store/Upgrades";
 
 function Product() {
