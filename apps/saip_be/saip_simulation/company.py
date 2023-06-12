@@ -187,6 +187,8 @@ class Company:
     capital_investment_this_turn: float = 0
     marketing: Dict[str, MarketingType] = field(default_factory=dict)
 
+    inventory_stack = []
+
     def __post_init__(self):
         pass  # self.start_of_turn_cleanup()
 
