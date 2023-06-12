@@ -441,10 +441,20 @@ class Simulation:
                     inventory_model.unit_count = inventory["unit_count"]
                     inventory_model.save()
                 else:
-                    inventory_model.delete() 
-            except models.Inventory.DoesNotExist:
-                print("There is an inventory entry in company class that does not exist in db!") 
+                    inventory_model.delete()
 
+            except models.Inventory.DoesNotExist:
+                if inventory["turn_num"] == self.current_turn:
+                    new_inventory_model = models.Inventory(
+                        company=company_model,
+                        unit_count=inventory["unit_count"],
+                        price_per_unit=inventory["price_per_unit"],
+                        turn_num=inventory["turn_num"]
+                    )
+                    new_inventory_model.save()
+                else:
+                    print("There is an inventory entry that does not exist in db and is not from current turn!")
+                
     def __write_current_turn_company_state(self, company_class_object: Company, ct_company_state_model: models.CompaniesState) -> None:
         
         ct_company_state_model.cash = company_class_object.balance
