@@ -240,8 +240,8 @@ class Simulation:
             production_model=company_state.production,
             company_upgrades=company_upgrades,
         )
-        new_company.inventory_stack = self.__create_inventory(company_model=company_model)
-        print(f"Inventory: {new_company.inventory_stack}")
+        new_company.inventory_queue = self.__create_inventory(company_model=company_model)
+        print(f"Inventory: {new_company.inventory_queue}")
         return new_company
 
 
@@ -399,7 +399,7 @@ class Simulation:
                 company_class_object.production_volume
             )  # add units produced to overall sum of all units produced
             ct_total_inventory += (
-                company_class_object.inventory
+                company_class_object.inventory_count
             )  # add inventory to overall sum of all inventories
             ct_total_units_sold += (
                 company_class_object.units_sold
@@ -431,7 +431,7 @@ class Simulation:
         return
 
     def __write_company_inventory(self, company_class_object: Company, company_model: models.Company):
-        for inventory in company_class_object.inventory_stack:
+        for inventory in company_class_object.inventory_queue:
             try:
                 inventory_model = models.Inventory.objects.get(
                     company=company_model,
@@ -459,7 +459,7 @@ class Simulation:
         
         ct_company_state_model.cash = company_class_object.balance
         ct_company_state_model.stock_price = company_class_object.stock_price
-        ct_company_state_model.inventory = company_class_object.inventory
+        ct_company_state_model.inventory = company_class_object.inventory_count
         ct_company_state_model.orders_received = self.market.customer_distribution[company_class_object.brand]["demand"]
         ct_company_state_model.orders_fulfilled = company_class_object.units_sold
         ct_company_state_model.ret_earnings = company_class_object.ret_earnings + company_class_object.profit_after_tax
@@ -493,7 +493,7 @@ class Simulation:
     
     def __write_next_turn_company_state(self, company_class_object: Company, nt_company_state_model: models.CompaniesState) -> None:
         nt_company_state_model.cash = company_class_object.balance #CHANGED after balance became cash (in models)
-        nt_company_state_model.inventory = company_class_object.inventory
+        nt_company_state_model.inventory = company_class_object.inventory_count
         nt_company_state_model.loans = company_class_object.loans
         nt_company_state_model.ret_earnings = (
             company_class_object.ret_earnings
