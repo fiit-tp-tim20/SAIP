@@ -178,11 +178,11 @@ class Inventory:
 
         return cost_of_units_sold, units_sold, unmet_demand, self.get_inventory_count()
 
-    def insert_into_inventory(self, production_volume, prod_ppu):
+    def insert_into_inventory(self, production_volume, prod_ppu, turn_num):
         product_line = {
             "unit_count": production_volume,
             "price_per_unit": prod_ppu,
-            "turn_num": None
+            "turn_num": turn_num
         }
         self.inventory_queue.append(product_line)
 
@@ -195,6 +195,7 @@ class Company:
     inventory_count: int = 0
     inventory_queue: list[dict] = field(default_factory=list)
     inventory: Inventory = field(init=False)
+    current_turn_num: int = 0
 
     production_volume: int = 0
     prod_ppu: float = 0  # field(init=False)
@@ -270,7 +271,7 @@ class Company:
             self.prod_costs_per_turn = self.production_volume * self.prod_ppu
             self.total_costs_per_turn = self.production_volume * self.total_ppu
             
-        self.inventory.insert_into_inventory(self.production_volume, self.prod_ppu)
+        self.inventory.insert_into_inventory(self.production_volume, self.prod_ppu, self.current_turn_num)
 
     def sell_product(self, demand: int) -> int:  # 2
         self.demand = demand

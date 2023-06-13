@@ -215,7 +215,9 @@ class Simulation:
         # instantiate the new company with the prepared values
         new_company = Company(
             brand = init_brand,
-            inventory = init_inventory,
+            #inventory = init_inventory, #TODO: remove inventory and test 
+            current_turn_num=self.current_turn,
+
             balance = init_balance,
             ret_earnings = init_ret_earnings,
             loans = init_loans,
@@ -232,6 +234,7 @@ class Simulation:
             
             capital_investment_this_turn = init_capital_investment_this_turn,
             marketing = init_marketing,
+            inventory_queue = self.__create_inventory(company_model=company_model),
         )
 
         new_company.factory = self.__create_factory(factory_model=company_state.factory)
@@ -240,8 +243,6 @@ class Simulation:
             production_model=company_state.production,
             company_upgrades=company_upgrades,
         )
-        new_company.inventory_queue = self.__create_inventory(company_model=company_model)
-        print(f"Inventory: {new_company.inventory_queue}")
         return new_company
 
 
@@ -431,7 +432,7 @@ class Simulation:
         return
 
     def __write_company_inventory(self, company_class_object: Company, company_model: models.Company):
-        for inventory in company_class_object.inventory_queue:
+        for inventory in company_class_object.inventory.inventory_queue:
             try:
                 inventory_model = models.Inventory.objects.get(
                     company=company_model,
@@ -444,7 +445,7 @@ class Simulation:
                     inventory_model.delete()
 
             except models.Inventory.DoesNotExist:
-                if inventory["turn_num"] == self.current_turn:
+                if inventory["turn_num"] == self.current_turn and inventory["unit_count"] > 0: 
                     new_inventory_model = models.Inventory(
                         company=company_model,
                         unit_count=inventory["unit_count"],
@@ -453,7 +454,8 @@ class Simulation:
                     )
                     new_inventory_model.save()
                 else:
-                    print("There is an inventory entry that does not exist in db and is not from current turn!")
+                    pass
+
                 
     def __write_current_turn_company_state(self, company_class_object: Company, ct_company_state_model: models.CompaniesState) -> None:
         
@@ -477,7 +479,7 @@ class Simulation:
         ct_company_state_model.loan_repayment = company_class_object.value_paid_in_loan_repayment
         ct_company_state_model.loans = company_class_object.loans
         ct_company_state_model.inventory_upgrade = company_class_object.value_paid_in_stored_product_upgrades
-        ct_company_state_model.overcharge_upgrade = company_class_object.price_diff_stored_products
+        ct_company_state_model.overcharge_upgrade = 0 #company_class_object.price_diff_stored_products #TODO: change this
 
         if ct_company_state_model.production is not None:
             ct_company_state_model.production.man_cost = company_class_object.prod_ppu
