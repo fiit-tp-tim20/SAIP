@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# def get_default_game_parameters() -> 'GameParameters':
-#     return GameParameters.objects.get_or_create()[0]
 
 class GameParameters(models.Model):
     budget_cap = models.PositiveIntegerField(default=10000)
@@ -22,7 +20,6 @@ class Game(models.Model):
     name = models.CharField(max_length=100, null=True)
     admin = models.ForeignKey(User, models.PROTECT, null=True, limit_choices_to={'is_staff': True})
     turns = models.PositiveIntegerField(null=True, default=16)
-    # parameters = models.ForeignKey(GameParameters, models.CASCADE, null=True, default=get_default_game_parameters)
     parameters = models.ForeignKey(GameParameters, models.CASCADE, null=True)
 
     def __str__(self):
@@ -52,10 +49,10 @@ class Turn(models.Model):
 class Company(models.Model):
     name = models.CharField(max_length=100, null=True)
     user = models.ForeignKey(
-        User, models.DO_NOTHING, null=True, related_name="user_companies"
+        User, models.CASCADE, null=True, related_name="user_companies"
     )
     game = models.ForeignKey(
-        Game, models.DO_NOTHING, null=True, related_name="game_companies"
+        Game, models.CASCADE, null=True, related_name="game_companies"
     )
     participants = models.CharField(max_length=1000, null=True)
 
@@ -83,9 +80,6 @@ class Marketing(models.Model):
     ooh = models.PositiveIntegerField(default=0)
     tv = models.PositiveIntegerField(default=0)
     billboard = models.PositiveIntegerField(default=0)
-
-    # def __str__(self):
-    #     return f"Marketing - {self.companiesstate.company}"
 
     class Meta:
         db_table = "Marketings"
@@ -122,7 +116,7 @@ class CompaniesUpgrades(models.Model):
     upgrade = models.ForeignKey(Upgrade, models.CASCADE, null=True)
     progress = models.PositiveIntegerField(null=True, default=0)
     game = models.ForeignKey(Game, models.CASCADE, null=True)
-    turn = models.ForeignKey(Turn, models.PROTECT, null=True)
+    turn = models.ForeignKey(Turn, models.CASCADE, null=True)
 
     def __str__(self):
         return f"{self.company} - {self.upgrade}"
@@ -147,13 +141,12 @@ class Factory(models.Model):
 
 
 class CompaniesState(models.Model):
-    company = models.ForeignKey(Company, models.PROTECT, null=True)
-    turn = models.ForeignKey(Turn, models.PROTECT, null=True)
+    company = models.ForeignKey(Company, models.CASCADE, null=True)
+    turn = models.ForeignKey(Turn, models.CASCADE, null=True)
     production = models.OneToOneField(
         Production, models.SET_NULL, null=True, blank=True
     )
     factory = models.OneToOneField(Factory, models.SET_NULL, null=True, blank=True)
-    # balance = models.FloatField(null=True, blank=True, default=0)
     stock_price = models.FloatField(null=True, blank=True)
     inventory = models.PositiveIntegerField(null=True, default=0)
     r_d = models.PositiveBigIntegerField(null=True, default=0)
@@ -166,7 +159,6 @@ class CompaniesState(models.Model):
     cash = models.FloatField(
         null=True, default=10000
     )  # celkovo dostupných prostriedkov
-    # capital = models.FloatField(null=True, default=0)
     ret_earnings = models.FloatField(null=True, default=0)
     net_profit = models.FloatField(null=True, blank=True)  # za kolo
     depreciation = models.FloatField(null=True, blank=True)
@@ -193,7 +185,7 @@ class CompaniesState(models.Model):
 
 
 class MarketState(models.Model):
-    turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
+    turn = models.ForeignKey(Turn, models.CASCADE, null=True)
     sold = models.PositiveIntegerField(null=True, default=0)
     demand = models.PositiveIntegerField(null=True, default=0)
     inventory = models.PositiveIntegerField(null=True, default=0)
@@ -207,7 +199,7 @@ class MarketState(models.Model):
         db_table = "Market States"
 
 class Inventory(models.Model):
-    company = models.ForeignKey(Company, models.PROTECT, null=True)
+    company = models.ForeignKey(Company, models.CASCADE, null=True)
     unit_count = models.PositiveIntegerField(null=True)
     price_per_unit = models.PositiveIntegerField(null=True)
     turn_num = models.PositiveIntegerField(null=True)
@@ -221,7 +213,7 @@ class Inventory(models.Model):
 
 
 class TeacherDecisions(models.Model):
-    turn = models.ForeignKey(Turn, models.DO_NOTHING, null=True)
+    turn = models.ForeignKey(Turn, models.CASCADE, null=True)
     interest_rate = models.FloatField(null=True, default=0.05)
     tax_rate = models.FloatField(null=True, default=0.21)
     inflation = models.FloatField(null=True, default=0)
@@ -233,14 +225,3 @@ class TeacherDecisions(models.Model):
     class Meta:
         db_table = "Teacher Decisions"
         verbose_name_plural = "Teacher Decisions"
-
-
-# class Participants(models.Model):
-#     user = models.ForeignKey(User, models.DO_NOTHING, null=True)
-#     names = models.CharField(null=True)
-
-#     def __str__(self):
-#         return f"{self.email}({self.user})"
-
-#     class Meta:
-#         db_table = 'Emails'
