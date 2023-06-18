@@ -1,19 +1,20 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn, CompaniesUpgrades, MarketState, TeacherDecisions
+from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn, CompaniesUpgrades, \
+    MarketState, TeacherDecisions
 
-from ..serializers import CompanySerializer, ProductionSerializer, SpendingsSerializer, MaketingSerializer, FactorySerializer
+from ..serializers import CompanySerializer, ProductionSerializer, SpendingsSerializer, MaketingSerializer, \
+    FactorySerializer
 
 from .GameManagement import get_last_turn, create_company_state, end_turn
 
-
 from django.core import serializers
-
 
 from saip_simulation.simulation import Simulation
 from django.utils import timezone
 from .GameManagement import create_turn, calculate_man_cost
+
 
 class IndustryView(APIView):
     def get(self, request) -> Response:
@@ -29,18 +30,23 @@ class IndustryView(APIView):
         rank = [None] * (company.game.turns - 1)
         stock_price = [None] * (company.game.turns - 1)
         last_turn = get_last_turn(company.game)
-       
+
         for turn_num in range(last_turn.number - 1):
-            state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
+            state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num + 1),
+                                               company=company)
             stock_price[turn_num] = state.stock_price
 
-            ordered_states = list(CompaniesState.objects.filter(turn=Turn.objects.get(game=company.game, number=turn_num+1)).order_by('-stock_price'))
-            
+            ordered_states = list(
+                CompaniesState.objects.filter(turn=Turn.objects.get(game=company.game, number=turn_num + 1)).order_by(
+                    '-stock_price'))
+
             for index, one in enumerate(ordered_states):
                 if one.company == company:
                     rank[turn_num] = index + 1
 
-        return Response({"num_players": len(ordered_states),"rank": rank, "stock_price": stock_price}, status=200)
+        return Response({"num_players": len(ordered_states), "rank": rank, "stock_price": stock_price}, status=200)
+
+
 class MarketingView(APIView):
 
     def get(self, request) -> Response:
@@ -56,16 +62,17 @@ class MarketingView(APIView):
         marketing = [None] * (company.game.turns - 1)
         last_turn = get_last_turn(company.game)
         for turn_num in range(last_turn.number - 1):
-            state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
+            state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num + 1),
+                                               company=company)
             marketing[turn_num] = state.orders_received
 
         return Response({"demand": marketing}, status=200)
 
-    
+
 class CompanyView(APIView):
 
     def get(self, request) -> Response:
-        
+
         if not request.user or not request.user.is_authenticated:
             return Response({"detail": "User is not authenticated"}, status=401)
 
@@ -82,7 +89,8 @@ class CompanyView(APIView):
         last_turn = get_last_turn(company.game)
         for turn_num in range(last_turn.number - 1):
             try:
-                state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num+1), company=company)
+                state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num + 1),
+                                                   company=company)
                 manufactured[turn_num] = state.production.volume
                 sold[turn_num] = state.orders_fulfilled
                 man_cost[turn_num] = state.production.man_cost_all
@@ -90,12 +98,15 @@ class CompanyView(APIView):
             except (CompaniesState.DoesNotExist, Turn.DoesNotExist):
                 continue
 
-        return Response({"manufactured": manufactured, "sold": sold, "man_cost": man_cost, "sell_price": sell_price}, status=200)
+        return Response({"manufactured": manufactured, "sold": sold, "man_cost": man_cost, "sell_price": sell_price},
+                        status=200)
 
 
 def create_upgrade_company_relation(game: Game, company: Company) -> None:
+    """Creates a relation between a company and all the upgrades in the game"""
     for upgrade in Upgrade.objects.all():
         CompaniesUpgrades.objects.create(upgrade=upgrade, company=company, game=game)
+
 
 class CompanyInfo(APIView):
 
@@ -110,7 +121,7 @@ class CompanyInfo(APIView):
             return Response({"detail": "Company for this user not found"}, status=404)
 
         last_turn = get_last_turn(company.game)
-        previous_turn = Turn.objects.get(game=company.game, number=last_turn.number-1)
+        previous_turn = Turn.objects.get(game=company.game, number=last_turn.number - 1)
         company_state = CompaniesState.objects.get(turn=previous_turn, company=company)
 
         if company_state.cash >= 10000:
@@ -123,6 +134,7 @@ class CompanyInfo(APIView):
 
         return Response({"id": company.id, 'name': company.name, 'budget_cap': budget}, status=200)
 
+
 class IndustryReport(APIView):
 
     def get(self, request) -> Response:
@@ -133,14 +145,14 @@ class IndustryReport(APIView):
             company = Company.objects.get(user=request.user)
         except Company.DoesNotExist:
             return Response({"detail": "Company for this user not found"}, status=404)
-        
+
         try:
             turn = Turn.objects.get(game=company.game, number=request.GET.get("turn"))
         except Turn.DoesNotExist:
             return Response({"detail": "Turn not found"}, status=404)
 
-        #last_turn = get_last_turn(company.game)
-        
+        # last_turn = get_last_turn(company.game)
+
         company_states = CompaniesState.objects.filter(turn=Turn.objects.get(game=company.game, number=turn.number))
         market_state = MarketState.objects.get(turn=Turn.objects.get(game=company.game, number=turn.number))
 
@@ -148,70 +160,81 @@ class IndustryReport(APIView):
         for state in company_states:
             company_info = dict()
             company_info['stock_price'] = round(state.stock_price, 2) if state.stock_price is not None else "N/A"
-            company_info['sell_price'] = state.production.sell_price if state.production.sell_price is not None else "N/A"
+            company_info[
+                'sell_price'] = state.production.sell_price if state.production.sell_price is not None else "N/A"
             company_info['net_profit'] = round(state.net_profit, 2) if state.stock_price is not None else "N/A"
             try:
-                company_info['market_share'] = round((state.orders_fulfilled/market_state.sold)*100, 2)
+                company_info['market_share'] = round((state.orders_fulfilled / market_state.sold) * 100, 2)
             except (ZeroDivisionError, TypeError):
                 company_info['market_share'] = 0
 
             industry[state.company.name] = company_info
 
-        market_state_previous = MarketState.objects.get(turn=Turn.objects.get(game=company.game, number=turn.number-1))
-        
+        market_state_previous = MarketState.objects.get(
+            turn=Turn.objects.get(game=company.game, number=turn.number - 1))
+
         market = dict()
         market['demand'] = market_state.demand
         try:
-            market['demand_difference'] = round(((market_state.demand/market_state_previous.demand) - 1)*100, 2)
+            market['demand_difference'] = round(((market_state.demand / market_state_previous.demand) - 1) * 100, 2)
         except (ZeroDivisionError, TypeError):
             market['demand_difference'] = "N/A"
         market['sold_products'] = market_state.sold
         try:
-            market['sold_products_difference'] = round(((market_state.sold/market_state_previous.sold) - 1)*100, 2)
+            market['sold_products_difference'] = round(((market_state.sold / market_state_previous.sold) - 1) * 100, 2)
         except (ZeroDivisionError, TypeError):
-            market['sold_products_difference'] ="N/A"
+            market['sold_products_difference'] = "N/A"
         market['manufactured'] = market_state.manufactured
         try:
-            market['manufactured_difference'] = round(((market_state.manufactured/market_state_previous.manufactured) - 1)*100, 2)
+            market['manufactured_difference'] = round(
+                ((market_state.manufactured / market_state_previous.manufactured) - 1) * 100, 2)
         except (ZeroDivisionError, TypeError):
             market['manufactured_difference'] = "N/A"
         market['capacity'] = market_state.capacity
         try:
-            market['capacity_difference'] = round(((market_state.capacity/market_state_previous.capacity) - 1)*100, 2)
+            market['capacity_difference'] = round(((market_state.capacity / market_state_previous.capacity) - 1) * 100,
+                                                  2)
         except (ZeroDivisionError, TypeError):
             market['capacity_difference'] = "N/A"
         market['inventory'] = market_state.inventory
         print(market_state.inventory)
         try:
-            market['inventory_difference'] = round(((market_state.inventory/market_state_previous.inventory) - 1)*100, 2)
+            market['inventory_difference'] = round(
+                ((market_state.inventory / market_state_previous.inventory) - 1) * 100, 2)
         except (ZeroDivisionError, TypeError):
             market['inventory_difference'] = "N/A"
 
-        teacher_decisions = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=turn.number))
-        teacher_decisions_previous = TeacherDecisions.objects.get(turn = Turn.objects.get(game=company.game, number=turn.number-1))
+        teacher_decisions = TeacherDecisions.objects.get(turn=Turn.objects.get(game=company.game, number=turn.number))
+        teacher_decisions_previous = TeacherDecisions.objects.get(
+            turn=Turn.objects.get(game=company.game, number=turn.number - 1))
         economic_parameters = dict()
         economic_parameters['interest_rate'] = teacher_decisions.interest_rate * 100
         try:
-            economic_parameters['interest_rate_difference'] = round(((teacher_decisions.interest_rate/teacher_decisions_previous.interest_rate) - 1)*100, 2)
+            economic_parameters['interest_rate_difference'] = round(
+                ((teacher_decisions.interest_rate / teacher_decisions_previous.interest_rate) - 1) * 100, 2)
         except (ZeroDivisionError, TypeError):
             economic_parameters['interest_rate_difference'] = "N/A"
         economic_parameters['tax_rate'] = teacher_decisions.tax_rate * 100
         try:
-            economic_parameters['tax_rate_difference'] = round(((teacher_decisions.tax_rate/teacher_decisions_previous.tax_rate) - 1)*100, 2)
+            economic_parameters['tax_rate_difference'] = round(
+                ((teacher_decisions.tax_rate / teacher_decisions_previous.tax_rate) - 1) * 100, 2)
         except (ZeroDivisionError, TypeError):
             economic_parameters['tax_rate_difference'] = "N/A"
         economic_parameters['inflation'] = teacher_decisions.inflation * 100
         try:
-            economic_parameters['inflation_difference'] = round(((teacher_decisions.inflation/teacher_decisions_previous.inflation) - 1)*100, 2)
+            economic_parameters['inflation_difference'] = round(
+                ((teacher_decisions.inflation / teacher_decisions_previous.inflation) - 1) * 100, 2)
         except (ZeroDivisionError, TypeError):
             economic_parameters['inflation_difference'] = "N/A"
         economic_parameters['loan_limit'] = teacher_decisions.loan_limit
         try:
-            economic_parameters['loan_limit_difference'] = round(((teacher_decisions.loan_limit/teacher_decisions_previous.loan_limit) - 1)*100, 2)
+            economic_parameters['loan_limit_difference'] = round(
+                ((teacher_decisions.loan_limit / teacher_decisions_previous.loan_limit) - 1) * 100, 2)
         except (ZeroDivisionError, TypeError):
             economic_parameters['loan_limit_difference'] = "N/A"
 
-        return Response({"industry": industry, "market": market, "economic_parameters": economic_parameters}, status=200)
+        return Response({"industry": industry, "market": market, "economic_parameters": economic_parameters},
+                        status=200)
 
 
 class CompanyReport(APIView):
@@ -225,96 +248,147 @@ class CompanyReport(APIView):
             company = Company.objects.get(user=request.user)
         except Company.DoesNotExist:
             return Response({"detail": "Company for this user not found"}, status=404)
-        
+
         try:
             turn = Turn.objects.get(game=company.game, number=request.GET.get("turn"))
         except Turn.DoesNotExist:
             return Response({"detail": "Turn not found"}, status=404)
 
-        #last_turn = get_last_turn(company.game)
-        #company_state = CompaniesState.objects.get(turn=last_turn, company=company)
-        
-        company_state_previous = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn.number), company=company)
+        # last_turn = get_last_turn(company.game)
+        # company_state = CompaniesState.objects.get(turn=last_turn, company=company)
+
+        company_state_previous = CompaniesState.objects.get(
+            turn=Turn.objects.get(game=company.game, number=turn.number), company=company)
         marketing = company_state_previous.marketing.billboard + company_state_previous.marketing.tv + company_state_previous.marketing.viral + company_state_previous.marketing.podcast + company_state_previous.marketing.ooh
-       
+
         try:
-            state2ago = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn.number-1), company=company)
+            state2ago = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn.number - 1),
+                                                   company=company)
         except (Turn.DoesNotExist, CompaniesState.DoesNotExist):
             state2ago = False
 
         production = dict()
-        production['production'] = company_state_previous.production.volume #"Vyrobené množstvo"
-        production['capacity'] = company_state_previous.factory.capacity #"Výrobná kapacita"
+        production['production'] = company_state_previous.production.volume  # "Vyrobené množstvo"
+        production['capacity'] = company_state_previous.factory.capacity  # "Výrobná kapacita"
         if (state2ago):
-            production['utilization'] = round((company_state_previous.production.volume/state2ago.factory.capacity)*100,2)
+            production['utilization'] = round(
+                (company_state_previous.production.volume / state2ago.factory.capacity) * 100, 2)
         else:
             production['utilization'] = "N/A"
-        #"Koeficient využitia výrobnej kapacity"
-        production['man_cost'] = round(company_state_previous.production.man_cost, 2) if company_state_previous.production.man_cost is not None else "N/A" #"Variabilné náklady"
-        production['new_inventory'] = company_state_previous.inventory if company_state_previous.inventory is not None else "N/A" #"Zásoby"
-        production['man_cost_all'] = round(company_state_previous.production.man_cost_all, 2) if company_state_previous.production.man_cost_all is not None else "N/A" #"Celkové náklady"
+        # "Koeficient využitia výrobnej kapacity"
+        production['man_cost'] = round(company_state_previous.production.man_cost,
+                                       2) if company_state_previous.production.man_cost is not None else "N/A"  # "Variabilné náklady"
+        production[
+            'new_inventory'] = company_state_previous.inventory if company_state_previous.inventory is not None else "N/A"  # "Zásoby"
+        production['man_cost_all'] = round(company_state_previous.production.man_cost_all,
+                                           2) if company_state_previous.production.man_cost_all is not None else "N/A"  # "Celkové náklady"
 
         sales = dict()
-        sales['orders_received'] = company_state_previous.orders_received if company_state_previous.orders_received is not None else "N/A"#"Prijaté objednávky"
-        sales['orders_fulfilled'] = company_state_previous.orders_fulfilled if company_state_previous.orders_fulfilled is not None else "N/A" #"Splnené objednávky"
-        sales['orders_unfulfilled'] = (company_state_previous.orders_received - company_state_previous.orders_fulfilled) if (company_state_previous.orders_fulfilled is not None and company_state_previous.orders_received is not None) else "N/A" #Nesplnené objednávky
-        sales['selling_price'] = company_state_previous.production.sell_price if company_state_previous.production.sell_price is not None else "N/A" #"Predajná cena"
+        sales[
+            'orders_received'] = company_state_previous.orders_received if company_state_previous.orders_received is not None else "N/A"  # "Prijaté objednávky"
+        sales[
+            'orders_fulfilled'] = company_state_previous.orders_fulfilled if company_state_previous.orders_fulfilled is not None else "N/A"  # "Splnené objednávky"
+        sales['orders_unfulfilled'] = (
+                company_state_previous.orders_received - company_state_previous.orders_fulfilled) if (
+                company_state_previous.orders_fulfilled is not None and company_state_previous.orders_received is not None) else "N/A"  # Nesplnené objednávky
+        sales[
+            'selling_price'] = company_state_previous.production.sell_price if company_state_previous.production.sell_price is not None else "N/A"  # "Predajná cena"
 
         balance = dict()
-        balance['cash'] = round(company_state_previous.cash, 2) if company_state_previous.cash is not None else "N/A" #"Hotovosť" #TODO: CHANGED from cash to balance !!!!!MIND THE SUMMARY AS WELL
-        balance['inventory_money'] = round((company_state_previous.inventory * company_state_previous.production.man_cost), 2) if (company_state_previous.inventory is not None and company_state_previous.production.man_cost is not None) else "N/A" #Zásoby
-        balance['capital_investments'] = round(company_state_previous.factory.capital_investments, 2) if company_state_previous.factory.capital_investments is not None else "N/A" #"Kapitálové investície"
-        balance['assets_summary'] = round((company_state_previous.cash+ (company_state_previous.inventory * company_state_previous.production.man_cost) + company_state_previous.factory.capital_investments), 2) if (company_state_previous.cash is not None and company_state_previous.inventory is not None and company_state_previous.production.man_cost is not None and company_state_previous.factory.capital_investments is not None) else "N/A" #"Súčet aktív"
+        balance['cash'] = round(company_state_previous.cash,
+                                2) if company_state_previous.cash is not None else "N/A"  # "Hotovosť" #TODO: CHANGED from cash to balance !!!!!MIND THE SUMMARY AS WELL
+        balance['inventory_money'] = round(
+            (company_state_previous.inventory * company_state_previous.production.man_cost), 2) if (
+                company_state_previous.inventory is not None and company_state_previous.production.man_cost is not None) else "N/A"  # Zásoby
+        balance['capital_investments'] = round(company_state_previous.factory.capital_investments,
+                                               2) if company_state_previous.factory.capital_investments is not None else "N/A"  # "Kapitálové investície"
+        balance['assets_summary'] = round((company_state_previous.cash + (
+                company_state_previous.inventory * company_state_previous.production.man_cost) + company_state_previous.factory.capital_investments),
+                                          2) if (
+                company_state_previous.cash is not None and company_state_previous.inventory is not None and company_state_previous.production.man_cost is not None and company_state_previous.factory.capital_investments is not None) else "N/A"  # "Súčet aktív"
 
-        #pasiva
-        balance['loans'] = round(company_state_previous.loans, 2) if company_state_previous.loans is not None else "N/A" #"Pôžičky"
-        balance['ret_earnings'] = round(company_state_previous.ret_earnings, 2) if company_state_previous.ret_earnings is not None else "N/A" #"Výsledok hospodárenia z predchádzajúcich období"
-        balance['base_capital'] = round(company.game.parameters.base_capital, 2) if company.game.parameters.base_capital is not None else "N/A" #"Základné ímanie"
-        balance['liabilities_summary'] = round(company_state_previous.loans + company_state_previous.ret_earnings + company.game.parameters.base_capital, 2) if (company_state_previous.loans is not None and company_state_previous.ret_earnings is not None and company.game.parameters.base_capital is not None) else "N/A" #"Súčet pasív"
+        # pasiva
+        balance['loans'] = round(company_state_previous.loans,
+                                 2) if company_state_previous.loans is not None else "N/A"  # "Pôžičky"
+        balance['ret_earnings'] = round(company_state_previous.ret_earnings,
+                                        2) if company_state_previous.ret_earnings is not None else "N/A"  # "Výsledok hospodárenia z predchádzajúcich období"
+        balance['base_capital'] = round(company.game.parameters.base_capital,
+                                        2) if company.game.parameters.base_capital is not None else "N/A"  # "Základné ímanie"
+        balance['liabilities_summary'] = round(
+            company_state_previous.loans + company_state_previous.ret_earnings + company.game.parameters.base_capital,
+            2) if (
+                company_state_previous.loans is not None and company_state_previous.ret_earnings is not None and company.game.parameters.base_capital is not None) else "N/A"  # "Súčet pasív"
 
         cash_flow = dict()
         try:
-            tmp_beginning_cash = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn.number-1), company=company).cash
-            cash_flow['beginning_cash'] = round(tmp_beginning_cash, 2) if tmp_beginning_cash is not None else "N/A" #???
+            tmp_beginning_cash = CompaniesState.objects.get(
+                turn=Turn.objects.get(game=company.game, number=turn.number - 1), company=company).cash
+            cash_flow['beginning_cash'] = round(tmp_beginning_cash,
+                                                2) if tmp_beginning_cash is not None else "N/A"  # ???
         except (Turn.DoesNotExist, CompaniesState.DoesNotExist):
-            tmp_beginning_cash = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn.number), company=company).cash
-            cash_flow['beginning_cash'] = round(tmp_beginning_cash, 2) if tmp_beginning_cash is not None else "N/A" #???
-            #"Počiatočný stav"
+            tmp_beginning_cash = CompaniesState.objects.get(
+                turn=Turn.objects.get(game=company.game, number=turn.number), company=company).cash
+            cash_flow['beginning_cash'] = round(tmp_beginning_cash,
+                                                2) if tmp_beginning_cash is not None else "N/A"  # ???
+            # "Počiatočný stav"
 
-        cash_flow['sales'] =  round(company_state_previous.sales, 2) if company_state_previous.sales is not None else "N/A" #plus #"Príjmy z predaja výrobkov"
-        cash_flow['manufactured_man_cost'] = round(company_state_previous.manufactured_man_cost, 2) if company_state_previous.manufactured_man_cost is not None else "N/A" #minus #"Výdavky na vyrobené výrobky"
+        cash_flow['sales'] = round(company_state_previous.sales,
+                                   2) if company_state_previous.sales is not None else "N/A"  # plus #"Príjmy z predaja výrobkov"
+        cash_flow['manufactured_man_cost'] = round(company_state_previous.manufactured_man_cost,
+                                                   2) if company_state_previous.manufactured_man_cost is not None else "N/A"  # minus #"Výdavky na vyrobené výrobky"
         # vydavky na rozhodnutia - zratane vydavky na marketing r_d a capital s minusovou hodnotou
-        cash_flow['inventory_charge'] = round(company_state_previous.inventory_charge, 2) if company_state_previous.inventory_charge is not None else "N/A" #"Výdavky na zásoby"
-        cash_flow['expenses'] = round(company_state_previous.r_d + marketing + company_state_previous.factory.capital, 2) if (company_state_previous.r_d is not None and marketing is not None and company_state_previous.factory.capital is not None) else "N/A" #"Výdavky na rozhodnutia" #TODO: change to company.decision_costs - add it to model
-        cash_flow['interest'] = round(company_state_previous.interest, 2) if company_state_previous.interest is not None else "N/A" # minus #"Výdavky na úroky"
-        cash_flow['tax'] = round(company_state_previous.tax, 2) if company_state_previous.tax is not None else "N/A" # minus # "Zaplatená daň"
+        cash_flow['inventory_charge'] = round(company_state_previous.inventory_charge,
+                                              2) if company_state_previous.inventory_charge is not None else "N/A"  # "Výdavky na zásoby"
+        cash_flow['expenses'] = round(company_state_previous.r_d + marketing + company_state_previous.factory.capital,
+                                      2) if (
+                company_state_previous.r_d is not None and marketing is not None and company_state_previous.factory.capital is not None) else "N/A"  # "Výdavky na rozhodnutia" #TODO: change to company.decision_costs - add it to model
+        cash_flow['interest'] = round(company_state_previous.interest,
+                                      2) if company_state_previous.interest is not None else "N/A"  # minus #"Výdavky na úroky"
+        cash_flow['tax'] = round(company_state_previous.tax,
+                                 2) if company_state_previous.tax is not None else "N/A"  # minus # "Zaplatená daň"
         # teraz bude stav cash flow aby vedeli či potrebuju pozicku
-        cash_flow['cash_flow_result'] = round(company_state_previous.cash_flow_res, 2) if company_state_previous.cash_flow_res is not None else "N/A" #"Výsledok finančného toku"
+        cash_flow['cash_flow_result'] = round(company_state_previous.cash_flow_res,
+                                              2) if company_state_previous.cash_flow_res is not None else "N/A"  # "Výsledok finančného toku"
 
-        #teraz ak je minus tak novy ubver alebo ak nie tak spatenie uveru
-        cash_flow['new_loans'] = round(company_state_previous.new_loans, 2) if company_state_previous.new_loans is not None else "N/A" #"Nové úvery"
-        cash_flow['loan_repayment'] = round(company_state_previous.loan_repayment, 2) if company_state_previous.loan_repayment is not None else "N/A" #"Splátka úveru"
-         
-        #zostatok do dalssieho prostredia
-        cash_flow['cash'] = round(company_state_previous.cash, 2) if company_state_previous.cash is not None else "N/A" #"Konecny stav" #CHANGED after balance became cash
+        # teraz ak je minus tak novy ubver alebo ak nie tak spatenie uveru
+        cash_flow['new_loans'] = round(company_state_previous.new_loans,
+                                       2) if company_state_previous.new_loans is not None else "N/A"  # "Nové úvery"
+        cash_flow['loan_repayment'] = round(company_state_previous.loan_repayment,
+                                            2) if company_state_previous.loan_repayment is not None else "N/A"  # "Splátka úveru"
+
+        # zostatok do dalssieho prostredia
+        cash_flow['cash'] = round(company_state_previous.cash,
+                                  2) if company_state_previous.cash is not None else "N/A"  # "Konecny stav" #CHANGED after balance became cash
 
         income_statement = dict()
-        income_statement['sales'] = round(company_state_previous.sales, 2) if company_state_previous.sales is not None else "N/A" #"Tržby z predaja výrobkov"
-        income_statement['manufactured_man_cost'] = round(company_state_previous.sold_man_cost, 2) if company_state_previous.sold_man_cost is not None else "N/A" #"Náklady na predaný tovar" #TODO: pridal som do modelov hodnotu sold_man_cost - mozno by bolo dobre zmenit aj nazov tejto hodnoty v dictionary na nieco ine ako manufactured_man_cost kedze to je nazov ineho atributu - to treba potom aj na FE, zmenit z coho to taha, preto to sem pisem
-        income_statement['marketing'] = round(marketing, 2) if marketing is not None else "N/A" #"Náklady na marketing"
-        income_statement['r_d'] = round(company_state_previous.r_d, 2) if company_state_previous.r_d is not None else "N/A" #"Náklady na výskum a vývoj"
-        income_statement['depreciation'] = round(company_state_previous.depreciation,2) if company_state_previous.depreciation is not None else "N/A" #"Odpisy"
-        income_statement['inventory_charge'] = round(company_state_previous.inventory_charge, 2) if company_state_previous.inventory_charge is not None else "N/A" # minus #"Dodatočné náklady na nepredané výrobky"
-        income_statement['inventory_upgrade'] = round(company_state_previous.inventory_upgrade, 2) if company_state_previous.inventory_upgrade is not None else "N/A" #"Náklady na upgrade zásob"
-        income_statement['overcharge_upgrade'] = round(company_state_previous.overcharge_upgrade, 2) if company_state_previous.inventory_upgrade is not None else "N/A" #"Náklady na precenenie zásob"
-        income_statement['interest'] = round(company_state_previous.interest, 2) if company_state_previous.interest is not None else "N/A" #"Nákladové úroky"
-        income_statement['profit_before_tax'] = round(company_state_previous.profit_before_tax, 2) if company_state_previous.profit_before_tax is not None else "N/A" #"Výsledok hospodárenia pred zdanením"
-        income_statement['tax'] = round(company_state_previous.tax, 2) if company_state_previous.tax is not None else "N/A" #"Daň"
-        income_statement['net_profit'] = round(company_state_previous.net_profit, 2) if company_state_previous.net_profit is not None else "N/A" #"Výsledok hospodárenia po zdanení"
+        income_statement['sales'] = round(company_state_previous.sales,
+                                          2) if company_state_previous.sales is not None else "N/A"  # "Tržby z predaja výrobkov"
+        income_statement['manufactured_man_cost'] = round(company_state_previous.sold_man_cost,
+                                                          2) if company_state_previous.sold_man_cost is not None else "N/A"  # "Náklady na predaný tovar" #TODO: pridal som do modelov hodnotu sold_man_cost - mozno by bolo dobre zmenit aj nazov tejto hodnoty v dictionary na nieco ine ako manufactured_man_cost kedze to je nazov ineho atributu - to treba potom aj na FE, zmenit z coho to taha, preto to sem pisem
+        income_statement['marketing'] = round(marketing,
+                                              2) if marketing is not None else "N/A"  # "Náklady na marketing"
+        income_statement['r_d'] = round(company_state_previous.r_d,
+                                        2) if company_state_previous.r_d is not None else "N/A"  # "Náklady na výskum a vývoj"
+        income_statement['depreciation'] = round(company_state_previous.depreciation,
+                                                 2) if company_state_previous.depreciation is not None else "N/A"  # "Odpisy"
+        income_statement['inventory_charge'] = round(company_state_previous.inventory_charge,
+                                                     2) if company_state_previous.inventory_charge is not None else "N/A"  # minus #"Dodatočné náklady na nepredané výrobky"
+        income_statement['inventory_upgrade'] = round(company_state_previous.inventory_upgrade,
+                                                      2) if company_state_previous.inventory_upgrade is not None else "N/A"  # "Náklady na upgrade zásob"
+        income_statement['overcharge_upgrade'] = round(company_state_previous.overcharge_upgrade,
+                                                       2) if company_state_previous.inventory_upgrade is not None else "N/A"  # "Náklady na precenenie zásob"
+        income_statement['interest'] = round(company_state_previous.interest,
+                                             2) if company_state_previous.interest is not None else "N/A"  # "Nákladové úroky"
+        income_statement['profit_before_tax'] = round(company_state_previous.profit_before_tax,
+                                                      2) if company_state_previous.profit_before_tax is not None else "N/A"  # "Výsledok hospodárenia pred zdanením"
+        income_statement['tax'] = round(company_state_previous.tax,
+                                        2) if company_state_previous.tax is not None else "N/A"  # "Daň"
+        income_statement['net_profit'] = round(company_state_previous.net_profit,
+                                               2) if company_state_previous.net_profit is not None else "N/A"  # "Výsledok hospodárenia po zdanení"
 
+        return Response({"production": production, "sales": sales, 'balance': balance, 'cash_flow': cash_flow,
+                         'income_statement': income_statement}, status=200)
 
-        return Response({"production": production, "sales": sales, 'balance': balance, 'cash_flow': cash_flow, 'income_statement': income_statement}, status=200)
-  
 
 class CreateCompanyView(APIView):
 
@@ -331,13 +405,15 @@ class CreateCompanyView(APIView):
         company.save()
 
         create_upgrade_company_relation(company.game, company)
-        
+
         turn = Turn.objects.get(game=company.game, number=0)
         create_company_state(company, turn)
 
         return Response({"companyID": company.id}, status=201)
 
+
 def checkCommitted(turn: Turn, end: bool = True) -> bool:
+    """Checks of all companies are committed and ends turn if auto_end is set to True"""
     states = CompaniesState.objects.filter(turn=turn)
     auto_end = turn.game.parameters.end_turn_on_committed
 
@@ -347,7 +423,7 @@ def checkCommitted(turn: Turn, end: bool = True) -> bool:
 
     if end and auto_end:
         end_turn(turn)
-    
+
     return True
 
 
@@ -370,6 +446,7 @@ class Committed(APIView):
             return Response({"detail": "Company state for this turn does not exist"}, status=500)
 
         return Response({"committed": company_state.committed}, status=200)
+
 
 class PostSpendingsView(APIView):
 
@@ -399,25 +476,30 @@ class PostSpendingsView(APIView):
         prod_serializer = ProductionSerializer(company_state.production, data=request.data['production'])
         prod_serializer.is_valid(raise_exception=True)
 
-
         factory_serializer = FactorySerializer(company_state.factory, data=request.data['factory'])
         factory_serializer.is_valid(raise_exception=True)
-
 
         marketing_serializer = MaketingSerializer(company_state.marketing, data=request.data['marketing'])
         marketing_serializer.is_valid(raise_exception=True)
 
+        try:
+            brakes = request.data['brakes']
+        except KeyError:
+            brakes = 0
+        try:
+            frame = request.data['frame']
+        except KeyError:
+            frame = 0
+        try:
+            battery = request.data['battery']
+        except KeyError:
+            battery = 0
+        try:
+            display = request.data['display']
+        except KeyError:
+            display = 0
 
-        try:    brakes = request.data['brakes']
-        except KeyError: brakes = 0
-        try:    frame = request.data['frame']
-        except KeyError: frame = 0
-        try:    battery = request.data['battery']
-        except KeyError: battery = 0
-        try:    display = request.data['display']
-        except KeyError: display = 0
-
-        brakes_progress = CompaniesUpgrades.objects.get(company=company, upgrade = Upgrade.objects.get(name="Brakes"))
+        brakes_progress = CompaniesUpgrades.objects.get(company=company, upgrade=Upgrade.objects.get(name="Brakes"))
         if brakes > 0:
             if brakes_progress.status == "f":
                 return Response({"detail": "Brakes are already finished"}, status=409)
@@ -427,9 +509,8 @@ class PostSpendingsView(APIView):
             if brakes_progress.progress >= Upgrade.objects.get(name="Brakes").cost:
                 brakes_progress.status = "f"
                 brakes_progress.turn = company_state.turn
-            
 
-        frame_progress = CompaniesUpgrades.objects.get(company=company, upgrade = Upgrade.objects.get(name="Frame"))
+        frame_progress = CompaniesUpgrades.objects.get(company=company, upgrade=Upgrade.objects.get(name="Frame"))
         if frame > 0:
             if frame_progress.status == "f":
                 return Response({"detail": "Frame is already finished"}, status=409)
@@ -439,9 +520,8 @@ class PostSpendingsView(APIView):
             if frame_progress.progress >= Upgrade.objects.get(name="Frame").cost:
                 frame_progress.status = "f"
                 frame_progress.turn = company_state.turn
-            
 
-        battery_progress = CompaniesUpgrades.objects.get(company=company, upgrade = Upgrade.objects.get(name="Battery"))
+        battery_progress = CompaniesUpgrades.objects.get(company=company, upgrade=Upgrade.objects.get(name="Battery"))
         if battery > 0:
             if battery_progress.status == "f":
                 return Response({"detail": "Battery is already finished"}, status=409)
@@ -451,9 +531,8 @@ class PostSpendingsView(APIView):
             if battery_progress.progress >= Upgrade.objects.get(name="Battery").cost:
                 battery_progress.status = "f"
                 battery_progress.turn = company_state.turn
-            
 
-        display_progress = CompaniesUpgrades.objects.get(company=company, upgrade = Upgrade.objects.get(name="Display"))
+        display_progress = CompaniesUpgrades.objects.get(company=company, upgrade=Upgrade.objects.get(name="Display"))
         if display > 0:
             if display_progress.status == "f":
                 return Response({"detail": "Display is already finished"}, status=409)
@@ -485,9 +564,10 @@ class PostSpendingsView(APIView):
         company_state.committed = True
         company_state.save()
 
-        checkCommitted(last_turn)
+        checkCommitted(last_turn) # checks if all companies are committed
 
         return Response(status=201)
+
 
 class TurnInfoView(APIView):
     def get(self, request) -> Response:
@@ -498,7 +578,7 @@ class TurnInfoView(APIView):
             company = Company.objects.get(user=request.user)
         except Company.DoesNotExist:
             return Response({"detail": "Company for this user not found"}, status=404)
-        
+
         turn = get_last_turn(company.game)
         state = CompaniesState.objects.get(turn=turn, company=company)
 

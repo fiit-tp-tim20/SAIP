@@ -132,9 +132,6 @@ class Factory(models.Model):
     capital = models.FloatField(null=True, default=0)
     capital_investments = models.FloatField(null=True, default=50000)
 
-    # def __str__(self):
-    #     return f"Factory - {self.companiesstate.company}"
-
     class Meta:
         db_table = "Factories"
         verbose_name_plural = "Factories"
@@ -174,7 +171,7 @@ class CompaniesState(models.Model):
     loans = models.FloatField(null=True, default=20000)
     inventory_upgrade = models.FloatField(null=True, default=0)
     overcharge_upgrade = models.FloatField(null=True, default=0)
-    sold_man_cost = models.FloatField(null=True, default=0) # vyrobne naklady na predane vyrobky
+    sold_man_cost = models.FloatField(null=True, default=0)  # vyrobne naklady na predane vyrobky
 
     def __str__(self):
         return f"{self.company} - {self.turn}"
@@ -197,6 +194,7 @@ class MarketState(models.Model):
 
     class Meta:
         db_table = "Market States"
+
 
 class Inventory(models.Model):
     company = models.ForeignKey(Company, models.CASCADE, null=True)
