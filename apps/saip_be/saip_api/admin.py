@@ -57,16 +57,11 @@ class TeacherDecisions(admin.ModelAdmin):
     list_display = ('__str__', 'interest_rate', 'tax_rate', 'inflation', 'loan_limit')
     list_filter = ('turn__game', 'turn__game__admin')
 
-
-# @admin.register(EmailGroup)
-# class EmailGroupAdmin(admin.ModelAdmin):
-#     list_display = ('user', 'email')
-
-
 @admin.register(Game)
 class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
     @action(label='End Turn', description='Ends the turn if you are admin for this game')
     def EndTurn(modeladmin, request, queryset):
+        """Ends the turn if you are admin for this game"""
         if request.user != queryset.admin and not request.user.is_superuser:
             return HttpResponse("You are not the admin of this game", status=403)
         if queryset.end is not None:
@@ -80,6 +75,7 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
         _ = end_turn(last_turn)
 
     def save_model(self, request, obj, form, change):
+        """Override save_model to create default upgrades and turn if they don't exist"""
         super().save_model(request, obj, form, change)
 
         create_default_upgrades() # checks if upgrades exist and creates them if not
@@ -88,6 +84,7 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
 
     @action(label='Download export', description='Download export for this game')
     def Download(modeladmin, request, queryset):
+        """Download export for this game"""
         if request.user != queryset.admin and not request.user.is_superuser:
             return HttpResponse("You are not the admin of this game", status=403)
 

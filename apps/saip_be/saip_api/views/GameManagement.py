@@ -3,7 +3,8 @@ from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from saip_api.models import Game, GameParameters, Upgrade, Turn, Company, CompaniesState, Production, Marketing, Factory, CompaniesUpgrades, MarketState, TeacherDecisions
+from saip_api.models import Game, GameParameters, Upgrade, Turn, Company, CompaniesState, Production, Marketing, \
+    Factory, CompaniesUpgrades, MarketState, TeacherDecisions
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
@@ -11,6 +12,7 @@ from ..serializers import GameSerializer
 
 from saip_simulation.simulation import Simulation
 
+# default upgrages, table is create only if it is empty
 parameters = {"Upgrades": [{"name": "Battery", "cost": 30000, "sales_effect": 0.75, "man_cost_effect": 0.3,
                             "camera_pos": "-0.1, 0.5, 3", "camera_rot": "3,2,1", "description": "Investícia do batérie predlžuje výdrž elektrického bicykla na cestách, a tým zaujme najmä zákazníkov, \
                             ktorí si potrpia na väčšej výdrži batérie. Investíciou do tohto vylepšenia sa zvýšia výrobné náklady \
@@ -29,14 +31,16 @@ parameters = {"Upgrades": [{"name": "Battery", "cost": 30000, "sales_effect": 0.
 
 
 def create_default_upgrades() -> None:
+    """Creates default upgrades if the table is empty"""
     if not Upgrade.objects.all():
         for upgrade in parameters["Upgrades"]:
             Upgrade.objects.create(name=upgrade["name"], cost=upgrade["cost"], sales_effect=upgrade["sales_effect"],
-                                   man_cost_effect = upgrade['man_cost_effect'], camera_pos=upgrade["camera_pos"],
+                                   man_cost_effect=upgrade['man_cost_effect'], camera_pos=upgrade["camera_pos"],
                                    camera_rot=upgrade["camera_rot"], description=upgrade["description"]).save()
 
 
 def create_company_state(company: Company, turn: Turn) -> CompaniesState:
+    """Creates company state for the given company and turn and populates it with classes with default values"""
     cs = CompaniesState.objects.create(turn=turn, company=company)
     production = Production.objects.create()
     cs.production = production
@@ -49,21 +53,23 @@ def create_company_state(company: Company, turn: Turn) -> CompaniesState:
 
     return cs
 
+
 def create_turn(number: int, game: Game) -> Turn:
+    """Creates turn for the given game and number, copies previous teacher decisions and calls company state and market state creation"""
     turn = Turn.objects.create(number=number, game=game)
     MarketState.objects.create(turn=turn).save()
 
     try:
-        prev_td = TeacherDecisions.objects.get(turn__game=game, turn__number=number-1)
+        prev_td = TeacherDecisions.objects.get(turn__game=game, turn__number=number - 1)
     except TeacherDecisions.DoesNotExist:
         TeacherDecisions.objects.create(turn=turn).save()
     else:
         prev_td.pk = None
         prev_td.turn = turn
         prev_td.save()
-    
+
     companies = Company.objects.filter(game=game)
-    
+
     for company in companies:
         create_company_state(company, turn)
 
@@ -71,6 +77,7 @@ def create_turn(number: int, game: Game) -> Turn:
 
 
 def get_last_turn(game: Game) -> Turn:
+    """Returns last turn for the given game"""
     return Turn.objects.filter(game=game, end__isnull=True).order_by('-number').first()
 
 
@@ -110,7 +117,8 @@ class GetRunningGamesView(APIView):
                               for game in games]}
 
         return Response(response)
-    
+
+
 class GetNotStartedGamesView(APIView):
 
     def get(self, request) -> Response:
@@ -126,7 +134,6 @@ class GetNotStartedGamesView(APIView):
 
 
 def calculate_man_cost(game: Game, turn: Turn) -> None:
-
     companies = Company.objects.filter(game=game)
     base_cost = game.parameters.base_man_cost
 
@@ -143,7 +150,7 @@ def calculate_man_cost(game: Game, turn: Turn) -> None:
         company_state.production.man_cost = round(value, 2)
         company_state.production.save()
         company_state.save()
-   
+
 
 class EndTurnView(PermissionRequiredMixin, APIView):
     permission_required = 'saip_api.add_turn'
@@ -165,7 +172,6 @@ class EndTurnView(PermissionRequiredMixin, APIView):
 
         last_turn = get_last_turn(game)
 
-
         return Response({"Number": last_turn.number, "Start": last_turn.start, "Game": game.name}, status=200)
 
     def post(self, request) -> Response:
@@ -182,37 +188,39 @@ class EndTurnView(PermissionRequiredMixin, APIView):
 
         if game.admin != request.user:
             return Response({"detail": "User is not admin"}, status=403)
-        
+
         turn = get_last_turn(game)
 
         end_turn(turn)
-        
+
         return Response({"detail": "Turn ended, simulation started"}, status=200)
+
 
 def end_turn(turn: Turn) -> Turn:
     game = turn.game
 
     if turn.number != 0:
-            companies = Company.objects.filter(game=game)
-            for company in companies:
-                state = CompaniesState.objects.get(company=company, turn=turn)
-                if state.committed == False and state.cash >= 10000:
-                    state_prev = CompaniesState.objects.get(company=company, turn=Turn.objects.get(game=company.game, number=turn.number-1))
-                    state.production.volume = state_prev.production.volume
-                    state.production.sell_price = state_prev.production.sell_price
+        companies = Company.objects.filter(game=game)
+        for company in companies:
+            state = CompaniesState.objects.get(company=company, turn=turn)
+            if state.committed == False and state.cash >= 10000:
+                state_prev = CompaniesState.objects.get(company=company, turn=Turn.objects.get(game=company.game,
+                                                                                               number=turn.number - 1))
+                state.production.volume = state_prev.production.volume
+                state.production.sell_price = state_prev.production.sell_price
 
-                    state.factory.capital = state_prev.factory.capital
+                state.factory.capital = state_prev.factory.capital
 
-                    state.marketing.viral = state_prev.marketing.viral
-                    state.marketing.podcast = state_prev.marketing.podcast
-                    state.marketing.tv = state_prev.marketing.tv
-                    state.marketing.billboard = state_prev.marketing.billboard
-                    state.marketing.ooh = state_prev.marketing.ooh
+                state.marketing.viral = state_prev.marketing.viral
+                state.marketing.podcast = state_prev.marketing.podcast
+                state.marketing.tv = state_prev.marketing.tv
+                state.marketing.billboard = state_prev.marketing.billboard
+                state.marketing.ooh = state_prev.marketing.ooh
 
-                    state.factory.save()
-                    state.production.save()
-                    state.marketing.save()
-                    state.save()
+                state.factory.save()
+                state.production.save()
+                state.marketing.save()
+                state.save()
 
     new_turn = create_turn(turn.number + 1, game)
     calculate_man_cost(game, new_turn)
