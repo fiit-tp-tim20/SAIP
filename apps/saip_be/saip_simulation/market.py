@@ -66,7 +66,8 @@ class Market:
         self.customer_count += floor(
             total_investment_from_companies
             / base_investment
-            * MarketPreset.STARTING_CUSTOMER_COUNT * 0.35
+            * MarketPreset.STARTING_CUSTOMER_COUNT
+            * 0.35
             * len(self.companies)
         )
 
@@ -89,17 +90,6 @@ class Market:
                 continue
             self.customer_base.append(AverageBudgetCustomer(self.products))
 
-    def __generate_product_dict(self):
-        for company in self.companies:
-            self.products[company.brand] = company.product
-        self.products["no_purchase"] = LastingProduct(None, -1, -1)
-
-    def __get_total_investment_from_companies(self):
-        total_investment = 0
-        for company in self.companies:
-            total_investment += company.yield_agg_marketing_value()
-        return total_investment
-
     def generate_distribution(self) -> Dict:
         for company in self.companies:
             company.product.attach_company(company)
@@ -111,6 +101,17 @@ class Market:
             self.customer_distribution[customer_choice]["demand"] += 1
         self.__calculate_sales_per_company()
         return self.customer_distribution
+
+    def __generate_product_dict(self):
+        for company in self.companies:
+            self.products[company.brand] = company.product
+        self.products["no_purchase"] = LastingProduct(None, -1, -1)
+
+    def __get_total_investment_from_companies(self):
+        total_investment = 0
+        for company in self.companies:
+            total_investment += company.yield_agg_marketing_value()
+        return total_investment
 
     def __calculate_sales_per_company(self):
         for company in self.companies:
@@ -235,7 +236,6 @@ def print_company(company: Company):
 ########################
 
 if __name__ == "__main__":
-
     TURN_COUNT = 1
 
     comA = Company(
