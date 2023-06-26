@@ -48,8 +48,7 @@ class Factory:
 
     base_capital_investment: float = field(
         init=True, default=FactoryPreset.STARTING_INVESTMENT
-    )  # Added so that we can correctly calculate capacity in invest_into_factory - changed FactoryPreset.STARTING_INVESTMENT to this
-    # TODO: maybe we want to add a full dict instead if we decide that things are configurable...........
+    )
 
     def __post_init__(self):
         self.upkeep = {
@@ -78,7 +77,7 @@ class Factory:
             self.upkeep["salaries"] = self.__calculate_salaries()
             self.upkeep["writeoff"] = (
                 self.capital_investment
-                * self.depreciation_rate  # CHANGED TO depreciation_rate FROM FactoryPreset.FACTORY_WRITEOFF_RATE
+                * self.depreciation_rate
             )
             return
 
@@ -355,9 +354,6 @@ class Company:
         self.product.upgrade_stored_products()
         return self.inventory_count * self.product.get_upgrade_stored_products_price()
 
-    def __price_diff_stored_products(self) -> float:
-        return (self.prev_turn_prod_ppu - self.prod_ppu) * self.inventory_count
-
     ###########################
     #   COST CALC UTILITIES   #
     ###########################
@@ -367,7 +363,6 @@ class Company:
         self.value_paid_in_interest = (
             self.loans * self.interest_rate * TURN_LENGTH / YEAR_LENGTH
         )
-        # self.price_diff_stored_products = self.__price_diff_stored_products()
         self.value_paid_in_stored_product_upgrades = self.__upgrade_stored_products()
         self.value_paid_in_inventory_charge = (
             self.inventory_count * FactoryPreset.INVENTORY_CHARGE_PER_UNIT
@@ -378,7 +373,6 @@ class Company:
             + self.marketing_costs
             + self.amount_spent_on_upgrades
             + self.value_paid_in_interest
-            # + self.price_diff_stored_products
             + self.value_paid_in_stored_product_upgrades
             + self.value_paid_in_inventory_charge
         )
