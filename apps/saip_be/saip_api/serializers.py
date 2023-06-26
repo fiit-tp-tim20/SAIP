@@ -10,6 +10,7 @@ from rest_framework import status
 
 
 class RegisterSerializer(serializers.ModelSerializer):
+    """Serializer for user registration"""
     password = serializers.CharField(write_only=True, required=True, allow_blank=False,
                                      style={'input_type': 'password'}, trim_whitespace=False)
     username = serializers.CharField(required=True, allow_blank=False,
@@ -34,16 +35,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-class UserSerializer(serializers.ModelSerializer):
-
-    username = serializers.CharField(required=True, allow_blank=False)
-
-    class Meta:
-        model = User
-        fields = ('username', 'date_joined')
-
-
 class GameSerializer(serializers.ModelSerializer):
+    """Serializer for game creation"""
 
     name = serializers.CharField(required=True, allow_blank=False,
                                  validators=[validators.UniqueValidator(queryset=Game.objects.all())])
@@ -67,6 +60,7 @@ class GameSerializer(serializers.ModelSerializer):
 
 
 class CompanySerializer(serializers.ModelSerializer):
+    """Serializer for company creation"""
 
     name = serializers.CharField(required=True, allow_blank=False)
     game = serializers.PrimaryKeyRelatedField(queryset=Game.objects.filter(end__isnull=True))
@@ -101,6 +95,7 @@ class CompanySerializer(serializers.ModelSerializer):
 
 
 class SpendingsSerializer(serializers.Serializer):
+    """Serializer for company spendings layout (does not have any methods)"""
 
     marketing = serializers.JSONField(required=True)
     production = serializers.JSONField(required=True)
@@ -112,6 +107,7 @@ class SpendingsSerializer(serializers.Serializer):
 
 
 class ProductionSerializer(serializers.ModelSerializer):
+    """Serializer for production update (needs already existing instance)"""
 
     sell_price = serializers.FloatField(required=True, min_value=0)
     volume = serializers.IntegerField(required=True, min_value=0)
@@ -129,6 +125,7 @@ class ProductionSerializer(serializers.ModelSerializer):
         return instance
 
 class MaketingSerializer(serializers.ModelSerializer):
+    """Serializer for marketing update (needs already existing instance)"""
 
     viral = serializers.IntegerField(required=True, min_value=0)
     podcast = serializers.IntegerField(required=True, min_value=0)
@@ -156,26 +153,16 @@ class MaketingSerializer(serializers.ModelSerializer):
         return instance
 
 class FactorySerializer(serializers.ModelSerializer):
+    """Serializer for factory update (needs already existing instance)"""
 
-    # prod_emp = serializers.IntegerField(required=True, min_value=0)
-    # cont_emp = serializers.IntegerField(required=True, min_value=0)
-    # aux_emp = serializers.IntegerField(required=True, min_value=0)
     capital = serializers.IntegerField(required=True, min_value=0)
     class Meta:
         model = Factory
-        # fields = ('prod_emp', 'cont_emp', 'aux_emp', 'capital')
         fields = ('capital', )
 
     def update(self, instance, validated_data) -> Factory:
-        # prod_emp = validated_data.get('prod_emp')
-        # cont_emp = validated_data.get('cont_emp')
-        # aux_emp = validated_data.get('aux_emp')
         capital = validated_data.get('capital')
 
-        
-        # instance.prod_emp = prod_emp
-        # instance.cont_emp = cont_emp
-        # instance.aux_emp = aux_emp
         instance.capital = capital
 
         return instance

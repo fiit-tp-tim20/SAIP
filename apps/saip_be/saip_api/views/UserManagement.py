@@ -39,6 +39,7 @@ class LoginView(APIView):
 
 
 def logout_all(request) -> bool:
+    """Logout user from all sessions."""
     if not request.user:
         return False
     request.user.auth_token_set.all().delete()
@@ -82,13 +83,13 @@ class RegisterView(APIView):
         return Response(status=201)
 
 
-class TestView(APIView):
-
-    def get(self, request) -> Response:
-
-        if not request.user or not request.user.is_authenticated:
-            return Response({"detail": "User is not authenticated."}, status=401)
-
-        return Response({
-            "user_id": request.user.id
-        }, status=200)
+# class TestView(APIView):
+#     """Test view to check if user is authenticated."""
+#
+#     def get(self, request) -> Response:
+#         if not request.user or not request.user.is_authenticated:
+#             return Response({"detail": "User is not authenticated."}, status=401)
+#
+#         return Response({
+#             "user_id": request.user.id
+#         }, status=200)
