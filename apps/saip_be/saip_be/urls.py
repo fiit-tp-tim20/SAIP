@@ -16,7 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from saip_api.views.UserManagement import RegisterView, LoginView, TestView, ChangePasswordView
+from saip_api.views.UserManagement import RegisterView, LoginView, ChangePasswordView
+# from saip_api.views.UserManagement import TestView
 from saip_api.views.Upgrade import UpgradeView
 from saip_api.views.GameManagement import CreateGameView, GetRunningGamesView, EndTurnView, GetNotStartedGamesView
 from saip_api.views.CompanyManagement import CreateCompanyView, PostSpendingsView, CompanyInfo, CompanyReport, TurnInfoView, Committed, IndustryReport, MarketingView, CompanyView, IndustryView
@@ -26,7 +27,7 @@ from knox.views import LogoutView
 urlpatterns = [
     path('api/admin/', admin.site.urls),
     path('api/register/', RegisterView.as_view(), name="register"),
-    path('api/test/', TestView.as_view(), name="test"),
+    # path('api/test/', TestView.as_view(), name="test"), # uncomment the TestView in UserManagement.py to use this
     path('api/change_password/', ChangePasswordView.as_view(), name="change_password"),
     path('api/login/', LoginView.as_view(), name="login"),
     path('api/logout/', LogoutView.as_view(), name='knox_logout'),

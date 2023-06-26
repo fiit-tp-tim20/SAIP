@@ -5,6 +5,7 @@ from zipfile import ZipFile
 
 from .models import Game, Turn, MarketState, Company, CompaniesState
 
+
 def create_game_export(game: Game) -> io.BytesIO:
     """Creates a zip file containing all the data for a game split into 2 csv files."""
     f = io.BytesIO()
@@ -29,10 +30,10 @@ def create_game_export(game: Game) -> io.BytesIO:
             cs = CompaniesState.objects.get(turn=turn, company=company)
             prod, mark, fact = cs.production, cs.marketing, cs.factory
             companies_writer.writerow([turn.number, company.name, prod.man_cost, prod.sell_price, prod.volume,
-                                        mark.viral, mark.podcast, mark.ooh, mark.tv, mark.billboard,
-                                        fact.capacity, fact.capital, fact.capital_investments,
-                                        cs.r_d, cs.cash, cs.inventory, cs.orders_received, cs.orders_fulfilled,
-                                        cs.ret_earnings, cs.net_profit, cs.cash_flow_res, cs.stock_price])
+                                       mark.viral, mark.podcast, mark.ooh, mark.tv, mark.billboard,
+                                       fact.capacity, fact.capital, fact.capital_investments,
+                                       cs.r_d, cs.cash, cs.inventory, cs.orders_received, cs.orders_fulfilled,
+                                       cs.ret_earnings, cs.net_profit, cs.cash_flow_res, cs.stock_price])
 
     with ZipFile(f, 'w', zipfile.ZIP_DEFLATED) as zip_file:
         zip_file.writestr('companies.csv', companies_export.getvalue())

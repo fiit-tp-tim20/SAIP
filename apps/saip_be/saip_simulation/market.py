@@ -159,7 +159,7 @@ def print_company_production(company: Company):
         f"Vyrobenych: {company.production_volume}\nKapacita: {company.factory.capacity}\nVyuzitie: {company.production_volume / company.factory.prev_capacity:.2f}"
     )
     print(
-        f"Variabilne naklady: {company.prod_costs_per_turn:.2f}/ks\nZasoby: {company.inventory}\nCelkove naklady: {company.total_ppu:.2f}/ks"
+        f"Variabilne naklady: {company.prod_costs_per_turn:.2f}/ks\nZasoby: {company.inventory_count}\nCelkove naklady: {company.total_ppu:.2f}/ks"
     )
 
 
@@ -195,7 +195,7 @@ def print_company_incomes_and_losses(company: Company):
         f"RnD: {company.amount_spent_on_upgrades}\nOdpisy: {company.factory.upkeep.get('writeoff'):.2f}\nVydavky na zasoby: {company.value_paid_in_inventory_charge}"
     )
     print(
-        f"Upgrade zasob: {company.value_paid_in_stored_product_upgrades:.2f}\nPrecenenie zasob: {company.price_diff_stored_products:.2f}\nUroky: {company.value_paid_in_interest:.2f}"
+        f"Upgrade zasob: {company.value_paid_in_stored_product_upgrades:.2f}\nUroky: {company.value_paid_in_interest:.2f}"
     )
     print(
         f"Vysledok pred zdanenim: {company.profit_before_tax:.2f}\nDan: {company.value_paid_in_tax:.2f}\nVysledok po zdaneni: {company.profit_after_tax:.2f}"
@@ -207,10 +207,10 @@ def print_company_stats(company: Company):
 
     print("AKTIVA")
     print(
-        f"Cash: {company.balance:.2f}\nZasoby: {company.inventory*company.prod_ppu}\nKapitalove investicie: {company.factory.capital_investment:.2f}"
+        f"Cash: {company.balance:.2f}\nZasoby: {company.inventory_count*company.prod_ppu}\nKapitalove investicie: {company.factory.capital_investment:.2f}"
     )
     print(
-        f"Sucet aktiv: {company.balance + (company.inventory*company.prod_ppu) + company.factory.capital_investment:.2f}"
+        f"Sucet aktiv: {company.balance + (company.inventory_count*company.prod_ppu) + company.factory.capital_investment:.2f}"
     )
 
     print("PASIVA")
@@ -241,7 +241,7 @@ if __name__ == "__main__":
     comA = Company(
         brand="A",
         product=LastingProduct(price=1800, man_cost=250),
-        inventory=0,
+        inventory_count=0,
         production_volume=85,
         balance=10_000,
         factory=Factory(),
@@ -251,7 +251,7 @@ if __name__ == "__main__":
     comB = Company(
         brand="B",
         product=LastingProduct(price=2500, man_cost=250),
-        inventory=0,
+        inventory_count=0,
         production_volume=82,
         balance=10_000,
         factory=Factory(),
@@ -261,7 +261,7 @@ if __name__ == "__main__":
     comC = Company(
         brand="C",
         product=LastingProduct(price=1950, man_cost=250),
-        inventory=0,
+        inventory_count=0,
         production_volume=90,
         balance=10_000,
         factory=Factory(),
@@ -270,7 +270,7 @@ if __name__ == "__main__":
     comD = Company(
         brand="D",
         product=LastingProduct(price=1700, man_cost=250),
-        inventory=0,
+        inventory_count=0,
         production_volume=99,
         balance=10_000,
         factory=Factory(),
