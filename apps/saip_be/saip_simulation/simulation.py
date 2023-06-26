@@ -348,10 +348,6 @@ class Simulation:
             company.invest_into_factory()
 
         self.market.generate_distribution()
-        #for company in self.companies.values():
-        #    print(company)
-        #    pass
-        pass
         return
 
     def write_simulation_results(self) -> None:
@@ -455,6 +451,15 @@ class Simulation:
                     new_inventory_model.save()
                 else:
                     pass
+        # TODO: maybe add this in if some problems pop up. shouldnt be necessary tho
+        # make an additional loop over all the inventories and delete any that have unit_count <= 0, just to make sure
+        #try:
+        #    inventory_models = models.Inventory.objects.filter(company=company_model)
+        #    for inventory_model in inventory_models:
+        #        if inventory_model.unit_count <= 0:
+        #            inventory_model.delete()
+        #except:
+        #    pass
 
                 
     def __write_current_turn_company_state(self, company_class_object: Company, ct_company_state_model: models.CompaniesState) -> None:
