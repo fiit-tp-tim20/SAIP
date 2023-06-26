@@ -162,7 +162,6 @@ class Simulation:
         init_brand = company_model.name
         if company_state is not None:
             init_max_budget = self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN) if company_state.cash > self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN) else (company_state.cash if company_state.cash > 0 else 0)
-            init_inventory = company_state.inventory if company_state.inventory is not None else 0
             init_balance = company_state.cash if company_state.cash is not None else self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN) #CHANGED after balance became cash (in models)
             init_ret_earnings = company_state.ret_earnings if company_state.ret_earnings is not None else 0
             init_loans = company_state.loans if company_state.loans is not None else 0
@@ -173,7 +172,6 @@ class Simulation:
                 init_capital_investment_this_turn = 0
         else:
             init_max_budget = self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN)
-            init_inventory = 0
             init_balance = self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN)
             init_ret_earnings = 0
             init_loans = 0
@@ -215,7 +213,6 @@ class Simulation:
         # instantiate the new company with the prepared values
         new_company = Company(
             brand = init_brand,
-            #inventory = init_inventory, #TODO: remove inventory and test 
             current_turn_num=self.current_turn,
 
             balance = init_balance,
