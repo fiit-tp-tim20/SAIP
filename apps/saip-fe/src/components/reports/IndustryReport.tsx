@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import getIndustryReport, { IndustryReport as IndustryReportType } from "../../api/GetIndustryReport";
 import { getIndustryGraphData } from "../../api/GetIndustryGraphData";
 import IndustryGraph from "../statisticsGraph/IndustryGraph";
 import numberWithSpaces from "../../utils/numberWithSpaces";
-import { useAtom } from "jotai";
-import { currentTurn } from "../../store/Atoms";
 import { getTurn } from "../../api/GetTurn";
 
 const sortByStockPrice = (a: IndustryReportType, b: IndustryReportType) => {
@@ -79,7 +77,6 @@ function IndustryReport() {
 								</tr>
 							</thead>
 							<tbody>
-								{/* TODO add sort */}
 								{data &&
 									Object.entries(data?.industry)
 										.sort((a, b) => sortByStockPrice(a[1], b[1]))
