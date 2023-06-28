@@ -9,15 +9,17 @@ import useUpgradesStore from "../../store/Upgrades";
 import { GameState } from "../../types/gameState";
 import useModal from "../modal/useModal";
 import BottomBarModal from "./BottomBarModal";
-import { getCommitted } from "../../api/GetCommitted";
 import getGeneralInfo from "../../api/CompanyInfo";
 import endTurn from "../../api/EndTurn";
+import getCommitted from "../../api/GetCommitted";
 
 export default function BottomBar() {
 	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());
 	const { data: committed, refetch: refetchCommited } = useQuery("committed", () => getCommitted());
 
 	const { Modal, isShowing, setIsShowing, setElement } = useModal(<div />);
+
+	const { reset: resetUpgradeState } = useUpgradesStore();
 
 	const {
 		getSum: getSumMarketing,
@@ -58,6 +60,7 @@ export default function BottomBar() {
 
 		await endTurn(gameState);
 		await refetchCommited();
+		resetUpgradeState();
 	};
 
 	const handleModalSubmit = async () => {
@@ -85,10 +88,9 @@ export default function BottomBar() {
 										totalSpent > data.budget_cap ? "text-red-600" : ""
 									}`}
 								>
-									Budget: {totalSpent}/{data.budget_cap}€
+									Rozpočet: {totalSpent}/{data.budget_cap}€
 								</p>
 								<button type="button" onClick={() => navigate("/product")} className="button-clear">
-									{/* TODO create state */}
 									Produkt: ✅
 								</button>
 								<button type="button" onClick={() => navigate("/company")} className="button-clear">

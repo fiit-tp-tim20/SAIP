@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from saip_api.models import Company, CompaniesUpgrades, Upgrade, Game
 from .GameManagement import get_last_turn
 
+
 class UpgradeView(APIView):
 
     def get(self, request) -> Response:
@@ -18,7 +19,8 @@ class UpgradeView(APIView):
         response = {'upgrade': list()}
 
         for upgrade in companies_upgrades:
-            other_companies = CompaniesUpgrades.objects.filter(upgrade=upgrade.upgrade, status="f", game=upgrade.game).exclude(turn=last_turn)
+            other_companies = CompaniesUpgrades.objects.filter(upgrade=upgrade.upgrade, status="f",
+                                                               game=upgrade.game).exclude(turn=last_turn)
             other_companies_list = [item.company.name for item in other_companies]
 
             local_upgrade = Upgrade.objects.get(pk=upgrade.upgrade_id)

@@ -1,9 +1,9 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { useQuery } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
 import "./i18n";
+import { useAtom } from "jotai";
 import Dashboard from "./screens/Dashboard";
 import Product from "./screens/Product";
 import Navbar from "./components/navbar/Navbar";
@@ -20,9 +20,8 @@ import logout from "./api/logout";
 import GameSelect from "./screens/GameSelect";
 import Register from "./screens/Register";
 import BugReport from "./components/bugreport/BugReport";
-import { getCommitted } from "./api/GetCommitted";
-import { useAtom } from "jotai";
 import { currentTurn } from "./store/Atoms";
+import getCommitted from "./api/GetCommitted";
 
 function App() {
 	const token = localStorage.getItem("token");
@@ -36,11 +35,11 @@ function App() {
 	const { reset: resetUpgradeState } = useUpgradesStore();
 	const { reset: resetMarketingState } = useMarketingStore();
 
-	const { data: committed, refetch: refetchCommited } = useQuery("committed", () => getCommitted());
+	const { refetch: refetchCommited } = useQuery("committed", () => getCommitted());
 
-	const [enableArc, setEnableArc] = React.useState(true);
+	const [enableArc] = useState(true);
 
-	const [turn, setTurn] = useAtom(currentTurn);
+	const [, setTurn] = useAtom(currentTurn);
 
 	useEffect(() => {
 		document.documentElement.style.setProperty(
@@ -105,40 +104,36 @@ function App() {
 		);
 	}
 
-	return (
-		<>
-			{token ? (
-				<Suspense>
-					<BrowserRouter>
-						<Navbar />
-						<div className="my-16">
-							<Routes>
-								<Route path="/product" element={<Product />} />
-								<Route path="/company" element={<Company />} />
-								<Route path="/marketing" element={<Marketing />} />
-								<Route path="/game" element={<GameSelect />} />
-								{/* <Route path="/news" element={<News />} /> */}
-								{/* <Route path="/" element={<Navigate to="/dashboard" replace />} /> */}
-								<Route path="/" element={<Dashboard />} />
-								<Route path="*" element={<NotFound />} />
-							</Routes>
-						</div>
-						<BottomBar />
-						<BugReport />
-					</BrowserRouter>
-				</Suspense>
-			) : (
+	if (token) {
+		return (
+			<Suspense>
 				<BrowserRouter>
-					<Routes>
-						<Route path="/register" element={<Register />} />
-						<Route path="/" element={<Login />} />
-						<Route path="*" element={<Navigate to="/" replace />} />
-					</Routes>
+					<Navbar />
+					<div className="my-16">
+						<Routes>
+							<Route path="/product" element={<Product />} />
+							<Route path="/company" element={<Company />} />
+							<Route path="/marketing" element={<Marketing />} />
+							<Route path="/game" element={<GameSelect />} />
+							<Route path="/" element={<Dashboard />} />
+							<Route path="*" element={<NotFound />} />
+						</Routes>
+					</div>
+					<BottomBar />
+					<BugReport />
 				</BrowserRouter>
-			)}
-			{/* <Devtools /> */}
-			{/* <ReactQueryDevtools initialIsOpen={false} /> */}
-		</>
+			</Suspense>
+		);
+	}
+
+	return (
+		<BrowserRouter>
+			<Routes>
+				<Route path="/register" element={<Register />} />
+				<Route path="/" element={<Login />} />
+				<Route path="*" element={<Navigate to="/" replace />} />
+			</Routes>
+		</BrowserRouter>
 	);
 }
 

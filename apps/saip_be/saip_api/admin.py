@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from .Exports import create_game_export
 
 from .models import Turn, Company, Production, Marketing, Factory, CompaniesState, Game, GameParameters, MarketState,\
-    Upgrade, CompaniesUpgrades, TeacherDecisions
+    Upgrade, CompaniesUpgrades, TeacherDecisions, Inventory
 
 from django_object_actions import DjangoObjectActions, action
 
@@ -42,7 +42,7 @@ class FactoryAdmin(admin.ModelAdmin):
 
 @admin.register(CompaniesState)
 class CompaniesStateAdmin(admin.ModelAdmin):
-    list_display = ('company', 'turn', 'production', 'marketing', 'factory', 'balance', 'stock_price', 'r_d',
+    list_display = ('company', 'turn', 'production', 'marketing', 'factory', 'cash', 'stock_price', 'r_d',
                     'inventory', 'manufactured_man_cost')
     list_filter = ('turn', 'company__game')
 
@@ -50,24 +50,22 @@ class CompaniesStateAdmin(admin.ModelAdmin):
 @admin.register(MarketState)
 class MarketStateAdmin(admin.ModelAdmin):
     list_display = ('turn', 'sold', 'demand', 'inventory', 'manufactured', 'capacity')
+    list_filter = ('turn__game',)
 
 @admin.register(TeacherDecisions)
 class TeacherDecisions(admin.ModelAdmin):
     list_display = ('__str__', 'interest_rate', 'tax_rate', 'inflation', 'loan_limit')
     list_filter = ('turn__game', 'turn__game__admin')
 
-
-# @admin.register(EmailGroup)
-# class EmailGroupAdmin(admin.ModelAdmin):
-#     list_display = ('user', 'email')
-
-
 @admin.register(Game)
 class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
     @action(label='End Turn', description='Ends the turn if you are admin for this game')
     def EndTurn(modeladmin, request, queryset):
-        if request.user != queryset.admin or queryset.end is not None:
+        """Ends the turn if you are admin for this game"""
+        if request.user != queryset.admin and not request.user.is_superuser:
             return HttpResponse("You are not the admin of this game", status=403)
+        if queryset.end is not None:
+            return HttpResponse("Game is already ended", status=400)
 
         last_turn = get_last_turn(queryset)
         if not last_turn:
@@ -77,6 +75,7 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
         _ = end_turn(last_turn)
 
     def save_model(self, request, obj, form, change):
+        """Override save_model to create default upgrades and turn if they don't exist"""
         super().save_model(request, obj, form, change)
 
         create_default_upgrades() # checks if upgrades exist and creates them if not
@@ -85,7 +84,8 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
 
     @action(label='Download export', description='Download export for this game')
     def Download(modeladmin, request, queryset):
-        if request.user != queryset.admin:
+        """Download export for this game"""
+        if request.user != queryset.admin and not request.user.is_superuser:
             return HttpResponse("You are not the admin of this game", status=403)
 
         f = create_game_export(queryset)
@@ -102,6 +102,7 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
 @admin.register(GameParameters)
 class GameParametersAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'budget_cap', 'depreciation', 'base_man_cost')
+    list_filter = ('game',)
 
 
 @admin.register(Upgrade)
@@ -113,3 +114,8 @@ class UpgradeAdmin(admin.ModelAdmin):
 class CompaniesUpgradeAdmin(admin.ModelAdmin):
     list_display = ('company', 'game', 'upgrade', 'status', 'progress', 'turn')
     list_filter = ('company__game', 'company', 'upgrade', 'turn')
+
+@admin.register(Inventory)
+class InventoryAdmin(admin.ModelAdmin):
+    list_display = ('company', 'unit_count', 'price_per_unit', 'turn_num')
+    list_filter = ('company__game', 'company', 'turn_num')

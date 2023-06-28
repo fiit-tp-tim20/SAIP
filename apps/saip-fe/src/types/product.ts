@@ -5,11 +5,8 @@ export type Player = {
 };
 
 export type Upgrade = {
-	id: number;
 	name: string;
 	players: string[];
-	// TODO edit be to return player as player object
-	// players: Player[];
 	description: string;
 	status: "finished" | "started" | "not started";
 	price: number;
