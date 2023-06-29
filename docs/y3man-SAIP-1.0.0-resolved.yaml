@@ -1,0 +1,1346 @@
+---
+openapi: 3.0.0
+info:
+  title: SAIP backend
+  description: The API for SAIP project
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/y3man/SAIP/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: http://127.0.0.1:8000
+  description: Local server
+- url: https://team20-22.studenti.fiit.stuba.sk
+  description: Deployment server
+paths:
+  /api/register/:
+    post:
+      tags:
+      - User management
+      summary: User registration
+      description: User can create an account with a username and a password
+      operationId: RegisterView
+      requestBody:
+        $ref: '#/components/requestBodies/RegUser'
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+        "400":
+          description: Bad request or some required data is missing.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+        "405":
+          description: Method not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_405'
+  /api/login/:
+    post:
+      tags:
+      - User management
+      summary: User login
+      description: User provides valid username and password. Access token is returned.
+      operationId: LoginView
+      requestBody:
+        $ref: '#/components/requestBodies/LogUser'
+      responses:
+        "200":
+          description: User logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: Bad request or some required data is missing.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+        "403":
+          description: User has exceeded maximum number of tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_403'
+        "405":
+          description: Method not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_405'
+  /api/test/:
+    get:
+      tags:
+      - Test
+      summary: Testing view to test access tokens
+      description: User needs to provide a valid access token (functions are commented out)
+      operationId: TestView
+      responses:
+        "200":
+          description: Token is valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+        "401":
+          description: User is not authenticated or did not provide a valid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "405":
+          description: Method not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_405_1'
+      security:
+      - ApiKeyAuth: []
+  /api/change_password/:
+    put:
+      tags:
+      - User management
+      summary: Change authenticated users password
+      description: User can change their password
+      operationId: ChangePasswordView
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api_change_password_body'
+      responses:
+        "200":
+          description: Password changed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+        "400":
+          description: Some of required data was not provided or data provided in incorrect format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400_1'
+        "401":
+          description: User is not authenticated or did not provide a valid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "405":
+          description: Method not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_405'
+        "500":
+          description: Failed to log out after password change
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500'
+      security:
+      - ApiKeyAuth: []
+  /api/logout/:
+    post:
+      tags:
+      - User management
+      summary: User log out
+      operationId: knox.LogoutView
+      responses:
+        "204":
+          description: User logged out
+        "405":
+          description: Method not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_405'
+      security:
+      - ApiKeyAuth: []
+  /api/upgrades/:
+    get:
+      tags:
+      - Company management
+      summary: Gets all upgrades with statuses for my company and companies which already have it
+      operationId: UpgradeView
+      responses:
+        "200":
+          description: List of all upgrades with my statuses + contains list of companies which already have it completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+        "401":
+          description: User is not authenticated or did not provide a valid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "405":
+          description: Method not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_405_2'
+      security:
+      - ApiKeyAuth: []
+  /api/create_game/:
+    post:
+      tags:
+      - Game management
+      summary: Creates game with provided name. Must have permission or be superuser.
+      operationId: CreateGameView
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api_create_game_body'
+        required: true
+      responses:
+        "201":
+          description: Game created. Returns id of created game.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_1'
+        "400":
+          description: Some of required data was not provided or data provided in incorrect format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400_1'
+        "401":
+          description: User is not authenticated or did not provide a valid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "403":
+          description: User does not have required permission to do this.
+        "405":
+          description: Method not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_405_2'
+      security:
+      - ApiKeyAuth: []
+  /api/list_games/:
+    get:
+      tags:
+      - Game management
+      summary: Gets a list of running games.
+      operationId: GetRunningGamesView
+      responses:
+        "200":
+          description: List of all running games with their respective IDs.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+        "401":
+          description: User is not authenticated or did not provide a valid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "405":
+          description: Method not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_405_2'
+      security:
+      - ApiKeyAuth: []
+  /api/create_company/:
+    post:
+      tags:
+      - Company management
+      summary: Creates a company to provided game (id) and returns its id.
+      operationId: CreateCompanyView
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api_create_company_body'
+        required: true
+      responses:
+        "201":
+          description: Company was created.
+          content:
+            application\json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201_2'
+        "400":
+          description: Some of required data was not provided or data provided in incorrect format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400_1'
+        "401":
+          description: User is not authenticated or did not provide a valid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "405":
+          description: Method not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_405_2'
+        "409":
+          description: Company with this name already exists in specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_409'
+      security:
+      - ApiKeyAuth: []
+  /api/end_turn/:
+    get:
+      tags:
+      - Game management
+      summary: Returns last turn of specified game.
+      operationId: EndTurnView_GetLastTurn
+      parameters:
+      - name: gameID
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Returns data about last turn of specified game.
+          content:
+            application\json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_4'
+        "400":
+          description: Game has ended or missing required data
+          content:
+            application\json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400_2'
+        "401":
+          description: User is not authenticated or is not admin for this game
+          content:
+            application\json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401_1'
+        "403":
+          description: User does not have required permission to do this.
+        "404":
+          description: Game not found
+          content:
+            application\json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404'
+      security:
+      - ApiKeyAuth: []
+    post:
+      tags:
+      - Game management
+      summary: Ends last turn of specified game
+      operationId: EndTurnView_EndTurn
+      parameters:
+      - name: gameID
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Turn ended and started another one.
+          content:
+            application\json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_5'
+        "400":
+          description: Game has ended or missing required data
+          content:
+            application\json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400_2'
+        "401":
+          description: User is not authenticated or is not admin for this game
+          content:
+            application\json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401_1'
+        "403":
+          description: User does not have required permission to do this.
+        "404":
+          description: Game not found
+          content:
+            application\json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404'
+      security:
+      - ApiKeyAuth: []
+  /api/spendings/:
+    post:
+      tags:
+      - Company management
+      summary: Allows for companies to post their spendings. Can only be done once per turn.
+      operationId: PostSpendingsView
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/api_spendings_body'
+        required: true
+      responses:
+        "201":
+          description: Decisions were posted
+        "400":
+          description: Some of required data was not provided or data provided in incorrect format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400_1'
+        "401":
+          description: User is not authenticated or did not provide a valid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "404":
+          description: Company for this user was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404_1'
+        "405":
+          description: Method not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_405_2'
+        "409":
+          description: Spendings for this company were already posted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_409_1'
+        "500":
+          description: Company state does not exist for this company and current turn
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_1'
+      security:
+      - ApiKeyAuth: []
+  /api/company_info/:
+    get:
+      tags:
+      - Company management
+      summary: Returns info about users company
+      operationId: CompanyInfo
+      responses:
+        "200":
+          description: Info about users company
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_6'
+        "401":
+          description: User is not authenticated or did not provide a valid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "404":
+          description: Company for this user was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404_1'
+        "405":
+          description: Method not allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_405_2'
+      security:
+      - ApiKeyAuth: []
+  /api/company_report/:
+    get:
+      tags:
+      - Company management
+      summary: Dashboar view - company
+      responses:
+        "200":
+          description: Returns dashboard view
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_7'
+        "401":
+          description: User is not authenticated or did not provide a valid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "404":
+          description: Company for this user was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404_1'
+      security:
+      - ApiKeyAuth: []
+  /api/industry_report/:
+    get:
+      tags:
+      - Company management
+      summary: Dashboar view - industry
+      responses:
+        "200":
+          description: Returns dashboard view for industry for every company in game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_8'
+        "401":
+          description: User is not authenticated or did not provide a valid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "404":
+          description: Company for this user was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404_1'
+      security:
+      - ApiKeyAuth: []
+  /api/committed/:
+    get:
+      tags:
+      - Company management
+      summary: Checks if company has comitted
+      responses:
+        "200":
+          description: State of the committed variable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_9'
+        "401":
+          description: User is not authenticated or did not provide a valid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "404":
+          description: Company for this user was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404_1'
+        "500":
+          description: Company state does not exist for this company and current turn
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_500_1'
+      security:
+      - ApiKeyAuth: []
+  /api/turn_info/:
+    get:
+      tags:
+      - Company management
+      summary: Info about the current turn
+      responses:
+        "200":
+          description: Number of this turn and starting time
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_10'
+        "401":
+          description: User is not authenticated or did not provide a valid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "404":
+          description: Company for this user was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404_1'
+      security:
+      - ApiKeyAuth: []
+  /api/marketing_view/:
+    get:
+      tags:
+      - Company management
+      summary: Demand data for graphing purposes
+      responses:
+        "200":
+          description: List of number of orders received for all turns prior to the current turn
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_11'
+        "401":
+          description: User is not authenticated or did not provide a valid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "404":
+          description: Company for this user was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404_1'
+      security:
+      - ApiKeyAuth: []
+  /api/company_view/:
+    get:
+      tags:
+      - Company management
+      summary: Company data for reports
+      responses:
+        "200":
+          description: "Lists of numbers of manufactured and sold units, cost and selling price for unit for all turn priot to the current turn"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_12'
+        "401":
+          description: User is not authenticated or did not provide a valid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "404":
+          description: Company for this user was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404_1'
+      security:
+      - ApiKeyAuth: []
+  /api/list_games_ns/:
+    get:
+      tags:
+      - Game management
+      summary: List pending games
+      responses:
+        "200":
+          description: List of games pending to start
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_13'
+        "401":
+          description: User is not authenticated or did not provide a valid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+      security:
+      - ApiKeyAuth: []
+  /api/industry_view/:
+    get:
+      tags:
+      - Company management
+      summary: Info for leaderboard graph and table
+      responses:
+        "200":
+          description: Arrays with data for development of stock price and rank
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_14'
+        "401":
+          description: User is not authenticated or did not provide a valid token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_401'
+        "404":
+          description: Company for this user was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_404_1'
+      security:
+      - ApiKeyAuth: []
+components:
+  schemas:
+    inline_response_405_1:
+      properties:
+        detail:
+          type: string
+          example: Method "POST" not allowed.
+    inline_response_200_2_upgrade:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Upgrade1
+        players:
+          type: array
+          items:
+            type: string
+            example: "[\"MyCompany\",\"Company2\"]"
+        status:
+          type: string
+          enum:
+          - finished
+          - started
+          - notstarted
+        price:
+          type: integer
+          example: 2
+        progress:
+          type: integer
+          example: 2
+        camera_pos:
+          maxItems: 3
+          minItems: 3
+          type: array
+          example:
+          - 1
+          - 2
+          - 3
+          items:
+            type: integer
+        camera_rot:
+          maxItems: 3
+          minItems: 3
+          type: array
+          example:
+          - 3
+          - 3
+          - 5
+          items:
+            type: integer
+    inline_response_405_2:
+      properties:
+        detail:
+          type: string
+          example: Method "PUT" not allowed.
+    api_spendings_body:
+      required:
+      - factory
+      - marketing
+      - production
+      properties:
+        marketing:
+          $ref: '#/components/schemas/apispendings_marketing'
+        production:
+          $ref: '#/components/schemas/apispendings_production'
+        factory:
+          $ref: '#/components/schemas/apispendings_factory'
+        brakes:
+          minimum: 0
+          type: integer
+          example: 500
+          default: 0
+        frame:
+          minimum: 0
+          type: integer
+          example: 600
+          default: 0
+        battery:
+          minimum: 0
+          type: integer
+          example: 500
+          default: 0
+        display:
+          minimum: 0
+          type: integer
+          example: 1000
+          default: 0
+    inline_response_409_1:
+      properties:
+        detail:
+          type: string
+          example: Decisions were posted before
+    inline_response_200_7_sales:
+      type: object
+      properties:
+        orders_received:
+          type: integer
+        orders_fulfilled:
+          type: integer
+        orders_unfulfilled:
+          type: integer
+        selling_price:
+          type: number
+    api_change_password_body:
+      required:
+      - password
+      properties:
+        password:
+          type: string
+          format: password
+          example: nbusr123
+    inline_response_200_13_games:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Cviko Streda
+    apispendings_production:
+      required:
+      - sell_price
+      - volume
+      type: object
+      properties:
+        sell_price:
+          minimum: 0
+          type: number
+          example: 152.3
+        volume:
+          minimum: 0
+          type: integer
+          example: 2500
+    inline_response_200_3_games:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 69
+        name:
+          type: string
+          example: Kantrencik-LS22-UT-1300
+    inline_response_500:
+      properties:
+        detail:
+          type: string
+          example: Failed to logout
+    inline_response_401_1:
+      properties:
+        detail:
+          type: string
+          example: User is not admin for this game
+    api_create_company_body:
+      required:
+      - game
+      - name
+      - participants
+      properties:
+        game:
+          type: integer
+          example: 69
+        name:
+          type: string
+          example: MySuperCompany
+        participants:
+          type: string
+          example: Robko;Lubko;Jurko;
+    inline_response_200_9:
+      properties:
+        committed:
+          type: boolean
+          example: true
+    inline_response_200_5:
+      properties:
+        detail:
+          type: string
+          example: "Turn ended, simulation started"
+    inline_response_200_6:
+      properties:
+        id:
+          type: integer
+          example: 4
+        name:
+          type: string
+          example: MySuperCompany
+        budget_cap:
+          type: integer
+          example: 10000
+    inline_response_200_7:
+      properties:
+        production:
+          $ref: '#/components/schemas/inline_response_200_7_production'
+        sales:
+          $ref: '#/components/schemas/inline_response_200_7_sales'
+        balance:
+          $ref: '#/components/schemas/inline_response_200_7_balance'
+        cash_flow:
+          $ref: '#/components/schemas/inline_response_200_7_cash_flow'
+        income_statement:
+          $ref: '#/components/schemas/inline_response_200_7_income_statement'
+    inline_response_200_8:
+      properties:
+        industry:
+          $ref: '#/components/schemas/inline_response_200_8_industry'
+        market:
+          $ref: '#/components/schemas/inline_response_200_8_market'
+        economic_parameters:
+          $ref: '#/components/schemas/inline_response_200_8_economic_parameters'
+    inline_response_200_8_industry:
+      type: object
+      properties:
+        MySuperCompany:
+          $ref: '#/components/schemas/inline_response_200_8_industry_MySuperCompany'
+        OtherCompany:
+          $ref: '#/components/schemas/inline_response_200_8_industry_MySuperCompany'
+    inline_response_200_1:
+      properties:
+        detail:
+          type: string
+          example: Password changed successfully
+    inline_response_200_2:
+      properties:
+        upgrade:
+          type: array
+          items:
+            $ref: '#/components/schemas/inline_response_200_2_upgrade'
+    inline_response_200_3:
+      properties:
+        games:
+          type: array
+          items:
+            $ref: '#/components/schemas/inline_response_200_3_games'
+    inline_response_200_4:
+      properties:
+        Number:
+          type: integer
+          example: 3
+        Start:
+          type: string
+          format: date-time
+          example: 2023-01-12T12:21:55.795458Z
+        Game:
+          type: string
+          example: Cviko Streda
+    inline_response_200_8_economic_parameters:
+      type: object
+      properties:
+        interest_rate:
+          type: number
+        interest_rate_difference:
+          type: number
+        tax_rate:
+          type: number
+        tax_rate_difference:
+          type: number
+        inflation:
+          type: number
+        inflation_difference:
+          type: number
+        loan_limit:
+          type: number
+        loan_limit_difference:
+          type: number
+    inline_response_200_11:
+      properties:
+        demand:
+          type: array
+          items:
+            type: integer
+    inline_response_200_10:
+      properties:
+        Number:
+          type: integer
+        Start:
+          type: string
+          example: 2023-01-12T12:21:55.795458Z
+        Committed:
+          type: boolean
+          example: true
+    inline_response_200_13:
+      properties:
+        games:
+          type: array
+          items:
+            $ref: '#/components/schemas/inline_response_200_13_games'
+    inline_response_404_1:
+      properties:
+        detail:
+          type: string
+          example: Company for this user not found
+    inline_response_200_12:
+      properties:
+        manufactured:
+          type: array
+          items:
+            type: integer
+        sold:
+          type: array
+          items:
+            type: integer
+        man_cost:
+          type: array
+          items:
+            type: number
+        sell_price:
+          type: array
+          items:
+            type: number
+    inline_response_200_7_income_statement:
+      type: object
+      properties:
+        sales:
+          type: number
+        sold_man_cost:
+          type: number
+        marketing:
+          type: number
+        r_d:
+          type: number
+        depreciation:
+          type: number
+        inventory_charge:
+          type: number
+        interest:
+          type: number
+        profit_before_tax:
+          type: number
+        tax:
+          type: number
+        net_profit:
+          type: number
+    inline_response_200_14:
+      properties:
+        num_players:
+          type: integer
+          example: 5
+        rank:
+          type: array
+          items:
+            type: integer
+        stock_price:
+          type: array
+          items:
+            type: number
+    api_create_game_body:
+      required:
+      - name
+      - turns
+      properties:
+        turns:
+          type: integer
+          example: 10
+        name:
+          type: string
+          example: Kantrencik-LS22-UT-1300
+    inline_response_500_1:
+      properties:
+        detail:
+          type: string
+          example: Company state for this turn does not exist
+    inline_response_201:
+      properties:
+        user_id:
+          type: integer
+          example: 3
+    inline_response_200:
+      properties:
+        token:
+          type: string
+          example: 18c94b25046fa8aad3ccd7f9fddf6f005cac2632300092822e8451a72450de74
+        expiry:
+          type: string
+          format: date-time
+          example: 2022-11-15T14:08:51.612649Z
+    inline_response_200_7_cash_flow:
+      properties:
+        beginning_cash:
+          type: number
+        sales:
+          type: number
+        sold_man_cost:
+          type: number
+        expenses:
+          type: number
+        interest:
+          type: number
+        tax:
+          type: number
+        cash_flow_result:
+          type: number
+        new_loans:
+          type: number
+        loan_repayment:
+          type: number
+        cash:
+          type: number
+    inline_response_403:
+      properties:
+        detail:
+          type: string
+          example: Maximum amount of tokens allowed per user exceeded.
+    inline_response_401:
+      properties:
+        detail:
+          type: string
+          example: User is not authenticated
+    inline_response_400_2:
+      properties:
+        detail:
+          type: string
+          example: Game has already ended
+    inline_response_400:
+      properties:
+        username:
+          type: array
+          items:
+            type: string
+            example: This field is required.
+        password:
+          type: array
+          items:
+            type: string
+            example: This field is required.
+    inline_response_400_1:
+      properties:
+        detail:
+          type: string
+          example: "{Field} is required"
+    inline_response_200_7_balance:
+      type: object
+      properties:
+        cash:
+          type: number
+        inventory_money:
+          type: number
+        capital_investments:
+          type: number
+        loans:
+          type: number
+        ret_earnings:
+          type: number
+        base_capital:
+          type: number
+    inline_response_405:
+      properties:
+        detail:
+          type: string
+          example: Method "GET" not allowed.
+    inline_response_404:
+      properties:
+        detail:
+          type: string
+          example: Game not found
+    apispendings_factory:
+      required:
+      - capital
+      type: object
+      properties:
+        capital:
+          minimum: 0
+          type: integer
+          example: 4000
+    inline_response_200_7_production:
+      type: object
+      properties:
+        production:
+          type: integer
+          example: 420
+        capacity:
+          type: integer
+        utilization:
+          type: number
+        man_cost:
+          type: number
+        new_inventory:
+          type: integer
+        selling_price:
+          type: number
+    inline_response_409:
+      properties:
+        detail:
+          type: string
+          example: Company with this name already exists in specified game
+    inline_response_200_8_industry_MySuperCompany:
+      type: object
+      properties:
+        stock_price:
+          type: number
+        sell_price:
+          type: number
+        net_profit:
+          type: number
+        som:
+          type: number
+    inline_response_200_8_market:
+      type: object
+      properties:
+        demand:
+          type: integer
+        demand_difference:
+          type: number
+        sold_products:
+          type: integer
+        sold_products_difference:
+          type: number
+        manufactured:
+          type: integer
+        manufactured_difference:
+          type: number
+        capacity:
+          type: integer
+        capacity_difference:
+          type: number
+        inventory:
+          type: integer
+        inventory_difference:
+          type: number
+    apispendings_marketing:
+      required:
+      - billboard
+      - ooh
+      - podcast
+      - tv
+      - viral
+      type: object
+      properties:
+        viral:
+          minimum: 0
+          type: integer
+          example: 1000
+        podcast:
+          minimum: 0
+          type: integer
+          example: 200
+        ooh:
+          minimum: 0
+          type: integer
+          example: 300
+        tv:
+          minimum: 0
+          type: integer
+          example: 400
+        billboard:
+          minimum: 0
+          type: integer
+          example: 100
+    inline_response_201_1:
+      properties:
+        gameID:
+          type: integer
+          example: 69
+    inline_response_201_2:
+      properties:
+        companyID:
+          type: integer
+          example: 420
+  responses:
+    CopyNotAllowed:
+      description: Method not allowed
+      content:
+        application/json:
+          schema:
+            properties:
+              detail:
+                type: string
+                example: Method "COPY" not allowed.
+    PutNotAllowed:
+      description: Method not allowed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_405_2'
+    PostNotAllowed:
+      description: Method not allowed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_405_1'
+    GetNotAllowed:
+      description: Method not allowed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_405'
+    InvalidToken:
+      description: User is not authenticated or did not provide a valid token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_401'
+    RequiredData:
+      description: Some of required data was not provided or data provided in incorrect format
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_400_1'
+    Forbidden:
+      description: User does not have required permission to do this.
+    GameHasEnded:
+      description: Game has ended or missing required data
+      content:
+        application\json:
+          schema:
+            $ref: '#/components/schemas/inline_response_400_2'
+    CompanyNotFound:
+      description: Company for this user was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_404_1'
+    CompanyStateDoesNotExist:
+      description: Company state does not exist for this company and current turn
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_500_1'
+    CompanyNameAlreadyExists:
+      description: Company with this name already exists in specified game
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response_409'
+  requestBodies:
+    RegUser:
+      content:
+        application/json:
+          schema:
+            required:
+            - password
+            - username
+            properties:
+              username:
+                type: string
+                example: rado
+              password:
+                type: string
+                format: password
+                example: nbusr123
+      required: true
+    LogUser:
+      content:
+        application/json:
+          schema:
+            required:
+            - password
+            - username
+            properties:
+              username:
+                type: string
+                example: rado
+              password:
+                type: string
+                format: password
+                example: nbusr123
+      required: true
+  securitySchemes:
+    ApiKeyAuth:
+      type: http
+      description: Standard Authorization header using bearer token.
+      scheme: Bearer
