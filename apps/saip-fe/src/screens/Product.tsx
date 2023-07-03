@@ -129,7 +129,7 @@ function Product() {
 										.filter((feature) => feature.status === "not started")
 										.map((feature) => (
 											<UpgradeInfo
-												key={feature.id}
+												key={feature.name}
 												name={feature.name}
 												progressMax={feature.price}
 												// name={t(`research.features.${feature.id}.title`) as string}
