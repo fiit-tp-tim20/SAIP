@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,7 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'corsheaders',
-    'django_object_actions',
+    'django_object_actions'
 ]
 
 MIDDLEWARE = [
@@ -80,6 +81,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'saip_be.wsgi.application'
+
+ASGI_APPLICATION = "saip_be.asgi.application"
 
 
 # Database
