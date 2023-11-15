@@ -82,7 +82,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'saip_be.wsgi.application'
 
-ASGI_APPLICATION = "saip_be.asgi.application"
+ASGI_APPLICATION = "saip_ws.asgi.application"
 
 
 # Database
