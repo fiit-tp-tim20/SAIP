@@ -23,6 +23,8 @@ from saip_api.views.GameManagement import CreateGameView, GetRunningGamesView, E
 from saip_api.views.CompanyManagement import CreateCompanyView, PostSpendingsView, CompanyInfo, CompanyReport, TurnInfoView, Committed, IndustryReport, MarketingView, CompanyView, IndustryView
 from knox.views import LogoutView
 
+from saip_api.views.TestWebSocket import RoomView, NotifyTrigger
+
 
 urlpatterns = [
     path('api/admin/', admin.site.urls),
@@ -46,4 +48,6 @@ urlpatterns = [
     path('api/company_view/', CompanyView.as_view(), name='company_view'),
     path('api/list_games_ns/', GetNotStartedGamesView.as_view(), name='list_games_ns'),
     path('api/industry_view/', IndustryView.as_view(), name='industry_view'),
+    path('api/wstest/', RoomView.as_view(), name='websocket_room'),
+    path('api/wstrigger/', NotifyTrigger.as_view(), name='websocket_trigger')
 ]
