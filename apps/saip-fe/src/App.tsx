@@ -25,10 +25,25 @@ import getCommitted from "./api/GetCommitted";
 
 function App() {
 	const token = localStorage.getItem("token");
+
+	useEffect(() => {
+		const chatSocket = new WebSocket(
+			'ws://127.0.0.1:8000/ws/turn_info/'
+		);
+		chatSocket.onmessage = function(e) {
+			const data = e.data;
+			console.log(data);
+			//document.querySelector('#chat-log').value += (e.data + '\n');
+		};
+		chatSocket.onclose = function(e) {
+			console.error('Chat socket closed unexpectedly');
+		};
+	}, [])
+	
 	const { data } = useQuery({
 		queryKey: ["currentTurn"],
 		queryFn: () => token && getTurn(),
-		refetchInterval: 1000,
+		refetchInterval: 1000000,
 	});
 
 	const { reset: resetCompanyState } = useCompanyStore();
