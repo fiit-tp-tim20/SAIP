@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./saip_be
+    command: gunicorn saip_be.wsgi:application --bind 0.0.0.0:8000
+    #command: daphne -b 0.0.0.0 -p 8089 saip_ws.asgi:application
+    volumes:
+      - ./saip_be/:/usr/src/app/
+    ports:
+      - 8000:8000
+      - 8089:8089
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - db
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.prod.db
+
+volumes:
+  postgres_data:
