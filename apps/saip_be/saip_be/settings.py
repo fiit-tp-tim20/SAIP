@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 from datetime import timedelta
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,7 +32,9 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',
+    # "daphe" and "channels " shall be commented when using WSGI with python manage.py runserver
+    #'daphne',
+    #'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -82,7 +85,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'saip_be.wsgi.application'
 
-ASGI_APPLICATION = "saip_ws.asgi.application"
+#ASGI_APPLICATION = "saip_ws.asgi.application"
 
 
 # Database
@@ -94,6 +97,17 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': os.environ.get("SQL_ENGINE"),
+#         'NAME': os.environ.get("SQL_DATABASE"),
+#         'USER': os.environ.get("SQL_USER"),
+#         'PASSWORD': os.environ.get("SQL_PASSWORD"),
+#         'HOST': os.environ.get("SQL_HOST"),
+#         'PORT': os.environ.get("SQL_PORT"),
+#     }
+# }
 
 CHANNEL_LAYERS = {
     "default": {
