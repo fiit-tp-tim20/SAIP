@@ -7,8 +7,8 @@ from asgiref.sync import async_to_sync
 class TestConsumer(WebsocketConsumer):
     def connect(self):
         self.user = self.scope["user"]
-        if not self.user or not self.user.is_authenticated:
-            return Response({"detail": "User is not authenticated"}, status=401)
+        # if not self.user or not self.user.is_authenticated:
+        #     return Response({"detail": "User is not authenticated"}, status=401)
         async_to_sync(self.channel_layer.group_add)("game", self.channel_name)
         self.accept()
         self.send(text_data="Websocket connected")
