@@ -1,18 +1,15 @@
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import getCompanyReport from "../../api/GetCompanyReport";
-import { getTurn } from "../../api/GetTurn";
 import numberWithSpaces from "../../utils/numberWithSpaces";
 
 function CompanyReport() {
-	const token = localStorage.getItem("token");
-
-	const { data: TURN } = useQuery({
-		queryKey: ["currentTurn"],
-		queryFn: () => token && getTurn(),
-	});
-
-	const [turn, setTurn] = useState<number>(TURN.Number - 1);
+	const TURN = localStorage.getItem("turn");
+	// @ts-ignore
+	// eslint-disable-next-line @typescript-eslint/naming-convention
+	const current_turn = parseInt(TURN, 10);
+	// @ts-ignore
+	const [turn, setTurn] = useState<number>(current_turn - 1);
 	const { isLoading, data } = useQuery(["companyReport", turn], () => getCompanyReport(turn));
 
 	return (
@@ -29,7 +26,7 @@ function CompanyReport() {
 						value={turn}
 						onChange={(e) => setTurn(parseInt(e.target.value, 10))}
 					>
-						{[...Array(TURN.Number).keys()].map((o) => (
+						{[...Array(TURN).keys()].map((o) => (
 							<option value={o}>{o}</option>
 						))}
 					</select>

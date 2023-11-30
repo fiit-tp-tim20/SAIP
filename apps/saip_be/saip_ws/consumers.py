@@ -12,18 +12,14 @@ class TestConsumer(WebsocketConsumer):
     def connect(self):
         token_key = (self.scope["subprotocols"][1])
         try:
-            print(token_key)
             token = AuthToken.objects.get(token_key=token_key[:CONSTANTS.TOKEN_KEY_LENGTH])
-            print(token)
             self.user = token.user
         except AuthToken.DoesNotExist:
-            print("nee")
             raise DenyConnection("Invalid token")
         self.accept()
         try:
             company = Company.objects.get(user=self.user)
         except Company.DoesNotExist:
-            print("neeee")
             return self.send(text_data="Company for this user not found", close=True)
         async_to_sync(self.channel_layer.group_add)("game", self.channel_name)
         self.send(text_data="Websocket connected")
@@ -45,3 +41,24 @@ class TestConsumer(WebsocketConsumer):
         message = text_data_json["message"]
         print("Message:" + message)
         self.send(text_data=json.dumps({"message": message}))
+
+class TestConsumer2(WebsocketConsumer):
+    def connect(self):
+        token_key = (self.scope["subprotocols"][1])
+        try:
+            token = AuthToken.objects.get(token_key=token_key[:CONSTANTS.TOKEN_KEY_LENGTH])
+            self.user = token.user
+        except AuthToken.DoesNotExist:
+            raise DenyConnection("Invalid token")
+        self.accept()
+        try:
+            company = Company.objects.get(user=self.user)
+        except Company.DoesNotExist:
+            return self.send(text_data="Company for this user not found", close=True)
+        async_to_sync(self.channel_layer.group_add)("game", self.channel_name)
+        self.send(text_data="Websocket connected")
+        turn = get_last_turn(company.game)
+        state = CompaniesState.objects.get(turn=turn, company=company)
+        y = {"Number": turn.number, "Start": turn.start, "Committed": state.committed}
+        q = json.dumps(y, indent=4, sort_keys=True, default=str)
+        return self.send(text_data=q, close=False)

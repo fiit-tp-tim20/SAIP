@@ -11,12 +11,11 @@ import useModal from "../modal/useModal";
 import BottomBarModal from "./BottomBarModal";
 import getGeneralInfo from "../../api/CompanyInfo";
 import endTurn from "../../api/EndTurn";
-import getCommitted from "../../api/GetCommitted";
 
 export default function BottomBar() {
 	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());
-	const { data: committed, refetch: refetchCommited } = useQuery("committed", () => getCommitted());
-
+	const committed = localStorage.getItem("committed");
+	console.log(committed);
 	const { Modal, isShowing, setIsShowing, setElement } = useModal(<div />);
 
 	const { reset: resetUpgradeState } = useUpgradesStore();
@@ -57,9 +56,7 @@ export default function BottomBar() {
 				podcast,
 			},
 		};
-
 		await endTurn(gameState);
-		await refetchCommited();
 		resetUpgradeState();
 	};
 
@@ -79,7 +76,7 @@ export default function BottomBar() {
 			<div className="fixed bottom-2 right-2 z-40">
 				{!isLoading ? (
 					<div className="bg-white px-3 py-1 rounded-lg border-2 accent-700-border">
-						{committed ? (
+						{committed === "true" ? (
 							<p className="text-center font-medium p-3">Čaká sa na ostatných hráčov</p>
 						) : (
 							<div className="flex flex-row gap-8 items-center">
@@ -107,7 +104,7 @@ export default function BottomBar() {
 										totalSpent > data.budget_cap ||
 										!getCheckedCompany() ||
 										!getCheckedMarketing() ||
-										committed
+										committed === "true"
 									}
 								>
 									Ukončiť kolo

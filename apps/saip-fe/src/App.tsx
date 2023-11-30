@@ -1,7 +1,6 @@
 import React, { Suspense, useEffect, useState } from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import { useQuery } from "react-query";
 import "./i18n";
 import { useAtom } from "jotai";
 import Dashboard from "./screens/Dashboard";
@@ -12,7 +11,6 @@ import Marketing from "./screens/Marketing";
 import BottomBar from "./components/bottombar/BottomBar";
 import Login from "./screens/Login";
 import NotFound from "./screens/NotFound";
-import { getTurn } from "./api/GetTurn";
 import useCompanyStore from "./store/Company";
 import useUpgradesStore from "./store/Upgrades";
 import useMarketingStore from "./store/Marketing";
@@ -21,7 +19,6 @@ import GameSelect from "./screens/GameSelect";
 import Register from "./screens/Register";
 import BugReport from "./components/bugreport/BugReport";
 import { currentTurn } from "./store/Atoms";
-import getCommitted from "./api/GetCommitted";
 
 function App() {
 	const token = localStorage.getItem("token");
@@ -31,8 +28,11 @@ function App() {
 		const chatSocket = new WebSocket("ws://127.0.0.1:8000/ws/turn_info/", ["token", token]);
 		chatSocket.onmessage = function (e) {
 			// @ts-ignore
+			console.log(e.data);
 			const receivedData = JSON.parse(e.data);
+			localStorage.setItem("committed", receivedData.Committed);
 			setData(receivedData);
+
 			// document.querySelector('#chat-log').value += (e.data + '\n');
 		};
 		chatSocket.onclose = function (e) {
@@ -44,8 +44,6 @@ function App() {
 	const { reset: resetCompanyState } = useCompanyStore();
 	const { reset: resetUpgradeState } = useUpgradesStore();
 	const { reset: resetMarketingState } = useMarketingStore();
-
-	const { refetch: refetchCommited } = useQuery("committed", () => getCommitted());
 
 	const [enableArc] = useState(true);
 
@@ -82,17 +80,18 @@ function App() {
 		}
 		if (!savedTurn && data) {
 			localStorage.setItem("turn", data.Number);
+			localStorage.setItem("committed", data.Committed);
 		}
 		if (savedTurn && data && data.Number !== parseInt(savedTurn, 10)) {
+			localStorage.setItem("committed", data.Committed);
 			localStorage.setItem("turn", data.Number);
-			refetchCommited();
 			resetCompanyState();
 			resetUpgradeState();
 			resetMarketingState();
 		}
 
 		setTurn(data?.Number || -1);
-	}, [data && data.Number]);
+	}, [data]);
 
 	// kompletne dum-dum riešenie PREROBIŤ. Aj tu aj getTurn() !!!!!!!!!!!!!
 	if (token && !data) {

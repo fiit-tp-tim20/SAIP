@@ -4,7 +4,6 @@ import getIndustryReport, { IndustryReport as IndustryReportType } from "../../a
 import { getIndustryGraphData } from "../../api/GetIndustryGraphData";
 import IndustryGraph from "../statisticsGraph/IndustryGraph";
 import numberWithSpaces from "../../utils/numberWithSpaces";
-import { getTurn } from "../../api/GetTurn";
 
 const sortByStockPrice = (a: IndustryReportType, b: IndustryReportType) => {
 	if (!a.stock_price) return 1;
@@ -16,13 +15,12 @@ const sortByStockPrice = (a: IndustryReportType, b: IndustryReportType) => {
 };
 
 function IndustryReport() {
-	const token = localStorage.getItem("token");
-	const { data: _turn } = useQuery({
-		queryKey: ["currentTurn"],
-		queryFn: () => token && getTurn(),
-	});
+	const turnn = localStorage.getItem("turn");
+	// @ts-ignore
+	// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle
+	const _turn = parseInt(turnn, 10);
 
-	const [turn, setTurn] = useState<number>(_turn.Number - 1);
+	const [turn, setTurn] = useState<number>(_turn - 1);
 
 	const { data, isLoading } = useQuery(["getIndustryReport", turn], () => getIndustryReport(turn));
 	const { data: graphData, isLoading: isLoading2 } = useQuery(["getIndustryGraphData"], getIndustryGraphData);
@@ -46,7 +44,7 @@ function IndustryReport() {
 						value={turn}
 						onChange={(e) => setTurn(parseInt(e.target.value, 10))}
 					>
-						{[...Array(_turn.Number).keys()].map((o) => {
+						{[...Array(_turn).keys()].map((o) => {
 							if (o === 0) return null;
 							return <option value={o}>{o}</option>;
 						})}

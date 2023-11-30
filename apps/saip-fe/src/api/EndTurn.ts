@@ -24,6 +24,7 @@ const endTurn = async (state: GameState) => {
 			display: state.upgrades.Display,
 		}),
 	});
+	localStorage.removeItem("committed");
 
 	// const data = await response.json();
 	// return data;
