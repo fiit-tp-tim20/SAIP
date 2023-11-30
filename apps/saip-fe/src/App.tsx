@@ -25,26 +25,21 @@ import getCommitted from "./api/GetCommitted";
 
 function App() {
 	const token = localStorage.getItem("token");
-
+	const [data, setData] = useState(null);
 	useEffect(() => {
-		const chatSocket = new WebSocket(
-			'ws://127.0.0.1:8000/ws/turn_info/'
-		);
-		chatSocket.onmessage = function(e) {
-			const data = e.data;
-			console.log(data);
-			//document.querySelector('#chat-log').value += (e.data + '\n');
+		// @ts-ignore
+		const chatSocket = new WebSocket("ws://127.0.0.1:8000/ws/turn_info/", ["token", token]);
+		chatSocket.onmessage = function (e) {
+			// @ts-ignore
+			const receivedData = JSON.parse(e.data);
+			setData(receivedData);
+			// document.querySelector('#chat-log').value += (e.data + '\n');
 		};
-		chatSocket.onclose = function(e) {
-			console.error('Chat socket closed unexpectedly');
+		chatSocket.onclose = function (e) {
+			console.error("Chat socket closed unexpectedly");
 		};
+		// eslint-disable-next-line
 	}, [])
-	
-	const { data } = useQuery({
-		queryKey: ["currentTurn"],
-		queryFn: () => token && getTurn(),
-		refetchInterval: 1000000,
-	});
 
 	const { reset: resetCompanyState } = useCompanyStore();
 	const { reset: resetUpgradeState } = useUpgradesStore();
