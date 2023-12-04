@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from saip_ws.triggers import broadcast_message
 from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn, CompaniesUpgrades, \
     MarketState, TeacherDecisions
-
 from ..serializers import CompanySerializer, ProductionSerializer, SpendingsSerializer, MaketingSerializer, \
     FactorySerializer
 
@@ -424,7 +423,10 @@ def checkCommitted(turn: Turn, end: bool = True) -> bool:
             return False
 
     if end and auto_end:
-        end_turn(turn)
+        new_turn = end_turn(turn)
+        y = {"Number": new_turn.number, "Start":  new_turn.start, "Committed": "false"}
+        broadcast_message(y)
+
 
     return True
 
@@ -567,6 +569,7 @@ class PostSpendingsView(APIView):
         company_state.save()
 
         checkCommitted(last_turn) # checks if all companies are committed
+
         return Response(status=201)
 
 

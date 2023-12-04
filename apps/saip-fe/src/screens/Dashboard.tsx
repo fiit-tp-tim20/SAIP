@@ -7,7 +7,6 @@ function Plan() {
 	const [showCompanyReport, setShowCompanyReport] = useState(true);
 	// @ts-ignore
 	const currentTurn = parseInt(localStorage.getItem("turn"), 10);
-	console.log(currentTurn);
 
 	useEffect(() => {
 		// @ts-ignore

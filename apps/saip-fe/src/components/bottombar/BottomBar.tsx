@@ -15,7 +15,6 @@ import endTurn from "../../api/EndTurn";
 export default function BottomBar() {
 	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());
 	const committed = localStorage.getItem("committed");
-	console.log(committed);
 	const { Modal, isShowing, setIsShowing, setElement } = useModal(<div />);
 
 	const { reset: resetUpgradeState } = useUpgradesStore();
