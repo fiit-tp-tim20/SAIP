@@ -3,6 +3,9 @@ from abc import abstractmethod, ABC
 from dataclasses import dataclass, field
 from pathlib import Path
 import requests
+import random
+import string
+import json
 from django.contrib.auth.forms import UserCreationForm
 
 file = Path(__file__).resolve()
@@ -33,6 +36,14 @@ from math import ceil, floor
 # from saip_api.models import Company
 import saip_api.models as models
 
+
+def generate_random_username(length=8):
+    return ''.join(random.choice(string.ascii_letters) for _ in range(length))
+
+
+def generate_random_password(length=12):
+    characters = string.ascii_letters + string.digits + string.punctuation
+    return ''.join(random.choice(characters) for _ in range(length))
 
 
 DECISIONS_PRESET =    {
@@ -72,15 +83,19 @@ class Bot(ABC):
     decisions: dict = field(default_factory=lambda: DECISIONS_PRESET)
 
     inventory_count: int = 0
+    # factory_value: float = FactoryPreset.STARTING_INVESTMENT
+    production_capacity: float = FactoryPreset.STARTING_INVESTMENT/500
+
     avg_price: float = AVG_PRICE_PRESET
-    # min_price: float = FactoryPreset.BASE_MATERIAL_COST_PER_UNIT
     min_price: float = (FactoryPreset.BASE_MATERIAL_COST_PER_UNIT + \
                        (FactoryPreset.BASE_RENT +
                         FactoryPreset.BASE_ENERGY_COST +
                         FactoryPreset.STARTING_EMPLOYEES * FactoryPreset.BASE_SALARY * TURN_LENGTH)/\
                        (FactoryPreset.STARTING_CAPACITY*FactoryPreset.OPTIMAL_THRESHOLD))*1.05
-    factory_value: float = FactoryPreset.STARTING_INVESTMENT
+    max_price: float = MAX_PRICE_PRESET
+
     token: str = None
+    company_id: int = 0
 
     @abstractmethod
     def calculate_capital_investments(self,**kwargs):
@@ -107,7 +122,7 @@ class Bot(ABC):
     def calculate_production_volume(self,**kwargs):
         production_rate = kwargs.get("production_rate")
 
-        return int(production_rate * self.factory_value/500)
+        return int(production_rate * self.production_capacity)
 
     def make_decisions(self):
         pass
@@ -125,9 +140,16 @@ class Bot(ABC):
             "Content-Type": "application/json",
         }
         response = requests.post(url, headers=headers, json=data)
-        print(response.json())
 
-    def register(self,username,passwd):
+        if response.status_code == 200:
+            print("Response JSON:", response.json())
+        else:
+            print("Response content:", response.text)
+
+    def register(self,username=None,passwd=None):
+        if username == None:
+            username = str(self.name) + '_' + generate_random_username()
+            passwd = generate_random_password()
 
         url = VITE_BACKEND_URL + "/register/"
         data = {
@@ -135,7 +157,12 @@ class Bot(ABC):
             "password": passwd
         }
         response = requests.post(url, json=data)
-        # print("Response JSON:", response)
+
+        if response.status_code == 201:
+            self.login(username=username, passwd=passwd)
+        else:
+            print("Response content:", response.text)
+
 
     def login(self,username,passwd):
         url = VITE_BACKEND_URL + "/login/"
@@ -144,9 +171,11 @@ class Bot(ABC):
             "password": passwd
         }
         response = requests.post(url, json=data,)
-        # print("Response JSON:", response.json())
-        self.token = response.json()["token"]
 
+        if response.status_code == 200:
+            self.token = response.json()["token"]
+        else:
+            print("Response content:", response.text)
 
     def create_company(self,id,name):
 
@@ -164,16 +193,59 @@ class Bot(ABC):
         # Make the POST request
         response = requests.post(url, headers=headers, json=data)
 
-    def get_company_report(self,turn_number):
+        if response.status_code == 201:
+            self.company_id = response.json().get("companyID")
+        else:
+            print("Response content:", response.text)
 
+    def get_company_report(self,turn_number):
         url = VITE_BACKEND_URL + "/company_report/"
         headers = {
             "Authorization": f"Bearer {self.token}",
             "Content-Type": "application/json",
-            "turn": str(turn_number)
         }
-        response = requests.get(url, headers=headers)
-        print(response.json())
+        params = {"turn": str(turn_number)}
+        response = requests.get(url, headers=headers,params=params)
+
+        if response.status_code == 200:
+            print("Response JSON:", response.json())
+            self.inventory_count = response.json().get("production").get("new_inventory")
+            self.production_capacity = response.json().get("production").get("capacity")
+        else:
+            print("Response content:", response.text)
+
+    def get_industry_report(self,turn_number):
+        url = VITE_BACKEND_URL + "/industry_report/"
+        headers = {
+            "Authorization": f"Bearer {self.token}",
+            "Content-Type": "application/json",
+        }
+        params = {"turn": str(turn_number)}
+        response = requests.get(url, headers=headers,params=params)
+
+        if response.status_code == 200:
+            print("Response JSON:", response.json())
+            industries = response.json().get("industry")
+            price_sum = 0
+            max_price = 0
+            min_price = 15000
+            for industry in industries.items():
+                print(industry)
+                sell_price = industry[1].get('sell_price')
+                price_sum += sell_price
+
+                if sell_price > max_price:
+                    max_price = sell_price
+                if sell_price < min_price:
+                    min_price = sell_price
+
+            self.avg_price = price_sum/len(industries)
+            self.min_price = min_price
+            self.max_price = max_price
+
+        else:
+            print("Response content:", response.text)
+
 
 @dataclass
 class LowPriceStrategyBot(Bot):
@@ -247,7 +319,6 @@ class AveragePriceStrategyBot(Bot):
 class HighPriceStrategyBot(Bot):
     name: float = "HighPriceStrategyBot"
     sales_effect_total: float = 0
-    max_price: float = MAX_PRICE_PRESET
 
     def calculate_capital_investments(self, **kwargs):
         return
@@ -274,24 +345,3 @@ class HighPriceStrategyBot(Bot):
     def calculate_marketing_investments(self, **kwargs):
         return
 
-
-# {
-#   "marketing": {
-#     "viral": 0,
-#     "podcast": 0,
-#     "ooh": 0,
-#     "tv": 0,
-#     "billboard": 0
-#   },
-#   "production": {
-#     "sell_price": 0,
-#     "volume": 0
-#   },
-#   "factory": {
-#     "capital": 0
-#   },
-#   "brakes": 0,
-#   "frame": 0,
-#   "battery": 0,
-#   "display": 0
-# }
