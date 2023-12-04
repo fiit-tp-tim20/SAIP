@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from saip_ws.triggers import broadcast_message
 from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn, CompaniesUpgrades, \
     MarketState, TeacherDecisions
 
@@ -123,6 +123,7 @@ class CompanyInfo(APIView):
         last_turn = get_last_turn(company.game)
         previous_turn = Turn.objects.get(game=company.game, number=last_turn.number - 1)
         company_state = CompaniesState.objects.get(turn=previous_turn, company=company)
+        state = CompaniesState.objects.get(turn=last_turn, company=company)
 
         if company_state.cash >= 10000:
             print(company_state.cash)
@@ -131,7 +132,8 @@ class CompanyInfo(APIView):
             budget = 0
         else:
             budget = company_state.cash
-
+        y = {"Number": last_turn.number, "Start":  last_turn.start, "Committed": state.committed}
+        broadcast_message(y)
         return Response({"id": company.id, 'name': company.name, 'budget_cap': budget}, status=200)
 
 
@@ -565,7 +567,6 @@ class PostSpendingsView(APIView):
         company_state.save()
 
         checkCommitted(last_turn) # checks if all companies are committed
-
         return Response(status=201)
 
 
