@@ -94,8 +94,10 @@ class Bot(ABC):
                        (FactoryPreset.STARTING_CAPACITY*FactoryPreset.OPTIMAL_THRESHOLD))*1.05
     max_price: float = MAX_PRICE_PRESET
 
+    username: str = None
     token: str = None
     company_id: int = 0
+
 
     @abstractmethod
     def calculate_capital_investments(self,**kwargs):
@@ -127,24 +129,21 @@ class Bot(ABC):
     def make_decisions(self):
         pass
 
-    def create_bot(self, id,username,passwd):
-        self.register(username,passwd)
-        self.login(username,passwd)
-        self.create_company(id)
+
+    def add_to_game(self,**kwargs):
+        game_id = kwargs.get("game_id")
+        self.register()
+        self.create_company(id=game_id,name=self.username)
 
     def commit_decisions(self):
         url = VITE_BACKEND_URL + "/spendings/"
         data = self.decisions
+        print(self.decisions)
         headers = {
             "Authorization": f"Bearer {self.token}",
             "Content-Type": "application/json",
         }
         response = requests.post(url, headers=headers, json=data)
-
-        if response.status_code == 200:
-            print("Response JSON:", response.json())
-        else:
-            print("Response content:", response.text)
 
     def register(self,username=None,passwd=None):
         if username == None:
@@ -159,6 +158,7 @@ class Bot(ABC):
         response = requests.post(url, json=data)
 
         if response.status_code == 201:
+            self.username = username
             self.login(username=username, passwd=passwd)
         else:
             print("Response content:", response.text)
@@ -176,6 +176,7 @@ class Bot(ABC):
             self.token = response.json()["token"]
         else:
             print("Response content:", response.text)
+
 
     def create_company(self,id,name):
 
@@ -198,7 +199,8 @@ class Bot(ABC):
         else:
             print("Response content:", response.text)
 
-    def get_company_report(self,turn_number):
+    def get_company_report(self,**kwargs):
+        turn_number = kwargs.get("turn_number")
         url = VITE_BACKEND_URL + "/company_report/"
         headers = {
             "Authorization": f"Bearer {self.token}",
@@ -214,7 +216,8 @@ class Bot(ABC):
         else:
             print("Response content:", response.text)
 
-    def get_industry_report(self,turn_number):
+    def get_industry_report(self,**kwargs):
+        turn_number = kwargs.get("turn_number")
         url = VITE_BACKEND_URL + "/industry_report/"
         headers = {
             "Authorization": f"Bearer {self.token}",
@@ -224,13 +227,12 @@ class Bot(ABC):
         response = requests.get(url, headers=headers,params=params)
 
         if response.status_code == 200:
-            print("Response JSON:", response.json())
+            # print("Response JSON:", response.json())
             industries = response.json().get("industry")
             price_sum = 0
             max_price = 0
             min_price = 15000
             for industry in industries.items():
-                print(industry)
                 sell_price = industry[1].get('sell_price')
                 price_sum += sell_price
 
@@ -246,6 +248,13 @@ class Bot(ABC):
         else:
             print("Response content:", response.text)
 
+    def play_turn(self,**kwargs):
+        turn_number = kwargs.get("turn_number")
+        self.get_company_report(turn_number=turn_number - 1)
+        if turn_number > 1:
+            self.get_industry_report(turn_number=turn_number - 1)
+        self.make_decisions()
+        self.commit_decisions()
 
 @dataclass
 class LowPriceStrategyBot(Bot):
@@ -264,16 +273,13 @@ class LowPriceStrategyBot(Bot):
         return int(self.total_budget * 0.8 - self.total_budget * 0.4 * inventory_coef)
 
     def calculate_product_price(self,**kwargs):
-        inventory_count = kwargs.get("inventory_count")
-        avg_price = kwargs.get("avg_price")
-        min_price = kwargs.get("min_price")
 
-        inventory_coef = self.calculate_inventory_coef(inventory_count=inventory_count)
+        inventory_coef = self.calculate_inventory_coef(inventory_count=self.inventory_count)
 
         coef = 0.8
-        diff_1 = int((avg_price - min_price)/2 * coef)
-        diff_2 = int((avg_price - min_price)/4 * (1 - inventory_coef))
-        price = avg_price - diff_1 + diff_2
+        diff_1 = int((self.avg_price - self.min_price)/2 * coef)
+        diff_2 = int((self.avg_price - self.min_price)/4 * (1 - inventory_coef))
+        price = self.avg_price - diff_1 + diff_2
         return price
 
     def calculate_upgrade_investments(self,**kwargs):
@@ -289,12 +295,10 @@ class LowPriceStrategyBot(Bot):
         self.decisions["marketing"]["viral"] = viral_investments
 
         # production
-        price = self.calculate_product_price(avg_price=self.avg_price,min_price=self.min_price)
+        price = self.calculate_product_price()
         volume = self.calculate_production_volume(production_rate=0.9)
         self.decisions["production"]["sell_price"] = price
         self.decisions["production"]["volume"] = volume
-
-        print(self.decisions)
 
     def end_turn(self):
         return
