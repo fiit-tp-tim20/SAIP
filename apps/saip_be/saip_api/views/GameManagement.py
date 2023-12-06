@@ -11,7 +11,9 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from ..serializers import GameSerializer
 
 from saip_simulation.simulation import Simulation
+from saip_simulation.bot import LowPriceStrategyBot
 
+from django.core.cache import cache
 # default upgrages, table is create only if it is empty
 parameters = {"Upgrades": [{"name": "Batéria", "cost": 30000, "sales_effect": 0.75, "man_cost_effect": 0.3,
                             "camera_pos": "-0.1, 0.5, 3", "camera_rot": "3,2,1", "description": "Investícia do batérie predlžuje výdrž elektrického bicykla na cestách, a tým zaujme najmä zákazníkov, \
@@ -199,6 +201,20 @@ class EndTurnView(PermissionRequiredMixin, APIView):
 def end_turn(turn: Turn) -> Turn:
     game = turn.game
 
+    if turn.number == 0:
+        bot_list = []
+        for i in range(3):
+            bot = LowPriceStrategyBot()
+            bot.add_to_game(game_id=game.id)
+            bot_list.append(bot)
+        cache.set(game.id, bot_list)
+
+    if turn.number != 0:
+        bot_list = cache.get(game.id)
+        for bot in bot_list:
+            bot.play_turn(turn_number=turn.number)
+
+
     if turn.number != 0:
         companies = Company.objects.filter(game=game)
         for company in companies:
@@ -231,6 +247,7 @@ def end_turn(turn: Turn) -> Turn:
         sim.run_simulation()
         sim.write_simulation_results()
 
+    print("Nové kolo...")
     turn.end = timezone.now()
     turn.save()
 

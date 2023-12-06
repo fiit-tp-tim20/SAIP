@@ -499,7 +499,7 @@ class PostSpendingsView(APIView):
         except KeyError:
             display = 0
 
-        brakes_progress = CompaniesUpgrades.objects.get(company=company, upgrade=Upgrade.objects.get(name="Brakes"))
+        brakes_progress = CompaniesUpgrades.objects.get(company=company, upgrade=Upgrade.objects.get(name="Brzdy"))
         if brakes > 0:
             if brakes_progress.status == "f":
                 return Response({"detail": "Brakes are already finished"}, status=409)
@@ -510,7 +510,7 @@ class PostSpendingsView(APIView):
                 brakes_progress.status = "f"
                 brakes_progress.turn = company_state.turn
 
-        frame_progress = CompaniesUpgrades.objects.get(company=company, upgrade=Upgrade.objects.get(name="Frame"))
+        frame_progress = CompaniesUpgrades.objects.get(company=company, upgrade=Upgrade.objects.get(name="Rám"))
         if frame > 0:
             if frame_progress.status == "f":
                 return Response({"detail": "Frame is already finished"}, status=409)
@@ -521,7 +521,7 @@ class PostSpendingsView(APIView):
                 frame_progress.status = "f"
                 frame_progress.turn = company_state.turn
 
-        battery_progress = CompaniesUpgrades.objects.get(company=company, upgrade=Upgrade.objects.get(name="Battery"))
+        battery_progress = CompaniesUpgrades.objects.get(company=company, upgrade=Upgrade.objects.get(name="Batéria"))
         if battery > 0:
             if battery_progress.status == "f":
                 return Response({"detail": "Battery is already finished"}, status=409)
@@ -532,7 +532,7 @@ class PostSpendingsView(APIView):
                 battery_progress.status = "f"
                 battery_progress.turn = company_state.turn
 
-        display_progress = CompaniesUpgrades.objects.get(company=company, upgrade=Upgrade.objects.get(name="Display"))
+        display_progress = CompaniesUpgrades.objects.get(company=company, upgrade=Upgrade.objects.get(name="Displej"))
         if display > 0:
             if display_progress.status == "f":
                 return Response({"detail": "Display is already finished"}, status=409)
