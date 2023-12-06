@@ -308,15 +308,33 @@ class LowPriceStrategyBot(Bot):
 @dataclass
 class AveragePriceStrategyBot(Bot):
     name: float = "AveragePriceStrategyBot"
+    sales_effect_total: float = 0
 
     def calculate_capital_investments(self, **kwargs):
         return
 
     def calculate_product_price(self, **kwargs):
-        return
+        inventory_count = kwargs.get("inventory_count")
+        avg_price = kwargs.get("avg_price")
+        max_price = kwargs.get("max_price")
+
+        inventory_coef = self.calculate_inventory_coef(inventory_count=inventory_count)
+
+        diff_2 = int((max_price - avg_price) / 4 * (1 - inventory_coef))
+        diff_3 = int((max_price - avg_price) / 2 * self.sales_effect_total)
+
+        price = avg_price - diff_2 + diff_3
+
+        if price > 15000:
+            price = 15000
+
+        return price
 
     def calculate_marketing_investments(self, **kwargs):
         return
+
+    def calculate_upgrade_investments(self, **kwargs):
+        pass
 
 
 @dataclass
@@ -348,4 +366,7 @@ class HighPriceStrategyBot(Bot):
 
     def calculate_marketing_investments(self, **kwargs):
         return
+
+    def calculate_upgrade_investments(self, **kwargs):
+        pass
 
