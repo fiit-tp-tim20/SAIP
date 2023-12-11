@@ -315,6 +315,12 @@ class AveragePriceStrategyBot(Bot):
     def calculate_capital_investments(self, **kwargs):
         return
 
+    def calculate_inventory_coef (self, **kwargs):
+        inventory_count = kwargs.get("inventory_count")
+        inventory_coef = inventory_count / 10000 if inventory_count < 10000 else 1
+
+        return inventory_coef
+
     def calculate_product_price(self, **kwargs):
         inventory_count = kwargs.get("inventory_count")
         avg_price = kwargs.get("avg_price")
@@ -337,39 +343,70 @@ class AveragePriceStrategyBot(Bot):
 
     def calculate_upgrade_investments(self, **kwargs):
 
-        # upg_dict = {0.75: 0, 0.85: 0, 0.55: 0, 0.45: 0}
-
         c = 0
 
-        if (self.upgrades[30000] < 30000):
-            c = self.total_budget
-            self.upgrades[30000] += c  # tu sa to nepripocita
-            self.decisions["upgrades"]["battery"] = c
-
-            print("v podmienke:")
-            print(self.upgrades)
-
-
-        elif (self.upgrades[34000] < 34000):
-            c = 0.85 * self.total_budget
-            self.upgrades[34000] += c
-            self.decisions["upgrades"]["display"] = c
-            self.sales_effect_total += 0.75
-
-        elif (self.upgrades[22000] < 22000):
-            c = 0.55 * self.total_budget
+        if (self.upgrades[22000] < 22000):
+            c = 4400
             self.upgrades[22000] += c
             self.decisions["upgrades"]["frame"] = c
-            self.sales_effect_total += 0.85
+
 
         elif (self.upgrades[18000] < 18000):
-            c = 0.6 * self.total_budget
+            c = 3600
             self.upgrades[18000] += c
-            self.sales_effect_total += 0.55
+            self.decisions["upgrades"]["brakes"] = c
+            self.sales_effect_total = 0.55
+
+
+        elif (self.upgrades[30000] < 30000):
+            c = 3750
+            self.upgrades[30000] += c  # tu sa to nepripocita
+            self.decisions["upgrades"]["battery"] = c
+            self.sales_effect_total = 1
+
+        elif (self.upgrades[34000] < 34000):
+            c = 4250
+            self.upgrades[34000] += c
+            self.decisions["upgrades"]["display"] = c
+            self.sales_effect_total = 1.75
+
         else:
-            self.sales_effect_total += 0.45
+            self.sales_effect_total += 2.6
 
         return c
+
+    def make_decisions(self):
+
+        # upgrades
+        upgrades = self.calculate_upgrade_investments()
+        rest = self.total_budget - upgrades
+
+        if(self.inventory_count <  1000):
+            capital_value = rest/2
+            marketing_value = rest/2
+
+        elif(self.inventory_count >  1000):
+            capital_value = 0
+            marketing_value = rest
+
+        # "capital investments"
+        #capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
+        self.decisions["factory"]["capital"] = capital_value
+
+
+
+        # marketing investments
+        #viral_investments = self.calculate_marketing_investments(other_investments=marketing_value)
+        self.decisions["marketing"]["viral"] = marketing_value
+
+        # production
+        price = self.calculate_product_price()
+        volume = self.calculate_production_volume(production_rate=0.9)
+        self.decisions["production"]["sell_price"] = price
+        self.decisions["production"]["volume"] = volume
+
+
+
 
 
 @dataclass
@@ -470,21 +507,21 @@ class HighPriceStrategyBot(Bot):
             c = 0.85 * self.total_budget
             self.upgrades[34000] += c
             self.decisions["upgrades"]["display"] = c
-            self.sales_effect_total += 0.75
+            self.sales_effect_total = 0.75
 
         elif (self.upgrades[22000] < 22000):
             c = 0.55 * self.total_budget
             self.upgrades[22000] += c
             self.decisions["upgrades"]["frame"] = c
-            self.sales_effect_total += 0.85
+            self.sales_effect_total = 1.6
 
         elif (self.upgrades[18000] < 18000):
             c = 0.6 * self.total_budget
             self.upgrades[18000] += c
             self.decisions["upgrades"]["brakes"] = c
-            self.sales_effect_total += 0.55
+            self.sales_effect_total = 2.15
         else:
-            self.sales_effect_total += 0.45
+            self.sales_effect_total = 2.6
 
         return c
 
