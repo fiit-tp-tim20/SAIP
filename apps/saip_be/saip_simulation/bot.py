@@ -274,10 +274,9 @@ class LowPriceStrategyBot(Bot):
         return int(self.total_budget * 0.8 - self.total_budget * 0.4 * inventory_coef)
 
     def calculate_product_price(self,**kwargs):
-
         inventory_coef = self.calculate_inventory_coef(inventory_count=self.inventory_count)
-
         coef = 0.8
+
         diff_1 = int((self.avg_price - self.min_price)/2 * coef)
         diff_2 = int((self.avg_price - self.min_price)/4 * (1 - inventory_coef))
         price = self.avg_price - diff_1 + diff_2
@@ -322,16 +321,11 @@ class AveragePriceStrategyBot(Bot):
         return inventory_coef
 
     def calculate_product_price(self, **kwargs):
-        inventory_count = kwargs.get("inventory_count")
-        avg_price = kwargs.get("avg_price")
-        max_price = kwargs.get("max_price")
+        inventory_coef = self.calculate_inventory_coef(inventory_count=self.inventory_count)
+        diff_2 = int((self.max_price - self.avg_price) / 4 * (1 - inventory_coef))
+        diff_3 = int((self.max_price - self.avg_price) / 2 * self.sales_effect_total)
 
-        inventory_coef = self.calculate_inventory_coef(inventory_count=inventory_count)
-
-        diff_2 = int((max_price - avg_price) / 4 * (1 - inventory_coef))
-        diff_3 = int((max_price - avg_price) / 2 * self.sales_effect_total)
-
-        price = avg_price - diff_2 + diff_3
+        price = self.avg_price - diff_2 + diff_3
 
         if price > 15000:
             price = 15000
@@ -393,8 +387,6 @@ class AveragePriceStrategyBot(Bot):
         #capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
         self.decisions["factory"]["capital"] = capital_value
 
-
-
         # marketing investments
         #viral_investments = self.calculate_marketing_investments(other_investments=marketing_value)
         self.decisions["marketing"]["viral"] = marketing_value
@@ -425,20 +417,13 @@ class HighPriceStrategyBot(Bot):
         return inventory_coef
 
     def calculate_product_price(self, **kwargs):
-
-        inventory_count = kwargs.get("inventory_count")
-        avg_price = kwargs.get("avg_price")
-        max_price = kwargs.get("max_price")
-
-
-        inventory_coef = self.calculate_inventory_coef(inventory_count=inventory_count)
-
+        inventory_coef = self.calculate_inventory_coef(inventory_count=self.inventory_count)
         coef = 0.1
-        diff_1 = int((max_price - avg_price) / 2 * coef) if self.sales_effect_total > 0 else 0
-        diff_2 = int((max_price - avg_price) / 4 * (1 - inventory_coef))
-        diff_3 = int((max_price - avg_price)/2 * self.sales_effect_total)
+        diff_1 = int((self.max_price - self.avg_price) / 2 * coef) if self.sales_effect_total > 0 else 0
+        diff_2 = int((self.max_price - self.avg_price) / 4 * (1 - inventory_coef))
+        diff_3 = int((self.max_price - self.avg_price)/2 * self.sales_effect_total)
 
-        price = avg_price + diff_1 - diff_2 + diff_3
+        price = self.avg_price + diff_1 - diff_2 + diff_3
 
         if price > 15000:
             price = 15000
