@@ -336,7 +336,40 @@ class AveragePriceStrategyBot(Bot):
         return
 
     def calculate_upgrade_investments(self, **kwargs):
-        pass
+
+        # upg_dict = {0.75: 0, 0.85: 0, 0.55: 0, 0.45: 0}
+
+        c = 0
+
+        if (self.upgrades[30000] < 30000):
+            c = self.total_budget
+            self.upgrades[30000] += c  # tu sa to nepripocita
+            self.decisions["upgrades"]["battery"] = c
+
+            print("v podmienke:")
+            print(self.upgrades)
+
+
+        elif (self.upgrades[34000] < 34000):
+            c = 0.85 * self.total_budget
+            self.upgrades[34000] += c
+            self.decisions["upgrades"]["display"] = c
+            self.sales_effect_total += 0.75
+
+        elif (self.upgrades[22000] < 22000):
+            c = 0.55 * self.total_budget
+            self.upgrades[22000] += c
+            self.decisions["upgrades"]["frame"] = c
+            self.sales_effect_total += 0.85
+
+        elif (self.upgrades[18000] < 18000):
+            c = 0.6 * self.total_budget
+            self.upgrades[18000] += c
+            self.sales_effect_total += 0.55
+        else:
+            self.sales_effect_total += 0.45
+
+        return c
 
 
 @dataclass
@@ -448,6 +481,7 @@ class HighPriceStrategyBot(Bot):
         elif (self.upgrades[18000] < 18000):
             c = 0.6 * self.total_budget
             self.upgrades[18000] += c
+            self.decisions["upgrades"]["brakes"] = c
             self.sales_effect_total += 0.55
         else:
             self.sales_effect_total += 0.45
