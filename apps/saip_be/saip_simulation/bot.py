@@ -351,11 +351,11 @@ class HighPriceStrategyBot(Bot):
     def calculate_inventory_coef (self, **kwargs):
         inventory_count = kwargs.get("inventory_count")
         inventory_coef = inventory_count / 10000 if inventory_count < 10000 else 1
-        print("Ahoj")
+
         return inventory_coef
 
     def calculate_product_price(self, **kwargs):
-        """""
+
         inventory_count = kwargs.get("inventory_count")
         avg_price = kwargs.get("avg_price")
         max_price = kwargs.get("max_price")
@@ -372,17 +372,25 @@ class HighPriceStrategyBot(Bot):
 
         if price > 15000:
             price = 15000
-        """
-        return 1000
+
+        return price
 
     def make_decisions(self):
+
+        # upgrades
+        upgrades = self.calculate_upgrade_investments()
+        capital_value = (self.total_budget - upgrades) / 3
+        marketing_value = 2 * capital_value
+
         # "capital investments"
-        capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
-        self.decisions["factory"]["capital"] = capital_investments
+        #capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
+        self.decisions["factory"]["capital"] = capital_value
+
+
 
         # marketing investments
-        viral_investments = self.calculate_marketing_investments(other_investments=capital_investments)
-        self.decisions["marketing"]["viral"] = viral_investments
+        #viral_investments = self.calculate_marketing_investments(other_investments=marketing_value)
+        self.decisions["marketing"]["viral"] = marketing_value
 
         # production
         price = self.calculate_product_price()
@@ -390,9 +398,9 @@ class HighPriceStrategyBot(Bot):
         self.decisions["production"]["sell_price"] = price
         self.decisions["production"]["volume"] = volume
 
-        # upgrades
 
-        self.calculate_upgrade_investments()
+
+
 
         """""
         self.decisions["upgrades"]["brakes"] = upgrades_decision[18000]
@@ -418,7 +426,7 @@ class HighPriceStrategyBot(Bot):
 
         if (self.upgrades[30000] < 30000):
             c = self.total_budget
-            self.upgrades[30000] += c
+            self.upgrades[30000] += c       #tu sa to nepripocita
             self.decisions["upgrades"]["battery"] = c
 
             print("v podmienke:")
@@ -429,15 +437,20 @@ class HighPriceStrategyBot(Bot):
             c = 0.85 * self.total_budget
             self.upgrades[34000] += c
             self.decisions["upgrades"]["display"] = c
+            self.sales_effect_total += 0.75
 
         elif (self.upgrades[22000] < 22000):
             c = 0.55 * self.total_budget
             self.upgrades[22000] += c
             self.decisions["upgrades"]["frame"] = c
+            self.sales_effect_total += 0.85
 
         elif (self.upgrades[18000] < 18000):
             c = 0.6 * self.total_budget
             self.upgrades[18000] += c
+            self.sales_effect_total += 0.55
+        else:
+            self.sales_effect_total += 0.45
 
-        #return self.upgrades, c
+        return c
 
