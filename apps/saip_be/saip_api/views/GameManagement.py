@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from ..serializers import GameSerializer
 
 from saip_simulation.simulation import Simulation
-from saip_simulation.bot import LowPriceStrategyBot
+from saip_simulation.bot import LowPriceStrategyBot, HighPriceStrategyBot
 
 from django.core.cache import cache
 # default upgrages, table is create only if it is empty
@@ -203,8 +203,8 @@ def end_turn(turn: Turn) -> Turn:
 
     if turn.number == 0:
         bot_list = []
-        for i in range(3):
-            bot = LowPriceStrategyBot()
+        for i in range(1):
+            bot = HighPriceStrategyBot()
             bot.add_to_game(game_id=game.id)
             bot_list.append(bot)
         cache.set(game.id, bot_list)

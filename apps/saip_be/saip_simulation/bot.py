@@ -61,10 +61,11 @@ DECISIONS_PRESET =    {
                       "factory": {
                         "capital": 0
                       },
-                      "brakes": 0,
-                      "frame": 0,
-                      "battery": 0,
-                      "display": 0
+                      "upgrades": {
+                          "brakes": 0,
+                          "frame": 0,
+                          "battery": 0,
+                          "display": 0},
                     }
 AVG_PRICE_PRESET = 800
 MAX_PRICE_PRESET = 1000
@@ -93,7 +94,7 @@ class Bot(ABC):
                         FactoryPreset.STARTING_EMPLOYEES * FactoryPreset.BASE_SALARY * TURN_LENGTH)/\
                        (FactoryPreset.STARTING_CAPACITY*FactoryPreset.OPTIMAL_THRESHOLD))*1.05
     max_price: float = MAX_PRICE_PRESET
-
+    upgrades:  Dict[int, int] = field(default_factory=lambda: {30000: 0, 34000: 0, 22000: 0, 18000: 0})
     username: str = None
     token: str = None
     company_id: int = 0
@@ -263,7 +264,7 @@ class LowPriceStrategyBot(Bot):
     def calculate_inventory_coef (self, **kwargs):
         inventory_count = kwargs.get("inventory_count")
         inventory_coef = inventory_count / 10000 if inventory_count < 10000 else 1
-
+        print("Ahoj")
         return inventory_coef
 
     def calculate_capital_investments(self,**kwargs):
@@ -299,6 +300,7 @@ class LowPriceStrategyBot(Bot):
         volume = self.calculate_production_volume(production_rate=0.9)
         self.decisions["production"]["sell_price"] = price
         self.decisions["production"]["volume"] = volume
+
 
     def end_turn(self):
         return
@@ -341,14 +343,23 @@ class AveragePriceStrategyBot(Bot):
 class HighPriceStrategyBot(Bot):
     name: float = "HighPriceStrategyBot"
     sales_effect_total: float = 0
+    sales_effect_total: float = 0
 
     def calculate_capital_investments(self, **kwargs):
         return
 
+    def calculate_inventory_coef (self, **kwargs):
+        inventory_count = kwargs.get("inventory_count")
+        inventory_coef = inventory_count / 10000 if inventory_count < 10000 else 1
+        print("Ahoj")
+        return inventory_coef
+
     def calculate_product_price(self, **kwargs):
+        """""
         inventory_count = kwargs.get("inventory_count")
         avg_price = kwargs.get("avg_price")
         max_price = kwargs.get("max_price")
+
 
         inventory_coef = self.calculate_inventory_coef(inventory_count=inventory_count)
 
@@ -361,12 +372,72 @@ class HighPriceStrategyBot(Bot):
 
         if price > 15000:
             price = 15000
+        """
+        return 1000
 
-        return price
+    def make_decisions(self):
+        # "capital investments"
+        capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
+        self.decisions["factory"]["capital"] = capital_investments
+
+        # marketing investments
+        viral_investments = self.calculate_marketing_investments(other_investments=capital_investments)
+        self.decisions["marketing"]["viral"] = viral_investments
+
+        # production
+        price = self.calculate_product_price()
+        volume = self.calculate_production_volume(production_rate=0.9)
+        self.decisions["production"]["sell_price"] = price
+        self.decisions["production"]["volume"] = volume
+
+        # upgrades
+
+        self.calculate_upgrade_investments()
+
+        """""
+        self.decisions["upgrades"]["brakes"] = upgrades_decision[18000]
+        self.decisions["upgrades"]["frame"] = upgrades_decision[22000]
+        self.decisions["upgrades"]["battery"] = upgrades_decision[30000]
+        self.decisions["upgrades"]["display"] = upgrades_decision[34000]
+        """
+
+    def end_turn(self):
+        return
 
     def calculate_marketing_investments(self, **kwargs):
         return
 
     def calculate_upgrade_investments(self, **kwargs):
-        pass
+
+
+        print("MOJE:")
+        print(self.upgrades)
+        #upg_dict = {0.75: 0, 0.85: 0, 0.55: 0, 0.45: 0}
+
+        c = 0
+
+        if (self.upgrades[30000] < 30000):
+            c = self.total_budget
+            self.upgrades[30000] += c
+            self.decisions["upgrades"]["battery"] = c
+
+            print("v podmienke:")
+            print(self.upgrades)
+
+
+        elif (self.upgrades[34000] < 34000):
+            c = 0.85 * self.total_budget
+            self.upgrades[34000] += c
+            self.decisions["upgrades"]["display"] = c
+
+        elif (self.upgrades[22000] < 22000):
+            c = 0.55 * self.total_budget
+            self.upgrades[22000] += c
+            self.decisions["upgrades"]["frame"] = c
+
+        elif (self.upgrades[18000] < 18000):
+            c = 0.6 * self.total_budget
+            self.upgrades[18000] += c
+
+        #return self.upgrades, c
 
