@@ -61,11 +61,10 @@ DECISIONS_PRESET =    {
                       "factory": {
                         "capital": 0
                       },
-                      "upgrades": {
-                          "brakes": 0,
-                          "frame": 0,
-                          "battery": 0,
-                          "display": 0},
+                      "brakes": 0,
+                      "frame": 0,
+                      "battery": 0,
+                      "display": 0,
                     }
 AVG_PRICE_PRESET = 800
 MAX_PRICE_PRESET = 1000
@@ -130,11 +129,35 @@ class Bot(ABC):
     def make_decisions(self):
         pass
 
+    def get_upgrades(self,**kwargs):
+        turn_number = kwargs.get("turn_number")
+
+        url = VITE_BACKEND_URL + "/upgrades/"
+        headers = {
+            "Authorization": f"Bearer {self.token}",
+            "Content-Type": "application/json",
+        }
+        params = {"turn": str(turn_number)}
+        response = requests.get(url, headers=headers,params=params)
+
+        if response.status_code == 200:
+            # print("Response JSON report:", response.json())
+            upgrades = response.json().get("upgrade")
+
+            for upgrade in upgrades:
+                price = upgrade.get("price")
+                progress = upgrade.get("progress")
+                self.upgrades[price] = progress
+
+        else:
+            print("Response content:", response.text)
+
 
     def add_to_game(self,**kwargs):
         game_id = kwargs.get("game_id")
         self.register()
         self.create_company(id=game_id,name=self.username)
+        return self.token
 
     def commit_decisions(self):
         url = VITE_BACKEND_URL + "/spendings/"
@@ -164,7 +187,6 @@ class Bot(ABC):
         else:
             print("Response content:", response.text)
 
-
     def login(self,username,passwd):
         url = VITE_BACKEND_URL + "/login/"
         data = {
@@ -177,7 +199,6 @@ class Bot(ABC):
             self.token = response.json()["token"]
         else:
             print("Response content:", response.text)
-
 
     def create_company(self,id,name):
 
@@ -211,7 +232,7 @@ class Bot(ABC):
         response = requests.get(url, headers=headers,params=params)
 
         if response.status_code == 200:
-            print("Response JSON:", response.json())
+            print("Response JSON report:", response.json())
             self.inventory_count = response.json().get("production").get("new_inventory")
             self.production_capacity = response.json().get("production").get("capacity")
         else:
@@ -254,12 +275,14 @@ class Bot(ABC):
         self.get_company_report(turn_number=turn_number - 1)
         if turn_number > 1:
             self.get_industry_report(turn_number=turn_number - 1)
+            self.get_upgrades(turn_number=turn_number - 1)
         self.make_decisions()
         self.commit_decisions()
 
 @dataclass
 class LowPriceStrategyBot(Bot):
     name: float = "LowPriceStrategyBot"
+    type: str = 'L'
 
     def calculate_inventory_coef (self, **kwargs):
         inventory_count = kwargs.get("inventory_count")
@@ -297,7 +320,7 @@ class LowPriceStrategyBot(Bot):
         # production
         price = self.calculate_product_price()
         volume = self.calculate_production_volume(production_rate=0.9)
-        self.decisions["production"]["sell_price"] = price
+        self.decisions["production"]["sell_price"] = round(price)
         self.decisions["production"]["volume"] = volume
 
 
@@ -310,6 +333,7 @@ class LowPriceStrategyBot(Bot):
 class AveragePriceStrategyBot(Bot):
     name: float = "AveragePriceStrategyBot"
     sales_effect_total: float = 0
+    type: str = 'A'
 
     def calculate_capital_investments(self, **kwargs):
         return
@@ -342,27 +366,32 @@ class AveragePriceStrategyBot(Bot):
         if (self.upgrades[22000] < 22000):
             c = 4400
             self.upgrades[22000] += c
-            self.decisions["upgrades"]["frame"] = c
+            self.decisions["frame"] = c
 
 
         elif (self.upgrades[18000] < 18000):
             c = 3600
             self.upgrades[18000] += c
-            self.decisions["upgrades"]["brakes"] = c
+            self.decisions["brakes"] = c
             self.sales_effect_total = 0.55
+            self.decisions["frame"] = 0
+
 
 
         elif (self.upgrades[30000] < 30000):
             c = 3750
             self.upgrades[30000] += c  # tu sa to nepripocita
-            self.decisions["upgrades"]["battery"] = c
+            self.decisions["battery"] = c
             self.sales_effect_total = 1
+            self.decisions["brakes"] = 0
+
 
         elif (self.upgrades[34000] < 34000):
             c = 4250
             self.upgrades[34000] += c
-            self.decisions["upgrades"]["display"] = c
+            self.decisions["display"] = c
             self.sales_effect_total = 1.75
+            self.decisions["battery"] = 0
 
         else:
             self.sales_effect_total += 2.6
@@ -370,7 +399,6 @@ class AveragePriceStrategyBot(Bot):
         return c
 
     def make_decisions(self):
-
         # upgrades
         upgrades = self.calculate_upgrade_investments()
         rest = self.total_budget - upgrades
@@ -394,7 +422,7 @@ class AveragePriceStrategyBot(Bot):
         # production
         price = self.calculate_product_price()
         volume = self.calculate_production_volume(production_rate=0.9)
-        self.decisions["production"]["sell_price"] = price
+        self.decisions["production"]["sell_price"] = round(price)
         self.decisions["production"]["volume"] = volume
 
 
@@ -406,6 +434,7 @@ class HighPriceStrategyBot(Bot):
     name: float = "HighPriceStrategyBot"
     sales_effect_total: float = 0
     sales_effect_total: float = 0
+    type: str = 'H'
 
     def calculate_capital_investments(self, **kwargs):
         return
@@ -450,7 +479,7 @@ class HighPriceStrategyBot(Bot):
         # production
         price = self.calculate_product_price()
         volume = self.calculate_production_volume(production_rate=0.9)
-        self.decisions["production"]["sell_price"] = price
+        self.decisions["production"]["sell_price"] = round(price)
         self.decisions["production"]["volume"] = volume
 
 
@@ -458,10 +487,10 @@ class HighPriceStrategyBot(Bot):
 
 
         """""
-        self.decisions["upgrades"]["brakes"] = upgrades_decision[18000]
-        self.decisions["upgrades"]["frame"] = upgrades_decision[22000]
-        self.decisions["upgrades"]["battery"] = upgrades_decision[30000]
-        self.decisions["upgrades"]["display"] = upgrades_decision[34000]
+        self.decisions["brakes"] = upgrades_decision[18000]
+        self.decisions["frame"] = upgrades_decision[22000]
+        self.decisions["battery"] = upgrades_decision[30000]
+        self.decisions["display"] = upgrades_decision[34000]
         """
 
     def end_turn(self):
@@ -482,7 +511,7 @@ class HighPriceStrategyBot(Bot):
         if (self.upgrades[30000] < 30000):
             c = self.total_budget
             self.upgrades[30000] += c       #tu sa to nepripocita
-            self.decisions["upgrades"]["battery"] = c
+            self.decisions["battery"] = c
 
             print("v podmienke:")
             print(self.upgrades)
@@ -491,20 +520,23 @@ class HighPriceStrategyBot(Bot):
         elif (self.upgrades[34000] < 34000):
             c = 0.85 * self.total_budget
             self.upgrades[34000] += c
-            self.decisions["upgrades"]["display"] = c
+            self.decisions["display"] = c
             self.sales_effect_total = 0.75
+            self.decisions["battery"] = 0
 
         elif (self.upgrades[22000] < 22000):
             c = 0.55 * self.total_budget
             self.upgrades[22000] += c
-            self.decisions["upgrades"]["frame"] = c
+            self.decisions["frame"] = c
             self.sales_effect_total = 1.6
+            self.decisions["display"] = 0
 
         elif (self.upgrades[18000] < 18000):
             c = 0.6 * self.total_budget
             self.upgrades[18000] += c
-            self.decisions["upgrades"]["brakes"] = c
+            self.decisions["brakes"] = c
             self.sales_effect_total = 2.15
+            self.decisions["frame"] = 0
         else:
             self.sales_effect_total = 2.6
 

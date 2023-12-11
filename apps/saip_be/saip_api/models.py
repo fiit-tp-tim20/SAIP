@@ -223,3 +223,15 @@ class TeacherDecisions(models.Model):
     class Meta:
         db_table = "Teacher Decisions"
         verbose_name_plural = "Teacher Decisions"
+
+
+class Bots(models.Model):
+    game_id = models.PositiveIntegerField(null=True)
+    token = models.CharField(max_length=64, null=True)
+    type = models.CharField(max_length=1, default="L")
+
+    def __str__(self):
+        return self.game_id
+
+    class Meta:
+        db_table = "Bots"
