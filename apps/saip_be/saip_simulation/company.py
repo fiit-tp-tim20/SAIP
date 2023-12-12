@@ -152,6 +152,20 @@ class Inventory:
             inventory_count += product_line.get("unit_count")
         return inventory_count
 
+    def get_inventory_money(self):
+        inventory_money = 0
+
+        for product_line in self.inventory_queue:
+            unit_count = product_line.get("unit_count")
+
+            if unit_count == 0:
+                continue
+
+            else:
+                inventory_money += unit_count * product_line.get("price_per_unit")
+
+        return inventory_money
+
     def get_products(self, demand) -> tuple[int, int, int, int]:
         """returns sum of (price_per_unit * sold_count) values for all retrieved products, units sold, unmet demand, remaining inventory"""
         unmet_demand = demand
@@ -270,7 +284,7 @@ class Company:
 
             self.prod_costs_per_turn = self.production_volume * self.prod_ppu
             self.total_costs_per_turn = self.production_volume * self.total_ppu
-            
+
         self.inventory.insert_into_inventory(self.production_volume, self.prod_ppu, self.current_turn_num)
 
     def sell_product(self, demand: int) -> int:  # 2
