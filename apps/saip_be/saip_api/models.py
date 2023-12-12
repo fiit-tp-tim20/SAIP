@@ -199,7 +199,7 @@ class MarketState(models.Model):
 class Inventory(models.Model):
     company = models.ForeignKey(Company, models.CASCADE, null=True)
     unit_count = models.PositiveIntegerField(null=True)
-    price_per_unit = models.PositiveIntegerField(null=True)
+    price_per_unit = models.FloatField(null=True)
     turn_num = models.PositiveIntegerField(null=True)
 
     def __str__(self):
