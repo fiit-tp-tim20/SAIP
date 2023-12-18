@@ -46,7 +46,7 @@ def generate_random_password(length=12):
     return ''.join(random.choice(characters) for _ in range(length))
 
 
-DECISIONS_PRESET =    {
+DECISIONS_PRESET ={
                       "marketing": {
                         "viral": 0,
                         "podcast": 0,
@@ -80,7 +80,26 @@ class Bot(ABC):
     # marketing_investments: dict[str, int] = field(default_factory=dict)
     # upgrade_investments: int = 0
     # product_price: int = 0
-    decisions: dict = field(default_factory=lambda: DECISIONS_PRESET)
+    decisions: dict = field(default_factory=lambda: {
+                      "marketing": {
+                        "viral": 0,
+                        "podcast": 0,
+                        "ooh": 0,
+                        "tv": 0,
+                        "billboard": 0
+                      },
+                      "production": {
+                        "sell_price": 0,
+                        "volume": 0
+                      },
+                      "factory": {
+                        "capital": 0
+                      },
+                      "brakes": 0,
+                      "frame": 0,
+                      "battery": 0,
+                      "display": 0,
+                    })
 
     inventory_count: int = 0
     # factory_value: float = FactoryPreset.STARTING_INVESTMENT
