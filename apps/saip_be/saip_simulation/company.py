@@ -210,6 +210,7 @@ class Company:
     inventory_queue: list[dict] = field(default_factory=list)
     inventory: Inventory = field(init=False)
     current_turn_num: int = 0
+    inventory_money: float = 0
 
     production_volume: int = 0
     prod_ppu: float = 0  # field(init=False)
@@ -296,6 +297,7 @@ class Company:
             self.inventory_count,
         ) = self.inventory.get_products(self.demand)
 
+        self.inventory_money = self.inventory.get_inventory_money()
         self.income_per_turn = self.units_sold * self.product.get_price()
         self.profit = (
             self.income_per_turn - self.cost_of_goods_sold - self.additional_costs

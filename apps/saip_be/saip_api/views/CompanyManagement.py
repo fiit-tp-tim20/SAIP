@@ -297,9 +297,13 @@ class CompanyReport(APIView):
         balance = dict()
         balance['cash'] = round(company_state_previous.cash,
                                 2) if company_state_previous.cash is not None else "N/A"  # "Hotovosť" #TODO: CHANGED from cash to balance !!!!!MIND THE SUMMARY AS WELL
-        balance['inventory_money'] = round(
-            (company_state_previous.inventory * company_state_previous.production.man_cost), 2) if (
+        # balance['inventory_money'] = round(
+        #     (company_state_previous.inventory * company_state_previous.production.man_cost), 2) if (
+        #         company_state_previous.inventory is not None and company_state_previous.production.man_cost is not None) else "N/A"  # Zásoby
+
+        balance['inventory_money'] = round(company_state_previous.inventory_money, 2) if (
                 company_state_previous.inventory is not None and company_state_previous.production.man_cost is not None) else "N/A"  # Zásoby
+
         balance['capital_investments'] = round(company_state_previous.factory.capital_investments,
                                                2) if company_state_previous.factory.capital_investments is not None else "N/A"  # "Kapitálové investície"
         balance['assets_summary'] = round((company_state_previous.cash + (

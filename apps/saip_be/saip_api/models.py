@@ -172,6 +172,7 @@ class CompaniesState(models.Model):
     inventory_upgrade = models.FloatField(null=True, default=0)
     overcharge_upgrade = models.FloatField(null=True, default=0)
     sold_man_cost = models.FloatField(null=True, default=0)  # vyrobne naklady na predane vyrobky
+    inventory_money = models.FloatField(null=True, default=0)  # Zásoby
 
     def __str__(self):
         return f"{self.company} - {self.turn}"
