@@ -32,6 +32,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
+            export PATH="$PATH:/home/ubuntu/.yarn/bin/"
             cd ~/SAIP/apps/saip-fe
             yarn
             yarn run build
