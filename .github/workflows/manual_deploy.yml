@@ -1,4 +1,4 @@
-name: deploy
+name: manual_deploy
 on: workflow_dispatch
 jobs:
   git_pull:
