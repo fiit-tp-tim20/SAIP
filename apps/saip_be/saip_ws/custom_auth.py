@@ -13,7 +13,7 @@ def get_user(token):
         knoxAuth = TokenAuthentication()
         user, auth_token = knoxAuth.authenticate_credentials(token.encode(HTTP_HEADER_ENCODING))
         return user
-    except token.DoesNotExist:
+    except Exception:
         return AnonymousUser()
 
 # https://stackoverflow.com/questions/43392889/how-do-you-authenticate-a-websocket-with-token-authentication-on-django-channels
