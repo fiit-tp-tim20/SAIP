@@ -72,6 +72,7 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
             return HttpResponse("Last turn not found", status=404)
         if last_turn.end is not None:
             return HttpResponse("Last turn is already ended", status=500)
+        # sem treba pridat broadcast
         _ = end_turn(last_turn)
 
     def save_model(self, request, obj, form, change):
