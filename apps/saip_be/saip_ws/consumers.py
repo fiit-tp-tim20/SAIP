@@ -11,11 +11,11 @@ from .triggers import broadcast_message
 
 class TestConsumer(WebsocketConsumer):
     def connect(self):
+        self.accept()
         try:
-            company = Company.objects.get(user=self.scope["user"])
+           company = Company.objects.get(user=self.scope["user"])
         except Company.DoesNotExist:
             return self.send(text_data="Company for this user not found", close=True)
-        self.accept()
         async_to_sync(self.channel_layer.group_add)("game", self.channel_name)
         self.send(text_data="Websocket connected")
         turn = get_last_turn(company.game)
