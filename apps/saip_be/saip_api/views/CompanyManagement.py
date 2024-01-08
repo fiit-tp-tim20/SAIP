@@ -131,8 +131,6 @@ class CompanyInfo(APIView):
             budget = 0
         else:
             budget = company_state.cash
-        y = {"Number": last_turn.number, "Start":  last_turn.start, "Committed": state.committed}
-        broadcast_message(y)
         return Response({"id": company.id, 'name': company.name, 'budget_cap': budget}, status=200)
 
 
@@ -425,7 +423,7 @@ def checkCommitted(turn: Turn, end: bool = True) -> bool:
     if end and auto_end:
         new_turn = end_turn(turn)
         y = {"Number": new_turn.number, "Start":  new_turn.start, "Committed": "false"}
-        broadcast_message(y)
+        broadcast_message(y) # toto je v poriadku, vsetkym pride sprava o tom, ze je nove kolo
 
 
     return True
