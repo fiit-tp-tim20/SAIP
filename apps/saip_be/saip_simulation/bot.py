@@ -251,7 +251,7 @@ class Bot(ABC):
         response = requests.get(url, headers=headers,params=params)
 
         if response.status_code == 200:
-            print("Response JSON report:", response.json())
+            # print("Response JSON report:", response.json())
             self.inventory_count = response.json().get("production").get("new_inventory")
             self.production_capacity = response.json().get("production").get("capacity")
         else:
@@ -289,14 +289,31 @@ class Bot(ABC):
         else:
             print("Response content:", response.text)
 
+    def get_committed_status(self,**kwargs):
+        turn_number = kwargs.get("turn_number")
+        url = VITE_BACKEND_URL + "/committed/"
+        headers = {
+            "Authorization": f"Bearer {self.token}",
+            "Content-Type": "application/json",
+        }
+        params = {"turn": str(turn_number)}
+        response = requests.get(url, headers=headers,params=params)
+
+        if response.status_code == 200:
+            return response.json().get("committed")
+        else:
+            print("Response content:", response.text)
+            return response.text
+
     def play_turn(self,**kwargs):
         turn_number = kwargs.get("turn_number")
-        self.get_company_report(turn_number=turn_number - 1)
-        if turn_number > 1:
-            self.get_industry_report(turn_number=turn_number - 1)
-            self.get_upgrades(turn_number=turn_number - 1)
-        self.make_decisions()
-        self.commit_decisions()
+        if self.get_committed_status(turn_number=turn_number) is False:
+            self.get_company_report(turn_number=turn_number - 1)
+            if turn_number > 1:
+                self.get_industry_report(turn_number=turn_number - 1)
+                self.get_upgrades(turn_number=turn_number - 1)
+            self.make_decisions()
+            self.commit_decisions()
 
 @dataclass
 class LowPriceStrategyBot(Bot):
@@ -306,7 +323,7 @@ class LowPriceStrategyBot(Bot):
     def calculate_inventory_coef (self, **kwargs):
         inventory_count = kwargs.get("inventory_count")
         inventory_coef = inventory_count / 10000 if inventory_count < 10000 else 1
-        print("Ahoj")
+        # print("Ahoj")
         return inventory_coef
 
     def calculate_capital_investments(self,**kwargs):
@@ -368,7 +385,7 @@ class AveragePriceStrategyBot(Bot):
         diff_2 = int((self.max_price - self.avg_price) / 4 * (1 - inventory_coef))
         diff_3 = int((self.max_price - self.avg_price) / 2 * self.sales_effect_total)
 
-        price = self.avg_price - diff_2 + diff_3
+        price = self.avg_price + diff_2 + diff_3
 
         if price > 15000:
             price = 15000
@@ -471,7 +488,7 @@ class HighPriceStrategyBot(Bot):
         diff_2 = int((self.max_price - self.avg_price) / 4 * (1 - inventory_coef))
         diff_3 = int((self.max_price - self.avg_price)/2 * self.sales_effect_total)
 
-        price = self.avg_price + diff_1 - diff_2 + diff_3
+        price = self.avg_price + diff_1 + diff_2 + diff_3
 
         if price > 15000:
             price = 15000
@@ -521,7 +538,7 @@ class HighPriceStrategyBot(Bot):
     def calculate_upgrade_investments(self, **kwargs):
 
 
-        print("MOJE:")
+        # print("MOJE:")
         print(self.upgrades)
         #upg_dict = {0.75: 0, 0.85: 0, 0.55: 0, 0.45: 0}
 
@@ -532,8 +549,8 @@ class HighPriceStrategyBot(Bot):
             self.upgrades[30000] += c       #tu sa to nepripocita
             self.decisions["battery"] = c
 
-            print("v podmienke:")
-            print(self.upgrades)
+            # print("v podmienke:")
+            # print(self.upgrades)
 
 
         elif (self.upgrades[34000] < 34000):
