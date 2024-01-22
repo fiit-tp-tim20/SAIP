@@ -117,14 +117,14 @@ class Simulation:
                 if (
                     market_state_model.demand is not None
                     and market_state_model.demand
-                    > config.MarketPreset.STARTING_CUSTOMER_COUNT
+                    > config.MarketPreset.STARTING_CUSTOMER_COUNT * len(self.companies)
                 )
-                else config.MarketPreset.STARTING_CUSTOMER_COUNT,
+                else config.MarketPreset.STARTING_CUSTOMER_COUNT * len(self.companies),
             )
         except models.MarketState.DoesNotExist:
             self.market = Market(
                 companies=self.companies.values(),
-                customer_count=config.MarketPreset.STARTING_CUSTOMER_COUNT,
+                customer_count=config.MarketPreset.STARTING_CUSTOMER_COUNT * len(self.companies),
             )  # TODO: companies is aleady a dict, we dont have to generate it in market object
         print("Simulation was set up without any errors!")
         return
