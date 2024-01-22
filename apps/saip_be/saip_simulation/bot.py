@@ -7,6 +7,7 @@ import random
 import string
 import json
 from django.contrib.auth.forms import UserCreationForm
+from random_username.generate import generate_username
 
 file = Path(__file__).resolve()
 parent, root = file.parent, file.parents[1]
@@ -37,7 +38,7 @@ from math import ceil, floor
 import saip_api.models as models
 
 
-def generate_random_username(length=8):
+def generate_random_string(length=8):
     return ''.join(random.choice(string.ascii_letters) for _ in range(length))
 
 
@@ -75,6 +76,7 @@ VITE_BACKEND_URL='http://127.0.0.1:8000/api'
 @dataclass
 class Bot(ABC):
     name: float = "Bot"
+    type: str = 'B'
     total_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
     # capital_investment: int = 0
     # marketing_investments: dict[str, int] = field(default_factory=dict)
@@ -189,8 +191,9 @@ class Bot(ABC):
         response = requests.post(url, headers=headers, json=data)
 
     def register(self,username=None,passwd=None):
-        if username == None:
-            username = str(self.name) + '_' + generate_random_username()
+        generated_name = generate_username()[0]
+        if username is None:
+            username = str(self.type) + '_' + generated_name + '_' + generate_random_string()
             passwd = generate_random_password()
 
         url = VITE_BACKEND_URL + "/register/"
@@ -201,7 +204,7 @@ class Bot(ABC):
         response = requests.post(url, json=data)
 
         if response.status_code == 201:
-            self.username = username
+            self.username = generated_name
             self.login(username=username, passwd=passwd)
         else:
             print("Response content:", response.text)
