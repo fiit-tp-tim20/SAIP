@@ -227,12 +227,12 @@ class TeacherDecisions(models.Model):
 
 
 class Bots(models.Model):
-    game_id = models.PositiveIntegerField(null=True)
+    game = models.ForeignKey(Game, models.CASCADE, null=True)
     token = models.CharField(max_length=64, null=True)
     type = models.CharField(max_length=1, default="L")
 
     def __str__(self):
-        return self.game_id
+        return f"{self.game} - {self.token}"
 
     class Meta:
         db_table = "Bots"

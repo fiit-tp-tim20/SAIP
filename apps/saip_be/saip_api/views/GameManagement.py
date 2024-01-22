@@ -207,7 +207,7 @@ def end_turn(turn: Turn) -> Turn:
             b.add_to_game(game_id=game.id)
 
             bot = Bots(
-                game_id=game.id,
+                game=game,
                 token=b.token,
                 type=b.type
             )
@@ -218,7 +218,7 @@ def end_turn(turn: Turn) -> Turn:
             b.add_to_game(game_id=game.id)
 
             bot = Bots(
-                game_id=game.id,
+                game=game,
                 token=b.token,
                 type=b.type
             )
@@ -229,7 +229,7 @@ def end_turn(turn: Turn) -> Turn:
             b.add_to_game(game_id=game.id)
 
             bot = Bots(
-                game_id=game.id,
+                game=game,
                 token=b.token,
                 type=b.type
             )
@@ -237,8 +237,8 @@ def end_turn(turn: Turn) -> Turn:
 
 
     if turn.number != 0:
-
-        bots = Bots.objects.filter(game_id=game.id)
+        print("kolo: ",turn.number)
+        bots = Bots.objects.filter(game=game)
         for bot in bots:
             if bot.type == 'L':
                 bot_curr = LowPriceStrategyBot()
