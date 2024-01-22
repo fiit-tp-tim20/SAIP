@@ -7,6 +7,9 @@ class GameParameters(models.Model):
     depreciation = models.FloatField(default=0.0125)
     base_man_cost = models.PositiveIntegerField(default=250)
     base_capital = models.PositiveIntegerField(default=40000)
+    number_of_low_price_bots = models.PositiveIntegerField(default=3)
+    number_of_avg_price_bots = models.PositiveIntegerField(default=3)
+    number_of_high_price_bots = models.PositiveIntegerField(default=3)
     end_turn_on_committed = models.BooleanField(default=True)
 
     class Meta:

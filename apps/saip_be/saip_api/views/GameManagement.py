@@ -200,9 +200,12 @@ class EndTurnView(PermissionRequiredMixin, APIView):
 
 def end_turn(turn: Turn) -> Turn:
     game = turn.game
+    numberl = game.parameters.number_of_low_price_bots
+    numbera = game.parameters.number_of_avg_price_bots
+    numberh = game.parameters.number_of_high_price_bots
 
     if turn.number == 0:
-        for i in range(3):
+        for i in range(numbera):
             b = AveragePriceStrategyBot()
             b.add_to_game(game_id=game.id)
 
@@ -213,7 +216,7 @@ def end_turn(turn: Turn) -> Turn:
             )
             bot.save()
 
-        for i in range(3):
+        for i in range(numberl):
             b = LowPriceStrategyBot()
             b.add_to_game(game_id=game.id)
 
@@ -224,7 +227,7 @@ def end_turn(turn: Turn) -> Turn:
             )
             bot.save()
 
-        for i in range(1):
+        for i in range(numberh):
             b = HighPriceStrategyBot()
             b.add_to_game(game_id=game.id)
 

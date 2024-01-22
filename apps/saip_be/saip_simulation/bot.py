@@ -320,6 +320,7 @@ class LowPriceStrategyBot(Bot):
     name: float = "LowPriceStrategyBot"
     type: str = 'L'
 
+
     def calculate_inventory_coef (self, **kwargs):
         inventory_count = kwargs.get("inventory_count")
         inventory_coef = inventory_count / 10000 if inventory_count < 10000 else 1
@@ -345,6 +346,8 @@ class LowPriceStrategyBot(Bot):
         pass
 
     def make_decisions(self):
+        print("I am", self.name)
+
         # "capital investments"
         capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
         self.decisions["factory"]["capital"] = capital_investments
@@ -435,6 +438,10 @@ class AveragePriceStrategyBot(Bot):
         return c
 
     def make_decisions(self):
+
+        print("I am", self.name)
+
+
         # upgrades
         upgrades = self.calculate_upgrade_investments()
         rest = self.total_budget - upgrades
@@ -496,6 +503,9 @@ class HighPriceStrategyBot(Bot):
         return price
 
     def make_decisions(self):
+
+        print("I am", self.name)
+
 
         # upgrades
         upgrades = self.calculate_upgrade_investments()
