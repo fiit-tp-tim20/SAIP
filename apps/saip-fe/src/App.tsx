@@ -22,6 +22,7 @@ import Register from "./screens/Register";
 import BugReport from "./components/bugreport/BugReport";
 import { currentTurn } from "./store/Atoms";
 import getCommitted from "./api/GetCommitted";
+import WelcomePage from "./screens/WelcomePage";
 
 function App() {
 	const token = localStorage.getItem("token");
@@ -130,7 +131,8 @@ function App() {
 		<BrowserRouter>
 			<Routes>
 				<Route path="/register" element={<Register />} />
-				<Route path="/" element={<Login />} />
+				<Route path="/login" element={<Login />} />
+				<Route path="/" element={<WelcomePage />} />
 				<Route path="*" element={<Navigate to="/" replace />} />
 			</Routes>
 		</BrowserRouter>
