@@ -18,14 +18,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
+import json
+
+with open('/etc/saip.json') as f:
+    config = json.load(f)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6*fhta)-nmkd0_+^$1o*+1=5ezem4w)yd(2jqiv8j=a7onp-_j'
+SECRET_KEY = config['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+# SSL
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+
+ALLOWED_HOSTS = ['*']
+# pridat akademicku siet
 
 
 # Application definition
@@ -57,10 +68,12 @@ MIDDLEWARE = [
 ]
 
 # frontend url
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:5173",
+#     "http://127.0.0.1:5173",
+# ]
+# pridat akademicku siet
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'saip_be.urls'
 
@@ -89,9 +102,18 @@ ASGI_APPLICATION = "saip_ws.asgi.application"
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'saip',
+        'USER': 'saip_user',
+        'PASSWORD': config['DB_PASSWORD'],
+        'HOST': 'localhost',
+        'PORT': '',
+        'CONN_MAX_AGE': 600,
     }
 }
 
@@ -137,6 +159,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+import os
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -146,8 +171,52 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
 }
 
-REST_KNOX = {"TOKEN_TTL": timedelta(days=365),
+if not DEBUG:
+    REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] = (
+            "rest_framework.renderers.JSONRenderer",
+        )
+
+REST_KNOX = {"TOKEN_TTL": timedelta(minutes=10),
              "AUTO_REFRESH": True,
-             "TOKEN_LIMIT_PER_USER": None,
+             "TOKEN_LIMIT_PER_USER": 7,
              "MIN_REFRESH_INTERVAL": 60,
              "AUTH_HEADER_PREFIX": "Bearer"}
+
+import platform
+if platform.system() == 'Windows':
+    LOG_FILE = 'info.log'
+else:
+    LOG_FILE = '/var/log/saip/info.log'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': LOG_FILE,
+            'formatter': 'verbose'
+        },
+        'console': {
+            'level': 'ERROR',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
