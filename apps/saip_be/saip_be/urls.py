@@ -48,6 +48,5 @@ urlpatterns = [
     path('api/company_view/', CompanyView.as_view(), name='company_view'),
     path('api/list_games_ns/', GetNotStartedGamesView.as_view(), name='list_games_ns'),
     path('api/industry_view/', IndustryView.as_view(), name='industry_view'),
-    path('api/wstest/', RoomView.as_view(), name='websocket_room'),
     path('api/wstrigger/', NotifyTrigger.as_view(), name='websocket_trigger')
 ]

@@ -4,9 +4,6 @@ from rest_framework.response import Response
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
-class RoomView(TemplateView):
-    template_name = "room.html"
-
 class NotifyTrigger(APIView):
     def post(self, request) -> Response:
         channel_layer = get_channel_layer()
