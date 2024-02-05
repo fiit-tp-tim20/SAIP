@@ -4,19 +4,15 @@ import Slider from "../components/slider/Slider";
 import useCompanyStore from "../store/Company";
 import { getCompanyStats } from "../api/GetCompanyStats";
 import CompanyGraph from "../components/statisticsGraph/CompanyGraph";
-import { getTurn } from "../api/GetTurn";
 import getCompanyReport from "../api/GetCompanyReport";
 
 function Company() {
-	const token = localStorage.getItem("token");
-
-	const { data: turn } = useQuery({
-		queryKey: ["currentTurn"],
-		queryFn: () => token && getTurn(),
-	});
-
+	const turnn = localStorage.getItem("turn");
+	// @ts-ignore
+	const turn = parseInt(turnn, 10);
 	const { isLoading: statsIsLoading, data: statsData } = useQuery(["getCompanyStats"], getCompanyStats);
-	const { data: reportData } = useQuery(["companyReport", turn], () => getCompanyReport(turn.Number - 1));
+	// @ts-ignore
+	const { data: reportData } = useQuery(["companyReport", turn], () => getCompanyReport(turn - 1));
 
 	const {
 		productCount,

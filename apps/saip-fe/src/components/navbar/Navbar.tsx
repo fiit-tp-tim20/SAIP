@@ -1,17 +1,14 @@
 import React from "react";
-import { useQuery } from "react-query";
 import { useLocation } from "react-router";
-import { getTurn } from "../../api/GetTurn";
 import LinkTab from "./LinkTab";
 import Profile from "./Profile";
 
 function Navbar() {
 	const location = useLocation();
 
-	const { data, isLoading } = useQuery({
-		queryKey: ["currentTurn"],
-		queryFn: () => getTurn(),
-	});
+	const turnn = localStorage.getItem("turn");
+	// @ts-ignore
+	const data = parseInt(turnn, 10);
 
 	const tabs = [
 		{
@@ -47,7 +44,7 @@ function Navbar() {
 					))}
 				</ul>
 				<div className="flex flex-row gap-3 pr-3">
-					<p className="m-auto">Kolo {isLoading ? null : data?.Number}</p>
+					<p className="m-auto">Kolo {data}</p>
 					<Profile />
 				</div>
 			</div>
