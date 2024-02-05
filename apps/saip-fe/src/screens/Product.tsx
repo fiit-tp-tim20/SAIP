@@ -129,6 +129,7 @@ function Product() {
 										.filter((feature) => feature.status === "not started")
 										.map((feature) => (
 											<UpgradeInfo
+												// @ts-ignore
 												key={feature.id}
 												name={feature.name}
 												progressMax={feature.price}

@@ -25,7 +25,7 @@ function App() {
 	const [data, setData] = useState(null);
 	useEffect(() => {
 		// @ts-ignore
-		const chatSocket = new WebSocket("ws://127.0.0.1:8000/ws/turn_info/", ["token", token]);
+		const chatSocket = new WebSocket("ws://team23-23.studenti.fiit.stuba.sk/ws/turn_info/", ["token", token]);
 		chatSocket.onmessage = function (e) {
 			// @ts-ignore
 			console.log(e.data);
