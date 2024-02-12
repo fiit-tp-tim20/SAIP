@@ -315,7 +315,7 @@ class Company:
     def calculate_stock_price(self) -> float:  # 3
         self.stock_price = (
             self.factory.capital_investment
-            + self.balance * 0.2  # financial state
+            + self.balance * 0.4  # financial state
             + (self.ret_earnings + self.profit) * 0.3  # total profits
             - self.loans * 0.5  # long term debt
             + self.yield_agg_marketing_value()
