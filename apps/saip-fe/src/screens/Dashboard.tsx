@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 
 import CompanyReport from "../components/reports/CompanyReport";
 import IndustryReport from "../components/reports/IndustryReport";
+// @ts-ignore
+import  {MyContext}  from "../api/MyContext.js";
 
 function Plan() {
 	const [showCompanyReport, setShowCompanyReport] = useState(true);
 	// @ts-ignore
-	const currentTurn = parseInt(localStorage.getItem("turn"), 10);
-
+	const data = useContext(MyContext);
+	// @ts-ignore
+	const currentTurn = data.num
+	// @ts-ignore
+	console.log(currentTurn)
 	useEffect(() => {
 		// @ts-ignore
 		if (currentTurn === 1) {

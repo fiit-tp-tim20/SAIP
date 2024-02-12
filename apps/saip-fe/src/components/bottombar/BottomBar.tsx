@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import React, { useEffect } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router";
 import { totalSpentPersist } from "../../store/Atoms";
@@ -11,13 +11,31 @@ import useModal from "../modal/useModal";
 import BottomBarModal from "./BottomBarModal";
 import getGeneralInfo from "../../api/CompanyInfo";
 import endTurn from "../../api/EndTurn";
+// @ts-ignore
+import  {MyContext}  from "..//../api/MyContext.js";
 
 export default function BottomBar() {
+	const dataWs = useContext(MyContext);
 	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());
-	const committed = localStorage.getItem("committed");
+	// @ts-ignore
+	const [committed, setCommitted] = useState(false)
+	// @ts-ignore
+	useEffect(() => {
+		// @ts-ignore
+		console.log("data",dataWs.comm)
+		console.log("comm", committed)
+		if (dataWs.comm != committed){
+			setCommitted(!committed)
+		}
+		console.log("data",dataWs.comm)
+		console.log("comm", committed)
+
+	}, [dataWs]);
 	const { Modal, isShowing, setIsShowing, setElement } = useModal(<div />);
 
+	const { reset: resetCompanyState } = useCompanyStore();
 	const { reset: resetUpgradeState } = useUpgradesStore();
+	const { reset: resetMarketingState } = useMarketingStore();
 
 	const {
 		getSum: getSumMarketing,
@@ -57,9 +75,12 @@ export default function BottomBar() {
 		};
 		await endTurn(gameState);
 		resetUpgradeState();
+		resetCompanyState();
+		resetMarketingState();
 	};
 
 	const handleModalSubmit = async () => {
+		setCommitted(!committed)
 		setIsShowing(false);
 		await handleEndTurn();
 	};
@@ -75,7 +96,7 @@ export default function BottomBar() {
 			<div className="fixed bottom-2 right-2 z-40">
 				{!isLoading ? (
 					<div className="bg-white px-3 py-1 rounded-lg border-2 accent-700-border">
-						{committed === "true" ? (
+						{committed ? (
 							<p className="text-center font-medium p-3">Čaká sa na ostatných hráčov</p>
 						) : (
 							<div className="flex flex-row gap-8 items-center">
@@ -102,8 +123,7 @@ export default function BottomBar() {
 									disabled={
 										totalSpent > data.budget_cap ||
 										!getCheckedCompany() ||
-										!getCheckedMarketing() ||
-										committed === "true"
+										!getCheckedMarketing() || committed
 									}
 								>
 									Ukončiť kolo

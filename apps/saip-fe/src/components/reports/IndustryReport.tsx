@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
 import { useQuery } from "react-query";
 import getIndustryReport, { IndustryReport as IndustryReportType } from "../../api/GetIndustryReport";
 import { getIndustryGraphData } from "../../api/GetIndustryGraphData";
 import IndustryGraph from "../statisticsGraph/IndustryGraph";
 import numberWithSpaces from "../../utils/numberWithSpaces";
+// @ts-ignore
+import {MyContext} from "../../api/MyContext.js";
 
 const sortByStockPrice = (a: IndustryReportType, b: IndustryReportType) => {
 	if (!a.stock_price) return 1;
@@ -15,10 +17,10 @@ const sortByStockPrice = (a: IndustryReportType, b: IndustryReportType) => {
 };
 
 function IndustryReport() {
-	const turnn = localStorage.getItem("turn");
+	const dataWs = useContext(MyContext);
 	// @ts-ignore
 	// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle
-	const _turn = parseInt(turnn, 10);
+	const _turn = dataWs.num
 
 	const [turn, setTurn] = useState<number>(_turn - 1);
 

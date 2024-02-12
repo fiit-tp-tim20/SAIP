@@ -422,9 +422,8 @@ def checkCommitted(turn: Turn, end: bool = True) -> bool:
 
     if end and auto_end:
         new_turn = end_turn(turn)
-        y = {"Number": new_turn.number, "Start":  new_turn.start, "Committed": "false"}
-        broadcast_message(y) # toto je v poriadku, vsetkym pride sprava o tom, ze je nove kolo
-
+        y = {"Number": new_turn.number, "Start": new_turn.start, "Committed": False}
+        broadcast_message(y)  # toto je v poriadku, vsetkym pride sprava o tom, ze je nove kolo
 
     return True
 
@@ -566,7 +565,7 @@ class PostSpendingsView(APIView):
         company_state.committed = True
         company_state.save()
 
-        checkCommitted(last_turn) # checks if all companies are committed
+        checkCommitted(last_turn)  # checks if all companies are committed
 
         return Response(status=201)
 

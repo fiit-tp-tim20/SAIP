@@ -23,7 +23,7 @@ from saip_api.views.GameManagement import CreateGameView, GetRunningGamesView, E
 from saip_api.views.CompanyManagement import CreateCompanyView, PostSpendingsView, CompanyInfo, CompanyReport, TurnInfoView, Committed, IndustryReport, MarketingView, CompanyView, IndustryView
 from knox.views import LogoutView
 
-from saip_api.views.TestWebSocket import RoomView, NotifyTrigger
+from saip_api.views.TestWebSocket import NotifyTrigger
 
 
 urlpatterns = [
