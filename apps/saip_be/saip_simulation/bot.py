@@ -150,14 +150,13 @@ class Bot(ABC):
 
     def capital_bonus_investments(self,**kwargs):
         p_capacity = self.production_capacity
-        inventory_count = kwargs.get("inventory_count")
 
-        #coef pre HB
-        v_coef = 0.45
-        m_coef = 0.80
+        inventory_count = kwargs.get("inventory_count")
+        m_coef = kwargs.get("m_coef")
+        v_coef = kwargs.get("v_coef")
 
         #priklad kedy bonus = 10000
-        bonus = 10000
+        bonus = self.bonus_spendable_cash
 
         if(inventory_count < p_capacity):
             return bonus * m_coef
@@ -364,7 +363,6 @@ class LowPriceStrategyBot(Bot):
     name: float = "LowPriceStrategyBot"
     type: str = 'L'
 
-
     def calculate_inventory_coef (self, **kwargs):
         inventory_count = kwargs.get("inventory_count")
         inventory_coef = inventory_count / 10000 if inventory_count < 10000 else 1
@@ -405,6 +403,8 @@ class LowPriceStrategyBot(Bot):
         volume = self.calculate_production_volume(production_rate=0.9)
         self.decisions["production"]["sell_price"] = round(price)
         self.decisions["production"]["volume"] = volume
+
+        self.capital_bonus_investments(v_coef=0.85, m_coef=1, inventory_count=self.inventory_count)
 
 
     def end_turn(self):
@@ -512,6 +512,8 @@ class AveragePriceStrategyBot(Bot):
         self.decisions["production"]["sell_price"] = round(price)
         self.decisions["production"]["volume"] = volume
 
+        self.capital_bonus_investments(v_coef=0.65, m_coef=0.9, inventory_count=self.inventory_count)
+
 
 
 
@@ -572,6 +574,7 @@ class HighPriceStrategyBot(Bot):
         self.decisions["production"]["sell_price"] = round(price)
         self.decisions["production"]["volume"] = volume
 
+        self.capital_bonus_investments(v_coef=0.45, m_coef=0.8, inventory_count=self.inventory_count)
 
 
 
