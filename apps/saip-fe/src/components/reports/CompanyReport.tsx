@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { useQuery } from "react-query";
 import getCompanyReport from "../../api/GetCompanyReport";
 import numberWithSpaces from "../../utils/numberWithSpaces";
+// @ts-ignore
+import {MyContext} from "../../api/MyContext.js";
 
 function CompanyReport() {
-	const TURN = localStorage.getItem("turn");
+	const dataWs = useContext(MyContext);
+	useEffect(() => {
+
+	}, []);
+	// @ts-ignore
+	const TURN = dataWs.num
 	// @ts-ignore
 	// eslint-disable-next-line @typescript-eslint/naming-convention
-	const current_turn = parseInt(TURN, 10);
 	// @ts-ignore
-	const [turn, setTurn] = useState<number>(current_turn - 1);
+	const [turn, setTurn] = useState<number>(dataWs.num - 1);
 	const { isLoading, data } = useQuery(["companyReport", turn], () => getCompanyReport(turn));
 
 	return (

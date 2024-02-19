@@ -1,14 +1,15 @@
-import React from "react";
+import React, {useContext} from "react";
 import { useLocation } from "react-router";
 import LinkTab from "./LinkTab";
 import Profile from "./Profile";
-
+// @ts-ignore
+import  {MyContext}  from "..//../api/MyContext.js";
 function Navbar() {
 	const location = useLocation();
 
-	const turnn = localStorage.getItem("turn");
+	const dataWs = useContext(MyContext);
 	// @ts-ignore
-	const data = parseInt(turnn, 10);
+	const data = dataWs.num
 
 	const tabs = [
 		{

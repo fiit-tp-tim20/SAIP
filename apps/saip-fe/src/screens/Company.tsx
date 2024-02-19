@@ -5,11 +5,14 @@ import useCompanyStore from "../store/Company";
 import { getCompanyStats } from "../api/GetCompanyStats";
 import CompanyGraph from "../components/statisticsGraph/CompanyGraph";
 import getCompanyReport from "../api/GetCompanyReport";
+import { useContext } from 'react';
+// @ts-ignore
+import  {MyContext}  from "../api/MyContext.js";
 
 function Company() {
-	const turnn = localStorage.getItem("turn");
+	const data = useContext(MyContext);
 	// @ts-ignore
-	const turn = parseInt(turnn, 10);
+	const turn = data.num
 	const { isLoading: statsIsLoading, data: statsData } = useQuery(["getCompanyStats"], getCompanyStats);
 	// @ts-ignore
 	const { data: reportData } = useQuery(["companyReport", turn], () => getCompanyReport(turn - 1));
