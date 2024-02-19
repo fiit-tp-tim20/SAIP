@@ -71,9 +71,23 @@ def create_turn(number: int, game: Game) -> Turn:
         prev_td.save()
 
     companies = Company.objects.filter(game=game)
-
     for company in companies:
         create_company_state(company, turn)
+    
+    if turn.number != 0:
+        print("kolo: ",turn.number + 1)
+        bots = Bots.objects.filter(game=game)
+        for bot in bots:
+            if bot.type == 'L':
+                bot_curr = LowPriceStrategyBot()
+            elif bot.type == 'H':
+                bot_curr = HighPriceStrategyBot()
+            else:
+                bot_curr = AveragePriceStrategyBot()
+
+            bot_curr.token = bot.token
+            print("Playing turn number: " + str(turn.number + 1))
+            bot_curr.play_turn(turn_number=turn.number + 1)
 
     return turn
 
@@ -239,19 +253,7 @@ def end_turn(turn: Turn) -> Turn:
             bot.save()
 
 
-    if turn.number != 0:
-        print("kolo: ",turn.number)
-        bots = Bots.objects.filter(game=game)
-        for bot in bots:
-            if bot.type == 'L':
-                bot_curr = LowPriceStrategyBot()
-            elif bot.type == 'H':
-                bot_curr = HighPriceStrategyBot()
-            else:
-                bot_curr = AveragePriceStrategyBot()
 
-            bot_curr.token = bot.token
-            bot_curr.play_turn(turn_number=turn.number)
 
 
     if turn.number != 0:
@@ -277,8 +279,19 @@ def end_turn(turn: Turn) -> Turn:
                 state.marketing.save()
                 state.save()
 
+    print("Creating turn" + str(turn.number + 1))
     new_turn = create_turn(turn.number + 1, game)
     calculate_man_cost(game, new_turn)
+
+    # TODO
+    # if turn.number >= 1:
+    #     with transaction.atomic():
+    #         new_turn_number = turn.number + 1
+    #         check_new_turn = Turn.objects.select_for_update().filter(game=game, number = turn.number).first()
+    #         if check_new_turn.end is not None:
+    #             return
+    #         turn.end = timezone.now()
+    #         turn.save()
 
     if turn.number != 0:
         prev_turn = Turn.objects.get(game=game, number=turn.number - 1)
