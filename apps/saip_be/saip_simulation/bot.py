@@ -147,6 +147,12 @@ class Bot(ABC):
 
         return int(production_rate * self.production_capacity)
 
+    def capital_bonus_investments(self,**kwargs):
+        p_capacity = self.production_capacity
+
+
+
+
     def make_decisions(self):
         pass
 
