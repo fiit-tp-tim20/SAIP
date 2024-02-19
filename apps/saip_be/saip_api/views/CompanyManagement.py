@@ -143,7 +143,7 @@ class CompanyInfo(APIView):
                 "id": company.id,
                 'name': company.name,
                 'budget_cap': budget,
-                'bonus_spendable_cash': bonus_spendable_cash
+                'bonus_spendable_cash': round(bonus_spendable_cash, 2)
             }, status=200)
 
 
