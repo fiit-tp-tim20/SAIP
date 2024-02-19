@@ -159,16 +159,11 @@ class Bot(ABC):
         bonus = self.bonus_spendable_cash
 
         if(inventory_count < p_capacity):
-            return bonus * m_coef
-
+            return round(bonus * m_coef)
         elif (inventory_count > 2 * p_capacity):
             return 0
-
         else:
-            return bonus * v_coef
-
-
-
+            return round(bonus * v_coef)
 
 
     def make_decisions(self):
@@ -392,7 +387,8 @@ class LowPriceStrategyBot(Bot):
 
         # "capital investments"
         capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
-        self.decisions["factory"]["capital"] = capital_investments
+        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.85, m_coef=1, inventory_count=self.inventory_count)
+        self.decisions["factory"]["capital"] = capital_investments + capital_investments_bonus
 
         # marketing investments
         viral_investments = self.calculate_marketing_investments(other_investments=capital_investments)
@@ -403,8 +399,6 @@ class LowPriceStrategyBot(Bot):
         volume = self.calculate_production_volume(production_rate=0.9)
         self.decisions["production"]["sell_price"] = round(price)
         self.decisions["production"]["volume"] = volume
-
-        self.capital_bonus_investments(v_coef=0.85, m_coef=1, inventory_count=self.inventory_count)
 
 
     def end_turn(self):
@@ -500,7 +494,8 @@ class AveragePriceStrategyBot(Bot):
 
         # "capital investments"
         #capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
-        self.decisions["factory"]["capital"] = capital_value
+        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.65, m_coef=0.9, inventory_count=self.inventory_count)
+        self.decisions["factory"]["capital"] = capital_value + capital_investments_bonus
 
         # marketing investments
         #viral_investments = self.calculate_marketing_investments(other_investments=marketing_value)
@@ -511,11 +506,6 @@ class AveragePriceStrategyBot(Bot):
         volume = self.calculate_production_volume(production_rate=0.9)
         self.decisions["production"]["sell_price"] = round(price)
         self.decisions["production"]["volume"] = volume
-
-        self.capital_bonus_investments(v_coef=0.65, m_coef=0.9, inventory_count=self.inventory_count)
-
-
-
 
 
 @dataclass
@@ -560,8 +550,8 @@ class HighPriceStrategyBot(Bot):
 
         # "capital investments"
         #capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
-        self.decisions["factory"]["capital"] = capital_value
-
+        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.45, m_coef=0.8, inventory_count=self.inventory_count)
+        self.decisions["factory"]["capital"] = capital_value + capital_investments_bonus
 
 
         # marketing investments
@@ -573,11 +563,6 @@ class HighPriceStrategyBot(Bot):
         volume = self.calculate_production_volume(production_rate=0.9)
         self.decisions["production"]["sell_price"] = round(price)
         self.decisions["production"]["volume"] = volume
-
-        self.capital_bonus_investments(v_coef=0.45, m_coef=0.8, inventory_count=self.inventory_count)
-
-
-
 
         """""
         self.decisions["brakes"] = upgrades_decision[18000]
