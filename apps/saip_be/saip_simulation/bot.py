@@ -78,6 +78,7 @@ class Bot(ABC):
     name: float = "Bot"
     type: str = 'B'
     total_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
+    bonus_spendable_cash: float = 0
     # capital_investment: int = 0
     # marketing_investments: dict[str, int] = field(default_factory=dict)
     # upgrade_investments: int = 0
@@ -284,6 +285,21 @@ class Bot(ABC):
         else:
             print("Response content:", response.text)
 
+    def get_company_info(self, **kwargs):
+        turn_number = kwargs.get("turn_number")
+        url = VITE_BACKEND_URL + "/company_info/"
+        headers = {
+            "Authorization": f"Bearer {self.token}",
+            "Content-Type": "application/json",
+        }
+        params = {"turn": str(turn_number)}
+        response = requests.get(url, headers=headers, params=params)
+
+        if response.status_code == 200:
+            self.bonus_spendable_cash = response.json().get("bonus_spendable_cash")
+        else:
+            print("Response content:", response.text)
+
     def get_industry_report(self,**kwargs):
         turn_number = kwargs.get("turn_number")
         url = VITE_BACKEND_URL + "/industry_report/"
@@ -336,6 +352,7 @@ class Bot(ABC):
         turn_number = kwargs.get("turn_number")
         if self.get_committed_status(turn_number=turn_number) is False:
             self.get_company_report(turn_number=turn_number - 1)
+            self.get_company_info(turn_number=turn_number - 1)
             if turn_number > 1:
                 self.get_industry_report(turn_number=turn_number - 1)
                 self.get_upgrades(turn_number=turn_number - 1)
