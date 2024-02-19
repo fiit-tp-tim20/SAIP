@@ -149,6 +149,24 @@ class Bot(ABC):
 
     def capital_bonus_investments(self,**kwargs):
         p_capacity = self.production_capacity
+        inventory_count = kwargs.get("inventory_count")
+
+        #coef pre HB
+        v_coef = 0.45
+        m_coef = 0.80
+
+        #priklad kedy bonus = 10000
+        bonus = 10000
+
+        if(inventory_count < p_capacity):
+            return bonus * m_coef
+
+        elif (inventory_count > 2 * p_capacity):
+            return 0
+
+        else:
+            return bonus * v_coef
+
 
 
 
