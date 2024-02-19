@@ -71,7 +71,7 @@ class Simulation:
                 "loan_limit": CompanyPreset.DEFAULT_LOAN_LIMIT,
             }
         return
-    
+
     def __setup_game_parameters(self) -> None:
         game_parameters_model = self.game_model.parameters
         if game_parameters_model is not None:
@@ -117,14 +117,14 @@ class Simulation:
                 if (
                     market_state_model.demand is not None
                     and market_state_model.demand
-                    > config.MarketPreset.STARTING_CUSTOMER_COUNT
+                    > config.MarketPreset.STARTING_CUSTOMER_COUNT * len(self.companies)
                 )
-                else config.MarketPreset.STARTING_CUSTOMER_COUNT,
+                else config.MarketPreset.STARTING_CUSTOMER_COUNT * len(self.companies),
             )
         except models.MarketState.DoesNotExist:
             self.market = Market(
                 companies=self.companies.values(),
-                customer_count=config.MarketPreset.STARTING_CUSTOMER_COUNT,
+                customer_count=config.MarketPreset.STARTING_CUSTOMER_COUNT * len(self.companies),
             )  # TODO: companies is aleady a dict, we dont have to generate it in market object
         print("Simulation was set up without any errors!")
         return
@@ -158,7 +158,7 @@ class Simulation:
             pt_company_state = None
             print(f"CompaniesState FOR PREV TURN WAS NONE FOR COMPANY {company_model.name}")
 
-        # setup values that are passed into the company constructor 
+        # setup values that are passed into the company constructor
         init_brand = company_model.name
         if company_state is not None:
             init_max_budget = self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN) if company_state.cash > self.game_parameters.get("budget_cap", CompanyPreset.DEFAULT_BUDGET_PER_TURN) else (company_state.cash if company_state.cash > 0 else 0)
@@ -228,7 +228,7 @@ class Simulation:
             prev_turn_prod_ppu = init_prev_turn_prod_ppu,
             prev_turn_total_ppu = init_prev_turn_total_ppu,
             prev_turn_inventory = init_prev_turn_inventory,
-            
+
             capital_investment_this_turn = init_capital_investment_this_turn,
             marketing = init_marketing,
             inventory_queue = self.__create_inventory(company_model=company_model),
@@ -273,7 +273,7 @@ class Simulation:
             else FactoryPreset.BASE_ENERGY_COST
         )
         return new_factory
-    
+
 
     def __create_inventory(self, company_model: models.Company) -> list:
         try:
@@ -281,7 +281,7 @@ class Simulation:
                 company=company_model
             )
         except models.Inventory.DoesNotExist:
-            return []   
+            return []
         inventories = []
         for inventory_model in inventory_models:
             inventory_dict = {
@@ -291,7 +291,7 @@ class Simulation:
             }
             inventories.append(inventory_dict)
         if inventories != []:
-            inventories = sorted(inventories, key=lambda d: d["turn_num"]) 
+            inventories = sorted(inventories, key=lambda d: d["turn_num"])
         return inventories
 
     def __create_product(
@@ -438,7 +438,7 @@ class Simulation:
                     inventory_model.delete()
 
             except models.Inventory.DoesNotExist:
-                if inventory["turn_num"] == self.current_turn and inventory["unit_count"] > 0: 
+                if inventory["turn_num"] == self.current_turn and inventory["unit_count"] > 0:
                     new_inventory_model = models.Inventory(
                         company=company_model,
                         unit_count=inventory["unit_count"],
@@ -458,16 +458,16 @@ class Simulation:
         #except:
         #    pass
 
-                
+
     def __write_current_turn_company_state(self, company_class_object: Company, ct_company_state_model: models.CompaniesState) -> None:
-        
+
         ct_company_state_model.cash = company_class_object.balance
         ct_company_state_model.stock_price = company_class_object.stock_price
         ct_company_state_model.inventory = company_class_object.inventory_count
         ct_company_state_model.orders_received = self.market.customer_distribution[company_class_object.brand]["demand"]
         ct_company_state_model.orders_fulfilled = company_class_object.units_sold
         ct_company_state_model.ret_earnings = company_class_object.ret_earnings + company_class_object.profit_after_tax
-        ct_company_state_model.net_profit = company_class_object.profit_after_tax 
+        ct_company_state_model.net_profit = company_class_object.profit_after_tax
         ct_company_state_model.depreciation = company_class_object.factory.upkeep.get("writeoff", 0)
         ct_company_state_model.new_loans = company_class_object.new_loans
         ct_company_state_model.inventory_charge = company_class_object.value_paid_in_inventory_charge
@@ -482,6 +482,7 @@ class Simulation:
         ct_company_state_model.loans = company_class_object.loans
         ct_company_state_model.inventory_upgrade = company_class_object.value_paid_in_stored_product_upgrades
         ct_company_state_model.overcharge_upgrade = 0 #company_class_object.price_diff_stored_products #TODO: change this
+        ct_company_state_model.inventory_money = company_class_object.inventory_money
 
         if ct_company_state_model.production is not None:
             ct_company_state_model.production.man_cost = company_class_object.prod_ppu
@@ -489,12 +490,12 @@ class Simulation:
             ct_company_state_model.production.volume = company_class_object.production_volume
             ct_company_state_model.production.save()
         if ct_company_state_model.factory is not None:
-            ct_company_state_model.factory.capacity = company_class_object.factory.capacity 
+            ct_company_state_model.factory.capacity = company_class_object.factory.capacity
             ct_company_state_model.factory.capital_investments = company_class_object.factory.capital_investment
             ct_company_state_model.factory.save()
         ct_company_state_model.save()
         return
-    
+
     def __write_next_turn_company_state(self, company_class_object: Company, nt_company_state_model: models.CompaniesState) -> None:
         nt_company_state_model.cash = company_class_object.balance #CHANGED after balance became cash (in models)
         nt_company_state_model.inventory = company_class_object.inventory_count

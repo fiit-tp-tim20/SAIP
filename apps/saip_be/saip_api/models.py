@@ -7,6 +7,9 @@ class GameParameters(models.Model):
     depreciation = models.FloatField(default=0.0125)
     base_man_cost = models.PositiveIntegerField(default=250)
     base_capital = models.PositiveIntegerField(default=40000)
+    number_of_low_price_bots = models.PositiveIntegerField(default=3)
+    number_of_avg_price_bots = models.PositiveIntegerField(default=3)
+    number_of_high_price_bots = models.PositiveIntegerField(default=3)
     end_turn_on_committed = models.BooleanField(default=True)
 
     class Meta:
@@ -172,6 +175,7 @@ class CompaniesState(models.Model):
     inventory_upgrade = models.FloatField(null=True, default=0)
     overcharge_upgrade = models.FloatField(null=True, default=0)
     sold_man_cost = models.FloatField(null=True, default=0)  # vyrobne naklady na predane vyrobky
+    inventory_money = models.FloatField(null=True, default=0)  # Zásoby
 
     def __str__(self):
         return f"{self.company} - {self.turn}"
@@ -199,7 +203,7 @@ class MarketState(models.Model):
 class Inventory(models.Model):
     company = models.ForeignKey(Company, models.CASCADE, null=True)
     unit_count = models.PositiveIntegerField(null=True)
-    price_per_unit = models.PositiveIntegerField(null=True)
+    price_per_unit = models.FloatField(null=True)
     turn_num = models.PositiveIntegerField(null=True)
 
     def __str__(self):
@@ -223,3 +227,15 @@ class TeacherDecisions(models.Model):
     class Meta:
         db_table = "Teacher Decisions"
         verbose_name_plural = "Teacher Decisions"
+
+
+class Bots(models.Model):
+    game = models.ForeignKey(Game, models.CASCADE, null=True)
+    token = models.CharField(max_length=64, null=True)
+    type = models.CharField(max_length=1, default="L")
+
+    def __str__(self):
+        return f"{self.game} - {self.token}"
+
+    class Meta:
+        db_table = "Bots"
