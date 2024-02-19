@@ -159,6 +159,7 @@ class CompaniesState(models.Model):
     cash = models.FloatField(
         null=True, default=10000
     )  # celkovo dostupných prostriedkov
+    bonus_spendable_cash = models.FloatField(null=True, default=0)
     ret_earnings = models.FloatField(null=True, default=0)
     net_profit = models.FloatField(null=True, blank=True)  # za kolo
     depreciation = models.FloatField(null=True, blank=True)
@@ -220,6 +221,7 @@ class TeacherDecisions(models.Model):
     tax_rate = models.FloatField(null=True, default=0.21)
     inflation = models.FloatField(null=True, default=0)
     loan_limit = models.FloatField(null=True, default=200000)
+    bonus_spendable_cash_increase_rate = models.FloatField(null=True, default=0.1)
 
     def __str__(self):
         return f"Teacher Decisions - {self.turn}"
