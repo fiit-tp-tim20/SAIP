@@ -24,9 +24,11 @@ export default function BottomBar() {
 		// @ts-ignore
 		console.log("data",dataWs.comm)
 		console.log("comm", committed)
+		// @ts-ignore
 		if (dataWs.comm != committed){
 			setCommitted(!committed)
 		}
+		// @ts-ignore
 		console.log("data",dataWs.comm)
 		console.log("comm", committed)
 

@@ -259,6 +259,25 @@ class CompanyReport(APIView):
         company_state_previous = CompaniesState.objects.get(
             turn=Turn.objects.get(game=company.game, number=turn.number), company=company)
         marketing = company_state_previous.marketing.billboard + company_state_previous.marketing.tv + company_state_previous.marketing.viral + company_state_previous.marketing.podcast + company_state_previous.marketing.ooh
+        marketing_dict = dict()
+        tele = []
+        viral = []
+        bilb = []
+        ooh = []
+        podc = []
+        for i in range(1, turn.number+1):
+            company_state_new = CompaniesState.objects.get(
+                turn=Turn.objects.get(game=company.game, number=i), company=company)
+            tele.append(company_state_new.marketing.tv)
+            viral.append(company_state_new.marketing.viral)
+            bilb.append(company_state_new.marketing.billboard)
+            ooh.append(company_state_new.marketing.ooh)
+            podc.append(company_state_new.marketing.podcast)
+        marketing_dict['tv'] = tele
+        marketing_dict['viral'] = viral
+        marketing_dict['billboard'] = bilb
+        marketing_dict['ooh'] = ooh
+        marketing_dict['podcast'] = podc
 
         try:
             state2ago = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn.number - 1),
@@ -386,7 +405,7 @@ class CompanyReport(APIView):
                                                2) if company_state_previous.net_profit is not None else "N/A"  # "Výsledok hospodárenia po zdanení"
 
         return Response({"production": production, "sales": sales, 'balance': balance, 'cash_flow': cash_flow,
-                         'income_statement': income_statement}, status=200)
+                         'income_statement': income_statement, "marketing": marketing_dict}, status=200)
 
 
 class CreateCompanyView(APIView):
