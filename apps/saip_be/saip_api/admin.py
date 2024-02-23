@@ -54,7 +54,7 @@ class MarketStateAdmin(admin.ModelAdmin):
 
 @admin.register(TeacherDecisions)
 class TeacherDecisions(admin.ModelAdmin):
-    list_display = ('__str__', 'interest_rate', 'tax_rate', 'inflation', 'loan_limit')
+    list_display = ('__str__', 'interest_rate', 'tax_rate', 'inflation', 'loan_limit', 'bonus_spendable_cash_increase_rate')
     list_filter = ('turn__game', 'turn__game__admin')
 
 @admin.register(Game)

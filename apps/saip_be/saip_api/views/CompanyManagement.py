@@ -122,16 +122,27 @@ class CompanyInfo(APIView):
         last_turn = get_last_turn(company.game)
         previous_turn = Turn.objects.get(game=company.game, number=last_turn.number - 1)
         company_state = CompaniesState.objects.get(turn=previous_turn, company=company)
-        state = CompaniesState.objects.get(turn=last_turn, company=company)
+        teacher_decisions = TeacherDecisions.objects.get(turn=previous_turn)
+
+        bonus_spendable_cash = 0
+        if company_state.ret_earnings > 0:
+            bonus_spendable_cash = company_state.ret_earnings * teacher_decisions.bonus_spendable_cash_increase_rate
+
+        # print("asd", bonus_spendable_cash, company_state.ret_earnings)
 
         if company_state.cash >= 10000:
-            print(company_state.cash)
             budget = 10000
         elif company_state.cash < 0:
             budget = 0
         else:
             budget = company_state.cash
-        return Response({"id": company.id, 'name': company.name, 'budget_cap': budget}, status=200)
+        return Response(
+            {
+                "id": company.id,
+                'name': company.name,
+                'budget_cap': budget,
+                'bonus_spendable_cash': round(bonus_spendable_cash, 2)
+            }, status=200)
 
 
 class IndustryReport(APIView):

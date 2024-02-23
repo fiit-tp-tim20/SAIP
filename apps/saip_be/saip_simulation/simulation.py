@@ -62,6 +62,7 @@ class Simulation:
                 "tax_rate": teacher_decisions_model.tax_rate if teacher_decisions_model.tax_rate is not None else CompanyPreset.DEFAULT_TAX_RATE,
                 "inflation": teacher_decisions_model.inflation if teacher_decisions_model.inflation is not None else FactoryPreset.BASE_INFLATION,
                 "loan_limit": teacher_decisions_model.loan_limit if teacher_decisions_model.loan_limit is not None else CompanyPreset.DEFAULT_LOAN_LIMIT,
+                "bonus_spendable_cash_increase_rate": teacher_decisions_model.loan_limit if teacher_decisions_model.loan_limit is not None else CompanyPreset.DEFAULT_LOAN_LIMIT,
             }
         except models.TeacherDecisions.DoesNotExist:
             self.teacher_decisions = {

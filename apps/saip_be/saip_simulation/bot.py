@@ -78,6 +78,7 @@ class Bot(ABC):
     name: float = "Bot"
     type: str = 'B'
     total_budget: float = CompanyPreset.DEFAULT_BUDGET_PER_TURN
+    bonus_spendable_cash: float = 0
     # capital_investment: int = 0
     # marketing_investments: dict[str, int] = field(default_factory=dict)
     # upgrade_investments: int = 0
@@ -146,6 +147,24 @@ class Bot(ABC):
         production_rate = kwargs.get("production_rate")
 
         return int(production_rate * self.production_capacity)
+
+    def capital_bonus_investments(self,**kwargs):
+        p_capacity = self.production_capacity
+
+        inventory_count = kwargs.get("inventory_count")
+        m_coef = kwargs.get("m_coef")
+        v_coef = kwargs.get("v_coef")
+
+        #priklad kedy bonus = 10000
+        bonus = self.bonus_spendable_cash
+
+        if(inventory_count < p_capacity):
+            return round(bonus * m_coef)
+        elif (inventory_count > 2 * p_capacity):
+            return 0
+        else:
+            return round(bonus * v_coef)
+
 
     def make_decisions(self):
         pass
@@ -260,6 +279,21 @@ class Bot(ABC):
         else:
             print("Response content:", response.text)
 
+    def get_company_info(self, **kwargs):
+        turn_number = kwargs.get("turn_number")
+        url = VITE_BACKEND_URL + "/company_info/"
+        headers = {
+            "Authorization": f"Bearer {self.token}",
+            "Content-Type": "application/json",
+        }
+        params = {"turn": str(turn_number)}
+        response = requests.get(url, headers=headers, params=params)
+
+        if response.status_code == 200:
+            self.bonus_spendable_cash = response.json().get("bonus_spendable_cash")
+        else:
+            print("Response content:", response.text)
+
     def get_industry_report(self,**kwargs):
         turn_number = kwargs.get("turn_number")
         url = VITE_BACKEND_URL + "/industry_report/"
@@ -312,6 +346,7 @@ class Bot(ABC):
         turn_number = kwargs.get("turn_number")
         if self.get_committed_status(turn_number=turn_number) is False:
             self.get_company_report(turn_number=turn_number - 1)
+            self.get_company_info(turn_number=turn_number - 1)
             if turn_number > 1:
                 self.get_industry_report(turn_number=turn_number - 1)
                 self.get_upgrades(turn_number=turn_number - 1)
@@ -322,7 +357,6 @@ class Bot(ABC):
 class LowPriceStrategyBot(Bot):
     name: float = "LowPriceStrategyBot"
     type: str = 'L'
-
 
     def calculate_inventory_coef (self, **kwargs):
         inventory_count = kwargs.get("inventory_count")
@@ -353,7 +387,8 @@ class LowPriceStrategyBot(Bot):
 
         # "capital investments"
         capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
-        self.decisions["factory"]["capital"] = capital_investments
+        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.85, m_coef=1, inventory_count=self.inventory_count)
+        self.decisions["factory"]["capital"] = capital_investments + capital_investments_bonus
 
         # marketing investments
         viral_investments = self.calculate_marketing_investments(other_investments=capital_investments)
@@ -459,7 +494,8 @@ class AveragePriceStrategyBot(Bot):
 
         # "capital investments"
         #capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
-        self.decisions["factory"]["capital"] = capital_value
+        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.65, m_coef=0.9, inventory_count=self.inventory_count)
+        self.decisions["factory"]["capital"] = capital_value + capital_investments_bonus
 
         # marketing investments
         #viral_investments = self.calculate_marketing_investments(other_investments=marketing_value)
@@ -470,9 +506,6 @@ class AveragePriceStrategyBot(Bot):
         volume = self.calculate_production_volume(production_rate=0.9)
         self.decisions["production"]["sell_price"] = round(price)
         self.decisions["production"]["volume"] = volume
-
-
-
 
 
 @dataclass
@@ -517,8 +550,8 @@ class HighPriceStrategyBot(Bot):
 
         # "capital investments"
         #capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
-        self.decisions["factory"]["capital"] = capital_value
-
+        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.45, m_coef=0.8, inventory_count=self.inventory_count)
+        self.decisions["factory"]["capital"] = capital_value + capital_investments_bonus
 
 
         # marketing investments
@@ -530,10 +563,6 @@ class HighPriceStrategyBot(Bot):
         volume = self.calculate_production_volume(production_rate=0.9)
         self.decisions["production"]["sell_price"] = round(price)
         self.decisions["production"]["volume"] = volume
-
-
-
-
 
         """""
         self.decisions["brakes"] = upgrades_decision[18000]

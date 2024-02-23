@@ -54,10 +54,12 @@ export default function BottomBar() {
 	const navigate = useNavigate();
 
 	const [totalSpent, setTotalSpent] = useAtom(totalSpentPersist);
+	// const [totalSpentBonus, setTotalSpentBonus] = useAtom(totalSpentPersistBonus);
 
 	useEffect(() => {
 		setTotalSpent(getSumUpgrades() + capitalInvestments + getSumMarketing());
 	}, [getSumUpgrades(), capitalInvestments, getSumMarketing()]);
+
 
 	const handleEndTurn = async () => {
 		const gameState: GameState = {
@@ -104,10 +106,11 @@ export default function BottomBar() {
 							<div className="flex flex-row gap-8 items-center">
 								<p
 									className={`text-center font-medium ${
-										totalSpent > data.budget_cap ? "text-red-600" : ""
+										totalSpent > data.budget_cap ? "text-red-600" : "",
+										totalSpent > data.budget_cap + data.bonus_spendable_cash ? "text-red-600" : ""
 									}`}
 								>
-									Rozpočet: {totalSpent}/{data.budget_cap}€
+									Rozpočet: {totalSpent}/{data.budget_cap}€ + ({data.bonus_spendable_cash}€)
 								</p>
 								<button type="button" onClick={() => navigate("/product")} className="button-clear">
 									Produkt: ✅
@@ -123,7 +126,8 @@ export default function BottomBar() {
 									onClick={openModal}
 									className="button-dark font-bold py-2 px-4 rounded-lg disabled:cursor-not-allowed"
 									disabled={
-										totalSpent > data.budget_cap ||
+										totalSpent - capitalInvestments > data.budget_cap ||
+										totalSpent > data.budget_cap + data.bonus_spendable_cash ||
 										!getCheckedCompany() ||
 										!getCheckedMarketing() || committed
 									}
