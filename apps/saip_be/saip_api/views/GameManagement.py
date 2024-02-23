@@ -73,9 +73,9 @@ def create_turn(number: int, game: Game) -> Turn:
     companies = Company.objects.filter(game=game)
     for company in companies:
         create_company_state(company, turn)
-    
+
     if turn.number != 0:
-        print("kolo: ",turn.number + 1)
+        print("kolo: ",turn.number)
         bots = Bots.objects.filter(game=game)
         for bot in bots:
             if bot.type == 'L':
@@ -86,8 +86,8 @@ def create_turn(number: int, game: Game) -> Turn:
                 bot_curr = AveragePriceStrategyBot()
 
             bot_curr.token = bot.token
-            print("Playing turn number: " + str(turn.number + 1))
-            bot_curr.play_turn(turn_number=turn.number + 1)
+            print("Playing turn number: " + str(turn.number))
+            bot_curr.play_turn(turn_number=turn.number)
 
     return turn
 
