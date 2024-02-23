@@ -7,13 +7,8 @@ import {MyContext} from "../../api/MyContext.js";
 
 function CompanyReport() {
 	const dataWs = useContext(MyContext);
-	useEffect(() => {
-
-	}, []);
 	// @ts-ignore
 	const TURN = dataWs.num
-	// @ts-ignore
-	// eslint-disable-next-line @typescript-eslint/naming-convention
 	// @ts-ignore
 	const [turn, setTurn] = useState<number>(dataWs.num - 1);
 	const { isLoading, data } = useQuery(["companyReport", turn], () => getCompanyReport(turn));
@@ -357,6 +352,44 @@ function CompanyReport() {
 										<b>{numberWithSpaces(data.income_statement.net_profit)} €</b>
 									</td>
 								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
+						<div className="flex flex-row items-center justify-between py-2">
+							<h2>Archív rozhodnutí</h2>
+						</div>
+						<table className="table-auto table-white">
+							<tbody>
+							<tr>
+								<th className="px-4 py-2">Kolo</th>
+								<th className="px-4 py-2">VM</th>
+								<th className="px-4 py-2">OOH</th>
+								<th className="px-4 py-2">BILL</th>
+								<th className="px-4 py-2">TV</th>
+								<th className="px-4 py-2">PODC</th>
+							</tr>
+							{[...Array(TURN-1).keys()].map(( turn) => (
+								<tr key={turn}>
+									<td className="px-4 py-2">{turn + 1}</td>
+									<td className="px-4 py-2 whitespace-nowrap">
+										{numberWithSpaces(data.marketing.viral[turn])} €
+									</td>
+									<td className="px-4 py-2 whitespace-nowrap">
+										{numberWithSpaces(data.marketing.ooh[turn])} €
+									</td>
+									<td className="px-4 py-2 whitespace-nowrap">
+										{numberWithSpaces(data.marketing.billboard[turn])} €
+									</td>
+									<td className="px-4 py-2 whitespace-nowrap">
+										{numberWithSpaces(data.marketing.tv[turn])} €
+									</td>
+									<td className="px-4 py-2 whitespace-nowrap">
+										{numberWithSpaces(data.marketing.podcast[turn])} €
+									</td>
+									{/* Repeat for the other 7 cells in this row */}
+								</tr>
+							))}
 							</tbody>
 						</table>
 					</div>
