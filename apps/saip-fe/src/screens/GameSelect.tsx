@@ -1,9 +1,11 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, {useRef, useState, useEffect, useContext} from "react";
 import { useQuery } from "react-query";
 import logout from "../api/logout";
 import useCompanyStore from "../store/Company";
 import useMarketingStore from "../store/Marketing";
 import useUpgradesStore from "../store/Upgrades";
+// @ts-ignore
+import {ConnectContext} from "../api/ConnectContext.js";
 
 type User = {
 	value: string;
@@ -27,6 +29,8 @@ const listGames = async () => {
 };
 
 function GameSelect() {
+	// @ts-ignore
+	const {connect, setConnect} = useContext(ConnectContext);
 	const [users, setUsers] = useState<User[]>([]);
 	const [inputNumbersOfUsers, setInputNumbersOfUsers] = useState(0);
 	const [selectedGame, setSelectedGame] = useState(0);
@@ -80,6 +84,9 @@ function GameSelect() {
 
 		if (response.status !== 201) {
 			setIsInvalidName(true);
+		}
+		else{
+			setConnect('yes')
 		}
 	};
 

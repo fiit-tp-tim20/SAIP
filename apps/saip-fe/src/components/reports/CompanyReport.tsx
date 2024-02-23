@@ -1,19 +1,44 @@
-import React, { useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { useQuery } from "react-query";
+import Tutorial from "../modal/Tutorial";
 import getCompanyReport from "../../api/GetCompanyReport";
-import { getTurn } from "../../api/GetTurn";
 import numberWithSpaces from "../../utils/numberWithSpaces";
+// @ts-ignore
+import {MyContext} from "../../api/MyContext.js";
 
 function CompanyReport() {
-	const token = localStorage.getItem("token");
+	const dataWs = useContext(MyContext);
+	// @ts-ignore
+	const TURN = dataWs.num
+	// @ts-ignore
+	const [turn, setTurn] = useState<number>(dataWs.num - 1);
+	const { isLoading, data } = useQuery(["companyReport", turn], () => getCompanyReport(turn));
 
-	const { data: TURN } = useQuery({
-		queryKey: ["currentTurn"],
-		queryFn: () => token && getTurn(),
+	// State for managing tutorial visibility
+	const [isTutorialOpen, setTutorialOpen] = useState<boolean>(true);
+
+	// State for managing tutorial visibility
+	const [tutorialStates, setTutorialStates] = useState({
+		production: false,
+		balance: false,
+		cashflow: false,
+		incomeStatement: false,
+		sales: false,
 	});
 
-	const [turn, setTurn] = useState<number>(TURN.Number - 1);
-	const { isLoading, data } = useQuery(["companyReport", turn], () => getCompanyReport(turn));
+	const openTutorial = (tutorialKey: string) => {
+		setTutorialStates((prevStates) => ({
+			...prevStates,
+			[tutorialKey]: true,
+		}));
+	};
+
+	const closeTutorial = (tutorialKey: string) => {
+		setTutorialStates((prevStates) => ({
+			...prevStates,
+			[tutorialKey]: false,
+		}));
+	};
 
 	return (
 		<div className="flex w-[600px] flex-col md:w-[900px] xl:w-[1280px]">
@@ -29,7 +54,7 @@ function CompanyReport() {
 						value={turn}
 						onChange={(e) => setTurn(parseInt(e.target.value, 10))}
 					>
-						{[...Array(TURN.Number).keys()].map((o) => (
+						{[...Array(TURN).keys()].map((o) => (
 							<option value={o}>{o}</option>
 						))}
 					</select>
@@ -42,6 +67,41 @@ function CompanyReport() {
 					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 						<div className="flex flex-row items-center justify-between py-2">
 							<h2>Správa o výrobe</h2>
+							{/* Add a button to open the tutorial */}
+							<button
+								onClick={() => openTutorial("production")}
+								className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+							>
+								?
+							</button>
+							{tutorialStates.production && (
+								<Tutorial
+									isOpen={tutorialStates.production}
+									closeModal={() => closeTutorial("production")}
+									textTitle="Správa o výrobe"
+									textContent={
+										<div>
+											<h5>Výrobné náklady</h5>
+											= (počet kusov * cena materiálu za kus * konštanta vylepšenia * inflácia +
+											statické náklady) * prekročenie kapacity <br />
+											<br />
+											<h5>Celkové náklady</h5>
+											= Výrobné náklady
+											<br />
+											+ odpisy
+											<br />
+											+ náklady za marketing
+											<br />
+											+ splátka úrokov
+											<br />
+											+ náklady za vylepšenie uskladneného produktu
+											<br />
+											+ poplatok za skladovanie: počet uskladnených kusov * 100
+											<br />
+										</div>
+									}
+								/>
+							)}
 						</div>
 						<table className="table-auto table-white">
 							<tbody>
@@ -87,6 +147,25 @@ function CompanyReport() {
 					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 						<div className="flex flex-row items-center justify-between py-2">
 							<h2>Správa o predaji</h2>
+							{/* Add a button to open the tutorial */}
+							<button
+								onClick={() => openTutorial("sales")}
+								className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+							>
+								💡
+							</button>
+							{tutorialStates.sales && (
+								<Tutorial
+									isOpen={tutorialStates.sales}
+									closeModal={() => closeTutorial("sales")}
+									textTitle="Tip"
+									textContent={
+										<div>
+											Ak máš veľa nesplnených objednávok, tak máš veľký dopyt po produkte a vyrábaš málo kusov.
+										</div>
+									}
+								/>
+							)}
 						</div>
 						<table className="table-auto table-white">
 							<tbody>
@@ -120,6 +199,35 @@ function CompanyReport() {
 					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 						<div className="flex flex-row items-center justify-between py-2">
 							<h2>Súvaha</h2>
+							{/* Add a button to open the tutorial */}
+							<button
+								onClick={() => openTutorial("balance")}
+								className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+							>
+								?
+							</button>
+							{tutorialStates.balance && (
+								<Tutorial
+									isOpen={tutorialStates.balance}
+									closeModal={() => closeTutorial("balance")}
+									textTitle="Súvaha"
+									textContent={
+										<div>
+											<h5>Hotovosť</h5>
+											= peňažný stav firmy <br />
+											<br />
+											<h5>Kapitálové investície</h5>
+											= hodnota továrne
+											<br />
+											<i>od týchto investicií závisi výrobná kapacita</i>
+											<br />
+											<br />
+											<h5>Zásoby</h5>
+											= výrobná cena za kus * počet kusov
+										</div>
+									}
+								/>
+							)}
 						</div>
 						<table className="table-auto table-white">
 							<thead>
@@ -193,6 +301,38 @@ function CompanyReport() {
 					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 						<div className="flex flex-row items-center justify-between py-2">
 							<h2>Cashflow</h2>
+							{/* Add a button to open the tutorial */}
+							<button
+								onClick={() => openTutorial("cashflow")}
+								className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+							>
+								?
+							</button>
+							{tutorialStates.cashflow && (
+								<Tutorial
+									isOpen={tutorialStates.cashflow}
+									closeModal={() => closeTutorial("cashflow")}
+									textTitle="Cashflow"
+									textContent={
+										<div>
+											<h5>Výdavky na zásoby</h5>
+											= náklady na uskladnenie + náklady na upgrade zásob <br />
+											<br />
+											<h5>Výdavky na rozhodnutia</h5>
+											= marketing + upgrady + kapitál
+											<br />
+											<br />
+											<h5>Výdavky na úroky</h5>
+											= úrok z pôžičky
+											<br />
+											<br />
+											<h5>Konečný stav</h5>
+											= hotovosť
+											<br />
+										</div>
+									}
+								/>
+							)}
 						</div>
 						<table className="table-auto table-white">
 							<tbody>
@@ -275,6 +415,34 @@ function CompanyReport() {
 					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 						<div className="flex flex-row items-center justify-between py-2">
 							<h2>Výkaz ziskov a strát</h2>
+							{/* Add a button to open the tutorial */}
+							<button
+								onClick={() => openTutorial("incomeStatement")}
+								className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+							>
+								?
+							</button>
+							{tutorialStates.incomeStatement && (
+								<Tutorial
+									isOpen={tutorialStates.incomeStatement}
+									closeModal={() => closeTutorial("incomeStatement")}
+									textTitle="Výkaz ziskov a strát"
+									textContent={
+										<div>
+											<h5>Odpisy</h5>
+											= odpis z kapitálových investícií <br />
+											<br />
+											<h5>Dodatočné náklady na nepredané výrobky</h5>
+											= cena za uskladnenie jednotky * počet kusov na sklade
+											<br />
+											<br />
+											<h5>Náklady na upgrade zásob</h5>
+											ak je zakúpený upgrade tak kusy, ktoré sa nachádzajú na sklade sa musia
+											upgradovať
+										</div>
+									}
+								/>
+							)}
 						</div>
 						<table className="table-auto table-white">
 							<tbody>
@@ -321,12 +489,6 @@ function CompanyReport() {
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Náklady na precenenie zásob</td>
-									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.income_statement.overcharge_upgrade)} €
-									</td>
-								</tr>
-								<tr>
 									<td className="px-4 py-2">Nákladové úroky</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data.income_statement.interest)} €
@@ -354,6 +516,44 @@ function CompanyReport() {
 										<b>{numberWithSpaces(data.income_statement.net_profit)} €</b>
 									</td>
 								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
+						<div className="flex flex-row items-center justify-between py-2">
+							<h2>Archív rozhodnutí</h2>
+						</div>
+						<table className="table-auto table-white">
+							<tbody>
+							<tr>
+								<th className="px-4 py-2">Kolo</th>
+								<th className="px-4 py-2">VM</th>
+								<th className="px-4 py-2">OOH</th>
+								<th className="px-4 py-2">BILL</th>
+								<th className="px-4 py-2">TV</th>
+								<th className="px-4 py-2">PODC</th>
+							</tr>
+							{[...Array(TURN-1).keys()].map(( turn) => (
+								<tr key={turn}>
+									<td className="px-4 py-2">{turn + 1}</td>
+									<td className="px-4 py-2 whitespace-nowrap">
+										{numberWithSpaces(data.marketing.viral[turn])} €
+									</td>
+									<td className="px-4 py-2 whitespace-nowrap">
+										{numberWithSpaces(data.marketing.ooh[turn])} €
+									</td>
+									<td className="px-4 py-2 whitespace-nowrap">
+										{numberWithSpaces(data.marketing.billboard[turn])} €
+									</td>
+									<td className="px-4 py-2 whitespace-nowrap">
+										{numberWithSpaces(data.marketing.tv[turn])} €
+									</td>
+									<td className="px-4 py-2 whitespace-nowrap">
+										{numberWithSpaces(data.marketing.podcast[turn])} €
+									</td>
+									{/* Repeat for the other 7 cells in this row */}
+								</tr>
+							))}
 							</tbody>
 						</table>
 					</div>

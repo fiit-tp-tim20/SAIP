@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import React, { useEffect } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router";
 import { totalSpentPersist } from "../../store/Atoms";
@@ -11,15 +11,33 @@ import useModal from "../modal/useModal";
 import BottomBarModal from "./BottomBarModal";
 import getGeneralInfo from "../../api/CompanyInfo";
 import endTurn from "../../api/EndTurn";
-import getCommitted from "../../api/GetCommitted";
+// @ts-ignore
+import  {MyContext}  from "..//../api/MyContext.js";
 
 export default function BottomBar() {
+	const dataWs = useContext(MyContext);
 	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());
-	const { data: committed, refetch: refetchCommited } = useQuery("committed", () => getCommitted());
+	// @ts-ignore
+	const [committed, setCommitted] = useState(false)
+	// @ts-ignore
+	useEffect(() => {
+		// @ts-ignore
+		console.log("data",dataWs.comm)
+		console.log("comm", committed)
+		// @ts-ignore
+		if (dataWs.comm != committed){
+			setCommitted(!committed)
+		}
+		// @ts-ignore
+		console.log("data",dataWs.comm)
+		console.log("comm", committed)
 
+	}, [dataWs]);
 	const { Modal, isShowing, setIsShowing, setElement } = useModal(<div />);
 
+	const { reset: resetCompanyState } = useCompanyStore();
 	const { reset: resetUpgradeState } = useUpgradesStore();
+	const { reset: resetMarketingState } = useMarketingStore();
 
 	const {
 		getSum: getSumMarketing,
@@ -59,13 +77,14 @@ export default function BottomBar() {
 				podcast,
 			},
 		};
-
 		await endTurn(gameState);
-		await refetchCommited();
 		resetUpgradeState();
+		resetCompanyState();
+		resetMarketingState();
 	};
 
 	const handleModalSubmit = async () => {
+		setCommitted(!committed)
 		setIsShowing(false);
 		await handleEndTurn();
 	};
@@ -110,8 +129,7 @@ export default function BottomBar() {
 										totalSpent - capitalInvestments > data.budget_cap ||
 										totalSpent > data.budget_cap + data.bonus_spendable_cash ||
 										!getCheckedCompany() ||
-										!getCheckedMarketing() ||
-										committed
+										!getCheckedMarketing() || committed
 									}
 								>
 									Ukončiť kolo

@@ -1,19 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { useQuery } from "react-query";
-import { getTurn } from "../api/GetTurn";
+import React, {useContext, useEffect, useState} from "react";
+
 import CompanyReport from "../components/reports/CompanyReport";
 import IndustryReport from "../components/reports/IndustryReport";
+// @ts-ignore
+import  {MyContext}  from "../api/MyContext.js";
 
 function Plan() {
 	const [showCompanyReport, setShowCompanyReport] = useState(true);
-	const { data: currentTurn } = useQuery("currentTurn", getTurn);
-
+	// @ts-ignore
+	const data = useContext(MyContext);
+	// @ts-ignore
+	const currentTurn = data.num
+	// @ts-ignore
+	console.log(currentTurn)
 	useEffect(() => {
-		if (currentTurn.Number === 1) {
+		// @ts-ignore
+		if (currentTurn === 1) {
 			setShowCompanyReport(true);
 		}
 	}, [currentTurn]);
-
 	return (
 		<div className="flex flex-col items-center">
 			<div className="inline-flex rounded-md shadow-sm pt-4" role="group">
@@ -33,7 +38,7 @@ function Plan() {
 					}
                     `}
 					onClick={() => setShowCompanyReport(false)}
-					disabled={currentTurn.Number === 1}
+					disabled={currentTurn === 1}
 				>
 					Správa o trhu
 				</button>

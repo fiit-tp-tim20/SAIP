@@ -1,9 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from saip_ws.triggers import broadcast_message
 from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn, CompaniesUpgrades, \
     MarketState, TeacherDecisions
-
 from ..serializers import CompanySerializer, ProductionSerializer, SpendingsSerializer, MaketingSerializer, \
     FactorySerializer
 
@@ -137,7 +136,6 @@ class CompanyInfo(APIView):
             budget = 0
         else:
             budget = company_state.cash
-
         return Response(
             {
                 "id": company.id,
@@ -272,6 +270,25 @@ class CompanyReport(APIView):
         company_state_previous = CompaniesState.objects.get(
             turn=Turn.objects.get(game=company.game, number=turn.number), company=company)
         marketing = company_state_previous.marketing.billboard + company_state_previous.marketing.tv + company_state_previous.marketing.viral + company_state_previous.marketing.podcast + company_state_previous.marketing.ooh
+        marketing_dict = dict()
+        tele = []
+        viral = []
+        bilb = []
+        ooh = []
+        podc = []
+        for i in range(1, turn.number+1):
+            company_state_new = CompaniesState.objects.get(
+                turn=Turn.objects.get(game=company.game, number=i), company=company)
+            tele.append(company_state_new.marketing.tv)
+            viral.append(company_state_new.marketing.viral)
+            bilb.append(company_state_new.marketing.billboard)
+            ooh.append(company_state_new.marketing.ooh)
+            podc.append(company_state_new.marketing.podcast)
+        marketing_dict['tv'] = tele
+        marketing_dict['viral'] = viral
+        marketing_dict['billboard'] = bilb
+        marketing_dict['ooh'] = ooh
+        marketing_dict['podcast'] = podc
 
         try:
             state2ago = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn.number - 1),
@@ -403,7 +420,7 @@ class CompanyReport(APIView):
                                                2) if company_state_previous.net_profit is not None else "N/A"  # "Výsledok hospodárenia po zdanení"
 
         return Response({"production": production, "sales": sales, 'balance': balance, 'cash_flow': cash_flow,
-                         'income_statement': income_statement}, status=200)
+                         'income_statement': income_statement, "marketing": marketing_dict}, status=200)
 
 
 class CreateCompanyView(APIView):
@@ -438,7 +455,9 @@ def checkCommitted(turn: Turn, end: bool = True) -> bool:
             return False
 
     if end and auto_end:
-        end_turn(turn)
+        new_turn = end_turn(turn)
+        y = {"Number": new_turn.number, "Start": new_turn.start, "Committed": False}
+        broadcast_message(y)  # toto je v poriadku, vsetkym pride sprava o tom, ze je nove kolo
 
     return True
 
@@ -580,7 +599,7 @@ class PostSpendingsView(APIView):
         company_state.committed = True
         company_state.save()
 
-        checkCommitted(last_turn) # checks if all companies are committed
+        checkCommitted(last_turn)  # checks if all companies are committed
 
         return Response(status=201)
 
