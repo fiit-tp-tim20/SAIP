@@ -258,7 +258,8 @@ class Simulation:
 
                 inflation=self.teacher_decisions.get("inflation", FactoryPreset.BASE_INFLATION),
                 depreciation_rate=self.game_parameters.get("depreciation", FactoryPreset.FACTORY_WRITEOFF_RATE),
-                base_capital_investment=self.game_parameters.get("base_capital", FactoryPreset.STARTING_INVESTMENT),
+                # base_capital_investment=self.game_parameters.get("base_capital", FactoryPreset.STARTING_INVESTMENT),
+                base_capital_investment=FactoryPreset.STARTING_INVESTMENT
             )
         else:
             new_factory = Factory(
@@ -266,7 +267,9 @@ class Simulation:
                 capital_investment= self.game_parameters.get("base_capital", FactoryPreset.STARTING_INVESTMENT),
                 inflation=self.teacher_decisions.get("inflation", FactoryPreset.BASE_INFLATION),
                 depreciation_rate=self.game_parameters.get("depreciation", FactoryPreset.FACTORY_WRITEOFF_RATE),
-                base_capital_investment=self.game_parameters.get("base_capital", FactoryPreset.STARTING_INVESTMENT),
+                # base_capital_investment=self.game_parameters.get("base_capital", FactoryPreset.STARTING_INVESTMENT),
+                base_capital_investment=FactoryPreset.STARTING_INVESTMENT
+
             )
 
         new_factory.base_energy_cost = (
