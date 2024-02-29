@@ -369,7 +369,7 @@ class Company:
 
     def __upgrade_stored_products(self) -> float:
         self.product.upgrade_stored_products()
-        return self.inventory_count * self.product.get_upgrade_stored_products_price()
+        return self.prev_turn_inventory * self.product.get_upgrade_stored_products_price()
 
     def __price_diff_stored_products(self) -> float:
         return (self.prev_turn_prod_ppu - self.prod_ppu) * self.inventory_count
