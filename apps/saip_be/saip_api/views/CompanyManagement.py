@@ -335,8 +335,7 @@ class CompanyReport(APIView):
 
         balance['capital_investments'] = round(company_state_previous.factory.capital_investments,
                                                2) if company_state_previous.factory.capital_investments is not None else "N/A"  # "Kapitálové investície"
-        balance['assets_summary'] = round((company_state_previous.cash + (
-                company_state_previous.inventory * company_state_previous.production.man_cost) + company_state_previous.factory.capital_investments),
+        balance['assets_summary'] = round((company_state_previous.cash + company_state_previous.inventory_money + company_state_previous.factory.capital_investments),
                                           2) if (
                 company_state_previous.cash is not None and company_state_previous.inventory is not None and company_state_previous.production.man_cost is not None and company_state_previous.factory.capital_investments is not None) else "N/A"  # "Súčet aktív"
 
