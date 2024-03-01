@@ -72,11 +72,11 @@ class Customer(ABC):
     @abstractmethod
     def calc_weight_for_product(self, product_price, average_product_price):
         pass
-    
+
     @abstractmethod
     def calc_weight_from_marketing(self, marketing_value):
         pass
-        
+
 
 
 # CHANGES - added 'or product_price == 0' condition to all calc_weight_for_product methods
@@ -105,9 +105,9 @@ class LowBudgetustomer(Customer):
         if product_price > average_product_price * 1.25:
             return 0
         return (average_product_price / product_price) ** 2
-    
+
     def calc_weight_from_marketing(self, marketing_value):
-        return 1 + marketing_value / 10_000 * 0.75
+        return 1 + marketing_value / 10_000 * 0.4
 
 
 @dataclass
@@ -120,7 +120,7 @@ class AverageBudgetCustomer(Customer):
         if product_price > average_product_price * 1.5:
             return 0.1
         return 0.5 + average_product_price / product_price
-    
+
     def calc_weight_from_marketing(self, marketing_value):
         return 1 + marketing_value / 10_000
 
@@ -149,6 +149,6 @@ class InovationsLover(Customer):
     def calculate_innovation_weight(self, product: Product):
         # TODO the logic here may be subject to change
         return 1 + product.get_upgrade_sales_effect_multiplier()
-    
+
     def calc_weight_from_marketing(self, marketing_value):
         return 1 + marketing_value / 10_000 * 1.15
