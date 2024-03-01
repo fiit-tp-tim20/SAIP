@@ -125,8 +125,8 @@ class CompanyInfo(APIView):
         teacher_decisions = TeacherDecisions.objects.get(turn=previous_turn)
 
         bonus_spendable_cash = 0
-        if company_state.ret_earnings > 0:
-            bonus_spendable_cash = company_state.ret_earnings * teacher_decisions.bonus_spendable_cash_increase_rate
+        if company_state.cash > 10000:
+            bonus_spendable_cash = company_state.cash * teacher_decisions.bonus_spendable_cash_increase_rate
 
         # print("asd", bonus_spendable_cash, company_state.ret_earnings)
 

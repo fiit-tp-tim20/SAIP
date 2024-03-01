@@ -106,7 +106,8 @@ export default function BottomBar() {
 							<div className="flex flex-row gap-8 items-center">
 								<p
 									className={`text-center font-medium ${
-										totalSpent > data.budget_cap ? "text-red-600" : "",
+										//@ts-ignore
+										totalSpent - capitalInvestments > data.budget_cap ? "text-red-600" : "" ||
 										totalSpent > data.budget_cap + data.bonus_spendable_cash ? "text-red-600" : ""
 									}`}
 								>
