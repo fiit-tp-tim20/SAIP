@@ -188,7 +188,7 @@ class EndTurnView(PermissionRequiredMixin, APIView):
 
         last_turn = get_last_turn(game)
 
-        return Response({"Number": last_turn.number, "Start": last_turn.start, "Game": game.name}, status=200)
+        return Response({"Number": last_turn.number, "Game": game.name}, status=200)
 
     def post(self, request) -> Response:
         if not request.user or not request.user.is_authenticated:
