@@ -64,6 +64,22 @@ function WelcomePage() {
 					<li>Ako ovplyvní trh inflácia/deflácia?</li>
 				</div>
 			</div>
+			<div className="fixed bottom-0 left-0 right-0 z-50 bg-white px-3 py-1 border-t-2 border-accent-700">
+				<div className="container mx-auto flex flex-row items-center justify-between">
+					<p className="text-center font-medium">Rozpočet:</p>
+					<div className="flex gap-8">
+						<button type="button" className="button-clear">
+							<p placeholder={"mail"}> meno@gmail.com</p>
+						</button>
+						<button type="button" className="button-clear">
+							Pomoc
+						</button>
+						<button type="button" className="button-clear">
+
+						</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	);
 }

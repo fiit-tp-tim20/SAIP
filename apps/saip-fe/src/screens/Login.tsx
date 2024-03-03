@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 
 import useCompanyStore from "../store/Company";
@@ -9,9 +9,12 @@ export default function Login() {
 	const [password, setPassword] = useState(0);
 
 	const [isInvalid, setIsInvalid] = useState(false);
-
+	const token = localStorage.getItem("token");
 	const { reset: marketingReset } = useMarketingStore();
 	const { reset: companyReset } = useCompanyStore();
+	useEffect(() => {
+
+	}, []);
 
 	const login = async () => {
 		const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/login/`, {
@@ -53,13 +56,9 @@ export default function Login() {
 	return (
 		<div className="w-full h-full max-w-xs flex flex-col gap-4 justify-center items-center">
 			<Link to="/">
-				<button
-				  className="button-light font-bold py-1 px-10 rounded-lg focus:outline-none focus:shadow-outline"
-				>
-					<h5 className="font-bold">🏠</h5>
-				</button>
+				<h1 className="font-bold">SAIP</h1>
 			</Link>
-			<h1 className="font-bold">SAIP</h1>
+
 			<h2 className="font-bold">Prihlásenie</h2>
 			<form className="bg-white rounded-2xl px-6 pt-6 pb-8 mb-4 mim-w-[300px]" onSubmit={handleSubmit}>
 				<div className="mb-4">

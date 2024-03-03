@@ -42,11 +42,7 @@ function Register() {
 	return (
 		<div className="w-full h-full max-w-xs flex flex-col gap-4 justify-center items-center">
 			<Link to="/">
-				<button
-				  className="button-light font-bold py-1 px-10 rounded-lg focus:outline-none focus:shadow-outline"
-				>
-					<h5 className="font-bold">🏠</h5>
-				</button>
+				<h1 className="font-bold">SAIP</h1>
 			</Link>
 			<h2 className="font-bold">Registrácia</h2>
 			<form className="bg-white rounded-2xl px-6 pt-6 pb-8 mb-4 min-w-[300px]">
