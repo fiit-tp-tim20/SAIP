@@ -74,7 +74,7 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
             return HttpResponse("Last turn is already ended", status=500)
         # sem treba pridat broadcast
         new_turn = end_turn(last_turn)
-        y = {"Number": new_turn.number, "Start": new_turn.start, "Committed": False}
+        y = {"Number": new_turn.number, "Committed": False}
         broadcast_message(y)
 
     def save_model(self, request, obj, form, change):

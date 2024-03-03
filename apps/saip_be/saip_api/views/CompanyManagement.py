@@ -559,7 +559,7 @@ def checkCommitted(turn: Turn, end: bool = True) -> bool:
 
     if end and auto_end:
         new_turn = end_turn(turn)
-        y = {"Number": new_turn.number, "Start": new_turn.start, "Committed": False}
+        y = {"Number": new_turn.number, "Committed": False}
         broadcast_message(y)  # toto je v poriadku, vsetkym pride sprava o tom, ze je nove kolo
 
     return True
@@ -720,4 +720,4 @@ class TurnInfoView(APIView):
         turn = get_last_turn(company.game)
         state = CompaniesState.objects.get(turn=turn, company=company)
 
-        return Response({"Number": turn.number, "Start": turn.start, "Committed": state.committed})
+        return Response({"Number": turn.number, "Committed": state.committed})
