@@ -22,7 +22,7 @@ class TestConsumer(WebsocketConsumer):
         self.send(text_data="Websocket connected")
         turn = get_last_turn(company.game)
         state = CompaniesState.objects.get(turn=turn, company=company)
-        y = {"Number": turn.number, "Start": turn.start, "Committed": state.committed}
+        y = {"Number": turn.number, "Committed": state.committed}
         q = json.dumps(y, indent=4, sort_keys=True, default=str)
         return self.send(text_data=q, close=False)
 
