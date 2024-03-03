@@ -58,14 +58,17 @@ class MarketingView(APIView):
         except Company.DoesNotExist:
             return Response({"detail": "Company for this user not found"}, status=404)
 
-        marketing = [None] * (company.game.turns - 1)
+        marketing = {'demand': [],
+                     'volume': []
+                     }
         last_turn = get_last_turn(company.game)
         for turn_num in range(last_turn.number - 1):
             state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num + 1),
                                                company=company)
-            marketing[turn_num] = state.orders_received
+            marketing['demand'].append(state.orders_received)
+            marketing['volume'].append(state.production.volume)
 
-        return Response({"demand": marketing}, status=200)
+        return Response({"stats": marketing}, status=200)
 
 
 class CompanyView(APIView):
@@ -341,7 +344,8 @@ class ArchiveReport(APIView):
             # predchádzajúcich období"
             balance['base_capital'].append(round(company.game.parameters.base_capital, 2))  # "Základné ímanie"
             balance['liabilities_summary'].append(round(
-                company_state_new.loans + company_state_new.ret_earnings + company.game.parameters.base_capital, 2))  # "Súčet pasív"
+                company_state_new.loans + company_state_new.ret_earnings + company.game.parameters.base_capital,
+                2))  # "Súčet pasív"
             balance['capital_investments'].append(round(company_state_new.factory.capital_investments, 2))
             income_statement['sales'].append(round(company_state_new.sales, 2))
             income_statement['manufactured_man_cost'].append(round(company_state_new.sold_man_cost, 2))
