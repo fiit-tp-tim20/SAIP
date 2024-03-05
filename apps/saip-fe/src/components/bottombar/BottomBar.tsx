@@ -19,6 +19,7 @@ export default function BottomBar() {
 	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());
 	// @ts-ignore
 	const [committed, setCommitted] = useState(false)
+	const [bonusCash, setBonusCash] = useState(0)
 	// @ts-ignore
 	useEffect(() => {
 		// @ts-ignore
@@ -28,6 +29,8 @@ export default function BottomBar() {
 		if (dataWs.comm != committed){
 			setCommitted(!committed)
 		}
+
+
 		// @ts-ignore
 		console.log("data",dataWs.comm)
 		console.log("comm", committed)
@@ -58,8 +61,13 @@ export default function BottomBar() {
 
 	useEffect(() => {
 		setTotalSpent(getSumUpgrades() + capitalInvestments + getSumMarketing());
-	}, [getSumUpgrades(), capitalInvestments, getSumMarketing()]);
-
+		try {
+			setBonusCash(data.bonus_spendable_cash)
+		}
+		catch (e) {
+			console.log(e)
+		}
+	}, [getSumUpgrades(), capitalInvestments, getSumMarketing(), data]);
 
 	const handleEndTurn = async () => {
 		const gameState: GameState = {
@@ -94,6 +102,7 @@ export default function BottomBar() {
 		setIsShowing(true);
 	};
 
+	// @ts-ignore
 	return (
 		<>
 			{isShowing && <Modal />}
@@ -107,10 +116,10 @@ export default function BottomBar() {
 								<p
 									className={`text-center font-medium ${
 										totalSpent - capitalInvestments > data.budget_cap ||
-										totalSpent > data.budget_cap + data.bonus_spendable_cash ? "text-red-600" : ""
+										totalSpent > data.budget_cap + bonusCash ? "text-red-600" : ""
 									}`}
 								>
-									Rozpočet: {totalSpent}/{data.budget_cap}€ + ({data.bonus_spendable_cash}€)
+									Rozpočet: {totalSpent}/{data.budget_cap}€ + ({bonusCash}€)
 								</p>
 								<button type="button" onClick={() => navigate("/product")} className="button-clear">
 									Produkt: ✅
@@ -127,7 +136,7 @@ export default function BottomBar() {
 									className="button-dark font-bold py-2 px-4 rounded-lg disabled:cursor-not-allowed"
 									disabled={
 										totalSpent - capitalInvestments > data.budget_cap ||
-										totalSpent > data.budget_cap + data.bonus_spendable_cash ||
+										totalSpent > data.budget_cap + bonusCash ||
 										!getCheckedCompany() ||
 										!getCheckedMarketing() || committed
 									}
