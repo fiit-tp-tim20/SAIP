@@ -121,11 +121,11 @@ export default function BottomBar() {
 								>
 									Rozpočet: {totalSpent}/{data.budget_cap}€ + ({bonusCash}€)
 								</p>
-								<button type="button" onClick={() => navigate("/product")} className="button-clear">
-									Produkt: ✅
-								</button>
 								<button type="button" onClick={() => navigate("/company")} className="button-clear">
-									Spoločnosť: {getCheckedCompany() ? "✅" : "❌"}
+									Výroba: {getCheckedCompany() ? "✅" : "❌"}
+								</button>
+								<button type="button" onClick={() => navigate("/product")} className="button-clear">
+									R&D: ✅
 								</button>
 								<button type="button" onClick={() => navigate("/marketing")} className="button-clear">
 									Marketing: {getCheckedMarketing() ? "✅" : "❌"}

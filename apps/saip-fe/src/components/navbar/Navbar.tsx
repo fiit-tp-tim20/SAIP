@@ -17,12 +17,12 @@ function Navbar() {
 			path: "/",
 		},
 		{
-			title: "Produkt",
-			path: "/product",
+			title: "Výroba a predaj",
+			path: "/company",
 		},
 		{
-			title: "Spoločnosť",
-			path: "/company",
+			title: "Výskum a vývoj",
+			path: "/product",
 		},
 		{
 			title: "Marketing",

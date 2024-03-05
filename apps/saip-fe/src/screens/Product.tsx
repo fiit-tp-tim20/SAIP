@@ -47,11 +47,10 @@ function Product() {
 				<div className="grid grid-cols-2 gap-6 px-6 max-w-7xl">
 					<div className="flex flex-col background-container p-6 rounded-2xl">
 						<div className="py-4">
-							<h2>{t("product.name.title") as string}</h2>
-							<p className="pt-1">{t("product.name.ebike") as string}</p>
+							<h1>{t("product.name.ebike") as string}</h1>
 						</div>
 						<div className="py-4">
-							<h2>{t("product.description.title") as string}</h2>
+							<h4>{t("product.description.title") as string}</h4>
 							<p className="pt-1">
 								Elektrický bicykel je výkonným a praktickým komerčným produktom, ktorý ponúka široké
 								spektrum výhod pre rôzne typy používateľov. Jeho elektrický pohon umožňuje jednoduchšie
