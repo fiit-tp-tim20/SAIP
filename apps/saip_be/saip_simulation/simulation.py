@@ -62,7 +62,8 @@ class Simulation:
                 "tax_rate": teacher_decisions_model.tax_rate if teacher_decisions_model.tax_rate is not None else CompanyPreset.DEFAULT_TAX_RATE,
                 "inflation": teacher_decisions_model.inflation if teacher_decisions_model.inflation is not None else FactoryPreset.BASE_INFLATION,
                 "loan_limit": teacher_decisions_model.loan_limit if teacher_decisions_model.loan_limit is not None else CompanyPreset.DEFAULT_LOAN_LIMIT,
-                "bonus_spendable_cash_increase_rate": teacher_decisions_model.loan_limit if teacher_decisions_model.loan_limit is not None else CompanyPreset.DEFAULT_LOAN_LIMIT,
+                "bonus_spendable_cash_increase_rate": teacher_decisions_model.bonus_spendable_cash_increase_rate if teacher_decisions_model.bonus_spendable_cash_increase_rate is not None else CompanyPreset.DEFAULT_SPENDABLE_CASH_INCREASE_RATE,
+
             }
         except models.TeacherDecisions.DoesNotExist:
             self.teacher_decisions = {
@@ -257,7 +258,8 @@ class Simulation:
 
                 inflation=self.teacher_decisions.get("inflation", FactoryPreset.BASE_INFLATION),
                 depreciation_rate=self.game_parameters.get("depreciation", FactoryPreset.FACTORY_WRITEOFF_RATE),
-                base_capital_investment=self.game_parameters.get("base_capital", FactoryPreset.STARTING_INVESTMENT),
+                # base_capital_investment=self.game_parameters.get("base_capital", FactoryPreset.STARTING_INVESTMENT),
+                base_capital_investment=FactoryPreset.STARTING_INVESTMENT
             )
         else:
             new_factory = Factory(
@@ -265,7 +267,9 @@ class Simulation:
                 capital_investment= self.game_parameters.get("base_capital", FactoryPreset.STARTING_INVESTMENT),
                 inflation=self.teacher_decisions.get("inflation", FactoryPreset.BASE_INFLATION),
                 depreciation_rate=self.game_parameters.get("depreciation", FactoryPreset.FACTORY_WRITEOFF_RATE),
-                base_capital_investment=self.game_parameters.get("base_capital", FactoryPreset.STARTING_INVESTMENT),
+                # base_capital_investment=self.game_parameters.get("base_capital", FactoryPreset.STARTING_INVESTMENT),
+                base_capital_investment=FactoryPreset.STARTING_INVESTMENT
+
             )
 
         new_factory.base_energy_cost = (

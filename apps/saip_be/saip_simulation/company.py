@@ -249,7 +249,7 @@ class Company:
 
     prev_turn_prod_ppu: float = 0
     prev_turn_total_ppu: float = 0
-    prev_turn_inventory: float = 0
+    prev_turn_inventory: int = 0
     amount_spent_on_upgrades: float = 0
 
     factory: Factory = None
@@ -369,7 +369,7 @@ class Company:
 
     def __upgrade_stored_products(self) -> float:
         self.product.upgrade_stored_products()
-        return self.inventory_count * self.product.get_upgrade_stored_products_price()
+        return self.prev_turn_inventory * self.product.get_upgrade_stored_products_price()
 
     def __price_diff_stored_products(self) -> float:
         return (self.prev_turn_prod_ppu - self.prod_ppu) * self.inventory_count
@@ -386,7 +386,7 @@ class Company:
         # self.price_diff_stored_products = self.__price_diff_stored_products()
         self.value_paid_in_stored_product_upgrades = self.__upgrade_stored_products()
         self.value_paid_in_inventory_charge = (
-            self.inventory_count * FactoryPreset.INVENTORY_CHARGE_PER_UNIT
+            self.prev_turn_inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT
         )
 
         self.additional_costs = (
