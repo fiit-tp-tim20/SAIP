@@ -58,7 +58,7 @@ function Marketing() {
 						<div>
 							<Slider
 								min={0}
-								max={5000}
+								max={10000}
 								value={viral}
 								setValue={setViral}
 								checked={viralChecked}
@@ -89,7 +89,7 @@ function Marketing() {
 						<div>
 							<Slider
 								min={0}
-								max={5000}
+								max={10000}
 								value={ooh}
 								setValue={setOoh}
 								checked={oohChecked}
@@ -117,7 +117,7 @@ function Marketing() {
 						<div>
 							<Slider
 								min={0}
-								max={5000}
+								max={10000}
 								value={billboard}
 								setValue={setBillboard}
 								checked={billboardChecked}
@@ -146,7 +146,7 @@ function Marketing() {
 						<div>
 							<Slider
 								min={0}
-								max={5000}
+								max={10000}
 								value={tv}
 								setValue={setTv}
 								checked={tvChecked}
@@ -175,7 +175,7 @@ function Marketing() {
 						<div>
 							<Slider
 								min={0}
-								max={5000}
+								max={10000}
 								value={podcast}
 								setValue={setPodcast}
 								checked={podcastChecked}
