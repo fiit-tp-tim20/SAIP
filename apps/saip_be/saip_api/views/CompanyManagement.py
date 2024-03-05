@@ -1,3 +1,5 @@
+import math
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from saip_ws.triggers import broadcast_message
@@ -128,10 +130,8 @@ class CompanyInfo(APIView):
         teacher_decisions = TeacherDecisions.objects.get(turn=previous_turn)
 
         bonus_spendable_cash = 0
-        if company_state.ret_earnings > 0:
-            bonus_spendable_cash = company_state.ret_earnings * teacher_decisions.bonus_spendable_cash_increase_rate
-
-        # print("asd", bonus_spendable_cash, company_state.ret_earnings)
+        if company_state.cash > 10000:
+            bonus_spendable_cash = (company_state.cash - 10000) * teacher_decisions.bonus_spendable_cash_increase_rate
 
         if company_state.cash >= 10000:
             budget = 10000
@@ -144,7 +144,7 @@ class CompanyInfo(APIView):
                 "id": company.id,
                 'name': company.name,
                 'budget_cap': budget,
-                'bonus_spendable_cash': round(bonus_spendable_cash, 2)
+                'bonus_spendable_cash': math.floor(bonus_spendable_cash)
             }, status=200)
 
 
