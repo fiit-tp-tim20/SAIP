@@ -39,7 +39,7 @@ class Product(ABC):
         sum = 0
         for upgrade in self.upgrades.values():
             sum += upgrade.sales_effect
-        self._upgrade_sales_effect_multiplier = 1 + sum
+        self._upgrade_sales_effect_multiplier = sum
 
     def _set_upgrade_man_cost_effect_multiplier(self):
         sum = 0
@@ -62,7 +62,7 @@ class Product(ABC):
 
     def add_upgrade(
         self, name, status, progress, total_cost, sales_effect, man_cost_effect, upgraded_this_turn
-    ): 
+    ):
         self.upgrades[name] = Upgrade(
             status=status,
             progress=progress,
@@ -80,7 +80,7 @@ class Product(ABC):
     def upgrade_stored_products(self):
         self._perform_upgrade_logic()
         self._set_upgrade_stored_products_price(self._calculate_upgrade_price())
-        
+
     def attach_company(self, company):
         self.company = company
         self.marketing_value += company.yield_agg_marketing_value()

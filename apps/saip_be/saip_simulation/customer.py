@@ -141,14 +141,18 @@ class InovationsLover(Customer):
             return 0.5
         if product.get_price() > 15_000:
             return 0
+        if self.calculate_innovation_weight(product) == 0:      # ak nema spolocnost dokoncene ziadne vylepsenie
+            return 0
+        if product.get_price() > average_product_price * 1.5:
+            return 0.1
         return (
-            +product.get_price() / average_product_price
-            + self.calculate_innovation_weight(product)
+            + average_product_price/product.get_price()
+            + self.calculate_innovation_weight(product)         # 1*sum(sales_effect)
         )
 
     def calculate_innovation_weight(self, product: Product):
         # TODO the logic here may be subject to change
-        return 1 + product.get_upgrade_sales_effect_multiplier()
+        return 1.2*product.get_upgrade_sales_effect_multiplier()
 
     def calc_weight_from_marketing(self, marketing_value):
         return 1 + marketing_value / 10_000 * 1.15
