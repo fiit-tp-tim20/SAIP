@@ -377,6 +377,7 @@ class LowPriceStrategyBot(Bot):
         diff_1 = int((self.avg_price - self.min_price)/2 * coef)
         diff_2 = int((self.avg_price - self.min_price)/4 * (1 - inventory_coef))
         price = self.avg_price - diff_1 + diff_2
+        price += random.randint(-round(price*0.02),round(price*0.04))
         return price
 
     def calculate_upgrade_investments(self,**kwargs):
@@ -427,6 +428,7 @@ class AveragePriceStrategyBot(Bot):
         diff_3 = int((self.max_price - self.avg_price) / 2 * self.sales_effect_total)
 
         price = self.avg_price + diff_2 + diff_3
+        price += random.randint(-round(price*0.02),round(price*0.04))
 
         if price > 15000:
             price = 15000
@@ -532,6 +534,7 @@ class HighPriceStrategyBot(Bot):
         diff_3 = int((self.max_price - self.avg_price)/2 * self.sales_effect_total)
 
         price = self.avg_price + diff_1 + diff_2 + diff_3
+        price += random.randint(-round(price*0.02),round(price*0.04))
 
         if price > 15000:
             price = 15000
