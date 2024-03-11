@@ -23,7 +23,12 @@ const useUpgradesStore = create<UpgradeState>()(
 			getSum: () => Object.values(get().upgrades).reduce((a, b) => a + b, 0),
 			getChecked: () => {
 				const checkedValues = Object.values(get().upgradesCheck);
-				return checkedValues.every((value) => value); // Check if all upgrades are checked
+				if (checkedValues.length > 0) {
+					return checkedValues.every((value) => value);
+				}
+				// Check if all upgrades are checked
+
+				return false;
 			},
 		}),
 		{

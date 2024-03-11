@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useQuery } from "react-query";
 import Slider from "../components/slider/Slider";
 import Tutorial from "../components/modal/Tutorial";
@@ -6,14 +6,14 @@ import useCompanyStore from "../store/Company";
 import { getCompanyStats } from "../api/GetCompanyStats";
 import CompanyGraph from "../components/statisticsGraph/CompanyGraph";
 import getCompanyReport from "../api/GetCompanyReport";
-import { useContext } from 'react';
+
 // @ts-ignore
-import  {MyContext}  from "../api/MyContext.js";
+import { MyContext } from "../api/MyContext.js";
 
 function Company() {
 	const data = useContext(MyContext);
 	// @ts-ignore
-	const turn = data.num
+	const turn = data.num;
 	const { isLoading: statsIsLoading, data: statsData } = useQuery(["getCompanyStats"], getCompanyStats);
 	// @ts-ignore
 	const { data: reportData } = useQuery(["companyReport", turn], () => getCompanyReport(turn - 1));
@@ -86,10 +86,15 @@ function Company() {
 								textTitle="Tip"
 								textContent={
 									<div>
-										Optimálny počet produkovaných kusov do ďalšieho obdobia je 90% maximálnej výrobnej kapacity.
-										<br/>
-										<br/>
+										Optimálny počet produkovaných kusov do ďalšieho obdobia je 90% maximálnej
+										výrobnej kapacity.
+										<br />
+										<br />
 										= 0,9 * (hodnota továrne / 500)
+										<br />
+										<br />
+										Každých 500€ z celkovej hodnoty továrne predstavuje jeden kus ktorý môžeme
+										vyrobiť.
 									</div>
 								}
 							/>
@@ -130,11 +135,7 @@ function Company() {
 								isOpen={tutorialStates.price}
 								closeModal={() => closeTutorial("price")}
 								textTitle="Tip"
-								textContent={
-									<div>
-										Maximálna predajná cena je 15 000 €.
-									</div>
-								}
+								textContent={<div>Maximálna predajná cena je 15 000 €.</div>}
 							/>
 						)}
 					</div>
@@ -178,9 +179,9 @@ function Company() {
 								textTitle="Tip"
 								textContent={
 									<div>
-										Aby neklesal kapitál, je potrebné minimálne investovať do kapitálu danú čiastku<br/>
-										<br/>
-										= 0,0125 * hodnota továrne
+										Aby neklesal kapitál, je potrebné minimálne investovať do kapitálu danú čiastku
+										<br />
+										<br />= 0,0125 * hodnota továrne
 									</div>
 								}
 							/>

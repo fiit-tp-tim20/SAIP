@@ -55,7 +55,7 @@ function UpgradeInfo(props: Props) {
 						>
 							<img
 								className="rounded-full"
-								src={`https://avatars.dicebear.com/api/miniavs/${avatar}.png`}
+								src={`https://ui-avatars.com/api/?name=${avatar}`}
 								alt="person"
 							/>
 						</div>

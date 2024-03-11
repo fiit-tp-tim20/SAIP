@@ -29,14 +29,11 @@ function ProductModal(props: Props) {
 					<h4>{t(`research.playerResearched.title`) as string}</h4>
 					{upgrade.players.length === 0 && <p>Žiaden z hráčov zatiaľ nedokončil toto vylepšenie</p>}
 					{upgrade.players.map((player) => (
-						<div
-							key={player}
-							className="flex items-center p-3 my-1 rounded-2xl bg-gray-200 dark:bg-[#242424]"
-						>
+						<div key={player} className="flex items-center p-3 my-1 rounded-2xl bg-green-300">
 							<div className="avatar pr-4">
 								<div className="w-8 rounded-full ring ring-accent-400 ring-offset-base-100 ring-offset-2">
 									<img
-										src={`https://avatars.dicebear.com/api/miniavs/${player}.png`}
+										src={`https://ui-avatars.com/api/?name=${player}`}
 										alt={player}
 										className="w-8 h-8 rounded-full mr-2 bg-gray-200"
 									/>
