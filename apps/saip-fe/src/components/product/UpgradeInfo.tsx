@@ -1,5 +1,6 @@
 import React from "react";
 import useUpgradesStore from "../../store/Upgrades";
+import numberWithSpaces from "../../utils/numberWithSpaces";
 
 type Props = {
 	name: string;
@@ -38,9 +39,8 @@ function UpgradeInfo(props: Props) {
 							</div>
 						</div>
 						<p className="my-auto ml-2">
-							{progressValue}
-							{upgrades[name] ? <span className="text-success-300"> + {upgrades[name]}</span> : ""}/
-							{progressMax}
+							{numberWithSpaces(progressValue)}
+							{upgrades[name] ? <span className="text-success-300"> + {upgrades[name]}</span> : ""} / {numberWithSpaces(progressMax)}€
 						</p>
 					</div>
 				)}

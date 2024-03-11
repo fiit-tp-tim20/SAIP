@@ -6,6 +6,7 @@ import useUpgradesStore from "../../store/Upgrades";
 import { Upgrade } from "../../types/product";
 import Slider from "../slider/Slider";
 import Canvas from "../three/Canvas";
+import numberWithSpaces from "../../utils/numberWithSpaces";
 
 type Props = {
 	upgrade: Upgrade;
@@ -47,14 +48,14 @@ function ProductModal(props: Props) {
 				</div>
 				<div className="py-2 flex flex-row items-center justify-between">
 					<h4>{t(`research.price.title`) as string}</h4>
-					<h5>{upgrade.price}€</h5>
+					<h5>{numberWithSpaces(upgrade.price)}€</h5>
 				</div>
 				{upgrade.price >= upgrade.progress && (
 					<div className="py-2 items-center">
 						<div className="flex flex-row items-center justify-between text-center">
 							<h4>{t(`research.progress.title`) as string}</h4>
 							<p className="my-auto ml-2">
-								{upgrade.progress}/{upgrade.price}
+								{numberWithSpaces(upgrade.progress)} / {numberWithSpaces(upgrade.price)}€
 							</p>
 						</div>
 						<div className="relative pt-1">
