@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
 import UpgradeInfo from "../components/product/UpgradeInfo";
@@ -8,6 +8,7 @@ import { Upgrade } from "../types/product";
 import ProductModal from "../components/product/ProductModal";
 import getUpgrades from "../api/Upgrades";
 import useUpgradesStore from "../store/Upgrades";
+import Tutorial from "../components/modal/Tutorial";
 
 function Product() {
 	const { t } = useTranslation();
@@ -17,6 +18,28 @@ function Product() {
 	const { isLoading, data } = useQuery(["upgrades"], getUpgrades);
 
 	const { upgrades, setUpgrade, setUpgradeCheck } = useUpgradesStore();
+
+	// State for managing tutorial visibility
+	const [isTutorialOpen, setTutorialOpen] = useState<boolean>(true);
+
+	// State for managing tutorial visibility
+	const [tutorialStates, setTutorialStates] = useState({
+		upgrades_tutorial: false,
+	});
+
+	const openTutorial = (tutorialKey: string) => {
+		setTutorialStates((prevStates) => ({
+			...prevStates,
+			[tutorialKey]: true,
+		}));
+	};
+
+	const closeTutorial = (tutorialKey: string) => {
+		setTutorialStates((prevStates) => ({
+			...prevStates,
+			[tutorialKey]: false,
+		}));
+	};
 
 	useEffect(() => {
 		if (!data) return;
@@ -49,7 +72,7 @@ function Product() {
 						<div className="py-4">
 							<h1>{t("product.name.ebike") as string}</h1>
 						</div>
-						<div className="py-4">
+						<div className="py-4 text-justify">
 							<h4>{t("product.description.title") as string}</h4>
 							<p className="pt-1">
 								Elektrický bicykel je výkonným a praktickým komerčným produktom, ktorý ponúka široké
@@ -64,24 +87,6 @@ function Product() {
 						{data && data.filter((feature) => feature.status === "finished").length ? (
 							<div className="py-4">
 								<h2>{t("research.finished.title") as string}</h2>
-								{isLoading ? (
-									<p>Loading...</p>
-								) : (
-									<ul className="pt-1">
-										{data &&
-											data
-												.filter((feature) => feature.status === "finished")
-												.map((feature, index) => (
-													<UpgradeInfo
-														key={index}
-														name={feature.name}
-														// name={t(`research.features.${feature.id}.title`) as string}
-														researchedAvatars={feature.players}
-														onClick={() => openModal(feature)}
-													/>
-												))}
-									</ul>
-								)}
 							</div>
 						) : null}
 					</div>
@@ -90,7 +95,27 @@ function Product() {
 						<Canvas />
 					</div>
 				</div>
-				<h1 className="p-6 pl-12">{t("research.title") as string}</h1>
+				<div className="flex items-center">
+					<h1 className="p-6 pl-12">{t("research.title") as string}</h1>
+					<div className="ml-4">
+						<button
+							onClick={() => openTutorial("upgrades_tutorial")}
+							className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+						>
+							💡
+						</button>
+						{tutorialStates.upgrades_tutorial && (
+							<Tutorial
+								isOpen={tutorialStates.upgrades_tutorial}
+								closeModal={() => closeTutorial("upgrades_tutorial")}
+								textTitle="Tip"
+								textContent={<div>
+									Efekt vylepšení vstupuje do platnosti až kolo po tom, čo bolo vylepšenie dokončené
+								</div>}
+							/>
+						)}
+					</div>
+				</div>
 				<div className="flex flex-col background-container p-6 rounded-2xl mx-6 max-w-7xl">
 					{data && data.filter((feature) => feature.status === "started").length ? (
 						<div className="py-4">
@@ -119,6 +144,24 @@ function Product() {
 					) : null}
 					<div className="py-4">
 						<h2>{t("research.available.title") as string}</h2>
+						{isLoading ? (
+							<p>Loading...</p>
+						) : (
+							<ul className="pt-1">
+								{data &&
+									data
+										.filter((feature) => feature.status === "finished")
+										.map((feature, index) => (
+											<UpgradeInfo
+												key={index}
+												name={feature.name}
+												// name={t(`research.features.${feature.id}.title`) as string}
+												researchedAvatars={feature.players}
+												onClick={() => openModal(feature)}
+											/>
+										))}
+							</ul>
+						)}
 						{isLoading ? (
 							<p>Loading...</p>
 						) : (

@@ -25,7 +25,9 @@ function Tutorial({ isOpen, closeModal, textTitle, textContent }) {
 				},
 			}}
 		>
-			<h3 className="popover-title" style={{ margin: "20px" }}>{textTitle}</h3>
+			<h3 className="popover-title" style={{ margin: "20px" }}>
+				{textTitle}
+			</h3>
 			<div className="popover-content" style={{ margin: "20px" }}>
 				{/* You can replace the static content with a dynamic text */}
 				{textContent}

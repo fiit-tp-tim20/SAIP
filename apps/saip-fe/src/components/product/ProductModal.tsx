@@ -23,7 +23,7 @@ function ProductModal(props: Props) {
 			<div className="flex flex-col max-h-[90vh] overflow-scroll scrollbar-hide">
 				<div className="py-2">
 					<h2 className="pb-2">{upgrade.name}</h2>
-					<p>{upgrade.description}</p>
+					<p className="text-justify">{upgrade.description}</p>
 				</div>
 				<div className="py-2">
 					<h4>{t(`research.playerResearched.title`) as string}</h4>
