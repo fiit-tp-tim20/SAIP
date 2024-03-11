@@ -120,7 +120,14 @@ export default function BottomBar() {
 							<p className="text-center font-medium p-3">Čaká sa na ostatných hráčov</p>
 						) : (
 							<div className="flex flex-row gap-8 items-center">
-								<p onMouseEnter={() => handleMouseEnter(`Efekt vylepšení vstupuje do platnosti až kolo po tom, čo bolo vylepšenie dokončené`)} onMouseLeave={handleMouseLeave}>
+								<p
+									onMouseEnter={() =>
+										handleMouseEnter(
+											` Hodnota v zátvorke je čast finančných prostriedkov, ktoré je možné spolu s budgetom naviac investovať do kapitálu. `,
+										)
+									}
+									onMouseLeave={handleMouseLeave}
+								>
 									💡
 								</p>
 								<p
