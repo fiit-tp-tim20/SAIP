@@ -8,6 +8,7 @@ interface UpgradeState {
 	setUpgradeCheck: (upgrade: string, value: boolean) => void;
 	reset: () => void;
 	getSum: () => number;
+	getChecked: () => boolean;
 }
 
 const useUpgradesStore = create<UpgradeState>()(
@@ -15,11 +16,15 @@ const useUpgradesStore = create<UpgradeState>()(
 		(set, get) => ({
 			upgrades: {},
 			setUpgrade: (upgrade, value) => set((state) => ({ upgrades: { ...state.upgrades, [upgrade]: value } })),
-			upgradesCheck: {},
+			upgradesCheck: {}, // Initialize upgradesCheck with default values of false
 			setUpgradeCheck: (upgrade, value) =>
 				set((state) => ({ upgradesCheck: { ...state.upgradesCheck, [upgrade]: value } })),
-			reset: () => set(() => ({ upgrades: {} })),
+			reset: () => set(() => ({ upgrades: {}, upgradesCheck: {} })), // Reset upgradesCheck along with upgrades
 			getSum: () => Object.values(get().upgrades).reduce((a, b) => a + b, 0),
+			getChecked: () => {
+				const checkedValues = Object.values(get().upgradesCheck);
+				return checkedValues.every((value) => value); // Check if all upgrades are checked
+			},
 		}),
 		{
 			name: "upgrades-storage",

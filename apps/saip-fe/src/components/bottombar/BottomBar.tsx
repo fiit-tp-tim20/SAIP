@@ -52,7 +52,7 @@ export default function BottomBar() {
 		podcast,
 	} = useMarketingStore();
 	const { capitalInvestments, getChecked: getCheckedCompany, productCount, productPrice } = useCompanyStore();
-	const { getSum: getSumUpgrades, upgrades } = useUpgradesStore();
+	const { getSum: getSumUpgrades, getChecked: getCheckedUpgrages, upgrades } = useUpgradesStore();
 
 	const navigate = useNavigate();
 
@@ -125,7 +125,7 @@ export default function BottomBar() {
 									Výroba: {getCheckedCompany() ? "✅" : "❌"}
 								</button>
 								<button type="button" onClick={() => navigate("/product")} className="button-clear">
-									R&D: ✅
+									R&D: {getCheckedUpgrages() ? "✅" : "❌"}
 								</button>
 								<button type="button" onClick={() => navigate("/marketing")} className="button-clear">
 									Marketing: {getCheckedMarketing() ? "✅" : "❌"}
@@ -138,6 +138,7 @@ export default function BottomBar() {
 										totalSpent - capitalInvestments > data.budget_cap ||
 										totalSpent > data.budget_cap + bonusCash ||
 										!getCheckedCompany() ||
+										!getCheckedUpgrages() ||
 										!getCheckedMarketing() || committed
 									}
 								>
