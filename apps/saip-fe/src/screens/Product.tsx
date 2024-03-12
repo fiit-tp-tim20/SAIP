@@ -17,7 +17,7 @@ function Product() {
 
 	const { isLoading, data } = useQuery(["upgrades"], getUpgrades);
 
-	const { upgrades, setUpgrade, setUpgradeCheck } = useUpgradesStore();
+	const { upgrades, setUpgrade, setUpgradeCheck, upgradesCheck } = useUpgradesStore();
 
 	// State for managing tutorial visibility
 	const [isTutorialOpen, setTutorialOpen] = useState<boolean>(true);
@@ -44,7 +44,7 @@ function Product() {
 	useEffect(() => {
 		if (!data) return;
 		data.forEach((upgrade) => {
-			if (upgrades[upgrade.name]) return;
+			if (upgrades[upgrade.name] || upgradesCheck[upgrade.name]) return;
 			setUpgrade(upgrade.name, 0);
 			setUpgradeCheck(upgrade.name, false);
 		});
@@ -109,9 +109,12 @@ function Product() {
 								isOpen={tutorialStates.upgrades_tutorial}
 								closeModal={() => closeTutorial("upgrades_tutorial")}
 								textTitle="Tip"
-								textContent={<div>
-									Efekt vylepšení vstupuje do platnosti až kolo po tom, čo bolo vylepšenie dokončené
-								</div>}
+								textContent={
+									<div>
+										Efekt vylepšení vstupuje do platnosti až kolo po tom, čo bolo vylepšenie
+										dokončené
+									</div>
+								}
 							/>
 						)}
 					</div>
@@ -119,7 +122,21 @@ function Product() {
 				<div className="flex flex-col background-container p-6 rounded-2xl mx-6 max-w-7xl">
 					{data && data.filter((feature) => feature.status === "started").length ? (
 						<div className="py-4">
-							<h2>{t("research.pending.title") as string}</h2>
+							<div className="flex justify-between items-center">
+								<h2>{t("research.pending.title") as string}</h2>
+								<button
+									onClick={() => {
+										data.forEach((upgrade) => {
+											setUpgrade(upgrade.name, 0);
+											setUpgradeCheck(upgrade.name, true);
+										});
+									}}
+									className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+								>
+									Nevyvíjať
+								</button>
+							</div>
+
 							{isLoading ? (
 								<p>Loading...</p>
 							) : (
