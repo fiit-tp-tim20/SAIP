@@ -87,6 +87,24 @@ function Product() {
 						{data && data.filter((feature) => feature.status === "finished").length ? (
 							<div className="py-4">
 								<h2>{t("research.finished.title") as string}</h2>
+								{isLoading ? (
+									<p>Loading...</p>
+								) : (
+									<ul className="pt-1">
+										{data &&
+											data
+												.filter((feature) => feature.status === "finished")
+												.map((feature, index) => (
+													<UpgradeInfo
+														key={index}
+														name={feature.name}
+														// name={t(`research.features.${feature.id}.title`) as string}
+														researchedAvatars={feature.players}
+														onClick={() => openModal(feature)}
+													/>
+												))}
+									</ul>
+								)}
 							</div>
 						) : null}
 					</div>
@@ -161,24 +179,6 @@ function Product() {
 					) : null}
 					<div className="py-4">
 						<h2>{t("research.available.title") as string}</h2>
-						{isLoading ? (
-							<p>Loading...</p>
-						) : (
-							<ul className="pt-1">
-								{data &&
-									data
-										.filter((feature) => feature.status === "finished")
-										.map((feature, index) => (
-											<UpgradeInfo
-												key={index}
-												name={feature.name}
-												// name={t(`research.features.${feature.id}.title`) as string}
-												researchedAvatars={feature.players}
-												onClick={() => openModal(feature)}
-											/>
-										))}
-							</ul>
-						)}
 						{isLoading ? (
 							<p>Loading...</p>
 						) : (
