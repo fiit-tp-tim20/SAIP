@@ -8,7 +8,8 @@ import CompanyGraph from "../components/statisticsGraph/CompanyGraph";
 import getCompanyReport from "../api/GetCompanyReport";
 
 // @ts-ignore
-import { MyContext } from "../api/MyContext.js";
+import  {MyContext}  from "../api/MyContext.js";
+import getGeneralInfo from "../api/CompanyInfo";
 
 function Company() {
 	const data = useContext(MyContext);
@@ -17,6 +18,8 @@ function Company() {
 	const { isLoading: statsIsLoading, data: statsData } = useQuery(["getCompanyStats"], getCompanyStats);
 	// @ts-ignore
 	const { data: reportData } = useQuery(["companyReport", turn], () => getCompanyReport(turn - 1));
+	const { isLoading, data: budget_data } = useQuery("companyInfo", () => getGeneralInfo());
+
 
 	const {
 		productCount,
@@ -197,7 +200,7 @@ function Company() {
 						<div>
 							<Slider
 								min={0}
-								max={10000}
+								max={10000 + budget_data.bonus_spendable_cash}
 								value={capitalInvestments}
 								setValue={setCapitalInvestments}
 								checked={capitalInvestmentsChecked}

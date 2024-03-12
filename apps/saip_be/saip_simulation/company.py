@@ -83,10 +83,12 @@ class Factory:
             return
 
     def total_upkeep(self) -> float:
+        fixed_costs_multiplier: int = max(int(self.capacity/100), 1)
+
         return (
-            self.upkeep.get("rent")
+            (self.upkeep.get("rent")
             + self.upkeep.get("energy")
-            + self.upkeep.get("salaries")
+            + self.upkeep.get("salaries")) * fixed_costs_multiplier
             + self.upkeep.get("materials")
         )
 
