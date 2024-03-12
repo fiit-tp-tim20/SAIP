@@ -52,7 +52,7 @@ function Marketing() {
 						<div className="flex flex-col">
 							<h3>Investícia (€)</h3>
 							<p>
-								Minimum: <span className="font-bold">100€</span> 
+								Minimálna investícia: <span className="font-bold">100€</span>
 							</p>
 						</div>
 						<div>
@@ -83,7 +83,7 @@ function Marketing() {
 						<div className="flex flex-col">
 							<h3>Investícia (€)</h3>
 							<p>
-								Minimum: <span className="font-bold">500€</span>
+								Minimálna investícia: <span className="font-bold">500€</span>
 							</p>
 						</div>
 						<div>
@@ -111,7 +111,7 @@ function Marketing() {
 						<div className="flex flex-col">
 							<h3>Investícia (€)</h3>
 							<p>
-								Minimum: <span className="font-bold">500€</span>
+								Minimálna investícia: <span className="font-bold">500€</span>
 							</p>
 						</div>
 						<div>
@@ -140,7 +140,7 @@ function Marketing() {
 						<div className="flex flex-col">
 							<h3>Investícia (€)</h3>
 							<p>
-								Minimum: <span className="font-bold">2000€</span>
+								Minimálna investícia: <span className="font-bold">2000€</span>
 							</p>
 						</div>
 						<div>
@@ -169,7 +169,7 @@ function Marketing() {
 						<div className="flex flex-col">
 							<h3>Investícia (€)</h3>
 							<p>
-								Minimum: <span className="font-bold">1000€</span>
+								Minimálna investícia: <span className="font-bold">1000€</span>
 							</p>
 						</div>
 						<div>
