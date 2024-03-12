@@ -96,13 +96,13 @@ class CompanyView(APIView):
                 state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num + 1),
                                                    company=company)
                 manufactured[turn_num] = state.production.volume
-                sold[turn_num] = state.orders_fulfilled
+                sold[turn_num] = state.inventory
                 man_cost[turn_num] = state.production.man_cost_all
                 sell_price[turn_num] = state.production.sell_price
             except (CompaniesState.DoesNotExist, Turn.DoesNotExist):
                 continue
 
-        return Response({"manufactured": manufactured, "sold": sold, "man_cost": man_cost, "sell_price": sell_price},
+        return Response({"manufactured": manufactured, "inventory": sold, "man_cost": man_cost, "sell_price": sell_price},
                         status=200)
 
 
@@ -131,7 +131,7 @@ class CompanyInfo(APIView):
 
         bonus_spendable_cash = 0
         if company_state.cash > 10000:
-            bonus_spendable_cash = company_state.cash * teacher_decisions.bonus_spendable_cash_increase_rate
+            bonus_spendable_cash = (company_state.cash - 10000) * teacher_decisions.bonus_spendable_cash_increase_rate
 
         if company_state.cash >= 10000:
             budget = 10000
