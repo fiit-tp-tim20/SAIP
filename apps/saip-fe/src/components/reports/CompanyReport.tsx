@@ -213,10 +213,10 @@ function CompanyReport() {
 									textTitle="Súvaha"
 									textContent={
 										<div>
-											<h5>Hotovosť</h5>
+											<h5>Finančné prostriedky</h5>
 											= peňažný stav firmy <br />
 											<br />
-											<h5>Kapitálové investície</h5>
+											<h5>Dlhodobý majetok</h5>
 											= hodnota továrne
 											<br />
 											<i>od týchto investicií závisi výrobná kapacita</i>
@@ -237,7 +237,7 @@ function CompanyReport() {
 							</thead>
 							<tbody>
 								<tr>
-									<td className="px-4 py-2">Hotovosť</td>
+									<td className="px-4 py-2">Finančné prostriedky</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data.balance.cash)} €
 									</td>
@@ -249,7 +249,7 @@ function CompanyReport() {
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Kapitálové investície</td>
+									<td className="px-4 py-2">Dlhodobý majetok</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data.balance.capital_investments)} €
 									</td>
@@ -327,7 +327,7 @@ function CompanyReport() {
 											<br />
 											<br />
 											<h5>Konečný stav</h5>
-											= hotovosť
+											= finančné prostriedky
 											<br />
 										</div>
 									}

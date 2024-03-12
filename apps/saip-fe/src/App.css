@@ -1,0 +1,14 @@
+.custom-tooltip {
+  position: absolute;
+  background-color: #27ab83;
+  color: #fff;
+  padding: 10px 15px; /* Increased padding for a bigger tooltip */
+  border-radius: 8px; /* Increased border radius for a smoother look */
+  z-index: 9999;
+  /* Additional styling for appearance */
+  font-size: 14px; /* Increase font size */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+  pointer-events: none; /* Ensure the tooltip does not interfere with mouse events */
+  white-space: nowrap; /* Prevent line breaks */
+  transform: translate(-30%, -110%); /* Position the tooltip above the text */
+}

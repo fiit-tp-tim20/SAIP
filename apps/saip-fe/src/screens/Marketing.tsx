@@ -44,7 +44,7 @@ function Marketing() {
 					<div className="flex flex-row items-center justify-between py-2">
 						<h2>Virálny marketing</h2>
 					</div>
-					<p className="pt-1">
+					<p className="pt-1 text-justify">
 						Informácie o produktoch šírené pomocou elektronických médií, najmä sociálnych sietí, ale aj
 						pomocou virálneho priestoru ako súčasť zábavy, hier, či web stránok.
 					</p>
@@ -73,7 +73,7 @@ function Marketing() {
 					<div className="flex flex-row items-center justify-between py-2">
 						<h2>OOH</h2>
 					</div>
-					<p className="pt-1">
+					<p className="pt-1 text-justify">
 						Kombinácia vynúteného vnímania bilbordovej reklamy umiestňovanej na miestach, kde sa musia
 						zdržiavať klienti ako je napr MHD, zastávky, čakárne v kombinácii s virálnym, televíznym alebo
 						podcastovým marketingom, kde bilbord človeka upúta a základné informuje a nálendá reklama vynúti
@@ -104,7 +104,7 @@ function Marketing() {
 					<div className="flex flex-row items-center justify-between py-2">
 						<h2>Billboardy</h2>
 					</div>
-					<p className="pt-1">
+					<p className="pt-1 text-justify">
 						Tlačená vonkajšia reklama obyčajne veľký rozmer, ale môžem mať aj podobu citylightu.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
@@ -132,7 +132,7 @@ function Marketing() {
 					<div className="flex flex-row items-center justify-between py-2">
 						<h2>Televízia</h2>
 					</div>
-					<p className="pt-1">
+					<p className="pt-1 text-justify">
 						Klasická televízna reklama vysielaná pomocou v terestriálnej ale streamovacej siete televíznych
 						programov.
 					</p>
@@ -161,7 +161,7 @@ function Marketing() {
 					<div className="flex flex-row items-center justify-between py-2">
 						<h2>Podcasty</h2>
 					</div>
-					<p className="pt-1">
+					<p className="pt-1 text-justify">
 						Marketingové aktivity ako súčasť nahratých rozhovorov v rámci cyklov či jednorazových aktivít
 						médií, či vysielaní rozhlasu alebo televízií.
 					</p>

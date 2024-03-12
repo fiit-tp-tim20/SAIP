@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import React, {useContext, useEffect, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router";
 import { totalSpentPersist } from "../../store/Atoms";
@@ -12,29 +12,29 @@ import BottomBarModal from "./BottomBarModal";
 import getGeneralInfo from "../../api/CompanyInfo";
 import endTurn from "../../api/EndTurn";
 // @ts-ignore
-import  {MyContext}  from "..//../api/MyContext.js";
+import { MyContext } from "../../api/MyContext.js";
+import numberWithSpaces from "../../utils/numberWithSpaces";
 
 export default function BottomBar() {
+	const [tooltipText, setTooltipText] = useState("");
 	const dataWs = useContext(MyContext);
 	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());
 	// @ts-ignore
-	const [committed, setCommitted] = useState(false)
-	const [bonusCash, setBonusCash] = useState(0)
+	const [committed, setCommitted] = useState(false);
+	const [bonusCash, setBonusCash] = useState(0);
 	// @ts-ignore
 	useEffect(() => {
 		// @ts-ignore
-		console.log("data",dataWs.comm)
-		console.log("comm", committed)
+		console.log("data", dataWs.comm);
+		console.log("comm", committed);
 		// @ts-ignore
-		if (dataWs.comm != committed){
-			setCommitted(!committed)
+		if (dataWs.comm != committed) {
+			setCommitted(!committed);
 		}
 
-
 		// @ts-ignore
-		console.log("data",dataWs.comm)
-		console.log("comm", committed)
-
+		console.log("data", dataWs.comm);
+		console.log("comm", committed);
 	}, [dataWs]);
 	const { Modal, isShowing, setIsShowing, setElement } = useModal(<div />);
 
@@ -52,7 +52,7 @@ export default function BottomBar() {
 		podcast,
 	} = useMarketingStore();
 	const { capitalInvestments, getChecked: getCheckedCompany, productCount, productPrice } = useCompanyStore();
-	const { getSum: getSumUpgrades, upgrades } = useUpgradesStore();
+	const { getSum: getSumUpgrades, getChecked: getCheckedUpgrages, upgrades } = useUpgradesStore();
 
 	const navigate = useNavigate();
 
@@ -62,10 +62,9 @@ export default function BottomBar() {
 	useEffect(() => {
 		setTotalSpent(getSumUpgrades() + capitalInvestments + getSumMarketing());
 		try {
-			setBonusCash(data.bonus_spendable_cash)
-		}
-		catch (e) {
-			console.log(e)
+			setBonusCash(data.bonus_spendable_cash);
+		} catch (e) {
+			console.log(e);
 		}
 	}, [getSumUpgrades(), capitalInvestments, getSumMarketing(), data]);
 
@@ -92,7 +91,7 @@ export default function BottomBar() {
 	};
 
 	const handleModalSubmit = async () => {
-		setCommitted(!committed)
+		setCommitted(!committed);
 		setIsShowing(false);
 		await handleEndTurn();
 	};
@@ -100,6 +99,14 @@ export default function BottomBar() {
 	const openModal = () => {
 		setElement(<BottomBarModal onAccept={handleModalSubmit} onDecline={() => setIsShowing(false)} />);
 		setIsShowing(true);
+	};
+
+	const handleMouseEnter = (text) => {
+		setTooltipText(text);
+	};
+
+	const handleMouseLeave = () => {
+		setTooltipText("");
 	};
 
 	// @ts-ignore
@@ -114,18 +121,32 @@ export default function BottomBar() {
 						) : (
 							<div className="flex flex-row gap-8 items-center">
 								<p
+									onMouseEnter={() =>
+										handleMouseEnter(
+											` Hodnota v zátvorke je čast finančných prostriedkov, ktoré je možné spolu s budgetom naviac investovať do kapitálu. `,
+										)
+									}
+									onMouseLeave={handleMouseLeave}
+								>
+									💡
+								</p>
+								<p
 									className={`text-center font-medium ${
 										totalSpent - capitalInvestments > data.budget_cap ||
-										totalSpent > data.budget_cap + bonusCash ? "text-red-600" : ""
+										totalSpent > data.budget_cap + bonusCash
+											? "text-red-600"
+											: ""
 									}`}
 								>
-									Rozpočet: {totalSpent}/{data.budget_cap}€ + ({bonusCash}€)
+									Rozpočet: {numberWithSpaces(totalSpent)}/{numberWithSpaces(data.budget_cap)}€ + (
+									{numberWithSpaces(bonusCash)}€)
 								</p>
-								<button type="button" onClick={() => navigate("/product")} className="button-clear">
-									Produkt: ✅
-								</button>
+								{tooltipText && <div className="custom-tooltip">{tooltipText}</div>}
 								<button type="button" onClick={() => navigate("/company")} className="button-clear">
-									Spoločnosť: {getCheckedCompany() ? "✅" : "❌"}
+									Výroba: {getCheckedCompany() ? "✅" : "❌"}
+								</button>
+								<button type="button" onClick={() => navigate("/product")} className="button-clear">
+									R&D: {getCheckedUpgrages() ? "✅" : "❌"}
 								</button>
 								<button type="button" onClick={() => navigate("/marketing")} className="button-clear">
 									Marketing: {getCheckedMarketing() ? "✅" : "❌"}
@@ -138,7 +159,9 @@ export default function BottomBar() {
 										totalSpent - capitalInvestments > data.budget_cap ||
 										totalSpent > data.budget_cap + bonusCash ||
 										!getCheckedCompany() ||
-										!getCheckedMarketing() || committed
+										!getCheckedUpgrages() ||
+										!getCheckedMarketing() ||
+										committed
 									}
 								>
 									Ukončiť kolo
