@@ -182,7 +182,7 @@ function IndustryReport() {
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2">Sazdba dane z prijmu</td>
+									<td className="px-4 py-2">Sadzba dane z prijmu</td>
 									<td className="px-4 py-2">
 										{numberWithSpaces(data?.economic_parameters.tax_rate)} %
 									</td>
