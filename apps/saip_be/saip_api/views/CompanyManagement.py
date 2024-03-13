@@ -61,7 +61,8 @@ class MarketingView(APIView):
             return Response({"detail": "Company for this user not found"}, status=404)
 
         marketing = {'demand': [],
-                     'volume': []
+                     'volume': [],
+                     'orders_fulfilled': []
                      }
         last_turn = get_last_turn(company.game)
         for turn_num in range(last_turn.number - 1):
@@ -69,6 +70,7 @@ class MarketingView(APIView):
                                                company=company)
             marketing['demand'].append(state.orders_received)
             marketing['volume'].append(state.production.volume)
+            marketing['orders_fulfilled'].append(state.orders_fulfilled)
 
         return Response({"stats": marketing}, status=200)
 
@@ -86,8 +88,8 @@ class CompanyView(APIView):
             return Response({"detail": "Company for this user not found"}, status=404)
 
         manufactured = [None] * (company.game.turns - 1)
-        sold = [None] * (company.game.turns - 1)
-        man_cost = [None] * (company.game.turns - 1)
+        inventory = [None] * (company.game.turns - 1)
+        capacity = [None] * (company.game.turns - 1)
         sell_price = [None] * (company.game.turns - 1)
 
         last_turn = get_last_turn(company.game)
@@ -96,13 +98,13 @@ class CompanyView(APIView):
                 state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num + 1),
                                                    company=company)
                 manufactured[turn_num] = state.production.volume
-                sold[turn_num] = state.orders_fulfilled
-                man_cost[turn_num] = state.production.man_cost_all
+                inventory[turn_num] = state.inventory
+                capacity[turn_num] = state.factory.capacity
                 sell_price[turn_num] = state.production.sell_price
             except (CompaniesState.DoesNotExist, Turn.DoesNotExist):
                 continue
 
-        return Response({"manufactured": manufactured, "sold": sold, "man_cost": man_cost, "sell_price": sell_price},
+        return Response({"manufactured": manufactured, "inventory": inventory, "capacity": capacity, "sell_price": sell_price},
                         status=200)
 
 
@@ -131,7 +133,7 @@ class CompanyInfo(APIView):
 
         bonus_spendable_cash = 0
         if company_state.cash > 10000:
-            bonus_spendable_cash = company_state.cash * teacher_decisions.bonus_spendable_cash_increase_rate
+            bonus_spendable_cash = (company_state.cash - 10000) * teacher_decisions.bonus_spendable_cash_increase_rate
 
         if company_state.cash >= 10000:
             budget = 10000

@@ -73,7 +73,7 @@ function Slider(props: SliderProps) {
 						type="button"
 						className="button-dark font-bold py-2 px-4 m-0 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
 						onClick={toggleState}
-						disabled={!!requiredMin && localValue < requiredMin && localValue !== 0}
+						disabled={(!!requiredMin && localValue < requiredMin && localValue !== 0) || props.max == 0}
 					>
 						{!checked ? "Potvrdiť" : "Zmeniť"}
 					</button>

@@ -35,7 +35,7 @@ function Marketing() {
 		<div className="flex w-[600px] flex-col md:w-[900px] xl:w-[1280px]">
 			<h1 className="my-4">Štatistiky</h1>
 			<div className="background-container my-2 flex flex-col rounded-2xl p-6">
-				{isLoading ? <div>Loading...</div> : <MarketingGraph demand={data.stats.demand} volume={data.stats.volume} />}
+				{isLoading ? <div>Loading...</div> : <MarketingGraph demand={data.stats.demand} volume={data.stats.volume} orders_fulfilled={data.stats.orders_fulfilled}/>}
 			</div>
 
 			<div className="flex flex-col">
@@ -52,7 +52,7 @@ function Marketing() {
 						<div className="flex flex-col">
 							<h3>Investícia (€)</h3>
 							<p>
-								Minimum: <span className="font-bold">100€</span> 
+								Minimálna investícia: <span className="font-bold">100€</span>
 							</p>
 						</div>
 						<div>
@@ -83,7 +83,7 @@ function Marketing() {
 						<div className="flex flex-col">
 							<h3>Investícia (€)</h3>
 							<p>
-								Minimum: <span className="font-bold">500€</span>
+								Minimálna investícia: <span className="font-bold">500€</span>
 							</p>
 						</div>
 						<div>
@@ -111,7 +111,7 @@ function Marketing() {
 						<div className="flex flex-col">
 							<h3>Investícia (€)</h3>
 							<p>
-								Minimum: <span className="font-bold">500€</span>
+								Minimálna investícia: <span className="font-bold">500€</span>
 							</p>
 						</div>
 						<div>
@@ -140,7 +140,7 @@ function Marketing() {
 						<div className="flex flex-col">
 							<h3>Investícia (€)</h3>
 							<p>
-								Minimum: <span className="font-bold">2000€</span>
+								Minimálna investícia: <span className="font-bold">2000€</span>
 							</p>
 						</div>
 						<div>
@@ -169,7 +169,7 @@ function Marketing() {
 						<div className="flex flex-col">
 							<h3>Investícia (€)</h3>
 							<p>
-								Minimum: <span className="font-bold">1000€</span>
+								Minimálna investícia: <span className="font-bold">1000€</span>
 							</p>
 						</div>
 						<div>

@@ -84,7 +84,7 @@ function Company() {
 				{statsIsLoading ? (
 					<div>Loading...</div>
 				) : (
-					<CompanyGraph manufactured={statsData?.manufactured} sold={statsData?.sold} />
+					<CompanyGraph manufactured={statsData.manufactured} price={statsData.sell_price} stored={statsData.inventory} capacity={statsData.capacity} />
 				)}
 			</div>
 			<div className="flex flex-col">
