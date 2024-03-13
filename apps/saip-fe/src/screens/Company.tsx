@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, {useState, useContext, useEffect} from "react";
 import { useQuery } from "react-query";
 import Slider from "../components/slider/Slider";
 import Tutorial from "../components/modal/Tutorial";
@@ -18,7 +18,8 @@ function Company() {
 	const { isLoading: statsIsLoading, data: statsData } = useQuery(["getCompanyStats"], getCompanyStats);
 	// @ts-ignore
 	const { data: reportData } = useQuery(["companyReport", turn], () => getCompanyReport(turn - 1));
-	const { isLoading, data: budget_data } = useQuery("companyInfo", () => getGeneralInfo());
+	const { isLoading, data: budget_data, refetch } = useQuery("companyInfo", () => getGeneralInfo());
+	const [plusCash, setPlusCash] = useState(0)
 
 
 	const {
@@ -59,6 +60,22 @@ function Company() {
 			[tutorialKey]: false,
 		}));
 	};
+	useEffect(() => {
+		refetch()
+	}, [turn]);
+	useEffect(() => {
+		console.log(plusCash)
+		if(!isLoading){
+			try{
+				setPlusCash(budget_data.bonus_spendable_cash);
+			}
+			catch (e) {
+				console.log(e)
+			}
+		}
+		console.log(plusCash)
+	}, [data]);
+
 
 	return (
 		<div className="flex flex-col xl:w-[1280px] md:w-[900px] w-[600px]">
@@ -200,7 +217,7 @@ function Company() {
 						<div>
 							<Slider
 								min={0}
-								max={10000}
+								max={10000 + plusCash}
 								value={capitalInvestments}
 								setValue={setCapitalInvestments}
 								checked={capitalInvestmentsChecked}
