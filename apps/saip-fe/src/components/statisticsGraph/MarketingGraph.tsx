@@ -4,11 +4,12 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 type MarketingGraphProps = {
 	demand: number[];
 	volume: number[];
+	orders_fulfilled: number[];
 
 };
 
-function MarketingGraph({volume, demand }: MarketingGraphProps) {
-	const chartData = demand.map((value, index) => ({ x: index+1, Dopyt: value, Volume: volume[index] }));
+function MarketingGraph({volume, demand, orders_fulfilled }: MarketingGraphProps) {
+	const chartData = demand.map((value, index) => ({ x: index+1, Dopyt: value, Volume: volume[index], Orders: orders_fulfilled[index] }));
 	return (
 		<div style={{ width: '100%', height: '250px' }}>
 			<ResponsiveContainer width="100%" height="100%">
@@ -29,6 +30,7 @@ function MarketingGraph({volume, demand }: MarketingGraphProps) {
 					<Legend verticalAlign="top" />
 					<Line type="monotone" dataKey="Dopyt" stroke="#8884d8" yAxisId={0} name="Dopyt" />
 					<Line type="monotone" dataKey="Volume" stroke="#82ca9d" yAxisId={0} name="Počet vyrobených kusov" />
+					<Line type="monotone" dataKey="Orders" stroke="#ffca9d" yAxisId={0} name="Splnené objednávky " />
 				</LineChart>
 			</ResponsiveContainer>
 		</div>

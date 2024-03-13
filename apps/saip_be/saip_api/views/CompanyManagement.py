@@ -61,7 +61,8 @@ class MarketingView(APIView):
             return Response({"detail": "Company for this user not found"}, status=404)
 
         marketing = {'demand': [],
-                     'volume': []
+                     'volume': [],
+                     'orders_fulfilled': []
                      }
         last_turn = get_last_turn(company.game)
         for turn_num in range(last_turn.number - 1):
@@ -69,6 +70,7 @@ class MarketingView(APIView):
                                                company=company)
             marketing['demand'].append(state.orders_received)
             marketing['volume'].append(state.production.volume)
+            marketing['orders_fulfilled'].append(state.orders_fulfilled)
 
         return Response({"stats": marketing}, status=200)
 
