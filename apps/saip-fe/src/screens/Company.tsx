@@ -67,7 +67,7 @@ function Company() {
 				{statsIsLoading ? (
 					<div>Loading...</div>
 				) : (
-					<CompanyGraph manufactured={statsData?.manufactured} sold={statsData?.sold} />
+					<CompanyGraph manufactured={statsData.manufactured} price={statsData.sell_price} stored={statsData.inventory} capacity={statsData.capacity} />
 				)}
 			</div>
 			<div className="flex flex-col">
@@ -200,7 +200,7 @@ function Company() {
 						<div>
 							<Slider
 								min={0}
-								max={10000 + budget_data.bonus_spendable_cash}
+								max={10000}
 								value={capitalInvestments}
 								setValue={setCapitalInvestments}
 								checked={capitalInvestmentsChecked}
