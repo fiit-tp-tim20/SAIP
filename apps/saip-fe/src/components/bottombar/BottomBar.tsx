@@ -18,7 +18,7 @@ import numberWithSpaces from "../../utils/numberWithSpaces";
 export default function BottomBar() {
 	const [tooltipText, setTooltipText] = useState("");
 	const dataWs = useContext(MyContext);
-	const { isLoading, data } = useQuery("companyInfo", () => getGeneralInfo());
+	const { isLoading, data, refetch} = useQuery("companyInfo", () => getGeneralInfo());
 	// @ts-ignore
 	const [committed, setCommitted] = useState(false);
 	const [bonusCash, setBonusCash] = useState(0);
@@ -31,6 +31,8 @@ export default function BottomBar() {
 		if (dataWs.comm != committed) {
 			setCommitted(!committed);
 		}
+		refetch()
+
 
 		// @ts-ignore
 		console.log("data", dataWs.comm);
@@ -61,13 +63,19 @@ export default function BottomBar() {
 
 	useEffect(() => {
 		setTotalSpent(getSumUpgrades() + capitalInvestments + getSumMarketing());
-		try {
-			setBonusCash(data.bonus_spendable_cash);
-		} catch (e) {
-			console.log(e);
-		}
-	}, [getSumUpgrades(), capitalInvestments, getSumMarketing(), data]);
 
+	}, [getSumUpgrades(), capitalInvestments, getSumMarketing()]);
+
+	useEffect(() => {
+		if(!isLoading){
+			try{
+				setBonusCash(data.bonus_spendable_cash);
+			}
+			catch (e) {
+				console.log(e)
+			}
+		}
+	}, [data]);
 	const handleEndTurn = async () => {
 		const gameState: GameState = {
 			upgrades,
