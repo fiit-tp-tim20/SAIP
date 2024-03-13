@@ -14,7 +14,7 @@ function CompanyGraph(props: CompanyGraphProps) {
 	const data = manufactured.map((value, index) => ({
 		x: index + 1,
 		Vyrobené: value,
-		Predané: stored[index], // Assuming "Predané" corresponds to the number of units sold
+		Zásoby: stored[index],
 		Cena: price[index],
 		Kapacita: capacity[index],
 	}));
@@ -26,14 +26,22 @@ function CompanyGraph(props: CompanyGraphProps) {
 					width={500}
 					height={300}
 					data={data}
-					margin={{ top: 5, right: 20, left: 10, bottom: 10 }}
+					margin={{ top: 5, right: 20, left: 20, bottom: 10 }}
 				>
 					<XAxis dataKey="x">
 						<Label value="Kolo" offset={-10} position="insideBottom" />
 					</XAxis>
-					<YAxis>
+					<YAxis yAxisId="right" orientation="right">
 						<Label
-							value="Jednotky"
+							value="Cena"
+							offset={0}
+							position="insideRight"
+							angle={-90}
+						/>
+					</YAxis>
+					<YAxis yAxisId="left" orientation="left">
+						<Label
+							value="Množstvo"
 							offset={0}
 							position="insideLeft"
 							angle={-90}
@@ -47,21 +55,28 @@ function CompanyGraph(props: CompanyGraphProps) {
 						dataKey="Vyrobené"
 						name="Vyrobené"
 						stroke="#8884d8"
-						yAxisId={0}
+						yAxisId="left"
 					/>
 					<Line
 						type="monotone"
-						dataKey="Predané"
-						name="Predané"
+						dataKey="Zásoby"
+						name="Zásoby"
 						stroke="#82ca9d"
-						yAxisId={0}
+						yAxisId="left"
 					/>
 					<Line
 						type="monotone"
 						dataKey="Kapacita"
 						name="Kapacita"
 						stroke="#ffc658"
-						yAxisId={0}
+						yAxisId="left"
+					/>
+					<Line
+						type="monotone"
+						dataKey="Cena"
+						name="Cena"
+						stroke="#a658"
+						yAxisId="right"
 					/>
 				</LineChart>
 			</ResponsiveContainer>
