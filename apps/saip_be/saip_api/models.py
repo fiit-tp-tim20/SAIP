@@ -221,7 +221,7 @@ class TeacherDecisions(models.Model):
     tax_rate = models.FloatField(null=True, default=0.21)
     inflation = models.FloatField(null=True, default=0)
     loan_limit = models.FloatField(null=True, default=200000)
-    bonus_spendable_cash_increase_rate = models.FloatField(null=True, default=0.01)
+    bonus_spendable_cash_increase_rate = models.FloatField(null=True, default=0.001)
 
     def __str__(self):
         return f"Teacher Decisions - {self.turn}"
