@@ -537,6 +537,12 @@ class CreateCompanyView(APIView):
         if not request.user or not request.user.is_authenticated:
             return Response({"detail": "User is not authenticated"}, status=401)
 
+        # Check if a company model already exists for the user
+        existing_company = Company.objects.filter(user=request.user).first()
+        if existing_company:
+            return Response({"detail": "Company already exists for this user"},
+                            status=409)
+
         serializer = CompanySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
