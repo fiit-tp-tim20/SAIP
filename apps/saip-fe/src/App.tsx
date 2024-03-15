@@ -35,7 +35,7 @@ function App() {
 	});
 	useEffect(() => {
 		// @ts-ignore
-		const chatSocket = new WebSocket('ws://localhost:8000/ws/turn_info/', ['token', token]);
+		const chatSocket = new WebSocket(`${import.meta.env.VITE_WS_URL}turn_info/`, ['token', token]);
 		chatSocket.onmessage = function (e) {
 			// @ts-ignore
 			console.log(e.data);
