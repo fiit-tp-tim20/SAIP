@@ -10,6 +10,7 @@ type Props = {
 };
 
 function Bike(props: JSX.IntrinsicElements["group"] & Props) {
+	//@ts-ignore
 	const { nodes, materials } = useGLTF("/bike_v8_test.glb");
 	const group = useRef<THREE.Group>(null!);
 

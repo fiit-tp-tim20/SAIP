@@ -4,26 +4,28 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from saip_api.models import Game, GameParameters, Upgrade, Turn, Company, CompaniesState, Production, Marketing, \
-    Factory, CompaniesUpgrades, MarketState, TeacherDecisions
+    Factory, CompaniesUpgrades, MarketState, TeacherDecisions, Bots
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from ..serializers import GameSerializer
 
 from saip_simulation.simulation import Simulation
+from saip_simulation.bot import LowPriceStrategyBot, HighPriceStrategyBot, AveragePriceStrategyBot
 
+from django.core.cache import cache
 # default upgrages, table is create only if it is empty
-parameters = {"Upgrades": [{"name": "Batéria", "cost": 30000, "sales_effect": 0.75, "man_cost_effect": 0.3,
+parameters = {"Upgrades": [{"name": "Battery", "cost": 30000, "sales_effect": 0.75, "man_cost_effect": 0.3,
                             "camera_pos": "-0.1, 0.5, 3", "camera_rot": "3,2,1", "description": "Investícia do batérie predlžuje výdrž elektrického bicykla na cestách, a tým zaujme najmä zákazníkov, \
                             ktorí si potrpia na väčšej výdrži batérie. Investíciou do tohto vylepšenia sa zvýšia výrobné náklady \
                             o 30%, ale taktiež sa aj zvýši záujem u zákazníkov, ktorých zaujímajú vylepšenia o 75%."},
-                           {"name": "Rám", "cost": 22000, "sales_effect": 0.55, "man_cost_effect": 0.2,
+                           {"name": "Frame", "cost": 22000, "sales_effect": 0.55, "man_cost_effect": 0.2,
                             "camera_pos": "0, 0.5, 5", "camera_rot": "6,5,4", "description": "Investícia do rámu zaujme najmä zákazníkov, ktorých zaujíma vzhľad a celková konštrukcia bicykla. \
                             Táto investícia spôsobí nárast výrobných nákladov o 20% a záujem zákazníkov zameraných na vylepšenia o 55%."},
-                           {"name": "Brzdy", "cost": 18000, "sales_effect": 0.45, "man_cost_effect": 0.1,
+                           {"name": "Brakes", "cost": 18000, "sales_effect": 0.45, "man_cost_effect": 0.1,
                             "camera_pos": "-0.7, 1.5, 3", "camera_rot": "9,8,7", "description": "Investíciou do tohto vylepšenia sa zvýši celková bezpečnosť pri používaní bicykla na cestách, ale aj \
                             v inom teréne. Výrobné náklady sa pri tejto investícii zvýšia o 10% a záujem zákazníkov zameraných na vylepšenia o 45%."},
-                           {"name": "Displej", "cost": 34000, "sales_effect": 0.85, "man_cost_effect": 0.4,
+                           {"name": "Display", "cost": 34000, "sales_effect": 0.85, "man_cost_effect": 0.4,
                             "camera_pos": "-0.7, 1.5, 3", "camera_rot": "9,8,7", "description": "Displej na elektrobicykli je neodmysliteľnou súčasťou pre celkové ovládanie a lepší pocit z jazdy, keď \
                             potrebujeme prehľad o tom akou rýchlosťou ideme, koľko kilometrov sme už na aktuálnej trase prešli a iné \
                             štatistiky. Investíciou do tohto vylepšenia sa zvýšia výrobné náklady o 40% a záujem zákazníkov zameraných na vylepšenia o 85%."}
@@ -69,9 +71,23 @@ def create_turn(number: int, game: Game) -> Turn:
         prev_td.save()
 
     companies = Company.objects.filter(game=game)
-
     for company in companies:
         create_company_state(company, turn)
+
+    if turn.number != 0:
+        print("kolo: ",turn.number)
+        bots = Bots.objects.filter(game=game)
+        for bot in bots:
+            if bot.type == 'L':
+                bot_curr = LowPriceStrategyBot()
+            elif bot.type == 'H':
+                bot_curr = HighPriceStrategyBot()
+            else:
+                bot_curr = AveragePriceStrategyBot()
+
+            bot_curr.token = bot.token
+            print("Playing turn number: " + str(turn.number))
+            bot_curr.play_turn(turn_number=turn.number)
 
     return turn
 
@@ -172,7 +188,7 @@ class EndTurnView(PermissionRequiredMixin, APIView):
 
         last_turn = get_last_turn(game)
 
-        return Response({"Number": last_turn.number, "Start": last_turn.start, "Game": game.name}, status=200)
+        return Response({"Number": last_turn.number, "Game": game.name}, status=200)
 
     def post(self, request) -> Response:
         if not request.user or not request.user.is_authenticated:
@@ -198,6 +214,47 @@ class EndTurnView(PermissionRequiredMixin, APIView):
 
 def end_turn(turn: Turn) -> Turn:
     game = turn.game
+    numberl = game.parameters.number_of_low_price_bots
+    numbera = game.parameters.number_of_avg_price_bots
+    numberh = game.parameters.number_of_high_price_bots
+
+    if turn.number == 0:
+        for i in range(numbera):
+            b = AveragePriceStrategyBot()
+            b.add_to_game(game_id=game.id)
+
+            bot = Bots(
+                game=game,
+                token=b.token,
+                type=b.type
+            )
+            bot.save()
+
+        for i in range(numberl):
+            b = LowPriceStrategyBot()
+            b.add_to_game(game_id=game.id)
+
+            bot = Bots(
+                game=game,
+                token=b.token,
+                type=b.type
+            )
+            bot.save()
+
+        for i in range(numberh):
+            b = HighPriceStrategyBot()
+            b.add_to_game(game_id=game.id)
+
+            bot = Bots(
+                game=game,
+                token=b.token,
+                type=b.type
+            )
+            bot.save()
+
+
+
+
 
     if turn.number != 0:
         companies = Company.objects.filter(game=game)
@@ -222,8 +279,19 @@ def end_turn(turn: Turn) -> Turn:
                 state.marketing.save()
                 state.save()
 
+    print("Creating turn" + str(turn.number + 1))
     new_turn = create_turn(turn.number + 1, game)
     calculate_man_cost(game, new_turn)
+
+    # TODO
+    # if turn.number >= 1:
+    #     with transaction.atomic():
+    #         new_turn_number = turn.number + 1
+    #         check_new_turn = Turn.objects.select_for_update().filter(game=game, number = turn.number).first()
+    #         if check_new_turn.end is not None:
+    #             return
+    #         turn.end = timezone.now()
+    #         turn.save()
 
     if turn.number != 0:
         prev_turn = Turn.objects.get(game=game, number=turn.number - 1)
@@ -231,6 +299,7 @@ def end_turn(turn: Turn) -> Turn:
         sim.run_simulation()
         sim.write_simulation_results()
 
+    print("Nové kolo...")
     turn.end = timezone.now()
     turn.save()
 

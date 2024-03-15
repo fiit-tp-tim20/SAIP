@@ -1,9 +1,10 @@
+import math
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from saip_ws.triggers import broadcast_message
 from saip_api.models import Game, Company, CompaniesUpgrades, Upgrade, CompaniesState, Turn, CompaniesUpgrades, \
     MarketState, TeacherDecisions
-
 from ..serializers import CompanySerializer, ProductionSerializer, SpendingsSerializer, MaketingSerializer, \
     FactorySerializer
 
@@ -59,14 +60,19 @@ class MarketingView(APIView):
         except Company.DoesNotExist:
             return Response({"detail": "Company for this user not found"}, status=404)
 
-        marketing = [None] * (company.game.turns - 1)
+        marketing = {'demand': [],
+                     'volume': [],
+                     'orders_fulfilled': []
+                     }
         last_turn = get_last_turn(company.game)
         for turn_num in range(last_turn.number - 1):
             state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num + 1),
                                                company=company)
-            marketing[turn_num] = state.orders_received
+            marketing['demand'].append(state.orders_received)
+            marketing['volume'].append(state.production.volume)
+            marketing['orders_fulfilled'].append(state.orders_fulfilled)
 
-        return Response({"demand": marketing}, status=200)
+        return Response({"stats": marketing}, status=200)
 
 
 class CompanyView(APIView):
@@ -82,8 +88,8 @@ class CompanyView(APIView):
             return Response({"detail": "Company for this user not found"}, status=404)
 
         manufactured = [None] * (company.game.turns - 1)
-        sold = [None] * (company.game.turns - 1)
-        man_cost = [None] * (company.game.turns - 1)
+        inventory = [None] * (company.game.turns - 1)
+        capacity = [None] * (company.game.turns - 1)
         sell_price = [None] * (company.game.turns - 1)
 
         last_turn = get_last_turn(company.game)
@@ -92,13 +98,13 @@ class CompanyView(APIView):
                 state = CompaniesState.objects.get(turn=Turn.objects.get(game=company.game, number=turn_num + 1),
                                                    company=company)
                 manufactured[turn_num] = state.production.volume
-                sold[turn_num] = state.orders_fulfilled
-                man_cost[turn_num] = state.production.man_cost_all
+                inventory[turn_num] = state.inventory
+                capacity[turn_num] = state.factory.capacity
                 sell_price[turn_num] = state.production.sell_price
             except (CompaniesState.DoesNotExist, Turn.DoesNotExist):
                 continue
 
-        return Response({"manufactured": manufactured, "sold": sold, "man_cost": man_cost, "sell_price": sell_price},
+        return Response({"manufactured": manufactured, "inventory": inventory, "capacity": capacity, "sell_price": sell_price},
                         status=200)
 
 
@@ -123,16 +129,25 @@ class CompanyInfo(APIView):
         last_turn = get_last_turn(company.game)
         previous_turn = Turn.objects.get(game=company.game, number=last_turn.number - 1)
         company_state = CompaniesState.objects.get(turn=previous_turn, company=company)
+        teacher_decisions = TeacherDecisions.objects.get(turn=previous_turn)
+
+        bonus_spendable_cash = 0
+        if company_state.cash > 10000:
+            bonus_spendable_cash = (company_state.cash - 10000) * teacher_decisions.bonus_spendable_cash_increase_rate
 
         if company_state.cash >= 10000:
-            print(company_state.cash)
             budget = 10000
         elif company_state.cash < 0:
             budget = 0
         else:
             budget = company_state.cash
-
-        return Response({"id": company.id, 'name': company.name, 'budget_cap': budget}, status=200)
+        return Response(
+            {
+                "id": company.id,
+                'name': company.name,
+                'budget_cap': budget,
+                'bonus_spendable_cash': math.floor(bonus_spendable_cash)
+            }, status=200)
 
 
 class IndustryReport(APIView):
@@ -237,6 +252,129 @@ class IndustryReport(APIView):
                         status=200)
 
 
+class ArchiveReport(APIView):
+
+    def get(self, request) -> Response:
+
+        if not request.user or not request.user.is_authenticated:
+            return Response({"detail": "User is not authenticated"}, status=401)
+
+        try:
+            company = Company.objects.get(user=request.user)
+        except Company.DoesNotExist:
+            return Response({"detail": "Company for this user not found"}, status=404)
+
+        try:
+            turn = Turn.objects.get(game=company.game, number=request.GET.get("turn"))
+        except Turn.DoesNotExist:
+            return Response({"detail": "Turn not found"}, status=404)
+
+        marketing_dict = {'tv': [],
+                          'viral': [],
+                          'billboard': [],
+                          'ooh': [],
+                          'podcast': []
+                          }
+        factory_dict = {'capital': [],
+                        'upgrades': []
+                        }
+        production_dict = {'volume': [],
+                           'man_cost': [],
+                           'man_cost_all': [],
+                           'sell_price': [],
+                           }
+        sales = {'orders_received': [],
+                 'orders_fulfilled': [],
+                 'orders_unfulfilled': [],
+                 }
+        balance = {'cash': [],
+                   'inventory_money': [],
+                   'assets_summary': [],
+                   'loans': [],
+                   'ret_earnings': [],
+                   'base_capital': [],
+                   'liabilities_summary': [],
+                   'capital_investments': [],
+                   }
+        income_statement = {'sales': [],  # "Tržby z predaja výrobkov"
+                            'manufactured_man_cost': [],  # "Náklady na predaný tovar"
+                            'r_d': [],  # "Náklady na výskum a vývoj"
+                            'depreciation': [],  # "Odpisy"
+                            'inventory_charge': [],  # minus #"Dodatočné náklady na nepredané výrobky"
+                            'inventory_upgrade': [],  # "Náklady na upgrade zásob"
+                            'overcharge_upgrade': [],  # "Náklady na precenenie zásob"
+                            'interest': [],  # "Nákladové úroky"
+                            'profit_before_tax': [],  # "Výsledok hospodárenia pred zdanením"
+                            'tax': [],  # "Daň"
+                            'net_profit': []}  # "Výsledok hospodárenia po zdanení"
+
+        cash_flow = {'sales': [],
+                     'manufactured_man_cost': [],
+                     'inventory_charge': [],
+                     'interest': [],
+                     'tax': [],
+                     'cash_flow_result': [],
+                     'new_loans': [],
+                     'loan_repayment': [],
+                     'cash': []}
+
+        for i in range(1, turn.number + 1):
+            company_state_new = CompaniesState.objects.get(
+                turn=Turn.objects.get(game=company.game, number=i), company=company)
+            factory_dict['capital'].append(company_state_new.factory.capital)
+            factory_dict['upgrades'].append(company_state_new.r_d)
+            production_dict['volume'].append(company_state_new.production.volume)
+            production_dict['man_cost'].append(round(company_state_new.production.man_cost, 2))
+            production_dict['man_cost_all'].append(round(company_state_new.production.man_cost_all, 2))
+            production_dict['sell_price'].append(company_state_new.production.sell_price)
+            marketing_dict['tv'].append(company_state_new.marketing.tv)
+            marketing_dict['viral'].append(company_state_new.marketing.viral)
+            marketing_dict['billboard'].append(company_state_new.marketing.billboard)
+            marketing_dict['ooh'].append(company_state_new.marketing.ooh)
+            marketing_dict['podcast'].append(company_state_new.marketing.podcast)
+            sales['orders_received'].append(company_state_new.orders_received)  # "Prijaté objednávky"
+            sales['orders_fulfilled'].append(company_state_new.orders_fulfilled)  # "Splnené objednávky"
+            sales['orders_unfulfilled'].append(
+                (company_state_new.orders_received - company_state_new.orders_fulfilled))  # Nesplnené objednávky
+            balance['cash'].append(round(company_state_new.cash, 2))
+            balance['inventory_money'].append(round(company_state_new.inventory_money, 2))
+            balance['assets_summary'].append(round((company_state_new.cash + (
+                    company_state_new.inventory * company_state_new.production.man_cost) +
+                                                    company_state_new.factory.capital_investments), 2))  # pasiva
+            balance['loans'].append(round(company_state_new.loans, 2))  # "Pôžičky"
+            balance['ret_earnings'].append(round(company_state_new.ret_earnings, 2))  # "Výsledok hospodárenia z
+            # predchádzajúcich období"
+            balance['base_capital'].append(round(company.game.parameters.base_capital, 2))  # "Základné ímanie"
+            balance['liabilities_summary'].append(round(
+                company_state_new.loans + company_state_new.ret_earnings + company.game.parameters.base_capital,
+                2))  # "Súčet pasív"
+            balance['capital_investments'].append(round(company_state_new.factory.capital_investments, 2))
+            income_statement['sales'].append(round(company_state_new.sales, 2))
+            income_statement['manufactured_man_cost'].append(round(company_state_new.sold_man_cost, 2))
+            income_statement['r_d'].append(round(company_state_new.r_d, 2))
+            income_statement['depreciation'].append(round(company_state_new.depreciation, 2))
+            income_statement['inventory_charge'].append(round(company_state_new.inventory_charge, 2))
+            income_statement['inventory_upgrade'].append(round(company_state_new.inventory_upgrade, 2))
+            income_statement['overcharge_upgrade'].append(round(company_state_new.overcharge_upgrade, 2))
+            income_statement['interest'].append(round(company_state_new.interest, 2))
+            income_statement['profit_before_tax'].append(round(company_state_new.profit_before_tax, 2))
+            income_statement['tax'].append(round(company_state_new.tax, 2))
+            income_statement['net_profit'].append(round(company_state_new.net_profit, 2))
+            cash_flow['sales'].append(round(company_state_new.sales, 2))
+            cash_flow['manufactured_man_cost'].append(round(company_state_new.manufactured_man_cost, 2))
+            cash_flow['inventory_charge'].append(round(company_state_new.inventory_charge, 2))
+            cash_flow['interest'].append(round(company_state_new.interest, 2))
+            cash_flow['tax'].append(round(company_state_new.tax, 2))
+            cash_flow['cash_flow_result'].append(round(company_state_new.cash_flow_res, 2))
+            cash_flow['new_loans'].append(round(company_state_new.new_loans, 2))
+            cash_flow['loan_repayment'].append(round(company_state_new.loan_repayment, 2))
+            cash_flow['cash'].append(round(company_state_new.cash, 2))
+
+        return Response({"marketing": marketing_dict, 'cash_flow': cash_flow, 'income_statement': income_statement,
+                         'balance': balance, 'sales': sales, 'production': production_dict, 'factory': factory_dict}
+                        , status=200)
+
+
 class CompanyReport(APIView):
 
     def get(self, request) -> Response:
@@ -297,13 +435,16 @@ class CompanyReport(APIView):
         balance = dict()
         balance['cash'] = round(company_state_previous.cash,
                                 2) if company_state_previous.cash is not None else "N/A"  # "Hotovosť" #TODO: CHANGED from cash to balance !!!!!MIND THE SUMMARY AS WELL
-        balance['inventory_money'] = round(
-            (company_state_previous.inventory * company_state_previous.production.man_cost), 2) if (
+        # balance['inventory_money'] = round(
+        #     (company_state_previous.inventory * company_state_previous.production.man_cost), 2) if (
+        #         company_state_previous.inventory is not None and company_state_previous.production.man_cost is not None) else "N/A"  # Zásoby
+
+        balance['inventory_money'] = round(company_state_previous.inventory_money, 2) if (
                 company_state_previous.inventory is not None and company_state_previous.production.man_cost is not None) else "N/A"  # Zásoby
+
         balance['capital_investments'] = round(company_state_previous.factory.capital_investments,
                                                2) if company_state_previous.factory.capital_investments is not None else "N/A"  # "Kapitálové investície"
-        balance['assets_summary'] = round((company_state_previous.cash + (
-                company_state_previous.inventory * company_state_previous.production.man_cost) + company_state_previous.factory.capital_investments),
+        balance['assets_summary'] = round((company_state_previous.cash + company_state_previous.inventory_money + company_state_previous.factory.capital_investments),
                                           2) if (
                 company_state_previous.cash is not None and company_state_previous.inventory is not None and company_state_previous.production.man_cost is not None and company_state_previous.factory.capital_investments is not None) else "N/A"  # "Súčet aktív"
 
@@ -346,7 +487,7 @@ class CompanyReport(APIView):
                                       2) if company_state_previous.interest is not None else "N/A"  # minus #"Výdavky na úroky"
         cash_flow['tax'] = round(company_state_previous.tax,
                                  2) if company_state_previous.tax is not None else "N/A"  # minus # "Zaplatená daň"
-        # teraz bude stav cash flow aby vedeli či potrebuju pozicku
+        # teraz bude stav cash flow aby vedeli či potrebuju pozicku›
         cash_flow['cash_flow_result'] = round(company_state_previous.cash_flow_res,
                                               2) if company_state_previous.cash_flow_res is not None else "N/A"  # "Výsledok finančného toku"
 
@@ -396,6 +537,12 @@ class CreateCompanyView(APIView):
         if not request.user or not request.user.is_authenticated:
             return Response({"detail": "User is not authenticated"}, status=401)
 
+        # Check if a company model already exists for the user
+        existing_company = Company.objects.filter(user=request.user).first()
+        if existing_company:
+            return Response({"detail": "Company already exists for this user"},
+                            status=409)
+
         serializer = CompanySerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -422,7 +569,9 @@ def checkCommitted(turn: Turn, end: bool = True) -> bool:
             return False
 
     if end and auto_end:
-        end_turn(turn)
+        new_turn = end_turn(turn)
+        y = {"Number": new_turn.number, "Committed": False}
+        broadcast_message(y)  # toto je v poriadku, vsetkym pride sprava o tom, ze je nove kolo
 
     return True
 
@@ -564,7 +713,7 @@ class PostSpendingsView(APIView):
         company_state.committed = True
         company_state.save()
 
-        checkCommitted(last_turn) # checks if all companies are committed
+        checkCommitted(last_turn)  # checks if all companies are committed
 
         return Response(status=201)
 
@@ -582,4 +731,4 @@ class TurnInfoView(APIView):
         turn = get_last_turn(company.game)
         state = CompaniesState.objects.get(turn=turn, company=company)
 
-        return Response({"Number": turn.number, "Start": turn.start, "Committed": state.committed})
+        return Response({"Number": turn.number, "Committed": state.committed})
