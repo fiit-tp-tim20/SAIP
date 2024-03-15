@@ -8,7 +8,9 @@ import string
 import json
 from django.contrib.auth.forms import UserCreationForm
 from random_username.generate import generate_username
+import os
 
+BACKEND_URL = os.getenv('BACKEND_URL')
 file = Path(__file__).resolve()
 parent, root = file.parent, file.parents[1]
 
@@ -69,9 +71,6 @@ DECISIONS_PRESET ={
                     }
 AVG_PRICE_PRESET = 800
 MAX_PRICE_PRESET = 1000
-
-VITE_BACKEND_URL='http://127.0.0.1:8000/api'
-# VITE_BACKEND_URL='https://saip.sk/api'
 
 @dataclass
 class Bot(ABC):
@@ -172,7 +171,7 @@ class Bot(ABC):
     def get_upgrades(self,**kwargs):
         turn_number = kwargs.get("turn_number")
 
-        url = VITE_BACKEND_URL + "/upgrades/"
+        url = BACKEND_URL + "/upgrades/"
         headers = {
             "Authorization": f"Bearer {self.token}",
             "Content-Type": "application/json",
@@ -200,7 +199,7 @@ class Bot(ABC):
         return self.token
 
     def commit_decisions(self):
-        url = VITE_BACKEND_URL + "/spendings/"
+        url = BACKEND_URL + "/spendings/"
         data = self.decisions
         print(self.decisions)
         headers = {
@@ -215,7 +214,7 @@ class Bot(ABC):
             username = str(self.type) + '_' + generated_name + '_' + generate_random_string()
             passwd = generate_random_password()
 
-        url = VITE_BACKEND_URL + "/register/"
+        url = BACKEND_URL + "/register/"
         data = {
             "username": username,
             "password": passwd
@@ -229,7 +228,7 @@ class Bot(ABC):
             print("Response content:", response.text)
 
     def login(self,username,passwd):
-        url = VITE_BACKEND_URL + "/login/"
+        url = BACKEND_URL + "/login/"
         data = {
             "username": username,
             "password": passwd
@@ -243,7 +242,7 @@ class Bot(ABC):
 
     def create_company(self,id,name):
 
-        url = VITE_BACKEND_URL + "/create_company/"
+        url = BACKEND_URL + "/create_company/"
         data = {
             "game": id,
             "name": name,
@@ -264,7 +263,7 @@ class Bot(ABC):
 
     def get_company_report(self,**kwargs):
         turn_number = kwargs.get("turn_number")
-        url = VITE_BACKEND_URL + "/company_report/"
+        url = BACKEND_URL + "/company_report/"
         headers = {
             "Authorization": f"Bearer {self.token}",
             "Content-Type": "application/json",
@@ -281,7 +280,7 @@ class Bot(ABC):
 
     def get_company_info(self, **kwargs):
         turn_number = kwargs.get("turn_number")
-        url = VITE_BACKEND_URL + "/company_info/"
+        url = BACKEND_URL + "/company_info/"
         headers = {
             "Authorization": f"Bearer {self.token}",
             "Content-Type": "application/json",
@@ -296,7 +295,7 @@ class Bot(ABC):
 
     def get_industry_report(self,**kwargs):
         turn_number = kwargs.get("turn_number")
-        url = VITE_BACKEND_URL + "/industry_report/"
+        url = BACKEND_URL + "/industry_report/"
         headers = {
             "Authorization": f"Bearer {self.token}",
             "Content-Type": "application/json",
@@ -328,7 +327,7 @@ class Bot(ABC):
 
     def get_committed_status(self,**kwargs):
         turn_number = kwargs.get("turn_number")
-        url = VITE_BACKEND_URL + "/committed/"
+        url = BACKEND_URL + "/committed/"
         headers = {
             "Authorization": f"Bearer {self.token}",
             "Content-Type": "application/json",
