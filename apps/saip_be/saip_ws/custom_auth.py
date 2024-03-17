@@ -4,6 +4,7 @@ from channels.db import database_sync_to_async
 from channels.middleware import BaseMiddleware
 from knox.auth import TokenAuthentication
 from rest_framework import HTTP_HEADER_ENCODING
+from urllib.parse import parse_qs
 from asgiref.sync import async_to_sync
 
 
@@ -24,9 +25,16 @@ class TokenAuthMiddleware(BaseMiddleware):
     #@database_sync_to_async # https://docs.djangoproject.com/en/4.2/topics/async/
     async def __call__(self, scope, receive, send):
         try:
-            token = scope["subprotocols"][1]
+            query_string = scope['query_string'].decode('utf-8')
+
+            # Parse the query string into a dictionary
+            query_params = parse_qs(query_string)
+
+            # Access the 'token' parameter from the dictionary
+            token = query_params.get('token', [None])[0]
         except ValueError:
             token = None   
         user = await get_user(token)
+        print(user)
         scope['user'] = user
         return await super().__call__(scope, receive, send)

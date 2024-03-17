@@ -24,10 +24,11 @@ import Register from "./screens/Register";
 import BugReport from "./components/bugreport/BugReport";
 import { currentTurn } from "./store/Atoms";
 import { io } from "socket.io-client"
+// @ts-ignore
 
 function App() {
 	const token = localStorage.getItem("token");
-	const [connect, setConnect] = useState('no')
+	const [connect, setConnect] = useState('yes')
 	const value = { connect, setConnect };
 	const dataWs = useContext(MyContext);
 	const [data, setData] = useState({
@@ -36,24 +37,15 @@ function App() {
 		start:  null
 	});
 	useEffect(() => {
-		// @ts-ignore
 		const socket = io('ws://localhost:8000', {
 			path: "/ws/turn_info/",
 			transports: ['websocket'],
 			query: { token: token }
-		  });
-	  
-		  socket.on('connection', () => {
-			console.log('Websocket connected');
-			setConnect('yes');
-		  });
-	  
-		  socket.on('close', () => {
-			console.error('Socket disconnected unexpectedly');
-		  });
-
-		// eslint-disable-next-line
-	}, [token, connect, data.num]);
+		});
+		socket.on("Data", (data: any) => {
+			console.log(data)
+		});
+	}, []);
 	const { reset: resetCompanyState } = useCompanyStore();
 	const { reset: resetUpgradeState } = useUpgradesStore();
 	const { reset: resetMarketingState } = useMarketingStore();
