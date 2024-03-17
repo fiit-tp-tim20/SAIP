@@ -23,6 +23,8 @@ import GameSelect from "./screens/GameSelect";
 import Register from "./screens/Register";
 import BugReport from "./components/bugreport/BugReport";
 import { currentTurn } from "./store/Atoms";
+import { io } from "socket.io-client"
+
 function App() {
 	const token = localStorage.getItem("token");
 	const [connect, setConnect] = useState('no')
@@ -35,37 +37,20 @@ function App() {
 	});
 	useEffect(() => {
 		// @ts-ignore
-		const chatSocket = new WebSocket(`${import.meta.env.VITE_WS_URL}turn_info/`, ['token', token]);
-		chatSocket.onmessage = function (e) {
-			// @ts-ignore
-			console.log(e.data);
-			console.log(connect)
-			if (e.data === 'Websocket connected') {
-				setConnect('yes');
-			}
-			if (connect === 'yes' && e.data[0] === '{'){
-				try {
-					const receivedData = JSON.parse(e.data);
-					setData({
-						num: receivedData.Number,
-						comm: receivedData.Committed,
-						start: receivedData.Start,
-					});
-				} catch (error) {
-					console.error('Error parsing JSON:', error);
-				}
-			}
-
-		};
-		chatSocket.onclose = function (e) {
-			console.log(e)
-			console.error('Chat socket closed unexpectedly');
-		};
-
-		// Cleanup function
-		return () => {
-			chatSocket.close();
-		};
+		const socket = io('ws://localhost:8000', {
+			path: "/ws/turn_info/",
+			transports: ['websocket'],
+			query: { token: token }
+		  });
+	  
+		  socket.on('connection', () => {
+			console.log('Websocket connected');
+			setConnect('yes');
+		  });
+	  
+		  socket.on('close', () => {
+			console.error('Socket disconnected unexpectedly');
+		  });
 
 		// eslint-disable-next-line
 	}, [token, connect, data.num]);
