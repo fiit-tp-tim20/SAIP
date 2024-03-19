@@ -54,5 +54,5 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd ~/SAIP
-            sudo cp apps/saip_be /var/www/ -r
+            cp apps/saip_be /var/www/ -r
             bash ~/manage_services.sh --restart
