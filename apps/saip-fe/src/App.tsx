@@ -1,6 +1,7 @@
 import React, {createContext, Suspense, useContext, useEffect, useState} from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import useWebSocket from 'react-use-websocket';
 // @ts-ignore
 import { MyContext } from "./api/MyContext.js";
 // @ts-ignore
@@ -25,18 +26,16 @@ import BugReport from "./components/bugreport/BugReport";
 import { currentTurn } from "./store/Atoms";
 function App() {
 	const token = localStorage.getItem("token");
-	const [connect, setConnect] = useState('no')
+	const [connect, setConnect] = useState('no');
 	const value = { connect, setConnect };
 	const dataWs = useContext(MyContext);
-	const [data, setData] = useState({
-		num: null,
-		comm: null,
-		start:  null
-	});
-	useEffect(() => {
-		// @ts-ignore
-		const chatSocket = new WebSocket(`${import.meta.env.VITE_WS_URL}turn_info/`, ['token', token]);
-		chatSocket.onmessage = function (e) {
+	const [data, setData] = useState({ num: null, comm: null, start: null });
+
+	const { sendJsonMessage, lastMessage, readyState } = useWebSocket(`${import.meta.env.VITE_WS_URL}turn_info/`, {
+		protocols: ['authorization', `${token}`],
+		onOpen: () => console.log('opened'),
+		onClose: () => console.log('closed'),
+		onMessage: (e) =>{
 			// @ts-ignore
 			console.log(e.data);
 			console.log(connect)
@@ -56,19 +55,12 @@ function App() {
 				}
 			}
 
-		};
-		chatSocket.onclose = function (e) {
-			console.log(e)
-			console.error('Chat socket closed unexpectedly');
-		};
-
-		// Cleanup function
-		return () => {
-			chatSocket.close();
-		};
-
-		// eslint-disable-next-line
-	}, [token, connect, data.num]);
+		},
+		share: true,
+		shouldReconnect: (closeEvent) => true,
+		reconnectAttempts: 10,
+		reconnectInterval: 3000,
+	});
 	const { reset: resetCompanyState } = useCompanyStore();
 	const { reset: resetUpgradeState } = useUpgradesStore();
 	const { reset: resetMarketingState } = useMarketingStore();

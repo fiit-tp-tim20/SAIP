@@ -11,13 +11,14 @@ from .triggers import broadcast_message
 
 class TestConsumer(WebsocketConsumer):
     def connect(self):
-        self.accept()
+
         try:
            if str(self.scope["user"]).lower() == "anonymoususer":
-            return self.send(text_data="User is anonymous", close=True)
+               return self.send(text_data="User is anonymous", close=True)
            company = Company.objects.get(user=self.scope["user"])
         except Company.DoesNotExist:
             return self.send(text_data="Company for this user not found", close=True)
+        self.accept("authorization")
         async_to_sync(self.channel_layer.group_add)("game", self.channel_name) # predpokladame, ze sa zatial hra jedna hra v jednom case
         self.send(text_data="Websocket connected")
         turn = get_last_turn(company.game)
