@@ -29,7 +29,11 @@ function App() {
 	const [connect, setConnect] = useState('no');
 	const value = { connect, setConnect };
 	const dataWs = useContext(MyContext);
-	const [data, setData] = useState({ num: null, comm: null, start: null });
+	const [data, setData] = useState({
+		num: null,
+		comm: null,
+		start:  null
+	});
 
 	const { sendJsonMessage, lastMessage, readyState } = useWebSocket(`${import.meta.env.VITE_WS_URL}turn_info/`, {
 		protocols: ['authorization', `${token}`],
@@ -41,6 +45,7 @@ function App() {
 			console.log(connect)
 			if (e.data === 'Websocket connected') {
 				setConnect('yes');
+				console.log(connect)
 			}
 			if (connect === 'yes' && e.data[0] === '{'){
 				try {
