@@ -22,7 +22,7 @@ function ProductModal(props: Props) {
 		<div className="background-container rounded-2xl p-6 grid grid-cols-2 gap-6 w-[60vw] min-h-[50vh] max-h-[95vh]">
 			<div className="flex flex-col max-h-[90vh] overflow-scroll scrollbar-hide">
 				<div className="py-2">
-					<h2 className="pb-2">{upgrade.name}</h2>
+					<h2 className="pb-2">{t(`features_translation.${upgrade.name}`)}</h2>
 					<p className="text-justify">{upgrade.description}</p>
 				</div>
 				<div className="py-2">

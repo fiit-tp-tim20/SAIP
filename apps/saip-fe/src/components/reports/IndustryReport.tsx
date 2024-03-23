@@ -1,11 +1,12 @@
-import React, {useContext, useState} from "react";
+import React, { useContext, useState } from "react";
 import { useQuery } from "react-query";
+import Tutorial from "../modal/Tutorial";
 import getIndustryReport, { IndustryReport as IndustryReportType } from "../../api/GetIndustryReport";
 import { getIndustryGraphData } from "../../api/GetIndustryGraphData";
 import IndustryGraph from "../statisticsGraph/IndustryGraph";
 import numberWithSpaces from "../../utils/numberWithSpaces";
 // @ts-ignore
-import {MyContext} from "../../api/MyContext.js";
+import { MyContext } from "../../api/MyContext.js";
 
 const sortByStockPrice = (a: IndustryReportType, b: IndustryReportType) => {
 	if (!a.stock_price) return 1;
@@ -20,12 +21,36 @@ function IndustryReport() {
 	const dataWs = useContext(MyContext);
 	// @ts-ignore
 	// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle
-	const _turn = dataWs.num
+	const _turn = dataWs.num;
 
 	const [turn, setTurn] = useState<number>(_turn - 1);
 
 	const { data, isLoading } = useQuery(["getIndustryReport", turn], () => getIndustryReport(turn));
 	const { data: graphData, isLoading: isLoading2 } = useQuery(["getIndustryGraphData"], getIndustryGraphData);
+
+	// State for managing tutorial visibility
+	const [isTutorialOpen, setTutorialOpen] = useState<boolean>(true);
+
+	// State for managing tutorial visibility
+	const [tutorialStates, setTutorialStates] = useState({
+		companies_table: false,
+		companies_table_tip: false,
+		economy_params_tip: false,
+	});
+
+	const openTutorial = (tutorialKey: string) => {
+		setTutorialStates((prevStates) => ({
+			...prevStates,
+			[tutorialKey]: true,
+		}));
+	};
+
+	const closeTutorial = (tutorialKey: string) => {
+		setTutorialStates((prevStates) => ({
+			...prevStates,
+			[tutorialKey]: false,
+		}));
+	};
 
 	if (!isLoading && !data) {
 		return <p>Industry report is not available yet</p>;
@@ -60,6 +85,54 @@ function IndustryReport() {
 					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 						<div className="flex flex-row items-center justify-between py-2">
 							<h2>Rebríček všetkých firiem (podľa akcií)</h2>
+							<div>
+								{/* Add a button to open the tutorial */}
+								<button
+									onClick={() => openTutorial("companies_table")}
+									className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+								>
+									?
+								</button>
+								{tutorialStates.companies_table && (
+									<Tutorial
+										isOpen={tutorialStates.companies_table}
+										closeModal={() => closeTutorial("companies_table")}
+										textTitle="Rebríček všetkých firiem (podľa akcií)"
+										textContent={
+											<div>
+												<p>
+													<h6>Hodnota akcie</h6>= (hodnota DHM + finančné prostriedky * 0,2 +
+													výsledky hospodárenia min. období *0,3 + suma výnosov do marketingu
+													- Pôžičky ) / 1 000
+												</p>
+											</div>
+										}
+									/>
+								)}
+								{/* Add a button to open the tutorial */}
+								<button
+									onClick={() => openTutorial("companies_table_tip")}
+									className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+								>
+									💡
+								</button>
+								{tutorialStates.companies_table_tip && (
+									<Tutorial
+										isOpen={tutorialStates.companies_table_tip}
+										closeModal={() => closeTutorial("companies_table_tip")}
+										textTitle="Rebríček všetkých firiem Tip 💡"
+										textContent={
+											<div>
+												<p>
+													V simulácií môže existovať aj spoločnosť riadená počítačom - bot.
+													Existujú tri typy botov s rôznymi stratégiami: bot s nízkou cenou,
+													bot s vysokou cenou, bot so strednou cenou.
+												</p>
+											</div>
+										}
+									/>
+								)}
+							</div>
 						</div>
 						<table className="table-auto table-white">
 							<thead>
@@ -155,6 +228,28 @@ function IndustryReport() {
 					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 						<div className="flex flex-row items-center justify-between py-2">
 							<h2>Ekonomické parametre trhu</h2>
+							{/* Add a button to open the tutorial */}
+							<button
+								onClick={() => openTutorial("economy_params_tip")}
+								className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+							>
+								💡
+							</button>
+							{tutorialStates.economy_params_tip && (
+								<Tutorial
+									isOpen={tutorialStates.economy_params_tip}
+									closeModal={() => closeTutorial("economy_params_tip")}
+									textTitle="Ekonomické parametre trhu Tip 💡"
+									textContent={
+										<div>
+											<p>
+												Ekonomické parametre môžu byť počas simulácie menené administrátorom.
+												Dôležitým parametrom, ktorý môže ovplyvniť výšku nákladov je inflácia.
+											</p>
+										</div>
+									}
+								/>
+							)}
 						</div>
 						<table className="table-auto table-white">
 							<thead>

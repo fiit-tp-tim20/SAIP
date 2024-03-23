@@ -87,5 +87,12 @@
 	},
 	"marketing": {
 		"title": "Marketing"
+	},
+
+	"features_translation": {
+		"Battery": "Batéria",
+		"Frame": "Rám",
+		"Display": "Displej",
+		"Brakes": "Brzdy"
 	}
 }
