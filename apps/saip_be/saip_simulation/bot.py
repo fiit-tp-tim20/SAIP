@@ -9,7 +9,9 @@ import json
 from django.contrib.auth.forms import UserCreationForm
 from random_username.generate import generate_username
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 BACKEND_URL = os.getenv('BACKEND_URL')
 file = Path(__file__).resolve()
 parent, root = file.parent, file.parents[1]
