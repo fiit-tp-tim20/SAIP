@@ -35,19 +35,22 @@ function App() {
 		start:  null
 	});
 
-	const { sendJsonMessage, lastMessage, readyState } = useWebSocket(`${import.meta.env.VITE_WS_URL}turn_info/`, {
+	const {   sendMessage,
+		sendJsonMessage,
+		lastMessage,
+		lastJsonMessage,
+		readyState,
+		getWebSocket,} = useWebSocket(`${import.meta.env.VITE_WS_URL}turn_info/`, {
 		protocols: ['authorization', `${token}`],
 		onOpen: () => console.log('opened'),
 		onClose: () => console.log('closed'),
 		onMessage: (e) =>{
+			console.log(e.data)
 			// @ts-ignore
-			console.log(e.data);
-			console.log(connect)
 			if (e.data === 'Websocket connected') {
 				setConnect('yes');
-				console.log(connect)
 			}
-			if (connect === 'yes' && e.data[0] === '{'){
+			if (e.data[0] === '{' && connect == 'yes') {
 				try {
 					const receivedData = JSON.parse(e.data);
 					setData({
@@ -64,7 +67,7 @@ function App() {
 		share: true,
 		shouldReconnect: (closeEvent) => true,
 		reconnectAttempts: 10,
-		reconnectInterval: 3000,
+		reconnectInterval: 30000,
 	});
 	const { reset: resetCompanyState } = useCompanyStore();
 	const { reset: resetUpgradeState } = useUpgradesStore();
