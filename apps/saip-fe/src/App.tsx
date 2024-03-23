@@ -23,6 +23,8 @@ import GameSelect from "./screens/GameSelect";
 import Register from "./screens/Register";
 import BugReport from "./components/bugreport/BugReport";
 import { currentTurn } from "./store/Atoms";
+import WelcomePage from "./screens/WelcomePage";
+
 function App() {
 	const token = localStorage.getItem("token");
 	const [connect, setConnect] = useState('no')
@@ -174,14 +176,14 @@ function App() {
 	return (
 		<MyContext.Provider value={data}>
 			<BrowserRouter>
-				<Routes>
-					<Route path="/register" element={<Register />} />
-					<Route path="/" element={<Login />} />
-					<Route path="*" element={<Navigate to="/" replace />} />
-				</Routes>
+			<Routes>
+				<Route path="/register" element={<Register />} />
+				<Route path="/login" element={<Login />} />
+				<Route path="/" element={<WelcomePage />} />
+				<Route path="*" element={<Navigate to="/" replace />} />
+			</Routes>
 			</BrowserRouter>
 		</MyContext.Provider>
-
 	);
 }
 
