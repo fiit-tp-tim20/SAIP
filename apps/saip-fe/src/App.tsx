@@ -1,7 +1,10 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, {createContext, Suspense, useContext, useEffect, useState} from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import { useQuery } from "react-query";
+// @ts-ignore
+import { MyContext } from "./api/MyContext.js";
+// @ts-ignore
+import { ConnectContext } from "./api/ConnectContext.js";
 import "./i18n";
 import { useAtom } from "jotai";
 import Dashboard from "./screens/Dashboard";
@@ -12,7 +15,6 @@ import Marketing from "./screens/Marketing";
 import BottomBar from "./components/bottombar/BottomBar";
 import Login from "./screens/Login";
 import NotFound from "./screens/NotFound";
-import { getTurn } from "./api/GetTurn";
 import useCompanyStore from "./store/Company";
 import useUpgradesStore from "./store/Upgrades";
 import useMarketingStore from "./store/Marketing";
@@ -21,22 +23,57 @@ import GameSelect from "./screens/GameSelect";
 import Register from "./screens/Register";
 import BugReport from "./components/bugreport/BugReport";
 import { currentTurn } from "./store/Atoms";
-import getCommitted from "./api/GetCommitted";
 import WelcomePage from "./screens/WelcomePage";
 
 function App() {
 	const token = localStorage.getItem("token");
-	const { data } = useQuery({
-		queryKey: ["currentTurn"],
-		queryFn: () => token && getTurn(),
-		refetchInterval: 1000,
+	const [connect, setConnect] = useState('no')
+	const value = { connect, setConnect };
+	const dataWs = useContext(MyContext);
+	const [data, setData] = useState({
+		num: null,
+		comm: null,
+		start:  null
 	});
+	useEffect(() => {
+		// @ts-ignore
+		const chatSocket = new WebSocket(`${import.meta.env.VITE_WS_URL}turn_info/`, ['token', token]);
+		chatSocket.onmessage = function (e) {
+			// @ts-ignore
+			console.log(e.data);
+			console.log(connect)
+			if (e.data === 'Websocket connected') {
+				setConnect('yes');
+			}
+			if (connect === 'yes' && e.data[0] === '{'){
+				try {
+					const receivedData = JSON.parse(e.data);
+					setData({
+						num: receivedData.Number,
+						comm: receivedData.Committed,
+						start: receivedData.Start,
+					});
+				} catch (error) {
+					console.error('Error parsing JSON:', error);
+				}
+			}
 
+		};
+		chatSocket.onclose = function (e) {
+			console.log(e)
+			console.error('Chat socket closed unexpectedly');
+		};
+
+		// Cleanup function
+		return () => {
+			chatSocket.close();
+		};
+
+		// eslint-disable-next-line
+	}, [token, connect, data.num]);
 	const { reset: resetCompanyState } = useCompanyStore();
 	const { reset: resetUpgradeState } = useUpgradesStore();
 	const { reset: resetMarketingState } = useMarketingStore();
-
-	const { refetch: refetchCommited } = useQuery("committed", () => getCommitted());
 
 	const [enableArc] = useState(true);
 
@@ -67,30 +104,36 @@ function App() {
 	}, [enableArc]);
 
 	useEffect(() => {
-		const savedTurn = localStorage.getItem("turn");
+		// @ts-ignore
+		const savedTurn = dataWs.num
 		if (!savedTurn && !data) {
-			localStorage.setItem("turn", "0");
+			//localStorage.setItem("turn", "0");
 		}
 		if (!savedTurn && data) {
-			localStorage.setItem("turn", data.Number);
+			//localStorage.setItem("turn", data.Number);
+			//localStorage.setItem("committed", data.Committed);
 		}
-		if (savedTurn && data && data.Number !== parseInt(savedTurn, 10)) {
-			localStorage.setItem("turn", data.Number);
-			refetchCommited();
+		if (savedTurn && data && data.num !== parseInt(savedTurn, 10)) {
+			//localStorage.setItem("committed", data.Committed);
+			//localStorage.setItem("turn", data.Number);
 			resetCompanyState();
 			resetUpgradeState();
 			resetMarketingState();
 		}
 
-		setTurn(data?.Number || -1);
-	}, [data && data.Number]);
+		setTurn(data?.num || -1);
+	}, [data]);
 
 	// kompletne dum-dum riešenie PREROBIŤ. Aj tu aj getTurn() !!!!!!!!!!!!!
-	if (token && !data) {
-		return <GameSelect />;
+	if (token && data.num === null) {
+		return (
+			<ConnectContext.Provider value={value}>
+				<GameSelect />
+			</ConnectContext.Provider>
+		);
 	}
 
-	if (data && data.Number === 0) {
+	if (data && data.num === 0) {
 		return (
 			<div className="flex flex-col justify-center items-center h-screen">
 				<h1 className="text-4xl font-bold pb-4">Hra sa ešte nezačala</h1>
@@ -107,35 +150,40 @@ function App() {
 
 	if (token) {
 		return (
-			<Suspense>
-				<BrowserRouter>
-					<Navbar />
-					<div className="my-16">
-						<Routes>
-							<Route path="/product" element={<Product />} />
-							<Route path="/company" element={<Company />} />
-							<Route path="/marketing" element={<Marketing />} />
-							<Route path="/game" element={<GameSelect />} />
-							<Route path="/" element={<Dashboard />} />
-							<Route path="*" element={<NotFound />} />
-						</Routes>
-					</div>
-					<BottomBar />
-					<BugReport />
-				</BrowserRouter>
-			</Suspense>
+			<MyContext.Provider value={data}>
+				<Suspense>
+					<BrowserRouter>
+						<Navbar />
+						<div className="my-16">
+							<Routes>
+								<Route path="/product" element={<Product />} />
+								<Route path="/company" element={<Company />} />
+								<Route path="/marketing" element={<Marketing />} />
+								<Route path="/game" element={<GameSelect />} />
+								<Route path="/" element={<Dashboard />} />
+								<Route path="*" element={<NotFound />} />
+							</Routes>
+						</div>
+						<BottomBar />
+						<BugReport />
+					</BrowserRouter>
+				</Suspense>
+			</MyContext.Provider>
+
 		);
 	}
 
 	return (
-		<BrowserRouter>
+		<MyContext.Provider value={data}>
+			<BrowserRouter>
 			<Routes>
 				<Route path="/register" element={<Register />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/" element={<WelcomePage />} />
 				<Route path="*" element={<Navigate to="/" replace />} />
 			</Routes>
-		</BrowserRouter>
+			</BrowserRouter>
+		</MyContext.Provider>
 	);
 }
 

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.http import HttpResponse
-
+from saip_ws.triggers import broadcast_message
 from .Exports import create_game_export
 
 from .models import Turn, Company, Production, Marketing, Factory, CompaniesState, Game, GameParameters, MarketState,\
@@ -54,7 +54,7 @@ class MarketStateAdmin(admin.ModelAdmin):
 
 @admin.register(TeacherDecisions)
 class TeacherDecisions(admin.ModelAdmin):
-    list_display = ('__str__', 'interest_rate', 'tax_rate', 'inflation', 'loan_limit')
+    list_display = ('__str__', 'interest_rate', 'tax_rate', 'inflation', 'loan_limit', 'bonus_spendable_cash_increase_rate')
     list_filter = ('turn__game', 'turn__game__admin')
 
 @admin.register(Game)
@@ -72,7 +72,10 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
             return HttpResponse("Last turn not found", status=404)
         if last_turn.end is not None:
             return HttpResponse("Last turn is already ended", status=500)
-        _ = end_turn(last_turn)
+        # sem treba pridat broadcast
+        new_turn = end_turn(last_turn)
+        y = {"Number": new_turn.number, "Committed": False}
+        broadcast_message(y)
 
     def save_model(self, request, obj, form, change):
         """Override save_model to create default upgrades and turn if they don't exist"""

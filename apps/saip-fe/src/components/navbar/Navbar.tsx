@@ -1,18 +1,15 @@
-import React from "react";
-import { useQuery } from "react-query";
+import React, {useContext} from "react";
 import { useLocation } from "react-router";
-import { getTurn } from "../../api/GetTurn";
 import LinkTab from "./LinkTab";
 import Profile from "./Profile";
 import {Link} from "react-router-dom";
-
+import  {MyContext}  from "..//../api/MyContext.js";
 function Navbar() {
 	const location = useLocation();
 
-	const { data, isLoading } = useQuery({
-		queryKey: ["currentTurn"],
-		queryFn: () => getTurn(),
-	});
+	const dataWs = useContext(MyContext);
+	// @ts-ignore
+	const data = dataWs.num
 
 	const tabs = [
 		{
@@ -20,12 +17,12 @@ function Navbar() {
 			path: "/",
 		},
 		{
-			title: "Produkt",
-			path: "/product",
+			title: "Výroba a predaj",
+			path: "/company",
 		},
 		{
-			title: "Spoločnosť",
-			path: "/company",
+			title: "Výskum a vývoj",
+			path: "/product",
 		},
 		{
 			title: "Marketing",
@@ -50,7 +47,7 @@ function Navbar() {
 					))}
 				</ul>
 				<div className="flex flex-row gap-3 pr-3">
-					<p className="m-auto">Kolo {isLoading ? null : data?.Number}</p>
+					<p className="m-auto">Kolo {data}</p>
 					<Profile />
 				</div>
 			</div>

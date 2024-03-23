@@ -20,8 +20,11 @@ from saip_api.views.UserManagement import RegisterView, LoginView, ChangePasswor
 # from saip_api.views.UserManagement import TestView
 from saip_api.views.Upgrade import UpgradeView
 from saip_api.views.GameManagement import CreateGameView, GetRunningGamesView, EndTurnView, GetNotStartedGamesView
-from saip_api.views.CompanyManagement import CreateCompanyView, PostSpendingsView, CompanyInfo, CompanyReport, TurnInfoView, Committed, IndustryReport, MarketingView, CompanyView, IndustryView
+from saip_api.views.CompanyManagement import CreateCompanyView, PostSpendingsView, CompanyInfo, CompanyReport, \
+    TurnInfoView, Committed, IndustryReport, MarketingView, CompanyView, IndustryView, ArchiveReport
 from knox.views import LogoutView
+
+from saip_api.views.TestWebSocket import NotifyTrigger
 
 
 urlpatterns = [
@@ -39,6 +42,7 @@ urlpatterns = [
     path('api/spendings/', PostSpendingsView.as_view(), name='spendings'),
     path('api/company_info/', CompanyInfo.as_view(), name='company_info'),
     path('api/company_report/', CompanyReport.as_view(), name='company_report'),
+    path('api/archive_report/', ArchiveReport.as_view(), name='archive_report'),
     path('api/committed/', Committed.as_view(), name='committed'),
     path('api/turn_info/', TurnInfoView.as_view(), name='turn_info'),
     path('api/industry_report/', IndustryReport.as_view(), name='industry_report'),
@@ -46,4 +50,5 @@ urlpatterns = [
     path('api/company_view/', CompanyView.as_view(), name='company_view'),
     path('api/list_games_ns/', GetNotStartedGamesView.as_view(), name='list_games_ns'),
     path('api/industry_view/', IndustryView.as_view(), name='industry_view'),
+    path('api/wstrigger/', NotifyTrigger.as_view(), name='websocket_trigger')
 ]

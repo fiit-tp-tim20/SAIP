@@ -83,10 +83,12 @@ class Factory:
             return
 
     def total_upkeep(self) -> float:
+        fixed_costs_multiplier: int = max(int(self.capacity/100), 1)
+
         return (
-            self.upkeep.get("rent")
+            (self.upkeep.get("rent")
             + self.upkeep.get("energy")
-            + self.upkeep.get("salaries")
+            + self.upkeep.get("salaries")) * fixed_costs_multiplier
             + self.upkeep.get("materials")
         )
 
@@ -152,6 +154,20 @@ class Inventory:
             inventory_count += product_line.get("unit_count")
         return inventory_count
 
+    def get_inventory_money(self):
+        inventory_money = 0
+
+        for product_line in self.inventory_queue:
+            unit_count = product_line.get("unit_count")
+
+            if unit_count == 0:
+                continue
+
+            else:
+                inventory_money += unit_count * product_line.get("price_per_unit")
+
+        return inventory_money
+
     def get_products(self, demand) -> tuple[int, int, int, int]:
         """returns sum of (price_per_unit * sold_count) values for all retrieved products, units sold, unmet demand, remaining inventory"""
         unmet_demand = demand
@@ -196,6 +212,7 @@ class Company:
     inventory_queue: list[dict] = field(default_factory=list)
     inventory: Inventory = field(init=False)
     current_turn_num: int = 0
+    inventory_money: float = 0
 
     production_volume: int = 0
     prod_ppu: float = 0  # field(init=False)
@@ -234,7 +251,7 @@ class Company:
 
     prev_turn_prod_ppu: float = 0
     prev_turn_total_ppu: float = 0
-    prev_turn_inventory: float = 0
+    prev_turn_inventory: int = 0
     amount_spent_on_upgrades: float = 0
 
     factory: Factory = None
@@ -270,7 +287,7 @@ class Company:
 
             self.prod_costs_per_turn = self.production_volume * self.prod_ppu
             self.total_costs_per_turn = self.production_volume * self.total_ppu
-            
+
         self.inventory.insert_into_inventory(self.production_volume, self.prod_ppu, self.current_turn_num)
 
     def sell_product(self, demand: int) -> int:  # 2
@@ -282,6 +299,7 @@ class Company:
             self.inventory_count,
         ) = self.inventory.get_products(self.demand)
 
+        self.inventory_money = self.inventory.get_inventory_money()
         self.income_per_turn = self.units_sold * self.product.get_price()
         self.profit = (
             self.income_per_turn - self.cost_of_goods_sold - self.additional_costs
@@ -299,7 +317,7 @@ class Company:
     def calculate_stock_price(self) -> float:  # 3
         self.stock_price = (
             self.factory.capital_investment
-            + self.balance * 0.2  # financial state
+            + self.balance * 0.4  # financial state
             + (self.ret_earnings + self.profit) * 0.3  # total profits
             - self.loans * 0.5  # long term debt
             + self.yield_agg_marketing_value()
@@ -353,7 +371,7 @@ class Company:
 
     def __upgrade_stored_products(self) -> float:
         self.product.upgrade_stored_products()
-        return self.inventory_count * self.product.get_upgrade_stored_products_price()
+        return self.prev_turn_inventory * self.product.get_upgrade_stored_products_price()
 
     def __price_diff_stored_products(self) -> float:
         return (self.prev_turn_prod_ppu - self.prod_ppu) * self.inventory_count
@@ -370,7 +388,7 @@ class Company:
         # self.price_diff_stored_products = self.__price_diff_stored_products()
         self.value_paid_in_stored_product_upgrades = self.__upgrade_stored_products()
         self.value_paid_in_inventory_charge = (
-            self.inventory_count * FactoryPreset.INVENTORY_CHARGE_PER_UNIT
+            self.prev_turn_inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT
         )
 
         self.additional_costs = (

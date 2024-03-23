@@ -12,9 +12,6 @@ export default function Login() {
 	const token = localStorage.getItem("token");
 	const { reset: marketingReset } = useMarketingStore();
 	const { reset: companyReset } = useCompanyStore();
-	useEffect(() => {
-
-	}, []);
 
 	const login = async () => {
 		const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/login/`, {

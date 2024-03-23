@@ -24,7 +24,7 @@ function Profile() {
 			>
 				<img
 					className="rounded-full"
-					src={`https://avatars.dicebear.com/api/miniavs/${data.id}a.png`}
+					src={`https://ui-avatars.com/api/?name=${data.name}`}
 					alt="user profile "
 				/>
 			</button>

@@ -1,19 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { useQuery } from "react-query";
-import { getTurn } from "../api/GetTurn";
+import React, {useContext, useEffect, useState} from "react";
+
 import CompanyReport from "../components/reports/CompanyReport";
 import IndustryReport from "../components/reports/IndustryReport";
+import ArchiveReport from "../components/reports/ArchiveReport";
+// @ts-ignore
+import  {MyContext}  from "../api/MyContext.js";
+import {func} from "three/examples/jsm/nodes/shadernode/ShaderNodeBaseElements";
 
 function Plan() {
 	const [showCompanyReport, setShowCompanyReport] = useState(true);
-	const { data: currentTurn } = useQuery("currentTurn", getTurn);
-
+	const [showIndustryReport, setShowIndustryReport] = useState(false);
+	const [showArchiveReport, setShowArchiveReport] = useState(false);
+	// @ts-ignore
+	const data = useContext(MyContext);
+	// @ts-ignore
+	const currentTurn = data.num
+	// @ts-ignore
 	useEffect(() => {
-		if (currentTurn.Number === 1) {
+		// @ts-ignore
+		if (currentTurn === 1) {
 			setShowCompanyReport(true);
 		}
-	}, [currentTurn]);
-
+	}, [data]);
 	return (
 		<div className="flex flex-col items-center">
 			<div className="inline-flex rounded-md shadow-sm pt-4" role="group">
@@ -22,24 +30,49 @@ function Plan() {
 					className={`font-bold py-2 px-4 m-0 rounded-l-lg transition-all duration-300 ${
 						showCompanyReport ? "button-group-colors-active" : "border button-group-colors"
 					}`}
-					onClick={() => setShowCompanyReport(true)}
+					onClick={function (){
+						setShowArchiveReport(false);
+						setShowIndustryReport(false);
+						setShowCompanyReport(true);
+					}}
 				>
 					Správa o spoločnosti
 				</button>
 				<button
 					type="button"
-					className={`font-bold py-2 px-4 m-0 rounded-r-lg transition-all duration-300 disabled:text-gray-300 disabled:border-gray-300 disabled:hover:bg-white ${
-						!showCompanyReport ? "button-group-colors-active" : "border button-group-colors"
+					className={`font-bold py-2 px-4 m-0 transition-all duration-300 disabled:text-gray-300 disabled:border-gray-300 disabled:hover:bg-white ${
+						showIndustryReport ? "button-group-colors-active" : "border button-group-colors"
 					}
                     `}
-					onClick={() => setShowCompanyReport(false)}
-					disabled={currentTurn.Number === 1}
+					onClick={function (){
+						setShowArchiveReport(false);
+						setShowCompanyReport(false);
+						setShowIndustryReport(true);
+					}}
+					disabled={currentTurn === 1}
 				>
 					Správa o trhu
 				</button>
+				<button
+					type="button"
+					className={`font-bold py-2 px-4 m-0 rounded-r-lg transition-all duration-300 disabled:text-gray-300 disabled:border-gray-300 disabled:hover:bg-white ${
+						showArchiveReport ? "button-group-colors-active" : "border button-group-colors"
+					}
+                    `}
+					onClick={function (){
+						setShowArchiveReport(true);
+						setShowCompanyReport(false);
+						setShowIndustryReport(false);
+					}}
+					disabled={currentTurn === 1}
+				>
+					Archív rozhodnutí
+				</button>
 			</div>
 
-			{showCompanyReport ? <CompanyReport /> : <IndustryReport />}
+			{showCompanyReport && <CompanyReport />}
+			{showIndustryReport && <IndustryReport />}
+			{showArchiveReport && <ArchiveReport />}
 		</div>
 	);
 }

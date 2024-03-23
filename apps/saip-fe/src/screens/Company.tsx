@@ -1,22 +1,26 @@
-import React from "react";
+import React, {useState, useContext, useEffect} from "react";
 import { useQuery } from "react-query";
 import Slider from "../components/slider/Slider";
+import Tutorial from "../components/modal/Tutorial";
 import useCompanyStore from "../store/Company";
 import { getCompanyStats } from "../api/GetCompanyStats";
 import CompanyGraph from "../components/statisticsGraph/CompanyGraph";
-import { getTurn } from "../api/GetTurn";
 import getCompanyReport from "../api/GetCompanyReport";
 
+// @ts-ignore
+import  {MyContext}  from "../api/MyContext.js";
+import getGeneralInfo from "../api/CompanyInfo";
+
 function Company() {
-	const token = localStorage.getItem("token");
-
-	const { data: turn } = useQuery({
-		queryKey: ["currentTurn"],
-		queryFn: () => token && getTurn(),
-	});
-
+	const data = useContext(MyContext);
+	// @ts-ignore
+	const turn = data.num;
 	const { isLoading: statsIsLoading, data: statsData } = useQuery(["getCompanyStats"], getCompanyStats);
-	const { data: reportData } = useQuery(["companyReport", turn], () => getCompanyReport(turn.Number - 1));
+	// @ts-ignore
+	const { data: reportData } = useQuery(["companyReport", turn], () => getCompanyReport(turn - 1));
+	const { isLoading, data: budget_data, refetch } = useQuery("companyInfo", () => getGeneralInfo());
+	const [plusCash, setPlusCash] = useState(0)
+
 
 	const {
 		productCount,
@@ -33,6 +37,46 @@ function Company() {
 		setCapitalInvestmentsChecked,
 	} = useCompanyStore();
 
+	// State for managing tutorial visibility
+	const [isTutorialOpen, setTutorialOpen] = useState<boolean>(true);
+
+	// State for managing tutorial visibility
+	const [tutorialStates, setTutorialStates] = useState({
+		production: false,
+		price: false,
+		invest: false,
+	});
+
+	const openTutorial = (tutorialKey: string) => {
+		setTutorialStates((prevStates) => ({
+			...prevStates,
+			[tutorialKey]: true,
+		}));
+	};
+
+	const closeTutorial = (tutorialKey: string) => {
+		setTutorialStates((prevStates) => ({
+			...prevStates,
+			[tutorialKey]: false,
+		}));
+	};
+	useEffect(() => {
+		refetch()
+	}, [turn]);
+	useEffect(() => {
+		console.log(plusCash)
+		if(!isLoading){
+			try{
+				setPlusCash(budget_data.bonus_spendable_cash);
+			}
+			catch (e) {
+				console.log(e)
+			}
+		}
+		console.log(plusCash)
+	}, [data]);
+
+
 	return (
 		<div className="flex flex-col xl:w-[1280px] md:w-[900px] w-[600px]">
 			<h1 className="my-4">Štatistiky</h1>
@@ -40,7 +84,7 @@ function Company() {
 				{statsIsLoading ? (
 					<div>Loading...</div>
 				) : (
-					<CompanyGraph manufactured={statsData?.manufactured} sold={statsData?.sold} />
+					<CompanyGraph manufactured={statsData.manufactured} price={statsData.sell_price} stored={statsData.inventory} capacity={statsData.capacity} />
 				)}
 			</div>
 			<div className="flex flex-col">
@@ -48,6 +92,33 @@ function Company() {
 				<div className="flex flex-col background-container p-6 rounded-2xl my-2">
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h2>Počet produkovaných kusov</h2>
+						{/* Add a button to open the tutorial */}
+						<button
+							onClick={() => openTutorial("production")}
+							className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+						>
+							💡
+						</button>
+						{tutorialStates.production && (
+							<Tutorial
+								isOpen={tutorialStates.production}
+								closeModal={() => closeTutorial("production")}
+								textTitle="Tip"
+								textContent={
+									<div>
+										Optimálny počet produkovaných kusov do ďalšieho obdobia je 90% maximálnej
+										výrobnej kapacity.
+										<br />
+										<br />
+										= 0,9 * (hodnota továrne / 500)
+										<br />
+										<br />
+										Každých 500€ z celkovej hodnoty továrne predstavuje jeden kus ktorý môžeme
+										vyrobiť.
+									</div>
+								}
+							/>
+						)}
 					</div>
 					<p className="pt-1">
 						Počet produkovaných kusov je počet kusov, ktoré sa vyrobia v určitom časovom období.
@@ -72,6 +143,21 @@ function Company() {
 				<div className="flex flex-col background-container p-6 rounded-2xl my-2">
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h2>Predajná cena</h2>
+						{/* Add a button to open the tutorial */}
+						<button
+							onClick={() => openTutorial("price")}
+							className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+						>
+							💡
+						</button>
+						{tutorialStates.price && (
+							<Tutorial
+								isOpen={tutorialStates.price}
+								closeModal={() => closeTutorial("price")}
+								textTitle="Tip"
+								textContent={<div>Maximálna predajná cena je 15 000 €.</div>}
+							/>
+						)}
 					</div>
 					<p className="pt-1">
 						Predajná cena je cena, za ktorú sa predáva produkt zákazníkovi. Predajná cena je kľúčovým
@@ -99,6 +185,27 @@ function Company() {
 				<div className="flex flex-col background-container p-6 rounded-2xl my-2">
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h2>Investície do kapitálu</h2>
+						{/* Add a button to open the tutorial */}
+						<button
+							onClick={() => openTutorial("invest")}
+							className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+						>
+							💡
+						</button>
+						{tutorialStates.invest && (
+							<Tutorial
+								isOpen={tutorialStates.invest}
+								closeModal={() => closeTutorial("invest")}
+								textTitle="Tip"
+								textContent={
+									<div>
+										Aby neklesal kapitál, je potrebné minimálne investovať do kapitálu danú čiastku
+										<br />
+										<br />= 0,0125 * hodnota továrne
+									</div>
+								}
+							/>
+						)}
 					</div>
 					<p className="pt-1">
 						Investície do kapitálu sú investície do majetku, ktoré sa používajú na výrobu produktov. Je
@@ -110,7 +217,7 @@ function Company() {
 						<div>
 							<Slider
 								min={0}
-								max={10000}
+								max={10000 + plusCash}
 								value={capitalInvestments}
 								setValue={setCapitalInvestments}
 								checked={capitalInvestmentsChecked}
