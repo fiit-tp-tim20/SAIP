@@ -16,19 +16,13 @@ from saip_simulation.bot import LowPriceStrategyBot, HighPriceStrategyBot, Avera
 from django.core.cache import cache
 # default upgrages, table is create only if it is empty
 parameters = {"Upgrades": [{"name": "Battery", "cost": 30000, "sales_effect": 0.75, "man_cost_effect": 0.3,
-                            "camera_pos": "-0.1, 0.5, 3", "camera_rot": "3,2,1", "description": "Investícia do batérie predlžuje výdrž elektrického bicykla na cestách, a tým zaujme najmä zákazníkov, \
-                            ktorí si potrpia na väčšej výdrži batérie. Investíciou do tohto vylepšenia sa zvýšia výrobné náklady \
-                            o 30%, ale taktiež sa aj zvýši záujem u zákazníkov, ktorých zaujímajú vylepšenia o 75%."},
+                            "camera_pos": "-0.1, 0.5, 3", "camera_rot": "3,2,1", "description": "Investovaním do batérie dochádza k zvýšeniu kapacity batérie, rýchlejšiemu nabíjaniu a nižšej váhe. Takisto sa predlžuje samotná životnosť batérie a nižším tempom klesá jej celková kapacita. Po dokončení tohto vylepšenia sa zvýšia výrobné náklady o 30% a rozhodnutovanie zákazníkov ovplyvňuje s váhou 0,75."},
                            {"name": "Frame", "cost": 22000, "sales_effect": 0.55, "man_cost_effect": 0.2,
-                            "camera_pos": "0, 0.5, 5", "camera_rot": "6,5,4", "description": "Investícia do rámu zaujme najmä zákazníkov, ktorých zaujíma vzhľad a celková konštrukcia bicykla. \
-                            Táto investícia spôsobí nárast výrobných nákladov o 20% a záujem zákazníkov zameraných na vylepšenia o 55%."},
+                            "camera_pos": "0, 0.5, 5", "camera_rot": "6,5,4", "description": "Investovaním do rámu dochádza k zvýšeniu nosnosti bicykla, zníženiu jeho hmotnosti a k zlepšeniu vzhľadu. V novom ráme sú použité inovatívne materiály, ktoré výrazne prispievajú ku kvalite produktu. Po zavedení do výroby táto investícia spôsobí nárast výrobných variabilných nákladov o 20% a rozhodnutovanie zákazníkov ovplyvňuje s váhou 0,55."},
                            {"name": "Brakes", "cost": 18000, "sales_effect": 0.45, "man_cost_effect": 0.1,
-                            "camera_pos": "-0.7, 1.5, 3", "camera_rot": "9,8,7", "description": "Investíciou do tohto vylepšenia sa zvýši celková bezpečnosť pri používaní bicykla na cestách, ale aj \
-                            v inom teréne. Výrobné náklady sa pri tejto investícii zvýšia o 10% a záujem zákazníkov zameraných na vylepšenia o 45%."},
+                            "camera_pos": "-0.7, 1.5, 3", "camera_rot": "9,8,7", "description": "Investovaním do bŕzd sa zvyšuje celková bezpečnosť produktu pri jeho používaní na cestách alebo v inom teréne. Po zavedení do výroby táto investícia spôsobí nárast výrobných variabilných nákladov o 10% a rozhodnutovanie zákazníkov ovplyvňuje s váhou 0,45."},
                            {"name": "Display", "cost": 34000, "sales_effect": 0.85, "man_cost_effect": 0.4,
-                            "camera_pos": "-0.7, 1.5, 3", "camera_rot": "9,8,7", "description": "Displej na elektrobicykli je neodmysliteľnou súčasťou pre celkové ovládanie a lepší pocit z jazdy, keď \
-                            potrebujeme prehľad o tom akou rýchlosťou ideme, koľko kilometrov sme už na aktuálnej trase prešli a iné \
-                            štatistiky. Investíciou do tohto vylepšenia sa zvýšia výrobné náklady o 40% a záujem zákazníkov zameraných na vylepšenia o 85%."}
+                            "camera_pos": "-0.7, 1.5, 3", "camera_rot": "9,8,7", "description": "Displej na e-biku je neodmysliteľnou súčasťou, ktorá prispieva k lepšiemu ovládaniu a lepšiemu pocitu z jazdy. Modernejší displej poskytne podrobnejšie informácie o stave e-biku. Nechýbajú informácie ako aktuálna rýchlosť, prejdená vzdialenosť, spálené kalórie, prevýšenie, aktuálna GPS poloha a podobne. Displej je možné spárovať s inteligentnými hodinkami alebo smartfónom. Takisto je kontabilný s takmer všetkými tréningovými aplikáciami. Okrem displeja je touto investíciou ovplyvnená aj samotná technológia bicykla, ktorá je viac flexibilnejšia a užívateľ si môže jednotlivé jazdné vlastnosti bicykla personalizovať. Po dokončení tohto vylepšenia sa zvýšia výrobné náklady o 40% a rozhodnutovanie zákazníkov ovplyvňuje s váhou 0,85."}
                            ]}
 
 

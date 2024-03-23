@@ -1,15 +1,15 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import Tutorial from "../modal/Tutorial";
 import getCompanyReport from "../../api/GetCompanyReport";
 import numberWithSpaces from "../../utils/numberWithSpaces";
 // @ts-ignore
-import {MyContext} from "../../api/MyContext.js";
+import { MyContext } from "../../api/MyContext.js";
 
 function CompanyReport() {
 	const dataWs = useContext(MyContext);
 	// @ts-ignore
-	const TURN = dataWs.num
+	const TURN = dataWs.num;
 	// @ts-ignore
 	const [turn, setTurn] = useState<number>(dataWs.num - 1);
 	const { isLoading, data } = useQuery(["companyReport", turn], () => getCompanyReport(turn));
@@ -24,6 +24,7 @@ function CompanyReport() {
 		cashflow: false,
 		incomeStatement: false,
 		sales: false,
+		balance_tip: false,
 	});
 
 	const openTutorial = (tutorialKey: string) => {
@@ -81,23 +82,41 @@ function CompanyReport() {
 									textTitle="Správa o výrobe"
 									textContent={
 										<div>
+											<h5>Koeficient využitia výrobnej kapacity</h5>
+											<p>= objem produkcie / maximálna výrobná kapacita * 100</p>
+											<br />
+											<b>Príklad</b> <br />
+											<p style={{ fontSize: "14px" }}>
+												Výrobné náklady sú členené na fixné a variabilné.; Počiatočná výška
+												fixných nákladov je 48 500 €. Fixné náklady sa menia skokovo vždy po
+												prekročení 100 ks výrobnej kapacity. K prvému nárastu dochádza pri
+												prekročení výrobnej kapacity 200 ks o 48 500 €. Následne po ďalších 100
+												ks rastú o 48 500 €.; Variabilné náklady sú na začiatku simulácie 250
+												€/ks. Po dokončení vylepšenia ich hodnota stúpne v závislosti od
+												dokončeného výskumu.; Na variabilné a fixné náklady vplýva inflácia.{" "}
+											</p>
+											<br />
 											<h5>Výrobné náklady</h5>
-											= (počet kusov * cena materiálu za kus * konštanta vylepšenia * inflácia +
-											statické náklady) * prekročenie kapacity <br />
+											<p>
+												= (počet kusov * cena materiálu za kus * suma modifikátorov vylepšení *
+												inflácia + fixné náklady) * koeficient nadmerného zaťaženia výroby{" "}
+											</p>
 											<br />
 											<h5>Celkové náklady</h5>
-											= Výrobné náklady
-											<br />
-											+ odpisy
-											<br />
-											+ náklady za marketing
-											<br />
-											+ splátka úrokov
-											<br />
-											+ náklady za vylepšenie uskladneného produktu
-											<br />
-											+ poplatok za skladovanie: počet uskladnených kusov * 100
-											<br />
+											<p>
+												= Výrobné náklady
+												<br />
+												+ odpisy
+												<br />
+												+ náklady na marketing
+												<br />
+												+ úroky z pôžičky
+												<br />
+												+ náklady za vylepšenie uskladneného produktu
+												<br />
+												+ poplatok za skladovanie: počet uskladnených kusov * 100
+												<br />+ náklady na výskum a vývoj
+											</p>
 										</div>
 									}
 								/>
@@ -158,10 +177,17 @@ function CompanyReport() {
 								<Tutorial
 									isOpen={tutorialStates.sales}
 									closeModal={() => closeTutorial("sales")}
-									textTitle="Tip"
+									textTitle="Správa o predaji Tip 💡"
 									textContent={
 										<div>
-											Ak máš veľa nesplnených objednávok, tak máš veľký dopyt po produkte a vyrábaš málo kusov.
+											Ak máš málo objednávok, analyzuj svoju predajnú cenu a investície do
+											marketingu. Koľko je zákazníkov na trhu? Aká je štruktúra a cenové stratégie
+											konkurencie? Mysli na to, že na trhu existujú rôzne skupiny zákazníkov,
+											ktoré majú rôzne cenové, marketingové a inovačné preferencie.
+											<br />
+											<br />
+											Ak máš veľa nesplnených objednávok, tak máš veľký dopyt po produkte a
+											vyrábaš málo kusov.
 										</div>
 									}
 								/>
@@ -199,35 +225,66 @@ function CompanyReport() {
 					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 						<div className="flex flex-row items-center justify-between py-2">
 							<h2>Súvaha</h2>
-							{/* Add a button to open the tutorial */}
-							<button
-								onClick={() => openTutorial("balance")}
-								className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
-							>
-								?
-							</button>
-							{tutorialStates.balance && (
-								<Tutorial
-									isOpen={tutorialStates.balance}
-									closeModal={() => closeTutorial("balance")}
-									textTitle="Súvaha"
-									textContent={
-										<div>
-											<h5>Finančné prostriedky</h5>
-											= peňažný stav firmy <br />
-											<br />
-											<h5>Dlhodobý majetok</h5>
-											= hodnota továrne
-											<br />
-											<i>od týchto investicií závisi výrobná kapacita</i>
-											<br />
-											<br />
-											<h5>Zásoby</h5>
-											= výrobná cena za kus * počet kusov
-										</div>
-									}
-								/>
-							)}
+							<div>
+								{/* Add a button to open the tutorial */}
+								<button
+									onClick={() => openTutorial("balance")}
+									className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+								>
+									?
+								</button>
+								{tutorialStates.balance && (
+									<Tutorial
+										isOpen={tutorialStates.balance}
+										closeModal={() => closeTutorial("balance")}
+										textTitle="Súvaha"
+										textContent={
+											<div>
+												<h5>Finančné prostriedky</h5>
+												= finančné prostriedky v hotovosti a na bankovom účte <br />
+												<i>
+													jeho hodnota klesá každé obdobie o výšku odpisov a stúpa o
+													investíciu do kapitálu
+												</i>
+												<br />
+												<h5>Dlhodobý majetok</h5>
+												= hodnota továrne
+												<br />
+												<i>od týchto investicií závisi výrobná kapacita</i>
+												<br />
+												<h5>Zásoby</h5>hodnota zásob ocenená metódou FIFO
+												<br />
+												<h5>Výsledok hospodárenia z predchádzajúcich období</h5>
+												suma všetkých výsledkov hospodárení za celú dobu trvania simulácie
+												<br />
+												<h5>Základné imanie</h5>
+												počiatočný vklad vlastníkov spoločnosti, nemenný počas celej doby
+												simulácie
+												<br />
+											</div>
+										}
+									/>
+								)}
+								<button
+									onClick={() => openTutorial("balance_tip")}
+									className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+								>
+									💡
+								</button>
+								{tutorialStates.balance_tip && (
+									<Tutorial
+										isOpen={tutorialStates.balance_tip}
+										closeModal={() => closeTutorial("balance_tip")}
+										textTitle="Súvaha Tip 💡"
+										textContent={
+											<div>
+												Mysli na to, že ak máš na sklade zásoby, musíš sa o ne starať, s čím sú
+												spojené zvýšené náklady.
+											</div>
+										}
+									/>
+								)}
+							</div>
 						</div>
 						<table className="table-auto table-white">
 							<thead>
@@ -316,18 +373,20 @@ function CompanyReport() {
 									textContent={
 										<div>
 											<h5>Výdavky na zásoby</h5>
-											= náklady na uskladnenie + náklady na upgrade zásob <br />
+											= investície do marketingu + R&D + kapitálu <br />
 											<br />
 											<h5>Výdavky na rozhodnutia</h5>
-											= marketing + upgrady + kapitál
-											<br />
+											= marketing + upgrady + kapitál <br />
 											<br />
 											<h5>Výdavky na úroky</h5>
-											= úrok z pôžičky
+											= úrok z pôžičky <br />
 											<br />
+											<h5>Začiatočný stav</h5>
+											= finančné prostriedky na začiatku obdobia (sú rovnaké ako konečný stav
+											minulého obdobia) <br />
 											<br />
 											<h5>Konečný stav</h5>
-											= finančné prostriedky
+											= finančné prostriedky na konci obdobia
 											<br />
 										</div>
 									}
@@ -429,16 +488,26 @@ function CompanyReport() {
 									textTitle="Výkaz ziskov a strát"
 									textContent={
 										<div>
+											<h5>Náklady na predaný tovar</h5>
+											= hodnota predaného tovaru. <br />
+											Ak spoločnosť mala v predchádzajúcom období zásoby, najskôr sa predajú
+											zásoby a až potom dochádza k predaju nových výrobkov. Hodnota vyskladnených
+											zásob je ocenená metódou FIFO.
 											<h5>Odpisy</h5>
-											= odpis z kapitálových investícií <br />
+											= DHM * 0,0125
+											<br />
+											<i>odpis z kapitálových investícií</i>
+											<br />
 											<br />
 											<h5>Dodatočné náklady na nepredané výrobky</h5>
 											= cena za uskladnenie jednotky * počet kusov na sklade
 											<br />
 											<br />
 											<h5>Náklady na upgrade zásob</h5>
-											ak je zakúpený upgrade tak kusy, ktoré sa nachádzajú na sklade sa musia
-											upgradovať
+											<i>
+												ak je dokončené vylepšenie a podnik má na sklade zásoby, tieto zásoby sa
+												upgradnú o dokončené vylepšenie, s čím sú spojené aj náklady{" "}
+											</i>
 										</div>
 									}
 								/>
