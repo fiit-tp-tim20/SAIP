@@ -219,6 +219,32 @@ function CompanyReport() {
 										{numberWithSpaces(data.sales.selling_price)} €/ks
 									</td>
 								</tr>
+								<tr>
+									<td className="px-4 py-2">Rentabilita tržieb (ROS)</td>
+									<td className="px-4 py-2 whitespace-nowrap">
+										{numberWithSpaces(
+											Math.round(
+												(data.income_statement.net_profit / data.income_statement.sales) *
+													100 *
+													100,
+											) / 100,
+										)}{" "}
+										%
+									</td>
+								</tr>
+								<tr>
+									<td className="px-4 py-2">Rentabilitu majetku (ROA)</td>
+									<td className="px-4 py-2 whitespace-nowrap">
+										{numberWithSpaces(
+											Math.round(
+												(data.income_statement.net_profit / data.balance.assets_summary) *
+													100 *
+													100,
+											) / 100,
+										)}{" "}
+										%
+									</td>
+								</tr>
 							</tbody>
 						</table>
 					</div>
