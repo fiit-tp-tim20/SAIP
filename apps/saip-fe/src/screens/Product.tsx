@@ -113,9 +113,9 @@ function Product() {
 						<Canvas />
 					</div>
 				</div>
-				<div className="flex items-center">
-					<h1 className="p-6 pl-12">{t("research.title") as string}</h1>
-					<div className="ml-4">
+				<div className="flex items-center justify-between">
+					<div className="flex items-center">
+						<h1 className="p-6 pl-12">{t("research.title") as string}</h1>
 						<button
 							onClick={() => openTutorial("upgrades_tutorial")}
 							className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
@@ -136,24 +136,22 @@ function Product() {
 							/>
 						)}
 					</div>
+					<button
+						onClick={() => {
+							data.forEach((upgrade) => {
+								setUpgrade(upgrade.name, 0);
+								setUpgradeCheck(upgrade.name, true);
+							});
+						}}
+						className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+					>
+						Nevyvíjať
+					</button>
 				</div>
 				<div className="flex flex-col background-container p-6 rounded-2xl mx-6 max-w-7xl">
 					{data && data.filter((feature) => feature.status === "started").length ? (
 						<div className="py-4">
-							<div className="flex justify-between items-center">
-								<h2>{t("research.pending.title") as string}</h2>
-								<button
-									onClick={() => {
-										data.forEach((upgrade) => {
-											setUpgrade(upgrade.name, 0);
-											setUpgradeCheck(upgrade.name, true);
-										});
-									}}
-									className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
-								>
-									Nevyvíjať
-								</button>
-							</div>
+							<h2>{t("research.pending.title") as string}</h2>
 
 							{isLoading ? (
 								<p>Loading...</p>
