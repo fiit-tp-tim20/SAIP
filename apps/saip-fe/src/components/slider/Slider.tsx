@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import numberWithSpaces from "../../utils/numberWithSpaces";
 
 interface SliderProps {
 	min: number;
@@ -19,15 +20,16 @@ function Slider(props: SliderProps) {
 	const [localValue, setLocalValue] = useState(value);
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		if (limitMax && parseInt(event.target.value, 10) > max) {
+		console.log(event.target.value)
+		if (limitMax && parseInt(event.target.value.replace(/\s/g, ''), 10) > max) {
 			setLocalValue(max);
 			return;
 		}
-		if ((limitMin && parseInt(event.target.value, 10) < min) || event.target.value === "") {
+		if ((limitMin && parseInt(event.target.value.replace(/\s/g, ''), 10) < min) || event.target.value.replace(/\s/g, '') === "") {
 			setLocalValue(min);
 			return;
 		}
-		setLocalValue(parseInt(event.target.value, 10));
+		setLocalValue(parseInt(event.target.value.replace(/\s/g, ''), 10));
 	};
 
 	const toggleState = () => {
@@ -56,11 +58,11 @@ function Slider(props: SliderProps) {
 			/>
 			<div className="flex items-center justify-between mt-2 min-w-[200px]">
 				<input
-					type="number"
+					type="text"
 					min={min}
 					max={max}
 					step={step}
-					value={localValue}
+					value={numberWithSpaces(localValue)}
 					onChange={handleChange}
 					className={`block w-1/2 appearance-none rounded-lg p-2 m-0 border border-gray-300 slider ${
 						checked ? "opacity-50 cursor-not-allowed" : ""

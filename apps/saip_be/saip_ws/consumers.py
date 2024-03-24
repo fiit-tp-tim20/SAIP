@@ -11,7 +11,7 @@ from .triggers import broadcast_message
 
 class TestConsumer(WebsocketConsumer):
     def connect(self):
-        self.accept()
+        self.accept('authorization')
         try:
            if str(self.scope["user"]).lower() == "anonymoususer":
             return self.send(text_data="User is anonymous", close=True)

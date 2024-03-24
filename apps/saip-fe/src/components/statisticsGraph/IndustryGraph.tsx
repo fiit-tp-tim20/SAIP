@@ -30,7 +30,7 @@ function IndustryGraph(props: IndustryGraphProps) {
                     <Tooltip />
                     <Legend verticalAlign="top"/>
                     <Line type="monotone" dataKey="Poradie" fill="#8884d8" yAxisId="left" />
-                    <Line type="monotone" dataKey="Cena" stroke="#82ca9d" yAxisId="right" />
+                    <Line type="monotone" dataKey="Cena" name="Cena akcie" stroke="#82ca9d" yAxisId="right" />
                 </ComposedChart>
             </ResponsiveContainer>
         </div>

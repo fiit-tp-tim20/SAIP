@@ -25,18 +25,12 @@ export default function BottomBar() {
 	// @ts-ignore
 	useEffect(() => {
 		// @ts-ignore
-		console.log("data", dataWs.comm);
-		console.log("comm", committed);
-		// @ts-ignore
 		if (dataWs.comm != committed) {
 			setCommitted(!committed);
 		}
 		refetch()
 
 
-		// @ts-ignore
-		console.log("data", dataWs.comm);
-		console.log("comm", committed);
 	}, [dataWs]);
 	const { Modal, isShowing, setIsShowing, setElement } = useModal(<div />);
 
@@ -109,7 +103,7 @@ export default function BottomBar() {
 		setIsShowing(true);
 	};
 
-	const handleMouseEnter = (text) => {
+	const handleMouseEnter = (text: React.SetStateAction<string>) => {
 		setTooltipText(text);
 	};
 

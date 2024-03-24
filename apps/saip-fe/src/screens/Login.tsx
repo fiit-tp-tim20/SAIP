@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
+// @ts-ignore
+import { useNavigate } from 'react-router-dom';
 
 import useCompanyStore from "../store/Company";
 import useMarketingStore from "../store/Marketing";
@@ -9,9 +11,11 @@ export default function Login() {
 	const [password, setPassword] = useState(0);
 
 	const [isInvalid, setIsInvalid] = useState(false);
-
+	const token = localStorage.getItem("token");
 	const { reset: marketingReset } = useMarketingStore();
 	const { reset: companyReset } = useCompanyStore();
+	const navigate = useNavigate();
+
 	const login = async () => {
 		const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/login/`, {
 			method: "POST",
@@ -38,7 +42,9 @@ export default function Login() {
 		companyReset();
 
 		//! temporary, find a better way to do this
+		navigate('/');
 		window.location.reload();
+
 		return response;
 	};
 
@@ -46,12 +52,16 @@ export default function Login() {
 		e.preventDefault();
 		// const {data, status} = useQuery('login', login)
 		login();
-		// navigate("/dashboard");
+		navigate('/');
+
 	};
 
 	return (
 		<div className="w-full h-full max-w-xs flex flex-col gap-4 justify-center items-center">
-			<h1 className="font-bold">SAIP</h1>
+			<Link to="/">
+				<h1 className="font-bold">SAIP</h1>
+			</Link>
+
 			<h2 className="font-bold">Prihlásenie</h2>
 			<form className="bg-white rounded-2xl px-6 pt-6 pb-8 mb-4 mim-w-[300px]" onSubmit={handleSubmit}>
 				<div className="mb-4">

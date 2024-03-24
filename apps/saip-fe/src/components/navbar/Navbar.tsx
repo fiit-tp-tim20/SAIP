@@ -2,8 +2,9 @@ import React, {useContext} from "react";
 import { useLocation } from "react-router";
 import LinkTab from "./LinkTab";
 import Profile from "./Profile";
+import {Link} from "react-router-dom";
 // @ts-ignore
-import  {MyContext}  from "..//../api/MyContext.js";
+import  {MyContext}  from "../../api/MyContext";
 function Navbar() {
 	const location = useLocation();
 
@@ -32,7 +33,9 @@ function Navbar() {
 
 	return (
 		<div className="flex flex-row p-2 top-0 w-screen fixed left-0 z-40 navbar-bg">
-			<p className="px-8 normal-case text-xl align-middle font-bold accent-800-color leading-[40px]">SAIP</p>
+			<Link to="/">
+				<p className="px-8 normal-case text-xl align-middle font-bold accent-800-color leading-[40px]">SAIP</p>
+			</Link>
 			<div className="flex flex-row justify-between w-screen">
 				<ul className="flex flex-row p-0 m-0">
 					{tabs.map((tab) => (

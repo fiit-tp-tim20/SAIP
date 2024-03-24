@@ -97,7 +97,7 @@ function Product() {
 												.map((feature, index) => (
 													<UpgradeInfo
 														key={index}
-														name={feature.name}
+														name={t(`features_translation.${feature.name}`)}
 														// name={t(`research.features.${feature.id}.title`) as string}
 														researchedAvatars={feature.players}
 														onClick={() => openModal(feature)}
@@ -126,11 +126,31 @@ function Product() {
 							<Tutorial
 								isOpen={tutorialStates.upgrades_tutorial}
 								closeModal={() => closeTutorial("upgrades_tutorial")}
-								textTitle="Tip"
+								textTitle="Výskum a vývoj Tip 💡"
 								textContent={
 									<div>
-										Efekt vylepšení vstupuje do platnosti až kolo po tom, čo bolo vylepšenie
-										dokončené
+										<p>
+											Investovaním do výskumu a vývoju ovplyvňujeme samotnú kvalitu produktu.
+											Vývojom nových materiálov a funkcionalít získavame produkt, ktorý je pre
+											zákazníkov atraktívnejší. V našej simulácii máte možnosť investovať do
+											štyroch vylepšení.
+										</p>
+										<p>
+											S investíciou do vylepšení je spojený aj vyšší záujem zákazníkov zameraných
+											na inovácie a vylepšenia. Vo všeobecnosti platí pravidlo, že{" "}
+											<b>
+												efekt vylepšení vstupuje do platnosti nasledujúce obdobie po období, v
+												ktorom bolo vylepšenie dokončené
+											</b>
+											.
+										</p>
+										<p>
+											S výskumom a vývojom je spojený aj rast výrobných nákladov a nákladov na
+											upgrade zásob. Ak máš na sklade zásoby a dokončíš vylepšenie, musíš tieto
+											zásoby upgradnúť s čím sú spojené ďalšie náklady a výdavky. Zváž preto
+											vypredanie zásob pred dokončením vylepšenia. Každé vylepšenie má iný
+											modifikátor vylepšenia, inú cenu výskumu a iný rast nákladov.
+										</p>
 									</div>
 								}
 							/>
@@ -138,6 +158,7 @@ function Product() {
 					</div>
 					<button
 						onClick={() => {
+							// @ts-ignore
 							data.forEach((upgrade) => {
 								setUpgrade(upgrade.name, 0);
 								setUpgradeCheck(upgrade.name, true);
@@ -163,7 +184,7 @@ function Product() {
 											.map((feature, index) => (
 												<UpgradeInfo
 													key={index}
-													name={feature.name}
+													name={t(`features_translation.${feature.name}`)}
 													// name={t(`research.features.${feature.id}.title`) as string}
 													researchedAvatars={feature.players}
 													progressMax={feature.price}
@@ -188,7 +209,7 @@ function Product() {
 											<UpgradeInfo
 												// @ts-ignore
 												key={feature.id}
-												name={feature.name}
+												name={t(`features_translation.${feature.name}`)}
 												progressMax={feature.price}
 												// name={t(`research.features.${feature.id}.title`) as string}
 												researchedAvatars={feature.players}

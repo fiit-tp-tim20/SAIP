@@ -1,6 +1,8 @@
 import React from "react";
+// @ts-ignore
 import Modal from "react-modal";
 
+// @ts-ignore
 function Tutorial({ isOpen, closeModal, textTitle, textContent }) {
 	return (
 		<Modal
@@ -13,6 +15,7 @@ function Tutorial({ isOpen, closeModal, textTitle, textContent }) {
 				content: {
 					width: "80%", // Set the width of the modal to 80% of the viewport
 					maxWidth: "600px", // Limit the maximum width of the modal
+					minWidth: "300px", // Minimum width for the content area
 					margin: "auto", // Center the modal horizontally
 					marginTop: "10%", // Center the modal vertically
 					display: "flex",
@@ -28,7 +31,7 @@ function Tutorial({ isOpen, closeModal, textTitle, textContent }) {
 			<h3 className="popover-title" style={{ margin: "20px" }}>
 				{textTitle}
 			</h3>
-			<div className="popover-content" style={{ margin: "20px" }}>
+			<div className="popover-content" style={{ margin: "20px", maxHeight: "300px", overflowY: "auto" }}>
 				{/* You can replace the static content with a dynamic text */}
 				{textContent}
 			</div>
