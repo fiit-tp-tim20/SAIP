@@ -1,6 +1,9 @@
 import React from "react";
 // @ts-ignore
 import Modal from "react-modal";
+import { useTranslation } from "react-i18next";
+
+const { t } = useTranslation();
 
 // @ts-ignore
 function Tutorial({ isOpen, closeModal, textTitle, textContent }) {
@@ -38,7 +41,7 @@ function Tutorial({ isOpen, closeModal, textTitle, textContent }) {
 
 			{/* eslint-disable-next-line react/button-has-type */}
 			<button className="button-light font-bold rounded-lg" onClick={closeModal} style={{ margin: "20px" }}>
-				Close
+				{t(`tutorial.close`)}
 			</button>
 		</Modal>
 	);
