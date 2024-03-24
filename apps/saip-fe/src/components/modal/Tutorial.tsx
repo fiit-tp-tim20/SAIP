@@ -1,9 +1,9 @@
 import React from "react";
 // @ts-ignore
 import Modal from "react-modal";
-import { useTranslation } from "react-i18next";
+// import { useTranslation } from "react-i18next";
 
-const { t } = useTranslation();
+// const { t } = useTranslation();
 
 // @ts-ignore
 function Tutorial({ isOpen, closeModal, textTitle, textContent }) {
