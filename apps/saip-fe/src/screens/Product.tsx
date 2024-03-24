@@ -164,7 +164,7 @@ function Product() {
 								setUpgradeCheck(upgrade.name, true);
 							});
 						}}
-						className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+						className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline mr-12"
 					>
 						Nevyvíjať
 					</button>
@@ -209,7 +209,7 @@ function Product() {
 											<UpgradeInfo
 												// @ts-ignore
 												key={feature.id}
-												name={t(`features_translation.${feature.name}`)}
+												name={feature.name}
 												progressMax={feature.price}
 												// name={t(`research.features.${feature.id}.title`) as string}
 												researchedAvatars={feature.players}

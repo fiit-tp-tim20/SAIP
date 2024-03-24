@@ -1,6 +1,7 @@
 import React from "react";
 import useUpgradesStore from "../../store/Upgrades";
 import numberWithSpaces from "../../utils/numberWithSpaces";
+import {useTranslation} from "react-i18next";
 
 type Props = {
 	name: string;
@@ -11,6 +12,7 @@ type Props = {
 };
 
 function UpgradeInfo(props: Props) {
+	const { t } = useTranslation();
 	const { name, researchedAvatars, progressMax, progressValue = 0, onClick } = props;
 
 	const { upgrades } = useUpgradesStore();
@@ -21,7 +23,7 @@ function UpgradeInfo(props: Props) {
 			onClick={onClick}
 		>
 			<div className="flex flex-row align-middle justify-center">
-				<p className="font-bold my-auto min-w-[180px]">{name}</p>
+				<p className="font-bold my-auto min-w-[180px]">{t(`features_translation.${name}`)}</p>
 				{progressMax && (
 					<div className="flex flex-row items-center justify-center text-center">
 						<div className="my-auto w-56">

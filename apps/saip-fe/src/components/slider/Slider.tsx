@@ -20,7 +20,6 @@ function Slider(props: SliderProps) {
 	const [localValue, setLocalValue] = useState(value);
 
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		console.log(event.target.value)
 		if (limitMax && parseInt(event.target.value.replace(/\s/g, ''), 10) > max) {
 			setLocalValue(max);
 			return;

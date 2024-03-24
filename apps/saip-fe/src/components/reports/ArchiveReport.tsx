@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { useQuery } from "react-query";
-import Tutorial from "../../components/modal/Tutorial";
+import Tutorial from "../modal/Tutorial";
 import getArchiveReport from "../../api/GetArchiveReport";
 import numberWithSpaces from "../../utils/numberWithSpaces";
 // @ts-ignore
@@ -41,26 +41,27 @@ function ArchiveReport() {
 	return (
 		<div className="flex w-[600px] flex-col md:w-[900px] xl:w-[1280px]">
 			<div className="flex flex-row justify-between">
-				<h1 className="my-4 mr-4">Archív rozhodnutí</h1>
-				<button
-					onClick={() => openTutorial("archive_report_tip")}
-					className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
-				>
-					💡
-				</button>
-				{tutorialStates.archive_report_tip && (
-					<Tutorial
-						isOpen={tutorialStates.archive_report_tip}
-						closeModal={() => closeTutorial("archive_report_tip")}
-						textTitle="Archív rozhodnutí Tip 💡"
-						textContent={
-							<div>
-								<p>Investície do vylepšení sú vyjadrené ako súčet investícií do vylepšení.</p>
-							</div>
-						}
-					/>
-				)}
-
+				<div className="flex items-center">
+					<h1 className="my-4 mr-4">Archív rozhodnutí</h1>
+					<button
+						onClick={() => openTutorial("archive_report_tip")}
+						className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+					>
+						💡
+					</button>
+					{tutorialStates.archive_report_tip && (
+						<Tutorial
+							isOpen={tutorialStates.archive_report_tip}
+							closeModal={() => closeTutorial("archive_report_tip")}
+							textTitle="Archív rozhodnutí Tip 💡"
+							textContent={
+								<div>
+									<p>Investície do vylepšení sú vyjadrené ako súčet investícií do vylepšení.</p>
+								</div>
+							}
+						/>
+					)}
+				</div>
 				<div>
 					<label htmlFor="turn" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
 						Pre kolo
