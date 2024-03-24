@@ -267,26 +267,29 @@ function CompanyReport() {
 										textContent={
 											<div>
 												<h5>Finančné prostriedky</h5>
-												= finančné prostriedky v hotovosti a na bankovom účte <br />
+												= finančné prostriedky v hotovosti a na bankovom účte <br/>
 												<i>
 													jeho hodnota klesá každé obdobie o výšku odpisov a stúpa o
 													investíciu do kapitálu
 												</i>
-												<br />
+												<br/>
+												<br/>
 												<h5>Dlhodobý majetok</h5>
 												= hodnota továrne
-												<br />
+												<br/>
 												<i>od týchto investicií závisi výrobná kapacita</i>
-												<br />
-												<h5>Zásoby</h5>hodnota zásob ocenená metódou FIFO
-												<br />
+												<br/>
+												<br/>
+												<h5>Zásoby</h5>hodnota zásob ocenená metódou FIFO <br/>
+												<br/>
 												<h5>Výsledok hospodárenia z predchádzajúcich období</h5>
 												suma všetkých výsledkov hospodárení za celú dobu trvania simulácie
-												<br />
+												<br/>
+												<br/>
 												<h5>Základné imanie</h5>
 												počiatočný vklad vlastníkov spoločnosti, nemenný počas celej doby
 												simulácie
-												<br />
+												<br/>
 											</div>
 										}
 									/>
@@ -515,20 +518,21 @@ function CompanyReport() {
 									textContent={
 										<div>
 											<h5>Náklady na predaný tovar</h5>
-											= hodnota predaného tovaru. <br />
+											= hodnota predaného tovaru. <br/>
 											Ak spoločnosť mala v predchádzajúcom období zásoby, najskôr sa predajú
 											zásoby a až potom dochádza k predaju nových výrobkov. Hodnota vyskladnených
-											zásob je ocenená metódou FIFO.
+											zásob je ocenená metódou FIFO. <br/>
+											<br/>
 											<h5>Odpisy</h5>
 											= DHM * 0,0125
-											<br />
+											<br/>
 											<i>odpis z kapitálových investícií</i>
-											<br />
-											<br />
+											<br/>
+											<br/>
 											<h5>Dodatočné náklady na nepredané výrobky</h5>
 											= cena za uskladnenie jednotky * počet kusov na sklade
-											<br />
-											<br />
+											<br/>
+											<br/>
 											<h5>Náklady na upgrade zásob</h5>
 											<i>
 												ak je dokončené vylepšenie a podnik má na sklade zásoby, tieto zásoby sa

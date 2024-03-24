@@ -63,7 +63,6 @@ function Company() {
 		refetch();
 	}, [turn]);
 	useEffect(() => {
-		console.log(plusCash);
 		if (!isLoading) {
 			try {
 				setPlusCash(budget_data.bonus_spendable_cash);
@@ -71,7 +70,6 @@ function Company() {
 				console.log(e);
 			}
 		}
-		console.log(plusCash);
 	}, [data]);
 
 	return (

@@ -43,8 +43,6 @@ function App() {
 		readyState,
 		getWebSocket,} = useWebSocket(`${import.meta.env.VITE_WS_URL}turn_info/`, {
 		protocols: ['authorization', `${token}`],
-		onOpen: () => console.log('opened'),
-		onClose: () => console.log('closed'),
 		onMessage: (e) =>{
 			// @ts-ignore
 			if (e.data === 'Websocket connected') {

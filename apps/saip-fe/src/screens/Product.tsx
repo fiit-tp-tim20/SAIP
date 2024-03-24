@@ -164,7 +164,7 @@ function Product() {
 								setUpgradeCheck(upgrade.name, true);
 							});
 						}}
-						className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+						className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline mr-12"
 					>
 						Nevyvíjať
 					</button>
