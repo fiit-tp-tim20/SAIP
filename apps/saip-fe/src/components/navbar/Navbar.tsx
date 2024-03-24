@@ -3,7 +3,8 @@ import { useLocation } from "react-router";
 import LinkTab from "./LinkTab";
 import Profile from "./Profile";
 import {Link} from "react-router-dom";
-import  {MyContext}  from "..//../api/MyContext.js";
+// @ts-ignore
+import  {MyContext}  from "../../api/MyContext";
 function Navbar() {
 	const location = useLocation();
 

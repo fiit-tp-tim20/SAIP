@@ -103,7 +103,7 @@ export default function BottomBar() {
 		setIsShowing(true);
 	};
 
-	const handleMouseEnter = (text) => {
+	const handleMouseEnter = (text: React.SetStateAction<string>) => {
 		setTooltipText(text);
 	};
 
