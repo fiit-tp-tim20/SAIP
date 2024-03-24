@@ -53,7 +53,7 @@ function CompanyGraph(props: CompanyGraphProps) {
 					<Line
 						type="monotone"
 						dataKey="Vyrobené"
-						name="Vyrobené"
+						name="Výroba"
 						stroke="#8884d8"
 						yAxisId="left"
 					/>
@@ -75,7 +75,7 @@ function CompanyGraph(props: CompanyGraphProps) {
 						type="monotone"
 						dataKey="Cena"
 						name="Cena"
-						stroke="#a658"
+						stroke="#000000"
 						yAxisId="right"
 					/>
 				</LineChart>

@@ -151,7 +151,9 @@ function Company() {
 						)}
 					</div>
 					<p className="pt-1">
-						Počet produkovaných kusov je počet kusov, ktoré sa vyrobia v určitom časovom období.
+						Počet produkovaných kusov predstavuje rozhodnutie užívateľa o výrobe na nasledujúce obdobie
+						(nasledujúci kvartál). Užívateľ má možnosť voliť výrobu v intervale od 0 ks až po maximálnu
+						výrobnú kapacitu.
 					</p>
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h3>Počet kusov (ks)</h3>
@@ -271,9 +273,9 @@ function Company() {
 						)}
 					</div>
 					<p className="pt-1">
-						Investície do kapitálu sú investície do majetku, ktoré sa používajú na výrobu produktov. Je
-						dôležité vykonať dôkladnú analýzu a zvážiť všetky faktory, ako je napríklad história podnikania,
-						finančná situácia, a perspektíva budúceho vývoja, pred rozhodnutím investovať do kapitálu.
+						Investície do kapitálu sú investíciou do dlhodobého majetku. V našej simulácií predstavujú
+						náklady na udržiavanie, modernizáciu a zväčšovanie továrne. Pomocou investícií do kapitálu
+						dokáže podnik zvýšiť svoju maximálnu výrobnú kapacitu.
 					</p>
 					<div className="py-2 flex flex-row items-center justify-between">
 						<h3>Investícia (€)</h3>
