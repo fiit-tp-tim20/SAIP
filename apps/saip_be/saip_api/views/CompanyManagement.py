@@ -133,7 +133,7 @@ class CompanyInfo(APIView):
 
         bonus_spendable_cash = 0
         if company_state.cash > 10000:
-            bonus_spendable_cash = company_state.cash * teacher_decisions.bonus_spendable_cash_increase_rate
+            bonus_spendable_cash = (company_state.cash - 10000) * teacher_decisions.bonus_spendable_cash_increase_rate
 
         if company_state.cash >= 10000:
             budget = 10000
