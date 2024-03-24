@@ -1,5 +1,7 @@
 import React, {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
+// @ts-ignore
+import { useNavigate } from 'react-router-dom';
 
 import useCompanyStore from "../store/Company";
 import useMarketingStore from "../store/Marketing";
@@ -12,6 +14,7 @@ export default function Login() {
 	const token = localStorage.getItem("token");
 	const { reset: marketingReset } = useMarketingStore();
 	const { reset: companyReset } = useCompanyStore();
+	const navigate = useNavigate();
 
 	const login = async () => {
 		const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/login/`, {
@@ -47,7 +50,7 @@ export default function Login() {
 		e.preventDefault();
 		// const {data, status} = useQuery('login', login)
 		login();
-		// navigate("/dashboard");
+		navigate('/');
 	};
 
 	return (

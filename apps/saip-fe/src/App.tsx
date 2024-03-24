@@ -1,4 +1,5 @@
 import React, {createContext, Suspense, useContext, useEffect, useState} from "react";
+import useWebSocket, { ReadyState } from 'react-use-websocket';
 import "./App.css";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 // @ts-ignore
@@ -27,7 +28,7 @@ import WelcomePage from "./screens/WelcomePage";
 
 function App() {
 	const token = localStorage.getItem("token");
-	const [connect, setConnect] = useState('no')
+	const [connect, setConnect] = useState('')
 	const value = { connect, setConnect };
 	const dataWs = useContext(MyContext);
 	const [data, setData] = useState({
@@ -35,17 +36,25 @@ function App() {
 		comm: null,
 		start:  null
 	});
-	useEffect(() => {
-		// @ts-ignore
-		const chatSocket = new WebSocket(`${import.meta.env.VITE_WS_URL}turn_info/`, ['token', token]);
-		chatSocket.onmessage = function (e) {
+	const {   sendMessage,
+		sendJsonMessage,
+		lastMessage,
+		lastJsonMessage,
+		readyState,
+		getWebSocket,} = useWebSocket(`${import.meta.env.VITE_WS_URL}turn_info/`, {
+		protocols: ['authorization', `${token}`],
+		onOpen: () => console.log('opened'),
+		onClose: () => console.log('closed'),
+		onMessage: (e) =>{
 			// @ts-ignore
-			console.log(e.data);
-			console.log(connect)
 			if (e.data === 'Websocket connected') {
 				setConnect('yes');
 			}
-			if (connect === 'yes' && e.data[0] === '{'){
+			if (e.data === 'Company for this user not found') {
+				setConnect('Company for this user not found');
+			}
+
+			if (e.data[0] === '{' && connect == 'yes') {
 				try {
 					const receivedData = JSON.parse(e.data);
 					setData({
@@ -58,19 +67,12 @@ function App() {
 				}
 			}
 
-		};
-		chatSocket.onclose = function (e) {
-			console.log(e)
-			console.error('Chat socket closed unexpectedly');
-		};
-
-		// Cleanup function
-		return () => {
-			chatSocket.close();
-		};
-
-		// eslint-disable-next-line
-	}, [token, connect, data.num]);
+		},
+		share: true,
+		shouldReconnect: (closeEvent) => true,
+		reconnectAttempts: 10,
+		reconnectInterval: 30000,
+	});
 	const { reset: resetCompanyState } = useCompanyStore();
 	const { reset: resetUpgradeState } = useUpgradesStore();
 	const { reset: resetMarketingState } = useMarketingStore();
@@ -125,7 +127,7 @@ function App() {
 	}, [data]);
 
 	// kompletne dum-dum riešenie PREROBIŤ. Aj tu aj getTurn() !!!!!!!!!!!!!
-	if (token && data.num === null) {
+	if (token && connect === 'Company for this user not found') {
 		return (
 			<ConnectContext.Provider value={value}>
 				<GameSelect />
@@ -148,7 +150,7 @@ function App() {
 		);
 	}
 
-	if (token) {
+	if (token && data.num != null) {
 		return (
 			<MyContext.Provider value={data}>
 				<Suspense>
