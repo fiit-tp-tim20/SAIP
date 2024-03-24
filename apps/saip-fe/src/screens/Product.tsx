@@ -97,7 +97,7 @@ function Product() {
 												.map((feature, index) => (
 													<UpgradeInfo
 														key={index}
-														name={t(`features_translation.${feature.name}`)}
+														name={feature.name}
 														// name={t(`research.features.${feature.id}.title`) as string}
 														researchedAvatars={feature.players}
 														onClick={() => openModal(feature)}
@@ -184,7 +184,7 @@ function Product() {
 											.map((feature, index) => (
 												<UpgradeInfo
 													key={index}
-													name={t(`features_translation.${feature.name}`)}
+													name={feature.name}
 													// name={t(`research.features.${feature.id}.title`) as string}
 													researchedAvatars={feature.players}
 													progressMax={feature.price}
