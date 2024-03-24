@@ -41,7 +41,7 @@ function Tutorial({ isOpen, closeModal, textTitle, textContent }) {
 
 			{/* eslint-disable-next-line react/button-has-type */}
 			<button className="button-light font-bold rounded-lg" onClick={closeModal} style={{ margin: "20px" }}>
-				{t(`tutorial.close`)}
+				Zatvoriť
 			</button>
 		</Modal>
 	);
