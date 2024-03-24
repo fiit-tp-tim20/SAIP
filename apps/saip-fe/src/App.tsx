@@ -28,7 +28,7 @@ import WelcomePage from "./screens/WelcomePage";
 
 function App() {
 	const token = localStorage.getItem("token");
-	const [connect, setConnect] = useState('no')
+	const [connect, setConnect] = useState('')
 	const value = { connect, setConnect };
 	const dataWs = useContext(MyContext);
 	const [data, setData] = useState({
@@ -46,11 +46,14 @@ function App() {
 		onOpen: () => console.log('opened'),
 		onClose: () => console.log('closed'),
 		onMessage: (e) =>{
-			console.log(e.data)
 			// @ts-ignore
 			if (e.data === 'Websocket connected') {
 				setConnect('yes');
 			}
+			if (e.data === 'Company for this user not found') {
+				setConnect('Company for this user not found');
+			}
+
 			if (e.data[0] === '{' && connect == 'yes') {
 				try {
 					const receivedData = JSON.parse(e.data);
@@ -124,7 +127,7 @@ function App() {
 	}, [data]);
 
 	// kompletne dum-dum riešenie PREROBIŤ. Aj tu aj getTurn() !!!!!!!!!!!!!
-	if (token && data.num === null) {
+	if (token && connect === 'Company for this user not found') {
 		return (
 			<ConnectContext.Provider value={value}>
 				<GameSelect />
@@ -147,7 +150,7 @@ function App() {
 		);
 	}
 
-	if (token) {
+	if (token && data.num != null) {
 		return (
 			<MyContext.Provider value={data}>
 				<Suspense>
