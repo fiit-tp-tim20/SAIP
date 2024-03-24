@@ -1,6 +1,8 @@
 import React from "react";
+// @ts-ignore
 import Modal from "react-modal";
 
+// @ts-ignore
 function Tutorial({ isOpen, closeModal, textTitle, textContent }) {
 	return (
 		<Modal

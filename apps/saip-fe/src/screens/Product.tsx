@@ -158,6 +158,7 @@ function Product() {
 					</div>
 					<button
 						onClick={() => {
+							// @ts-ignore
 							data.forEach((upgrade) => {
 								setUpgrade(upgrade.name, 0);
 								setUpgradeCheck(upgrade.name, true);

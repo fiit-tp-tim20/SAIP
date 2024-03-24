@@ -42,7 +42,9 @@ export default function Login() {
 		companyReset();
 
 		//! temporary, find a better way to do this
+		navigate('/');
 		window.location.reload();
+
 		return response;
 	};
 
@@ -50,7 +52,7 @@ export default function Login() {
 		e.preventDefault();
 		// const {data, status} = useQuery('login', login)
 		login();
-		navigate('/');
+
 	};
 
 	return (
