@@ -52,6 +52,7 @@ export default function Login() {
 		e.preventDefault();
 		// const {data, status} = useQuery('login', login)
 		login();
+		navigate('/');
 
 	};
 
