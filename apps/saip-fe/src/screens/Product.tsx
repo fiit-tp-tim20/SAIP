@@ -209,7 +209,7 @@ function Product() {
 											<UpgradeInfo
 												// @ts-ignore
 												key={feature.id}
-												name={t(`features_translation.${feature.name}`)}
+												name={feature.name}
 												progressMax={feature.price}
 												// name={t(`research.features.${feature.id}.title`) as string}
 												researchedAvatars={feature.players}
