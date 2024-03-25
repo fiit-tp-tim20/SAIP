@@ -16,6 +16,10 @@ function WelcomePage() {
 	};
 	const tabs = [
 		{
+			title: "Príručka",
+			path: "/tmp",
+		},
+		{
 			title: "Prihlásenie",
 			path: "/login",
 		},
