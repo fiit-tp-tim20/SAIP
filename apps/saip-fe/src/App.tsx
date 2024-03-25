@@ -25,6 +25,7 @@ import Register from "./screens/Register";
 import BugReport from "./components/bugreport/BugReport";
 import { currentTurn } from "./store/Atoms";
 import WelcomePage from "./screens/WelcomePage";
+import ManualLanding from "./screens/ManualLanding";
 
 function App() {
 	const token = localStorage.getItem("token");
@@ -160,6 +161,7 @@ function App() {
 								<Route path="/company" element={<Company />} />
 								<Route path="/marketing" element={<Marketing />} />
 								<Route path="/game" element={<GameSelect />} />
+								<Route path="/tmp" element={<ManualLanding />} />
 								<Route path="/" element={<Dashboard />} />
 								<Route path="*" element={<NotFound />} />
 							</Routes>
@@ -179,6 +181,7 @@ function App() {
 			<Routes>
 				<Route path="/register" element={<Register />} />
 				<Route path="/login" element={<Login />} />
+				<Route path="/tmp" element={<ManualLanding />} />
 				<Route path="/" element={<WelcomePage />} />
 				<Route path="*" element={<Navigate to="/" replace />} />
 			</Routes>
