@@ -167,7 +167,7 @@ function Marketing() {
 								Minimálna investícia: <span className="font-bold">500€</span>
 							</p>
 							<p>
-								Marketingový modifikátor: <span className="font-bold">1,50</span> + <span className="font-bold">0,1</span> za každých investovaných <span className="font-bold">1 000€</span>
+								Marketingový modifikátor: <span className="font-bold">1,50</span>
 							</p>
 						</div>
 						<div>
@@ -198,7 +198,7 @@ function Marketing() {
 								Minimálna investícia: <span className="font-bold">500€</span>
 							</p>
 							<p>
-								Marketingový modifikátor: <span className="font-bold">1,0</span> + <span className="font-bold">0,1</span> za každých investovaných <span className="font-bold">1 000€</span>
+								Marketingový modifikátor: <span className="font-bold">1,0</span>
 							</p>
 						</div>
 						<div>
@@ -230,7 +230,7 @@ function Marketing() {
 								Minimálna investícia: <span className="font-bold">2 000€</span>
 							</p>
 							<p>
-								Marketingový modifikátor: <span className="font-bold">1,0</span> + <span className="font-bold">0,1</span> za každých investovaných <span className="font-bold">1 000€</span>
+								Marketingový modifikátor: <span className="font-bold">1,0</span>
 							</p>
 						</div>
 						<div>
@@ -265,7 +265,7 @@ function Marketing() {
 								Minimálna investícia: <span className="font-bold">1 000€</span>
 							</p>
 							<p>
-								Marketingový modifikátor: <span className="font-bold">1,25</span> + <span className="font-bold">0,1</span> za každých investovaných <span className="font-bold">1 000€</span>
+								Marketingový modifikátor: <span className="font-bold">1,25</span>
 							</p>
 						</div>
 						<div>
