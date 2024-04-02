@@ -87,13 +87,20 @@ function CompanyReport() {
 											<br />
 											<b>Príklad</b> <br />
 											<p style={{ fontSize: "14px" }}>
-												Výrobné náklady sú členené na fixné a variabilné.; Počiatočná výška
-												fixných nákladov je 48 500 €. Fixné náklady sa menia skokovo vždy po
-												prekročení 100 ks výrobnej kapacity. K prvému nárastu dochádza pri
-												prekročení výrobnej kapacity 200 ks o 48 500 €. Následne po ďalších 100
-												ks rastú o 48 500 €.; Variabilné náklady sú na začiatku simulácie 250
-												€/ks. Po dokončení vylepšenia ich hodnota stúpne v závislosti od
-												dokončeného výskumu.; Na variabilné a fixné náklady vplýva inflácia.{" "}
+												Výrobné náklady sú členené na fixné a variabilné.
+												<br />
+												<br />
+												Počiatočná výška fixných nákladov je 48 500 €. Fixné náklady sa menia
+												skokovo vždy po prekročení 100 ks výrobnej kapacity. K prvému nárastu
+												dochádza pri prekročení výrobnej kapacity 200 ks o 48 500 €. Následne po
+												ďalších 100 ks rastú o 48 500 €.
+												<br />
+												<br />
+												Variabilné náklady sú na začiatku simulácie 250 €/ks. Po dokončení
+												vylepšenia ich hodnota stúpne v závislosti od dokončeného výskumu.{" "}
+												<br />
+												<br />
+												Na variabilné a fixné náklady vplýva inflácia.{" "}
 											</p>
 											<br />
 											<h5>Výrobné náklady</h5>
@@ -177,7 +184,7 @@ function CompanyReport() {
 								<Tutorial
 									isOpen={tutorialStates.sales}
 									closeModal={() => closeTutorial("sales")}
-									textTitle="Správa o predaji Tip 💡"
+									textTitle="Správa o predaji 💡"
 									textContent={
 										<div>
 											Ak máš málo objednávok, analyzuj svoju predajnú cenu a investície do
@@ -267,29 +274,29 @@ function CompanyReport() {
 										textContent={
 											<div>
 												<h5>Finančné prostriedky</h5>
-												= finančné prostriedky v hotovosti a na bankovom účte <br/>
+												= finančné prostriedky v hotovosti a na bankovom účte <br />
 												<i>
 													jeho hodnota klesá každé obdobie o výšku odpisov a stúpa o
 													investíciu do kapitálu
 												</i>
-												<br/>
-												<br/>
+												<br />
+												<br />
 												<h5>Dlhodobý majetok</h5>
 												= hodnota továrne
-												<br/>
+												<br />
 												<i>od týchto investicií závisi výrobná kapacita</i>
-												<br/>
-												<br/>
-												<h5>Zásoby</h5>hodnota zásob ocenená metódou FIFO <br/>
-												<br/>
+												<br />
+												<br />
+												<h5>Zásoby</h5>hodnota zásob ocenená metódou FIFO <br />
+												<br />
 												<h5>Výsledok hospodárenia z predchádzajúcich období</h5>
 												suma všetkých výsledkov hospodárení za celú dobu trvania simulácie
-												<br/>
-												<br/>
+												<br />
+												<br />
 												<h5>Základné imanie</h5>
 												počiatočný vklad vlastníkov spoločnosti, nemenný počas celej doby
 												simulácie
-												<br/>
+												<br />
 											</div>
 										}
 									/>
@@ -304,7 +311,7 @@ function CompanyReport() {
 									<Tutorial
 										isOpen={tutorialStates.balance_tip}
 										closeModal={() => closeTutorial("balance_tip")}
-										textTitle="Súvaha Tip 💡"
+										textTitle="Súvaha 💡"
 										textContent={
 											<div>
 												Mysli na to, že ak máš na sklade zásoby, musíš sa o ne starať, s čím sú
@@ -402,10 +409,10 @@ function CompanyReport() {
 									textContent={
 										<div>
 											<h5>Výdavky na zásoby</h5>
-											= investície do marketingu + R&D + kapitálu <br />
+											= výdavky na skladovanie zásob + výdavky na upgrade zásob <br />
 											<br />
 											<h5>Výdavky na rozhodnutia</h5>
-											= marketing + upgrady + kapitál <br />
+											= investície do marketingu + R&D + kapitálu <br />
 											<br />
 											<h5>Výdavky na úroky</h5>
 											= úrok z pôžičky <br />
@@ -518,21 +525,21 @@ function CompanyReport() {
 									textContent={
 										<div>
 											<h5>Náklady na predaný tovar</h5>
-											= hodnota predaného tovaru. <br/>
+											= hodnota predaného tovaru. <br />
 											Ak spoločnosť mala v predchádzajúcom období zásoby, najskôr sa predajú
 											zásoby a až potom dochádza k predaju nových výrobkov. Hodnota vyskladnených
-											zásob je ocenená metódou FIFO. <br/>
-											<br/>
+											zásob je ocenená metódou FIFO. <br />
+											<br />
 											<h5>Odpisy</h5>
 											= DHM * 0,0125
-											<br/>
+											<br />
 											<i>odpis z kapitálových investícií</i>
-											<br/>
-											<br/>
+											<br />
+											<br />
 											<h5>Dodatočné náklady na nepredané výrobky</h5>
 											= cena za uskladnenie jednotky * počet kusov na sklade
-											<br/>
-											<br/>
+											<br />
+											<br />
 											<h5>Náklady na upgrade zásob</h5>
 											<i>
 												ak je dokončené vylepšenie a podnik má na sklade zásoby, tieto zásoby sa

@@ -120,7 +120,7 @@ function IndustryReport() {
 									<Tutorial
 										isOpen={tutorialStates.companies_table_tip}
 										closeModal={() => closeTutorial("companies_table_tip")}
-										textTitle="Rebríček všetkých firiem Tip 💡"
+										textTitle="Rebríček všetkých firiem 💡"
 										textContent={
 											<div>
 												<p>
@@ -239,7 +239,7 @@ function IndustryReport() {
 								<Tutorial
 									isOpen={tutorialStates.economy_params_tip}
 									closeModal={() => closeTutorial("economy_params_tip")}
-									textTitle="Ekonomické parametre trhu Tip 💡"
+									textTitle="Ekonomické parametre trhu 💡"
 									textContent={
 										<div>
 											<p>

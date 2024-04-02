@@ -126,7 +126,7 @@ function Product() {
 							<Tutorial
 								isOpen={tutorialStates.upgrades_tutorial}
 								closeModal={() => closeTutorial("upgrades_tutorial")}
-								textTitle="Výskum a vývoj Tip 💡"
+								textTitle="Výskum a vývoj 💡"
 								textContent={
 									<div>
 										<p>
