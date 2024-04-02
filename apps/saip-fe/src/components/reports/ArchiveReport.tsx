@@ -53,10 +53,16 @@ function ArchiveReport() {
 						<Tutorial
 							isOpen={tutorialStates.archive_report_tip}
 							closeModal={() => closeTutorial("archive_report_tip")}
-							textTitle="Archív rozhodnutí Tip 💡"
+							textTitle="Archív rozhodnutí 💡"
 							textContent={
 								<div>
 									<p>Investície do vylepšení sú vyjadrené ako súčet investícií do vylepšení.</p>
+									<br />
+									<br />
+									<p>
+										Nie je možné určiť, ktoré vylepšenie podnik v ktorom kole vyvíjal. Je potrebné
+										si viesť o tom evidenciu zvlášť.
+									</p>
 								</div>
 							}
 						/>

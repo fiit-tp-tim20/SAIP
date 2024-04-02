@@ -82,7 +82,7 @@ function Marketing() {
 						<Tutorial
 							isOpen={tutorialStates.marketing_tip}
 							closeModal={() => closeTutorial("marketing_tip")}
-							textTitle="Tip 💡"
+							textTitle="Marketing 💡"
 							textContent={
 								<div>
 									<p>
@@ -91,18 +91,23 @@ function Marketing() {
 										budeš zaujímavejší pre tie kategórie zákazníkov, ktorých marketing zaujíma. Čím
 										viac investuješ do marketingu, tým rýchlejšie rastie veľkosť trhu.
 									</p>
+									<br />
+									<br />
 									<p>
 										Každý z týchto nástrojov má iný vplyv na trh a vnímanie zákazníka. Do každého
 										nástroja je možné investovať celý rozpočet, teda 10 000 €. Do výpočtu výnosu z
 										marketingu (vplyvu investície marketingu na zákazníka) vstupuje marketingový
 										modifikátor (odlišný pre každý marketingový nástroj).
 									</p>
+									<br />
+									<br />
 									<p>
 										S rastúcou výškou investície do konkrétneho marketingového nástroja rastie aj
 										jeho efektivita (od 0,7 pri minimálnej výške investície až pod 1 pri výške
 										investície 10 000 €). Na začiatku simulácie existuje na trhu 100 zákazníkov na
 										každú spoločnosť.
 									</p>
+									<br />
 									<br />
 									Zloženie zákazníkov na trhu je počas simulácie konštantné:
 									<ul style={{ listStyleType: "disc", marginLeft: "20px" }}>
@@ -122,8 +127,8 @@ function Marketing() {
 					</div>
 					<p className="pt-1 text-justify">
 						Informácie o produktoch šírené pomocou elektronických médií, najmä sociálnych sietí, ale aj
-						pomocou virálneho priestoru ako súčasť zábavy, hier, či web stránok. Predstavuje taktiež chytľavé
-						obrázky a krátke videá (reels), ktorých úlohou je najmä zaujať.
+						pomocou virálneho priestoru ako súčasť zábavy, hier, či web stránok. Predstavuje taktiež
+						chytľavé obrázky a krátke videá (reels), ktorých úlohou je najmä zaujať.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
 						<div className="flex flex-col">
@@ -132,9 +137,10 @@ function Marketing() {
 								Minimálna investícia: <span className="font-bold">100€</span>
 							</p>
 							<p>
-								Marketingový modifikátor: <span className="font-bold">1,25</span> + <span className="font-bold">0,1</span> za každých investovaných <span className="font-bold">1 000€</span>
+								Marketingový modifikátor: <span className="font-bold">1,25</span> +{" "}
+								<span className="font-bold">0,1</span> za každých investovaných{" "}
+								<span className="font-bold">1 000€</span>
 							</p>
-
 						</div>
 						<div>
 							<Slider
@@ -189,7 +195,8 @@ function Marketing() {
 						<h2>Billboardy</h2>
 					</div>
 					<p className="pt-1 text-justify">
-						Tradičný marketingový nástroj. Možno si ho predstaviť ako tlačenú vonkajšiu reklamu obyčajne veľký rozmer, ale môže mať aj podobu citylightu.
+						Tradičný marketingový nástroj. Možno si ho predstaviť ako tlačenú vonkajšiu reklamu obyčajne
+						veľký rozmer, ale môže mať aj podobu citylightu.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">
 						<div className="flex flex-col">
@@ -253,9 +260,9 @@ function Marketing() {
 					</div>
 					<p className="pt-1 text-justify">
 						Marketingový nástroj "podcasty" sa využíva k propagácii produktov, služieb nebo značky
-						prostredníctvom audio obsahu distribuovaného online. Podcasty sú séria zvukových nahrávok,
-						ktoré môžu zahrnovať rozhovory, diskusie, reportáže nebo lekcie na rôzne témy. Vo svojom jadre
-						sú podcasty forma obsahového marketingu, ktorá umožňuje značkám vytvárať relevantný a hodnotný
+						prostredníctvom audio obsahu distribuovaného online. Podcasty sú séria zvukových nahrávok, ktoré
+						môžu zahrnovať rozhovory, diskusie, reportáže nebo lekcie na rôzne témy. Vo svojom jadre sú
+						podcasty forma obsahového marketingu, ktorá umožňuje značkám vytvárať relevantný a hodnotný
 						obsah pro svoje cieľové publikum.
 					</p>
 					<div className="flex flex-row items-center justify-between py-2">

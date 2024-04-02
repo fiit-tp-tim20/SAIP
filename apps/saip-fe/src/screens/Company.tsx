@@ -103,7 +103,7 @@ function Company() {
 							<Tutorial
 								isOpen={tutorialStates.production}
 								closeModal={() => closeTutorial("production")}
-								textTitle="Počet produkovaných kusov Tip 💡"
+								textTitle="Počet produkovaných kusov 💡"
 								textContent={
 									<div>
 										<p>
@@ -184,7 +184,7 @@ function Company() {
 							<Tutorial
 								isOpen={tutorialStates.price}
 								closeModal={() => closeTutorial("price")}
-								textTitle="Predajná cena Tip 💡"
+								textTitle="Predajná cena 💡"
 								textContent={
 									<div>
 										<p>Maximálna predajná cena je 15 000 €. </p>
@@ -238,7 +238,7 @@ function Company() {
 							<Tutorial
 								isOpen={tutorialStates.invest}
 								closeModal={() => closeTutorial("invest")}
-								textTitle="Investície do kapitálu Tip 💡"
+								textTitle="Investície do kapitálu 💡"
 								textContent={
 									<div>
 										<p>
