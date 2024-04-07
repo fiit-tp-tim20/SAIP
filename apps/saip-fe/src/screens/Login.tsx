@@ -12,7 +12,6 @@ export default function Login() {
 	const [password, setPassword] = useState(0);
 
 	const [isInvalid, setIsInvalid] = useState(true);
-	const token = localStorage.getItem("token");
 	const { reset: marketingReset } = useMarketingStore();
 	const { reset: companyReset } = useCompanyStore();
 	const navigate = useNavigate();
