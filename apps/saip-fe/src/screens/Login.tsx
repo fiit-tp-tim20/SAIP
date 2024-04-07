@@ -5,12 +5,13 @@ import { useNavigate } from 'react-router-dom';
 
 import useCompanyStore from "../store/Company";
 import useMarketingStore from "../store/Marketing";
+import {sleep} from "react-query/types/core/utils";
 
 export default function Login() {
 	const [email, setEmail] = useState(0);
 	const [password, setPassword] = useState(0);
 
-	const [isInvalid, setIsInvalid] = useState(false);
+	const [isInvalid, setIsInvalid] = useState(true);
 	const token = localStorage.getItem("token");
 	const { reset: marketingReset } = useMarketingStore();
 	const { reset: companyReset } = useCompanyStore();
@@ -32,28 +33,27 @@ export default function Login() {
 			setIsInvalid(true);
 			return null;
 		}
+		setIsInvalid(false);
 
 		const { token, expiry } = await response.clone().json();
 
 		localStorage.setItem("token", token);
 		localStorage.setItem("expiryDate", expiry);
-
 		marketingReset();
 		companyReset();
-
-		//! temporary, find a better way to do this
-		navigate('/');
-		window.location.reload();
 
 		return response;
 	};
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		// const {data, status} = useQuery('login', login)
-		login();
-		navigate('/');
+		let q = await login(); // Wait for the login function to complete
+		if (q?.status === 200) {
+			navigate('/');
 
+
+
+		}
 	};
 
 	return (
