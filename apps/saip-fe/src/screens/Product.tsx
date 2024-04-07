@@ -160,7 +160,7 @@ function Product() {
 						onClick={() => {
 							// @ts-ignore
 							data.forEach((upgrade) => {
-								setUpgrade(upgrade.name, 0);
+								//setUpgrade(upgrade.name, 0);
 								setUpgradeCheck(upgrade.name, true);
 							});
 						}}

@@ -53,7 +53,17 @@ function WelcomePage() {
 					<li>Ako sa v podniku využíva dlhodobý hmotný majetok a ako sa mení jeho hodnota?</li>
 					<li>Ako pracovať s hlavnými výkazmi podniku ako súvaha, výkaz ziskov a strát a výkaz o peňažnom toku?</li>
 				</div>
-				<div className=" w-1/2 h-1/2 place-self-auto">
+				<div className="w-1/2 h-1/2 place-self-auto">
+					<div className="text-center mb-8 mt-8 text-l ">Simulačná aplikácia investovania a podnikania SAIP
+						je počítačová aplikácia, ktorá umožňuje užívateľovi podnikať v simulovanom prostredí.
+						Jej cieľom je interaktívnou formou vzdelávať v oblasti podnikania, ekonómie a manažmentu.
+						Je určená všetkým, ktorí majú záujem precvičiť si svoje vedomosti a zručnosti v oblasti ekonómie,
+						manažmentu a podnikania. Predovšetkým je vhodná ako učebná pomôcka na výuku predmetov v oblasti
+						ekonómie, manažmentu, výroby, marketingu, investícií, financií a podnikania. Študentom poskytuje
+						možnosť precvičiť si získané  vedomosti a lepšie pochopiť preberané učivo. Pedagógom poskytuje
+						nástroj na spestrenie výuky a zároveň predstavuje vhodnú učebnú pomôcku na praktické vysvetlenie
+						preberaného učiva.
+					</div>
 					<Canvas />
 				</div>
 			</div>
