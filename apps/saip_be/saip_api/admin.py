@@ -4,11 +4,13 @@ from saip_ws.triggers import broadcast_message
 from .Exports import create_game_export
 
 from .models import Turn, Company, Production, Marketing, Factory, CompaniesState, Game, GameParameters, MarketState,\
-    Upgrade, CompaniesUpgrades, TeacherDecisions, Inventory
+    Upgrade, CompaniesUpgrades, TeacherDecisions, Inventory, CompaniesCommit
 
 from django_object_actions import DjangoObjectActions, action
 
 from .views.GameManagement import end_turn, get_last_turn, create_default_upgrades, create_turn
+
+from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
 
 @admin.register(Turn)
 class TurnsAdmin(admin.ModelAdmin):
@@ -46,6 +48,24 @@ class CompaniesStateAdmin(admin.ModelAdmin):
                     'inventory', 'manufactured_man_cost')
     list_filter = ('turn', 'company__game')
 
+@admin.register(CompaniesCommit)
+class CompaniesCommitAdmin(admin.ModelAdmin):
+    list_display=('company_name','game_name', 'turn_number', 'committed')
+    list_filter = (
+        ('turn', RelatedDropdownFilter),
+    )
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    @admin.display()
+    def company_name(self, obj):
+        return obj.company.name
+    @admin.display()
+    def turn_number(self, obj):
+        return obj.turn.number
+    @admin.display()
+    def game_name(self, obj):
+        return obj.company.game
 
 @admin.register(MarketState)
 class MarketStateAdmin(admin.ModelAdmin):

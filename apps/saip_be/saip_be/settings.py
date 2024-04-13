@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'knox',
     'corsheaders',
     'django_object_actions',
+    'django_admin_listfilter_dropdown'
 ]
 
 MIDDLEWARE = [
