@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'knox',
     'corsheaders',
-    'django_object_actions'
+    'django_object_actions',
+    'django_admin_listfilter_dropdown'
 ]
 
 MIDDLEWARE = [
