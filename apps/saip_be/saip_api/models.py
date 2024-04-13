@@ -186,6 +186,11 @@ class CompaniesState(models.Model):
         verbose_name_plural = "Companies States"
 
 
+class CompaniesCommit(CompaniesState):
+    class Meta:
+        proxy = True
+        verbose_name_plural = "Companies Commits"
+
 class MarketState(models.Model):
     turn = models.ForeignKey(Turn, models.CASCADE, null=True)
     sold = models.PositiveIntegerField(null=True, default=0)
