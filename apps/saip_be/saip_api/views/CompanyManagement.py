@@ -559,7 +559,7 @@ class CreateCompanyView(APIView):
         return Response({"companyID": company.id}, status=201)
 
 
-def checkCommitted(turn: Turn, end: bool = True) -> bool:
+def checkCommitted(turn: Turn, game_name: str, end: bool = True) -> bool:
     """Checks of all companies are committed and ends turn if auto_end is set to True"""
     states = CompaniesState.objects.filter(turn=turn)
     auto_end = turn.game.parameters.end_turn_on_committed
@@ -571,7 +571,7 @@ def checkCommitted(turn: Turn, end: bool = True) -> bool:
     if end and auto_end:
         new_turn = end_turn(turn)
         y = {"Number": new_turn.number, "Committed": False}
-        broadcast_message(y)  # toto je v poriadku, vsetkym pride sprava o tom, ze je nove kolo
+        broadcast_message(y, game_name)  # toto je v poriadku, vsetkym pride sprava o tom, ze je nove kolo
 
     return True
 
@@ -713,7 +713,7 @@ class PostSpendingsView(APIView):
         company_state.committed = True
         company_state.save()
 
-        checkCommitted(last_turn)  # checks if all companies are committed
+        checkCommitted(last_turn,company.game.name)  # checks if all companies are committed
 
         return Response(status=201)
 

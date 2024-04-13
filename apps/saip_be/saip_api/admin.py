@@ -95,7 +95,7 @@ class GameAdmin(DjangoObjectActions, admin.ModelAdmin):
         # sem treba pridat broadcast
         new_turn = end_turn(last_turn)
         y = {"Number": new_turn.number, "Committed": False}
-        broadcast_message(y)
+        broadcast_message(y, queryset.name)
 
     def save_model(self, request, obj, form, change):
         """Override save_model to create default upgrades and turn if they don't exist"""
