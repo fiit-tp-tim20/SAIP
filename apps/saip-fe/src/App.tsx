@@ -29,7 +29,6 @@ import WelcomePage from "./screens/WelcomePage";
 function App() {
 	const token = localStorage.getItem("token");
 	const [connect, setConnect] = useState('')
-	const value = { connect, setConnect };
 	const dataWs = useContext(MyContext);
 	const [data, setData] = useState({
 		num: null,
@@ -69,7 +68,7 @@ function App() {
 		share: true,
 		shouldReconnect: (closeEvent) => true,
 		reconnectAttempts: 10,
-		reconnectInterval: 3000,
+		reconnectInterval: 10000,
 	});
 	const { reset: resetCompanyState } = useCompanyStore();
 	const { reset: resetUpgradeState } = useUpgradesStore();
@@ -127,9 +126,7 @@ function App() {
 	// kompletne dum-dum riešenie PREROBIŤ. Aj tu aj getTurn() !!!!!!!!!!!!!
 	if (token && connect === 'Company for this user not found') {
 		return (
-			<ConnectContext.Provider value={value}>
-				<GameSelect />
-			</ConnectContext.Provider>
+			<GameSelect />
 		);
 	}
 
@@ -161,6 +158,7 @@ function App() {
 								<Route path="/marketing" element={<Marketing />} />
 								<Route path="/game" element={<GameSelect />} />
 								<Route path="/" element={<Dashboard />} />
+								<Route path="/login" element={<Navigate to="/" replace />} />
 								<Route path="*" element={<NotFound />} />
 							</Routes>
 						</div>

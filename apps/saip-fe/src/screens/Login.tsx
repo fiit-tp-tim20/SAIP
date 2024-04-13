@@ -11,7 +11,7 @@ export default function Login() {
 	const [email, setEmail] = useState(0);
 	const [password, setPassword] = useState(0);
 
-	const [isInvalid, setIsInvalid] = useState(true);
+	const [isInvalid, setIsInvalid] = useState(false);
 	const { reset: marketingReset } = useMarketingStore();
 	const { reset: companyReset } = useCompanyStore();
 	const navigate = useNavigate();
@@ -32,7 +32,6 @@ export default function Login() {
 			setIsInvalid(true);
 			return null;
 		}
-		setIsInvalid(false);
 
 		const { token, expiry } = await response.clone().json();
 
@@ -47,12 +46,6 @@ export default function Login() {
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		let q = await login(); // Wait for the login function to complete
-		if (q?.status === 200) {
-			navigate('/');
-
-
-
-		}
 	};
 
 	return (
