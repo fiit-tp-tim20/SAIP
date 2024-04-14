@@ -23,6 +23,7 @@ function IndustryReport() {
 	// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle
 	const _turn = dataWs.num;
 
+	// @ts-ignore
 	const [turn, setTurn] = useState<number>(_turn - 1);
 
 	const { data, isLoading } = useQuery(["getIndustryReport", turn], () => getIndustryReport(turn));
