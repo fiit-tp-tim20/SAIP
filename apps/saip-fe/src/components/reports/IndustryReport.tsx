@@ -6,7 +6,7 @@ import { getIndustryGraphData } from "../../api/GetIndustryGraphData";
 import IndustryGraph from "../statisticsGraph/IndustryGraph";
 import numberWithSpaces from "../../utils/numberWithSpaces";
 // @ts-ignore
-import { MyContext } from "../../api/MyContext.js";
+import { MyContext } from "../../api/MyContext";
 
 const sortByStockPrice = (a: IndustryReportType, b: IndustryReportType) => {
 	if (!a.stock_price) return 1;

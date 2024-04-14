@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 // @ts-ignore
-import { useNavigate } from 'react-router-dom';
+import  {MyContext}  from "../api/MyContext";
+
 // @ts-ignore
-import Spinner from '../utils/Spinner'
+import { useNavigate } from 'react-router-dom';
 
 import useCompanyStore from "../store/Company";
 import useMarketingStore from "../store/Marketing";
@@ -14,7 +15,8 @@ export default function Login() {
 	const [password, setPassword] = useState(0);
 
 	const [isInvalid, setIsInvalid] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
+	// @ts-ignore
+	const { setIsLoading } = useContext(MyContext);
 	const { reset: marketingReset } = useMarketingStore();
 	const { reset: companyReset } = useCompanyStore();
 	const navigate = useNavigate();
@@ -30,11 +32,9 @@ export default function Login() {
 				"Content-type": "application/json",
 			},
 		});
-		setIsLoading(false);
 
 		if (response.status === 400) {
 			setIsInvalid(true);
-
 			return null;
 		}
 
@@ -49,13 +49,10 @@ export default function Login() {
 	};
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-		setIsLoading(true)
 		e.preventDefault();
-		let q = await login(); // Wait for the login function to complete
+		setIsLoading(true)
+		await login();
 	};
-	if (isLoading){
-		return <Spinner />;
-	}
 
 	return (
 		<div className="w-full h-full max-w-xs flex flex-col gap-4 justify-center items-center">

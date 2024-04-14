@@ -4,7 +4,7 @@ import Tutorial from "../modal/Tutorial";
 import getCompanyReport from "../../api/GetCompanyReport";
 import numberWithSpaces from "../../utils/numberWithSpaces";
 // @ts-ignore
-import { MyContext } from "../../api/MyContext.js";
+import { MyContext } from "../../api/MyContext";
 
 function CompanyReport() {
 	const dataWs = useContext(MyContext);

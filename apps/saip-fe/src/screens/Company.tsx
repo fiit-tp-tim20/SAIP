@@ -8,7 +8,7 @@ import CompanyGraph from "../components/statisticsGraph/CompanyGraph";
 import getCompanyReport from "../api/GetCompanyReport";
 
 // @ts-ignore
-import { MyContext } from "../api/MyContext.js";
+import { MyContext } from "../api/MyContext";
 import getGeneralInfo from "../api/CompanyInfo";
 
 function Company() {
