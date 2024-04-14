@@ -1,7 +1,7 @@
 import React, {createContext, Suspense, useContext, useEffect, useState} from "react";
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import "./App.css";
-import { BrowserRouter, Route, Routes, Navigate, useNavigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 // @ts-ignore
 import { MyContext } from "./api/MyContext";
 // @ts-ignore
@@ -26,6 +26,7 @@ import BugReport from "./components/bugreport/BugReport";
 import { currentTurn } from "./store/Atoms";
 import WelcomePage from "./screens/WelcomePage";
 import Spinner from "./utils/Spinner";
+import {useNavigate} from "react-router";
 function App() {
 	const token = localStorage.getItem("token");
 	const [isLoading, setIsLoading] = useState(true);
@@ -151,32 +152,46 @@ function App() {
 		);
 	}
 
-	return (
-		<MyContext.Provider value={{ ...data, isLoading, setIsLoading }}>
-			<BrowserRouter>
-				<Routes>
-					{token && data.num !== null ? (
-						<>
-							<Route path="/product" element={<Product />} />
-							<Route path="/company" element={<Company />} />
-							<Route path="/marketing" element={<Marketing />} />
-							<Route path="/game" element={<GameSelect />} />
-							<Route path="/" element={<Dashboard />} />
-							<Route path="/login" element={<Navigate to="/" replace />} />
-							<Route path="*" element={<NotFound />} />
-						</>
-					) : (
-						<>
-							<Route path="/register" element={<Register />} />
-							<Route path="/login" element={<Login />} />
-							<Route path="/" element={<WelcomePage />} />
-							<Route path="*" element={<Navigate to="/" replace />} />
-						</>
-					)}
-				</Routes>
-			</BrowserRouter>
-		</MyContext.Provider>
-	);
+	if (token && data.num != null) {
+		return (
+			<MyContext.Provider value={{ ...data, isLoading, setIsLoading }}>
+				<Suspense>
+					<BrowserRouter>
+						<Navbar />
+						<div className="my-16">
+							<Routes>
+								<Route path="/product" element={<Product />} />
+								<Route path="/company" element={<Company />} />
+								<Route path="/marketing" element={<Marketing />} />
+								<Route path="/game" element={<GameSelect />} />
+								<Route path="/" element={<Dashboard />} />
+								<Route path="/login" element={<Navigate to="/" replace />} />
+								<Route path="*" element={<NotFound />} />
+							</Routes>
+						</div>
+						<BottomBar />
+						<BugReport />
+					</BrowserRouter>
+				</Suspense>
+			</MyContext.Provider>
+
+		);
+	}
+	if(!token){
+		return (
+			<MyContext.Provider value={{ ...data, isLoading, setIsLoading }}>
+				<BrowserRouter>
+					<Routes>
+						<Route path="/register" element={<Register />} />
+						<Route path="/login" element={<Login />} />
+						<Route path="/" element={<WelcomePage />} />
+						<Route path="*" element={<Navigate to="/" replace />} />
+					</Routes>
+				</BrowserRouter>
+			</MyContext.Provider>
+		);
+	}
+
 }
 
 export default App;
