@@ -12,7 +12,7 @@ import BottomBarModal from "./BottomBarModal";
 import getGeneralInfo from "../../api/CompanyInfo";
 import endTurn from "../../api/EndTurn";
 // @ts-ignore
-import { MyContext } from "../../api/MyContext.js";
+import { MyContext } from "../../api/MyContext";
 import numberWithSpaces from "../../utils/numberWithSpaces";
 
 export default function BottomBar() {

@@ -3,7 +3,7 @@ import useWebSocket, { ReadyState } from 'react-use-websocket';
 import "./App.css";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 // @ts-ignore
-import { MyContext } from "./api/MyContext.js";
+import { MyContext } from "./api/MyContext";
 // @ts-ignore
 import { ConnectContext } from "./api/ConnectContext.js";
 import "./i18n";
@@ -25,11 +25,12 @@ import Register from "./screens/Register";
 import BugReport from "./components/bugreport/BugReport";
 import { currentTurn } from "./store/Atoms";
 import WelcomePage from "./screens/WelcomePage";
+import Spinner from "./utils/Spinner";
 
 function App() {
 	const token = localStorage.getItem("token");
+	const [isLoading, setIsLoading] = useState(true);
 	const [connect, setConnect] = useState('')
-	const value = { connect, setConnect };
 	const dataWs = useContext(MyContext);
 	const [data, setData] = useState({
 		num: null,
@@ -64,12 +65,13 @@ function App() {
 					console.error('Error parsing JSON:', error);
 				}
 			}
+			setIsLoading(false)
 
 		},
 		share: true,
 		shouldReconnect: (closeEvent) => true,
 		reconnectAttempts: 10,
-		reconnectInterval: 3000,
+		reconnectInterval: 10000,
 	});
 	const { reset: resetCompanyState } = useCompanyStore();
 	const { reset: resetUpgradeState } = useUpgradesStore();
@@ -106,16 +108,7 @@ function App() {
 	useEffect(() => {
 		// @ts-ignore
 		const savedTurn = dataWs.num
-		if (!savedTurn && !data) {
-			//localStorage.setItem("turn", "0");
-		}
-		if (!savedTurn && data) {
-			//localStorage.setItem("turn", data.Number);
-			//localStorage.setItem("committed", data.Committed);
-		}
 		if (savedTurn && data && data.num !== parseInt(savedTurn, 10)) {
-			//localStorage.setItem("committed", data.Committed);
-			//localStorage.setItem("turn", data.Number);
 			resetCompanyState();
 			resetUpgradeState();
 			resetMarketingState();
@@ -123,13 +116,14 @@ function App() {
 
 		setTurn(data?.num || -1);
 	}, [data]);
+	if (isLoading){
+		return <Spinner />;
+	}
 
 	// kompletne dum-dum riešenie PREROBIŤ. Aj tu aj getTurn() !!!!!!!!!!!!!
 	if (token && connect === 'Company for this user not found') {
 		return (
-			<ConnectContext.Provider value={value}>
-				<GameSelect />
-			</ConnectContext.Provider>
+			<GameSelect />
 		);
 	}
 
@@ -150,7 +144,7 @@ function App() {
 
 	if (token && data.num != null) {
 		return (
-			<MyContext.Provider value={data}>
+			<MyContext.Provider value={{ ...data, isLoading, setIsLoading }}>
 				<Suspense>
 					<BrowserRouter>
 						<Navbar />
@@ -161,6 +155,7 @@ function App() {
 								<Route path="/marketing" element={<Marketing />} />
 								<Route path="/game" element={<GameSelect />} />
 								<Route path="/" element={<Dashboard />} />
+								<Route path="/login" element={<Navigate to="/" replace />} />
 								<Route path="*" element={<NotFound />} />
 							</Routes>
 						</div>
@@ -172,19 +167,21 @@ function App() {
 
 		);
 	}
+	if(!token){
+		return (
+			<MyContext.Provider value={{ ...data, isLoading, setIsLoading }}>
+				<BrowserRouter>
+					<Routes>
+						<Route path="/register" element={<Register />} />
+						<Route path="/login" element={<Login />} />
+						<Route path="/" element={<WelcomePage />} />
+						<Route path="*" element={<Navigate to="/" replace />} />
+					</Routes>
+				</BrowserRouter>
+			</MyContext.Provider>
+		);
+	}
 
-	return (
-		<MyContext.Provider value={data}>
-			<BrowserRouter>
-			<Routes>
-				<Route path="/register" element={<Register />} />
-				<Route path="/login" element={<Login />} />
-				<Route path="/" element={<WelcomePage />} />
-				<Route path="*" element={<Navigate to="/" replace />} />
-			</Routes>
-			</BrowserRouter>
-		</MyContext.Provider>
-	);
 }
 
 export default App;

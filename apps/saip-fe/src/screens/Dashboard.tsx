@@ -4,7 +4,7 @@ import CompanyReport from "../components/reports/CompanyReport";
 import IndustryReport from "../components/reports/IndustryReport";
 import ArchiveReport from "../components/reports/ArchiveReport";
 // @ts-ignore
-import  {MyContext}  from "../api/MyContext.js";
+import  {MyContext}  from "../api/MyContext";
 import {func} from "three/examples/jsm/nodes/shadernode/ShaderNodeBaseElements";
 
 function Plan() {

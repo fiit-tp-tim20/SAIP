@@ -29,8 +29,6 @@ const listGames = async () => {
 };
 
 function GameSelect() {
-	// @ts-ignore
-	const {connect, setConnect} = useContext(ConnectContext);
 	const [users, setUsers] = useState<User[]>([]);
 	const [inputNumbersOfUsers, setInputNumbersOfUsers] = useState(0);
 	const [selectedGame, setSelectedGame] = useState(0);
@@ -84,9 +82,6 @@ function GameSelect() {
 
 		if (response.status !== 201) {
 			setIsInvalidName(true);
-		}
-		else{
-			setConnect('yes')
 		}
 	};
 
