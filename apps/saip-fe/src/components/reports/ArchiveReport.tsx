@@ -4,7 +4,7 @@ import Tutorial from "../modal/Tutorial";
 import getArchiveReport from "../../api/GetArchiveReport";
 import numberWithSpaces from "../../utils/numberWithSpaces";
 // @ts-ignore
-import { MyContext } from "../../api/MyContext.js";
+import { MyContext } from "../../api/MyContext";
 import getCompanyReport from "../../api/GetCompanyReport";
 
 function ArchiveReport() {
