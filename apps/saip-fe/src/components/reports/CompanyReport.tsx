@@ -134,37 +134,37 @@ function CompanyReport() {
 								<tr>
 									<td className="px-4 py-2">Vyrobené množstvo</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.production?.production)} ks
+										{numberWithSpaces(data?.production?.production)} ks
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Výrobná kapacita (max)</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.production.capacity)} ks
+										{numberWithSpaces(data?.production.capacity)} ks
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Koeficient využitia výrobnej kapacity (minulé kolo)</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.production.utilization)} %
+										{numberWithSpaces(data?.production.utilization)} %
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Výrobné náklady</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.production.man_cost)} €/ks
+										{numberWithSpaces(data?.production.man_cost)} €/ks
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Zásoby</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.production.new_inventory)} ks
+										{numberWithSpaces(data?.production.new_inventory)} ks
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Celkové náklady</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.production.man_cost_all)} €/ks
+										{numberWithSpaces(data?.production.man_cost_all)} €/ks
 									</td>
 								</tr>
 							</tbody>
@@ -205,25 +205,25 @@ function CompanyReport() {
 								<tr>
 									<td className="px-4 py-2">Prijaté objednávky</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.sales.orders_received)}
+										{numberWithSpaces(data?.sales.orders_received)}
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Splnené objednávky</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.sales.orders_fulfilled)}
+										{numberWithSpaces(data?.sales.orders_fulfilled)}
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Nesplnené objednávky</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.sales.orders_unfulfilled)}
+										{numberWithSpaces(data?.sales.orders_unfulfilled)}
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Predajná cena</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.sales.selling_price)} €/ks
+										{numberWithSpaces(data?.sales.selling_price)} €/ks
 									</td>
 								</tr>
 								<tr>
@@ -231,7 +231,7 @@ function CompanyReport() {
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(
 											Math.round(
-												(data.income_statement.net_profit / data.income_statement.sales) *
+												(data?.income_statement.net_profit / data?.income_statement.sales) *
 													100 *
 													100,
 											) / 100,
@@ -244,7 +244,7 @@ function CompanyReport() {
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(
 											Math.round(
-												(data.income_statement.net_profit / data.balance.assets_summary) *
+												(data?.income_statement.net_profit / data?.balance.assets_summary) *
 													100 *
 													100,
 											) / 100,
@@ -332,19 +332,19 @@ function CompanyReport() {
 								<tr>
 									<td className="px-4 py-2">Finančné prostriedky</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.balance.cash)} €
+										{numberWithSpaces(data?.balance.cash)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Zásoby</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.balance.inventory_money)} €
+										{numberWithSpaces(data?.balance.inventory_money)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Dlhodobý majetok</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.balance.capital_investments)} €
+										{numberWithSpaces(data?.balance.capital_investments)} €
 									</td>
 								</tr>
 								<tr>
@@ -352,7 +352,7 @@ function CompanyReport() {
 										<b>Súčet aktív</b>
 									</td>
 									<td className="px-4 py-2 whitespace-nowrap font-bold">
-										{numberWithSpaces(data.balance.assets_summary)} €
+										{numberWithSpaces(data?.balance.assets_summary)} €
 									</td>
 								</tr>
 							</tbody>
@@ -365,19 +365,19 @@ function CompanyReport() {
 								<tr>
 									<td className="px-4 py-2">Pôžičky</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.balance.loans)} €
+										{numberWithSpaces(data?.balance.loans)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Výsledok hospodárenia z predchádzajúcich období</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.balance.ret_earnings)} €
+										{numberWithSpaces(data?.balance.ret_earnings)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Základné imanie</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.balance.base_capital)} €
+										{numberWithSpaces(data?.balance.base_capital)} €
 									</td>
 								</tr>
 								<tr>
@@ -385,7 +385,7 @@ function CompanyReport() {
 										<b>Súčet pasív</b>
 									</td>
 									<td className="px-4 py-2 whitespace-nowrap font-bold">
-										{numberWithSpaces(data.balance.liabilities_summary)} €
+										{numberWithSpaces(data?.balance.liabilities_summary)} €
 									</td>
 								</tr>
 							</tbody>
@@ -434,43 +434,43 @@ function CompanyReport() {
 								<tr>
 									<td className="px-4 py-2">Počiatočný stav</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.cash_flow.beginning_cash)} €
+										{numberWithSpaces(data?.cash_flow.beginning_cash)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Príjmy z predaja výrobkov</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.cash_flow.sales)} €
+										{numberWithSpaces(data?.cash_flow.sales)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Výdavky na vyrobené výrobky</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.cash_flow.manufactured_man_cost)} €
+										{numberWithSpaces(data?.cash_flow.manufactured_man_cost)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Výdavky na zásoby</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.cash_flow.inventory_charge)} €
+										{numberWithSpaces(data?.cash_flow.inventory_charge)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Výdavky na rozhodnutia</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.cash_flow.expenses)} €
+										{numberWithSpaces(data?.cash_flow.expenses)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2"> Výdavky na úroky</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.cash_flow.interest)} €
+										{numberWithSpaces(data?.cash_flow.interest)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Zaplatená daň</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.cash_flow.tax)} €
+										{numberWithSpaces(data?.cash_flow.tax)} €
 									</td>
 								</tr>
 								<tr>
@@ -478,21 +478,21 @@ function CompanyReport() {
 										<b>Výsledok finančného toku</b>
 									</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										<b>{numberWithSpaces(data.cash_flow.cash_flow_result)} €</b>
+										<b>{numberWithSpaces(data?.cash_flow.cash_flow_result)} €</b>
 									</td>
 								</tr>
-								{data.cash_flow.new_loans > 0 ? (
+								{data?.cash_flow.new_loans > 0 ? (
 									<tr>
 										<td className="px-4 py-2">Nové úvery</td>
 										<td className="px-4 py-2 whitespace-nowrap">
-											{numberWithSpaces(data.cash_flow.new_loans)} €
+											{numberWithSpaces(data?.cash_flow.new_loans)} €
 										</td>
 									</tr>
 								) : (
 									<tr>
 										<td className="px-4 py-2">Splátka úveru</td>
 										<td className="px-4 py-2 whitespace-nowrap">
-											{numberWithSpaces(data.cash_flow.loan_repayment)} €
+											{numberWithSpaces(data?.cash_flow.loan_repayment)} €
 										</td>
 									</tr>
 								)}
@@ -501,7 +501,7 @@ function CompanyReport() {
 										<b>Konečný stav</b>
 									</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										<b>{numberWithSpaces(data.cash_flow.cash)} €</b>
+										<b>{numberWithSpaces(data?.cash_flow.cash)} €</b>
 									</td>
 								</tr>
 							</tbody>
@@ -555,49 +555,49 @@ function CompanyReport() {
 								<tr>
 									<td className="px-4 py-2">Tržby z predaja výrobkov</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.income_statement.sales)} €
+										{numberWithSpaces(data?.income_statement.sales)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Náklady na predaný tovar</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.income_statement.manufactured_man_cost)} €
+										{numberWithSpaces(data?.income_statement.manufactured_man_cost)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Náklady na marketing</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.income_statement.marketing)} €
+										{numberWithSpaces(data?.income_statement.marketing)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Náklady na výskum a vývoj</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.income_statement.r_d)} €
+										{numberWithSpaces(data?.income_statement.r_d)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Odpisy</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.income_statement.depreciation)} €
+										{numberWithSpaces(data?.income_statement.depreciation)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Dodatočné náklady na nepredané výrobky</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.income_statement.inventory_charge)} €
+										{numberWithSpaces(data?.income_statement.inventory_charge)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Náklady na upgrade zásob</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.income_statement.inventory_upgrade)} €
+										{numberWithSpaces(data?.income_statement.inventory_upgrade)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Nákladové úroky</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.income_statement.interest)} €
+										{numberWithSpaces(data?.income_statement.interest)} €
 									</td>
 								</tr>
 								<tr>
@@ -605,13 +605,13 @@ function CompanyReport() {
 										<b>Výsledok hospodárenia pred zdanením</b>
 									</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										<b>{numberWithSpaces(data.income_statement.profit_before_tax)} €</b>
+										<b>{numberWithSpaces(data?.income_statement.profit_before_tax)} €</b>
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">Daň</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data.income_statement.tax)} €
+										{numberWithSpaces(data?.income_statement.tax)} €
 									</td>
 								</tr>
 								<tr>
@@ -619,7 +619,7 @@ function CompanyReport() {
 										<b>Výsledok hospodárenia po zdanení</b>
 									</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										<b>{numberWithSpaces(data.income_statement.net_profit)} €</b>
+										<b>{numberWithSpaces(data?.income_statement.net_profit)} €</b>
 									</td>
 								</tr>
 							</tbody>
