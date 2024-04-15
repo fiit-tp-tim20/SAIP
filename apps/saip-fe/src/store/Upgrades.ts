@@ -24,10 +24,7 @@ const useUpgradesStore = create<UpgradeState>()(
 			getChecked: () => {
 				const checkedValues = Object.values(get().upgradesCheck);
 				if (checkedValues.length > 0) {
-					return (
-						checkedValues.every((value) => value) ||
-						Object.keys(get().upgrades).some((upgrade) => get().upgrades[upgrade] === "finished")
-					);
+					return checkedValues.every((value) => value);
 				}
 				// Check if all upgrades are checked
 				return false;
