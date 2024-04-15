@@ -44,6 +44,7 @@ function App() {
 		getWebSocket,} = useWebSocket(`${import.meta.env.VITE_WS_URL}turn_info/`, {
 		protocols: ['authorization', `${token}`],
 		onMessage: (e) =>{
+			console.log(e.data)
 			// @ts-ignore
 			if (e.data === 'Websocket connected') {
 				setConnect('yes');
@@ -68,13 +69,13 @@ function App() {
 
 		},
 		onClose: (event) => {
-			localStorage.removeItem("token");
-			//setIsLoading(true)
-			setData({
-				num: null,
-				comm: null,
-				start:  null
-			});
+			// localStorage.removeItem("token");
+			// //setIsLoading(true)
+			// setData({
+			// 	num: null,
+			// 	comm: null,
+			// 	start:  null
+			// });
 
 		},
 		share: true,
