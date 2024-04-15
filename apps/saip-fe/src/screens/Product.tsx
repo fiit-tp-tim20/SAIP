@@ -166,7 +166,7 @@ function Product() {
 						}}
 						className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline mr-12"
 					>
-						Nevyvíjať
+						Potvrdiť všetky
 					</button>
 				</div>
 				<div className="flex flex-col background-container p-6 rounded-2xl mx-6 max-w-7xl">
