@@ -82,7 +82,7 @@ function App() {
 		share: true,
 		shouldReconnect: (closeEvent) => true,
 		reconnectAttempts: 1000,
-		reconnectInterval: 10000,
+		reconnectInterval: 6000,
 	});
 	const { reset: resetCompanyState } = useCompanyStore();
 	const { reset: resetUpgradeState } = useUpgradesStore();
