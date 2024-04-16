@@ -44,6 +44,7 @@ function Product() {
 	useEffect(() => {
 		if (!data) return;
 		data.forEach((upgrade) => {
+			if(upgrade.status === 'finished') return;
 			if (upgrades[upgrade.name] || upgradesCheck[upgrade.name]) return;
 			setUpgrade(upgrade.name, 0);
 			setUpgradeCheck(upgrade.name, false);
