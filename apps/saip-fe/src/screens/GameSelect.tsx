@@ -4,8 +4,6 @@ import logout from "../api/logout";
 import useCompanyStore from "../store/Company";
 import useMarketingStore from "../store/Marketing";
 import useUpgradesStore from "../store/Upgrades";
-// @ts-ignore
-import {ConnectContext} from "../api/ConnectContext.js";
 
 type User = {
 	value: string;

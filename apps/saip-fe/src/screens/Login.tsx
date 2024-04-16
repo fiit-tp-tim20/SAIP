@@ -50,8 +50,8 @@ export default function Login() {
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		setIsLoading(true)
-		await login();
+		let res = await login();
+		if(res)setIsLoading(true);
 	};
 
 	return (
@@ -73,7 +73,10 @@ export default function Login() {
 						id="username"
 						type="text"
 						placeholder="Prihlasovacie meno"
-						onChange={(e: any) => setEmail(e.target.value)}
+						onChange={(e: any) => {
+							setEmail(e.target.value);
+							setIsInvalid(false);
+						}}
 					/>
 				</div>
 				<div className="mb-6">
@@ -87,7 +90,10 @@ export default function Login() {
 						id="password"
 						type="password"
 						placeholder="Heslo"
-						onChange={(e: any) => setPassword(e.target.value)}
+						onChange={(e: any) => {
+							setPassword(e.target.value)
+							setIsInvalid(false);
+						}}
 					/>
 					{isInvalid ? <p className="text-red-500 text-xs italic">Nesprávne meno alebo heslo.</p> : null}
 				</div>

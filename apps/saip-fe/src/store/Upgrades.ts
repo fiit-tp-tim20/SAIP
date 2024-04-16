@@ -27,7 +27,6 @@ const useUpgradesStore = create<UpgradeState>()(
 					return checkedValues.every((value) => value);
 				}
 				// Check if all upgrades are checked
-
 				return false;
 			},
 		}),
