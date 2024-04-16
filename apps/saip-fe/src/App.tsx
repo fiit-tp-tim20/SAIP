@@ -2,10 +2,7 @@ import React, {createContext, Suspense, useContext, useEffect, useState} from "r
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import "./App.css";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-// @ts-ignore
 import { MyContext } from "./api/MyContext";
-// @ts-ignore
-import { ConnectContext } from "./api/ConnectContext.js";
 import "./i18n";
 import { useAtom } from "jotai";
 import Dashboard from "./screens/Dashboard";
