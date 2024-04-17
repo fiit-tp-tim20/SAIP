@@ -239,6 +239,9 @@ class Bot(ABC):
 
         if response.status_code == 200:
             self.token = response.json()["token"]
+            print("login bot...")
+            print("username: ",username)
+            print("token: ",self.token)
         else:
             print("Response content:", response.text)
 
@@ -345,6 +348,8 @@ class Bot(ABC):
 
     def play_turn(self,**kwargs):
         turn_number = kwargs.get("turn_number")
+        print("Bot type:",self.name)
+        print("Token:",self.token)
         if self.get_committed_status(turn_number=turn_number) is False:
             self.get_company_report(turn_number=turn_number - 1)
             self.get_company_info(turn_number=turn_number - 1)
