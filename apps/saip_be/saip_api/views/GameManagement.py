@@ -223,6 +223,7 @@ def end_turn(turn: Turn) -> Turn:
                 type=b.type
             )
             bot.save()
+            print("Saved token: ",bot.token)
 
         for i in range(numberl):
             b = LowPriceStrategyBot()
@@ -234,6 +235,8 @@ def end_turn(turn: Turn) -> Turn:
                 type=b.type
             )
             bot.save()
+            print("Saved token: ",bot.token)
+
 
         for i in range(numberh):
             b = HighPriceStrategyBot()
@@ -245,6 +248,8 @@ def end_turn(turn: Turn) -> Turn:
                 type=b.type
             )
             bot.save()
+            print("Saved token: ",bot.token)
+
 
 
 
