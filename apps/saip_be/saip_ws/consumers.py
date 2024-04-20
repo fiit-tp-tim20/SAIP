@@ -44,6 +44,7 @@ class TestConsumer(WebsocketConsumer):
         return self.send(text_data=q, close=False)
         
     def disconnect(self, close_code):
+        self.send(text_data=f"Disconnected, close_code: {close_code}")
         company = self.get_user_company()
         if company is None:
             return
