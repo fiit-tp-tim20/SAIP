@@ -67,6 +67,7 @@ function App() {
 
 		},
 		onClose: (event) => {
+			console.log(event)
 			// localStorage.removeItem("token");
 			// //setIsLoading(true)
 			// setData({
