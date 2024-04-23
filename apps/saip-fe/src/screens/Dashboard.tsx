@@ -14,7 +14,7 @@ function Plan() {
 	// @ts-ignore
 	const data = useContext(MyContext);
 	// @ts-ignore
-	const currentTurn = data.num
+	const currentTurn = data.turnNum
 	// @ts-ignore
 	useEffect(() => {
 		// @ts-ignore

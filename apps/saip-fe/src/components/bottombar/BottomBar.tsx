@@ -18,20 +18,10 @@ import numberWithSpaces from "../../utils/numberWithSpaces";
 export default function BottomBar() {
 	const [tooltipText, setTooltipText] = useState("");
 	const dataWs = useContext(MyContext);
+	const {setComm, comm} = useContext(MyContext)
 	const { isLoading, data, refetch} = useQuery("companyInfo", () => getGeneralInfo());
 	// @ts-ignore
-	const [committed, setCommitted] = useState(false);
 	const [bonusCash, setBonusCash] = useState(0);
-	// @ts-ignore
-	useEffect(() => {
-		// @ts-ignore
-		if (dataWs.comm != committed) {
-			setCommitted(!committed);
-		}
-		refetch()
-
-
-	}, [dataWs]);
 	const { Modal, isShowing, setIsShowing, setElement } = useModal(<div />);
 
 	const { reset: resetCompanyState } = useCompanyStore();
@@ -93,7 +83,7 @@ export default function BottomBar() {
 	};
 
 	const handleModalSubmit = async () => {
-		setCommitted(!committed);
+		setComm(true)
 		setIsShowing(false);
 		await handleEndTurn();
 	};
@@ -118,7 +108,7 @@ export default function BottomBar() {
 			<div className="fixed bottom-2 right-2 z-40">
 				{!isLoading ? (
 					<div className="bg-white px-3 py-1 rounded-lg border-2 accent-700-border">
-						{committed ? (
+						{comm ? (
 							<p className="text-center font-medium p-3">Čaká sa na ostatných hráčov</p>
 						) : (
 							<div className="flex flex-row gap-8 items-center">
@@ -163,7 +153,7 @@ export default function BottomBar() {
 										!getCheckedCompany() ||
 										!getCheckedUpgrages() ||
 										!getCheckedMarketing() ||
-										committed
+										comm
 									}
 								>
 									Ukončiť kolo
