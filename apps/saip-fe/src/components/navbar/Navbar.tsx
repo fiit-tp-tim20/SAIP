@@ -10,7 +10,7 @@ function Navbar() {
 
 	const dataWs = useContext(MyContext);
 	// @ts-ignore
-	const data = dataWs.num
+	const data = dataWs.turnNum
 
 	const tabs = [
 		{
