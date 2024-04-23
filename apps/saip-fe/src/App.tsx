@@ -28,25 +28,24 @@ function App() {
 	const token = localStorage.getItem("token");
 	const currentDate = new Date();
 	const exp = localStorage.getItem("expiryDate");
+	const [tokenExpired, setTokenExpired] = useState(false)
 	// @ts-ignore
-	const exp_date = new Date(exp)
 	const [isLoading, setIsLoading] = useState(true);
+	const [comm, setComm] = useState(false);
 	const [connect, setConnect] = useState('')
 	const dataWs = useContext(MyContext);
-	const [data, setData] = useState({
-		num: null,
-		comm: null,
-		start:  null
-	});
+	const [turnNum, setTurnNum] = useState(null);
 	useEffect(() => {
-		if (exp_date < currentDate){
-			console.log("token expired")
-			localStorage.removeItem("expiryDate")
-			localStorage.removeItem("token")
-
+		if(exp){
+			const exp_date = new Date(exp)
+			if (exp_date < currentDate){
+				localStorage.removeItem("token")
+				localStorage.removeItem("expiryDate")
+				console.log("token expired")
+				setTokenExpired(true)
+			}
 		}
-
-	}, []);
+	}, [token, comm]);
 	const {   sendMessage,
 		sendJsonMessage,
 		lastMessage,
@@ -67,11 +66,8 @@ function App() {
 			if (e.data[0] === '{' && connect == 'yes') {
 				try {
 					const receivedData = JSON.parse(e.data);
-					setData({
-						num: receivedData.Number,
-						comm: receivedData.Committed,
-						start: receivedData.Start,
-					});
+					setTurnNum(receivedData.Number)
+					setComm(receivedData.Committed)
 				} catch (error) {
 					console.error('Error parsing JSON:', error);
 				}
@@ -80,14 +76,6 @@ function App() {
 
 		},
 		onClose: (event) => {
-			console.log(event)
-			// localStorage.removeItem("token");
-			// //setIsLoading(true)
-			// setData({
-			// 	num: null,
-			// 	comm: null,
-			// 	start:  null
-			// });
 
 		},
 		share: true,
@@ -100,8 +88,6 @@ function App() {
 	const { reset: resetMarketingState } = useMarketingStore();
 
 	const [enableArc] = useState(true);
-
-	const [, setTurn] = useAtom(currentTurn);
 
 	useEffect(() => {
 		document.documentElement.style.setProperty(
@@ -128,18 +114,27 @@ function App() {
 	}, [enableArc]);
 
 	useEffect(() => {
-		// @ts-ignore
-		const savedTurn = dataWs.num
-		if (savedTurn && data && data.num !== parseInt(savedTurn, 10)) {
-			resetCompanyState();
-			resetUpgradeState();
-			resetMarketingState();
-		}
-
-		setTurn(data?.num || -1);
-	}, [data]);
+		resetCompanyState();
+		resetUpgradeState();
+		resetMarketingState();
+	}, [comm, turnNum]);
 	if (isLoading){
 		return <Spinner />;
+	}
+	if(tokenExpired){
+		return (
+					<div className="grid items-center">
+			<h1 className="flex justify-center mt-10">404</h1>
+			<h3 className="flex justify-center my-5">Váš token vypršal, prihláste sa prosím znovu!</h3>
+			<button
+				className="flex bg-accent-500 hover:bg-accent-700 text-white font-bold rounded-lg mx-40 mt-10"
+				type="button"
+				onClick={() =>{
+					setTokenExpired(false)
+					}}
+					>Späť na prihlásenie</button>
+		</div>
+		)
 	}
 
 	// kompletne dum-dum riešenie PREROBIŤ. Aj tu aj getTurn() !!!!!!!!!!!!!
@@ -149,7 +144,7 @@ function App() {
 		);
 	}
 
-	if (data && data.num === 0 && token) {
+	if (turnNum === 0 && token) {
 		return (
 			<div className="flex flex-col justify-center items-center h-screen">
 				<h1 className="text-4xl font-bold pb-4">Hra sa ešte nezačala</h1>
@@ -164,9 +159,9 @@ function App() {
 		);
 	}
 
-	if (token && data.num != null) {
+	if (token && turnNum != null) {
 		return (
-			<MyContext.Provider value={{ ...data, isLoading, setIsLoading }}>
+			<MyContext.Provider value={{ turnNum, comm, isLoading, setIsLoading, setComm}}>
 				<Suspense>
 					<BrowserRouter>
 						<Navbar />
@@ -191,7 +186,7 @@ function App() {
 	}
 	if(!token){
 		return (
-			<MyContext.Provider value={{ ...data, isLoading, setIsLoading }}>
+			<MyContext.Provider value={{ turnNum, comm,isLoading, setIsLoading, setComm }}>
 				<BrowserRouter>
 					<Routes>
 						<Route path="/register" element={<Register />} />

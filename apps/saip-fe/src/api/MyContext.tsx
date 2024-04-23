@@ -1,9 +1,9 @@
 import { createContext } from 'react';
 
 export const MyContext = createContext({
-    num: null,
-    comm: null,
-    start: null,
+    turnNum: null,
+    comm: false,
     isLoading: false,
-    setIsLoading: (isLoading: boolean) => {}
+    setIsLoading: (isLoading: boolean) => {},
+    setComm: (comm: boolean) => {}
 });
