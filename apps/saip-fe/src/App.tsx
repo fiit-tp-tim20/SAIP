@@ -26,6 +26,10 @@ import Spinner from "./utils/Spinner";
 import {useNavigate} from "react-router";
 function App() {
 	const token = localStorage.getItem("token");
+	const currentDate = new Date();
+	const exp = localStorage.getItem("expiryDate");
+	// @ts-ignore
+	const exp_date = new Date(exp)
 	const [isLoading, setIsLoading] = useState(true);
 	const [connect, setConnect] = useState('')
 	const dataWs = useContext(MyContext);
@@ -34,6 +38,15 @@ function App() {
 		comm: null,
 		start:  null
 	});
+	useEffect(() => {
+		if (exp_date < currentDate){
+			console.log("token expired")
+			localStorage.removeItem("expiryDate")
+			localStorage.removeItem("token")
+
+		}
+
+	}, []);
 	const {   sendMessage,
 		sendJsonMessage,
 		lastMessage,
