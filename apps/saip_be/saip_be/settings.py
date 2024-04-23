@@ -181,7 +181,7 @@ if not DEBUG:
             "rest_framework.renderers.JSONRenderer",
         )
 
-REST_KNOX = {"TOKEN_TTL": timedelta(minutes=10),
+REST_KNOX = {"TOKEN_TTL": timedelta(days=365),
              "AUTO_REFRESH": True,
              "TOKEN_LIMIT_PER_USER": 7,
              "MIN_REFRESH_INTERVAL": 60,
