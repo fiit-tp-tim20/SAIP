@@ -9,9 +9,9 @@ import { MyContext } from "../../api/MyContext";
 function CompanyReport() {
 	const dataWs = useContext(MyContext);
 	// @ts-ignore
-	const TURN = dataWs.num;
+	const TURN = dataWs.turnNum;
 	// @ts-ignore
-	const [turn, setTurn] = useState<number>(dataWs.num - 1);
+	const [turn, setTurn] = useState<number>(dataWs.turnNum - 1);
 	const { isLoading, data } = useQuery(["companyReport", turn], () => getCompanyReport(turn));
 
 	// State for managing tutorial visibility

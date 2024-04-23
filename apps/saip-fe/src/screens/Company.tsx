@@ -14,7 +14,7 @@ import getGeneralInfo from "../api/CompanyInfo";
 function Company() {
 	const data = useContext(MyContext);
 	// @ts-ignore
-	const turn = data.num;
+	const turn = data.turnNum;
 	const { isLoading: statsIsLoading, data: statsData } = useQuery(["getCompanyStats"], getCompanyStats);
 	// @ts-ignore
 	const { data: reportData } = useQuery(["companyReport", turn], () => getCompanyReport(turn - 1));
