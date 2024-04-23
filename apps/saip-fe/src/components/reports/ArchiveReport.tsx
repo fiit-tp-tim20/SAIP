@@ -10,9 +10,9 @@ import getCompanyReport from "../../api/GetCompanyReport";
 function ArchiveReport() {
 	const dataWs = useContext(MyContext);
 	// @ts-ignore
-	const TURN = dataWs.num;
+	const TURN = dataWs.turnNum;
 	// @ts-ignore
-	const [turn, setTurn] = useState<number>(dataWs.num - 1);
+	const [turn, setTurn] = useState<number>(dataWs.turnNum - 1);
 	const { isLoading, data } = useQuery(["archiveReport", turn], () => getArchiveReport(turn));
 
 	// State for managing tutorial visibility
