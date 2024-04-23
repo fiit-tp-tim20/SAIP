@@ -125,7 +125,7 @@ function App() {
 		return (
 					<div className="grid items-center">
 			<h1 className="flex justify-center mt-10">404</h1>
-			<h3 className="flex justify-center my-5">Váš token vypršal, prihláste sa prosím znovu.</h3>
+			<h3 className="flex justify-center my-5">Váš token vypršal, prihláste sa prosím znovu!</h3>
 			<button
 				className="flex bg-accent-500 hover:bg-accent-700 text-white font-bold rounded-lg mx-40 mt-10"
 				type="button"
