@@ -21,7 +21,7 @@ function IndustryReport() {
 	const dataWs = useContext(MyContext);
 	// @ts-ignore
 	// eslint-disable-next-line @typescript-eslint/naming-convention,no-underscore-dangle
-	const _turn = dataWs.turnNum;
+	const _turn = dataWs.num;
 
 	// @ts-ignore
 	const [turn, setTurn] = useState<number>(_turn - 1);
