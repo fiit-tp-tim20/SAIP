@@ -39,9 +39,6 @@ function App() {
 		if(exp){
 			const exp_date = new Date(exp)
 			if (exp_date < currentDate){
-				localStorage.removeItem("token")
-				localStorage.removeItem("expiryDate")
-				console.log("token expired")
 				setTokenExpired(true)
 			}
 		}
@@ -55,6 +52,10 @@ function App() {
 		protocols: ['authorization', `${token}`],
 		onMessage: (e) =>{
 			console.log(e.data)
+			if (e.data === 'User is anonymous') {
+				localStorage.removeItem("token")
+				localStorage.removeItem("expiryDate");
+			}
 			// @ts-ignore
 			if (e.data === 'Websocket connected') {
 				setConnect('yes');
@@ -122,6 +123,8 @@ function App() {
 		return <Spinner />;
 	}
 	if(tokenExpired){
+		localStorage.removeItem("token")
+		localStorage.removeItem("expiryDate")
 		return (
 					<div className="grid items-center">
 			<h1 className="flex justify-center mt-10">404</h1>
