@@ -24,6 +24,7 @@ import { currentTurn } from "./store/Atoms";
 import WelcomePage from "./screens/WelcomePage";
 import Spinner from "./utils/Spinner";
 import {useNavigate} from "react-router";
+import {is} from "@react-three/fiber/dist/declarations/src/core/utils";
 function App() {
 	const token = localStorage.getItem("token");
 	const currentDate = new Date();
@@ -31,6 +32,7 @@ function App() {
 	const [tokenExpired, setTokenExpired] = useState(false)
 	// @ts-ignore
 	const [isLoading, setIsLoading] = useState(true);
+	const [isAnonym, setIsAnonym] = useState(true);
 	const [comm, setComm] = useState(false);
 	const [connect, setConnect] = useState('')
 	const dataWs = useContext(MyContext);
@@ -39,9 +41,6 @@ function App() {
 		if(exp){
 			const exp_date = new Date(exp)
 			if (exp_date < currentDate){
-				localStorage.removeItem("token")
-				localStorage.removeItem("expiryDate")
-				console.log("token expired")
 				setTokenExpired(true)
 			}
 		}
@@ -55,15 +54,22 @@ function App() {
 		protocols: ['authorization', `${token}`],
 		onMessage: (e) =>{
 			console.log(e.data)
+			if (e.data === 'User is anonymous' && !token) {
+				setIsAnonym(true)
+				setIsLoading(false)
+			}
 			// @ts-ignore
 			if (e.data === 'Websocket connected') {
-				setConnect('yes');
+				setIsAnonym(false)
 			}
 			if (e.data === 'Company for this user not found') {
+				setIsLoading(false)
 				setConnect('Company for this user not found');
 			}
 
-			if (e.data[0] === '{' && connect == 'yes') {
+
+			if (e.data[0] === '{') {
+
 				try {
 					const receivedData = JSON.parse(e.data);
 					setTurnNum(receivedData.Number)
@@ -71,8 +77,10 @@ function App() {
 				} catch (error) {
 					console.error('Error parsing JSON:', error);
 				}
+				setIsLoading(false)
+
 			}
-			setIsLoading(false)
+
 
 		},
 		onClose: (event) => {
@@ -81,7 +89,7 @@ function App() {
 		share: true,
 		shouldReconnect: (closeEvent) => true,
 		reconnectAttempts: 1000,
-		reconnectInterval: 6000,
+		reconnectInterval: 3900,
 	});
 	const { reset: resetCompanyState } = useCompanyStore();
 	const { reset: resetUpgradeState } = useUpgradesStore();
@@ -118,16 +126,29 @@ function App() {
 		resetUpgradeState();
 		resetMarketingState();
 	}, [comm, turnNum]);
+	useEffect(() => {
+		const timer = setTimeout(() => {
+			if (isLoading) {
+				setTokenExpired(true);
+				setIsLoading(false);
+			}
+		}, 4000);
+
+
+		return () => clearTimeout(timer);
+	}, [isLoading]);
 	if (isLoading){
 		return <Spinner />;
 	}
 	if(tokenExpired){
+		localStorage.removeItem("token")
+		localStorage.removeItem("expiryDate")
 		return (
 					<div className="grid items-center">
 			<h1 className="flex justify-center mt-10">404</h1>
-			<h3 className="flex justify-center my-5">Váš token vypršal, prihláste sa prosím znovu!</h3>
+			<h3 className="flex justify-center my-5">Boli ste odhlásený, prihláste sa prosím znovu</h3>
 			<button
-				className="flex bg-accent-500 hover:bg-accent-700 text-white font-bold rounded-lg mx-40 mt-10"
+				className="flex bg-accent-500 hover:bg-accent-700 text-white font-bold rounded-lg mx-60 mt-10"
 				type="button"
 				onClick={() =>{
 					setTokenExpired(false)
@@ -138,13 +159,13 @@ function App() {
 	}
 
 	// kompletne dum-dum riešenie PREROBIŤ. Aj tu aj getTurn() !!!!!!!!!!!!!
-	if (token && connect === 'Company for this user not found') {
+	if (connect === 'Company for this user not found' && isAnonym) {
 		return (
 			<GameSelect />
 		);
 	}
 
-	if (turnNum === 0 && token) {
+	if (turnNum === 0 && !isAnonym) {
 		return (
 			<div className="flex flex-col justify-center items-center h-screen">
 				<h1 className="text-4xl font-bold pb-4">Hra sa ešte nezačala</h1>
@@ -159,7 +180,7 @@ function App() {
 		);
 	}
 
-	if (token && turnNum != null) {
+	if (token && !isAnonym && !isLoading) {
 		return (
 			<MyContext.Provider value={{ turnNum, comm, isLoading, setIsLoading, setComm}}>
 				<Suspense>
@@ -184,7 +205,7 @@ function App() {
 
 		);
 	}
-	if(!token){
+	if(isAnonym){
 		return (
 			<MyContext.Provider value={{ turnNum, comm,isLoading, setIsLoading, setComm }}>
 				<BrowserRouter>
