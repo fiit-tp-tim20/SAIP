@@ -7,6 +7,11 @@ const getGeneralInfo = async () => {
 	});
 
 	const data = await response.json();
+	if(data.detail){
+		localStorage.removeItem("token")
+		localStorage.removeItem("expiryDate");
+		window.location.reload()
+	}
 
 	return data;
 };

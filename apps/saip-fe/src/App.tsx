@@ -52,16 +52,16 @@ function App() {
 		protocols: ['authorization', `${token}`],
 		onMessage: (e) =>{
 			console.log(e.data)
-			if (e.data === 'User is anonymous') {
-				localStorage.removeItem("token")
-				localStorage.removeItem("expiryDate");
-			}
 			// @ts-ignore
 			if (e.data === 'Websocket connected') {
 				setConnect('yes');
 			}
 			if (e.data === 'Company for this user not found') {
 				setConnect('Company for this user not found');
+			}
+			if (e.data === 'User is anonymous') {
+				localStorage.removeItem("token")
+				localStorage.removeItem("expiryDate");
 			}
 
 			if (e.data[0] === '{' && connect == 'yes') {
@@ -162,7 +162,7 @@ function App() {
 		);
 	}
 
-	if (token && turnNum != null) {
+	if (token && turnNum) {
 		return (
 			<MyContext.Provider value={{ turnNum, comm, isLoading, setIsLoading, setComm}}>
 				<Suspense>
