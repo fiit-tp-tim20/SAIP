@@ -395,11 +395,11 @@ class LowPriceStrategyBot(Bot):
         # "capital investments"
         capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
         capital_investments_bonus = self.capital_bonus_investments(v_coef=0.85, m_coef=1, inventory_count=self.inventory_count)
-        self.decisions["factory"]["capital"] = capital_investments + capital_investments_bonus
+        self.decisions["factory"]["capital"] = floor(capital_investments + capital_investments_bonus)
 
         # marketing investments
         viral_investments = self.calculate_marketing_investments(other_investments=capital_investments)
-        self.decisions["marketing"]["viral"] = viral_investments
+        self.decisions["marketing"]["viral"] = floor(viral_investments)
 
         # production
         price = self.calculate_product_price()
@@ -503,11 +503,11 @@ class AveragePriceStrategyBot(Bot):
         # "capital investments"
         #capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
         capital_investments_bonus = self.capital_bonus_investments(v_coef=0.65, m_coef=0.9, inventory_count=self.inventory_count)
-        self.decisions["factory"]["capital"] = capital_value + capital_investments_bonus
+        self.decisions["factory"]["capital"] = floor(capital_value + capital_investments_bonus)
 
         # marketing investments
         #viral_investments = self.calculate_marketing_investments(other_investments=marketing_value)
-        self.decisions["marketing"]["viral"] = marketing_value
+        self.decisions["marketing"]["viral"] = floor(marketing_value)
 
         # production
         price = self.calculate_product_price()
@@ -560,12 +560,12 @@ class HighPriceStrategyBot(Bot):
         # "capital investments"
         #capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
         capital_investments_bonus = self.capital_bonus_investments(v_coef=0.45, m_coef=0.8, inventory_count=self.inventory_count)
-        self.decisions["factory"]["capital"] = capital_value + capital_investments_bonus
+        self.decisions["factory"]["capital"] = floor(capital_value + capital_investments_bonus)
 
 
         # marketing investments
         #viral_investments = self.calculate_marketing_investments(other_investments=marketing_value)
-        self.decisions["marketing"]["viral"] = marketing_value
+        self.decisions["marketing"]["viral"] = floor(marketing_value)
 
         # production
         price = self.calculate_product_price()
