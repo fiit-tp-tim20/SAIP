@@ -277,7 +277,7 @@ class Bot(ABC):
         response = requests.get(url, headers=headers,params=params)
 
         if response.status_code == 200:
-            # print("Response JSON report:", response.json())
+            print("Company report:", response.json())
             self.inventory_count = response.json().get("production").get("new_inventory")
             self.production_capacity = response.json().get("production").get("capacity")
         else:
@@ -366,13 +366,17 @@ class LowPriceStrategyBot(Bot):
 
     def calculate_inventory_coef (self, **kwargs):
         inventory_count = kwargs.get("inventory_count")
-        inventory_coef = inventory_count / 10000 if inventory_count < 10000 else 1
+        inventory_coef = inventory_count / 500 if inventory_count < 500 else 1
         # print("Ahoj")
         return inventory_coef
 
     def calculate_capital_investments(self,**kwargs):
         inventory_count = kwargs.get("inventory_count")
         inventory_coef = self.calculate_inventory_coef(inventory_count=inventory_count)
+
+        ## TODO pošpekulovať nad touto podmienkou
+        if inventory_count > 800:
+            return 0
 
         return int(self.total_budget * 0.8 - self.total_budget * 0.4 * inventory_coef)
 
@@ -424,7 +428,7 @@ class AveragePriceStrategyBot(Bot):
 
     def calculate_inventory_coef (self, **kwargs):
         inventory_count = kwargs.get("inventory_count")
-        inventory_coef = inventory_count / 10000 if inventory_count < 10000 else 1
+        inventory_coef = inventory_count / 250 if inventory_count < 250 else 1
 
         return inventory_coef
 
@@ -492,11 +496,11 @@ class AveragePriceStrategyBot(Bot):
         upgrades = self.calculate_upgrade_investments()
         rest = self.total_budget - upgrades
 
-        if(self.inventory_count <  1000):
+        if(self.inventory_count <  250):
             capital_value = rest/2
             marketing_value = rest/2
 
-        elif(self.inventory_count >  1000):
+        elif(self.inventory_count >  250):
             capital_value = 0
             marketing_value = rest
 
