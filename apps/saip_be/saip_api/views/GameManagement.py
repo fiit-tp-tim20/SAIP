@@ -68,20 +68,20 @@ def create_turn(number: int, game: Game) -> Turn:
     for company in companies:
         create_company_state(company, turn)
 
-    if turn.number != 0:
-        print("kolo: ",turn.number)
-        bots = Bots.objects.filter(game=game)
-        for bot in bots:
-            if bot.type == 'L':
-                bot_curr = LowPriceStrategyBot()
-            elif bot.type == 'H':
-                bot_curr = HighPriceStrategyBot()
-            else:
-                bot_curr = AveragePriceStrategyBot()
-
-            bot_curr.token = bot.token
-            print("Playing turn number: " + str(turn.number))
-            bot_curr.play_turn(turn_number=turn.number)
+    # if turn.number != 0:
+    #     print("kolo: ",turn.number)
+    #     bots = Bots.objects.filter(game=game)
+    #     for bot in bots:
+    #         if bot.type == 'L':
+    #             bot_curr = LowPriceStrategyBot()
+    #         elif bot.type == 'H':
+    #             bot_curr = HighPriceStrategyBot()
+    #         else:
+    #             bot_curr = AveragePriceStrategyBot()
+    #
+    #         bot_curr.token = bot.token
+    #         print("Playing turn number: " + str(turn.number))
+    #         bot_curr.play_turn(turn_number=turn.number)
 
     return turn
 
@@ -301,5 +301,21 @@ def end_turn(turn: Turn) -> Turn:
     print("Nové kolo...")
     turn.end = timezone.now()
     turn.save()
+
+    if new_turn.number != 0:
+        print("kolo: ",new_turn.number)
+        bots = Bots.objects.filter(game=game)
+        for bot in bots:
+            if bot.type == 'L':
+                bot_curr = LowPriceStrategyBot()
+            elif bot.type == 'H':
+                bot_curr = HighPriceStrategyBot()
+            else:
+                bot_curr = AveragePriceStrategyBot()
+
+            bot_curr.token = bot.token
+            print("Playing turn number: " + str(new_turn.number))
+            bot_curr.play_turn(turn_number=new_turn.number)
+
 
     return new_turn
