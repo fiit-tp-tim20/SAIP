@@ -12,7 +12,8 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-BACKEND_URL = os.getenv('BACKEND_URL')
+#BACKEND_URL = os.getenv('BACKEND_URL')
+BACKEND_URL = "http://127.0.0.1:8000/api"
 file = Path(__file__).resolve()
 parent, root = file.parent, file.parents[1]
 
@@ -193,11 +194,13 @@ class Bot(ABC):
         else:
             print("Response content:", response.text)
 
-
-    def add_to_game(self,**kwargs):
+    def add_to_game(self, company_name=None, **kwargs):
         game_id = kwargs.get("game_id")
         self.register()
-        self.create_company(id=game_id,name=self.username)
+        if company_name is None:
+            self.create_company(id=game_id, name=self.username)
+        else:
+            self.create_company(id=game_id, name=company_name)
         return self.token
 
     def commit_decisions(self):
