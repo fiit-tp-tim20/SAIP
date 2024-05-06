@@ -138,7 +138,7 @@ function IndustryReport() {
 						<table className="table-auto table-white">
 							<thead>
 								<tr>
-									<th className="px-4 py-2 text-left table-header"> </th>
+									<th className="px-4 py-2 text-left table-header" />
 									<th className="px-4 py-2 text-left table-header text-white">Spoločnosť</th>
 									<th className="px-4 py-2 text-left table-header text-white">
 										Hodnota jednej akcie
@@ -172,6 +172,60 @@ function IndustryReport() {
 												</td>
 											</tr>
 										))}
+								{/* Add row for average stock price */}
+								<tr>
+									<td className="px-4 py-2">
+										<b>Priemer</b>
+									</td>
+									<td className="px-4 py-2"/>
+									<td className="px-4 py-2">
+										{/* Calculate and display average stock price */}
+										{data && (
+											<b>
+												{numberWithSpaces(
+													(
+														Object.values(data.industry).reduce(
+															(acc, curr) => acc + curr.stock_price,
+															0,
+														) / Object.keys(data.industry).length
+													).toFixed(2),
+												)}{" "}
+												€
+											</b>
+										)}
+									</td>
+									<td className="px-4 py-2">
+										{/* Calculate and display average net profit */}
+										{data && (
+											<b>
+												{numberWithSpaces(
+													(
+														Object.values(data.industry).reduce(
+															(acc, curr) => acc + curr.net_profit,
+															0,
+														) / Object.keys(data.industry).length
+													).toFixed(2),
+												)}{" "}
+												€
+											</b>
+										)}
+									</td>
+									<td className="px-4 py-2">
+										{/* Calculate and display average sell price */}
+										{data && (
+											<b>
+												{numberWithSpaces(
+													Object.values(data.industry).reduce(
+														(acc, curr) => acc + curr.sell_price,
+														0,
+													) / Object.keys(data.industry).length,
+												)}{" "}
+												€/ks
+											</b>
+										)}
+									</td>
+									<td className="px-4 py-2"/>
+								</tr>
 							</tbody>
 						</table>
 					</div>
