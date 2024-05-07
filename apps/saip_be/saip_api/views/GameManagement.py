@@ -1,3 +1,5 @@
+import random
+
 from django.utils import timezone
 
 from rest_framework.views import APIView
@@ -12,6 +14,7 @@ from ..serializers import GameSerializer
 
 from saip_simulation.simulation import Simulation
 from saip_simulation.bot import LowPriceStrategyBot, HighPriceStrategyBot, AveragePriceStrategyBot
+
 
 from django.core.cache import cache
 # default upgrages, table is create only if it is empty
@@ -212,10 +215,48 @@ def end_turn(turn: Turn) -> Turn:
     numbera = game.parameters.number_of_avg_price_bots
     numberh = game.parameters.number_of_high_price_bots
 
+    names = ['VelociBike',
+             'PedalX',
+             'GearRide',
+             'CycleZ',
+             'UrbanCycle',
+             'MountainZ',
+             'SpeedCycle',
+             'EcoBike',
+             'TrailBlaze',
+             'CityCycle',
+             'TerraBike',
+             'SwiftBike',
+             'RideRight',
+             'ZenithBike',
+             'AeroBike',
+             'EverBike',
+             'BlazeBike',
+             'UrbanEdge',
+             'SpinCycle',
+             'AdventureBike',
+             'TrekBike',
+             'PeakBike',
+             'MetroBike',
+             'GearBike',
+             'RidgeBike',
+             'UrbanBike',
+             'TrailBike',
+             'SpeedBike',
+             'CityBike']
+    random.shuffle(names)
+
+    name_index = 0
     if turn.number == 0:
         for i in range(numbera):
+            if name_index < len(names):
+                company_name = names[name_index]
+                name_index += 1
+            else:
+                company_name = None
+
             b = AveragePriceStrategyBot()
-            b.add_to_game(game_id=game.id)
+            b.add_to_game(game_id=game.id, company_name=company_name)
 
             bot = Bots(
                 game=game,
@@ -226,8 +267,14 @@ def end_turn(turn: Turn) -> Turn:
             print("Saved token: ",bot.token)
 
         for i in range(numberl):
+            if name_index < len(names):
+                company_name = names[name_index]
+                name_index += 1
+            else:
+                company_name = None
+
             b = LowPriceStrategyBot()
-            b.add_to_game(game_id=game.id)
+            b.add_to_game(game_id=game.id, company_name=company_name)
 
             bot = Bots(
                 game=game,
@@ -237,10 +284,15 @@ def end_turn(turn: Turn) -> Turn:
             bot.save()
             print("Saved token: ",bot.token)
 
-
         for i in range(numberh):
+            if name_index < len(names):
+                company_name = names[name_index]
+                name_index += 1
+            else:
+                company_name = None
+
             b = HighPriceStrategyBot()
-            b.add_to_game(game_id=game.id)
+            b.add_to_game(game_id=game.id, company_name=company_name)
 
             bot = Bots(
                 game=game,
