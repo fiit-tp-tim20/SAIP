@@ -12,8 +12,8 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-#BACKEND_URL = os.getenv('BACKEND_URL')
-BACKEND_URL = "http://127.0.0.1:8000/api"
+BACKEND_URL = os.getenv('BACKEND_URL')
+#BACKEND_URL = "http://127.0.0.1:8000/api"
 file = Path(__file__).resolve()
 parent, root = file.parent, file.parents[1]
 
