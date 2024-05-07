@@ -46,12 +46,12 @@ function CompanyReport() {
 			<div className="flex flex-row justify-between">
 				<h1 className="my-4">Správa o spoločnosti</h1>
 				<div>
-					<label htmlFor="turn" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+					<label htmlFor="turn" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-600">
 						Pre kolo
 					</label>
 					<select
 						id="turn"
-						className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+						className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 hover:cursor-pointer"
 						value={turn}
 						onChange={(e) => setTurn(parseInt(e.target.value, 10))}
 					>
