@@ -397,7 +397,7 @@ class LowPriceStrategyBot(Bot):
 
         # "capital investments"
         capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
-        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.85, m_coef=1, inventory_count=self.inventory_count)
+        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.6, m_coef=0.75, inventory_count=self.inventory_count)
         self.decisions["factory"]["capital"] = floor(capital_investments + capital_investments_bonus)
 
         # marketing investments
@@ -504,7 +504,7 @@ class AveragePriceStrategyBot(Bot):
 
         # "capital investments"
         #capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
-        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.65, m_coef=0.9, inventory_count=self.inventory_count)
+        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.45, m_coef=0.65, inventory_count=self.inventory_count)
         self.decisions["factory"]["capital"] = floor(capital_value + capital_investments_bonus)
 
         # marketing investments
@@ -565,7 +565,7 @@ class HighPriceStrategyBot(Bot):
 
         # "capital investments"
         #capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
-        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.45, m_coef=0.8, inventory_count=self.inventory_count)
+        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.3, m_coef=0.6, inventory_count=self.inventory_count)
         self.decisions["factory"]["capital"] = floor(capital_value + capital_investments_bonus)
 
 
