@@ -452,7 +452,7 @@ function CompanyReport() {
 								<tr>
 									<td className="px-4 py-2">Výdavky na zásoby</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data?.cash_flow.inventory_charge)} €
+										{numberWithSpaces(data?.cash_flow.inventory_charge_all)} €
 									</td>
 								</tr>
 								<tr>
