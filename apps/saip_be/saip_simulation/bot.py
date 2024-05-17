@@ -374,7 +374,6 @@ class LowPriceStrategyBot(Bot):
         inventory_count = kwargs.get("inventory_count")
         inventory_coef = self.calculate_inventory_coef(inventory_count=inventory_count)
 
-        ## TODO pošpekulovať nad touto podmienkou
         if inventory_count > 800:
             return 0
 
@@ -499,8 +498,7 @@ class AveragePriceStrategyBot(Bot):
         if(self.inventory_count <  250):
             capital_value = rest/2
             marketing_value = rest/2
-
-        elif(self.inventory_count >  250):
+        else:
             capital_value = 0
             marketing_value = rest
 
@@ -558,8 +556,12 @@ class HighPriceStrategyBot(Bot):
 
         # upgrades
         upgrades = self.calculate_upgrade_investments()
-        capital_value = (self.total_budget - upgrades) / 3
-        marketing_value = 2 * capital_value
+        if (self.inventory_count < 200):
+            capital_value = (self.total_budget - upgrades) / 3
+            marketing_value = 2 * capital_value
+        else:
+            capital_value = 0
+            marketing_value = self.total_budget - upgrades
 
         # "capital investments"
         #capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
