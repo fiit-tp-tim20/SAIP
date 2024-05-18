@@ -1,4 +1,5 @@
 export type IndustryReport = {
+    finished_upgrades: string;
 	market_share: number;
 	net_profit: number | null;
 	sell_price: number;

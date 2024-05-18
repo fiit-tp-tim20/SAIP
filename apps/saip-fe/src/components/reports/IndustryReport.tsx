@@ -148,6 +148,7 @@ function IndustryReport() {
 									</th>
 									<th className="px-4 py-2 text-left table-header text-white">Predajná cena</th>
 									<th className="px-4 py-2 text-left table-header text-white">Podiel na trhu</th>
+									<th className="px-4 py-2 text-left table-header text-white">Dokončené vylepšenia</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -177,6 +178,11 @@ function IndustryReport() {
 													{industry[1]?.market_share &&
 														numberWithSpaces(industry[1]?.market_share)}{" "}
 													%
+												</td>
+												<td className="px-4 py-2">
+													{industry[1]?.finished_upgrades &&
+														numberWithSpaces(industry[1]?.finished_upgrades)}{" "}
+
 												</td>
 											</tr>
 										))}
