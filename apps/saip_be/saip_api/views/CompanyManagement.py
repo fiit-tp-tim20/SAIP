@@ -104,8 +104,9 @@ class CompanyView(APIView):
             except (CompaniesState.DoesNotExist, Turn.DoesNotExist):
                 continue
 
-        return Response({"manufactured": manufactured, "inventory": inventory, "capacity": capacity, "sell_price": sell_price},
-                        status=200)
+        return Response(
+            {"manufactured": manufactured, "inventory": inventory, "capacity": capacity, "sell_price": sell_price},
+            status=200)
 
 
 def create_upgrade_company_relation(game: Game, company: Company) -> None:
@@ -276,7 +277,8 @@ class ArchiveReport(APIView):
                           'podcast': []
                           }
         factory_dict = {'capital': [],
-                        'upgrades': []
+                        'upgrades': [],
+                        'upgrade_turn': [' '] * turn.number
                         }
         production_dict = {'volume': [],
                            'man_cost': [],
@@ -317,7 +319,13 @@ class ArchiveReport(APIView):
                      'new_loans': [],
                      'loan_repayment': [],
                      'cash': []}
-
+        upgrade_names = ["Brakes", "Frame", "Battery", "Display"]
+        for i in upgrade_names:
+            upgrade_turn = CompaniesUpgrades.objects.get(company=company, upgrade=Upgrade.objects.get(name=i))
+            if upgrade_turn.status == 'f':
+                turn_u = upgrade_turn.turn.number
+                factory_dict['upgrade_turn'].pop(0)
+                factory_dict['upgrade_turn'].insert(turn_u-1, i)
         for i in range(1, turn.number + 1):
             company_state_new = CompaniesState.objects.get(
                 turn=Turn.objects.get(game=company.game, number=i), company=company)
@@ -444,7 +452,8 @@ class CompanyReport(APIView):
 
         balance['capital_investments'] = round(company_state_previous.factory.capital_investments,
                                                2) if company_state_previous.factory.capital_investments is not None else "N/A"  # "Kapitálové investície"
-        balance['assets_summary'] = round((company_state_previous.cash + company_state_previous.inventory_money + company_state_previous.factory.capital_investments),
+        balance['assets_summary'] = round((
+                                                      company_state_previous.cash + company_state_previous.inventory_money + company_state_previous.factory.capital_investments),
                                           2) if (
                 company_state_previous.cash is not None and company_state_previous.inventory is not None and company_state_previous.production.man_cost is not None and company_state_previous.factory.capital_investments is not None) else "N/A"  # "Súčet aktív"
 
@@ -617,8 +626,6 @@ class PostSpendingsView(APIView):
         if company_state.committed:
             return Response({"detail": "Decisions were posted before"}, status=409)
 
-        print(company_state.marketing.viral, company_state.turn.number)
-
         spendings_serializer = SpendingsSerializer(data=request.data)
         spendings_serializer.is_valid(raise_exception=True)
 
@@ -647,7 +654,6 @@ class PostSpendingsView(APIView):
             display = request.data['display']
         except KeyError:
             display = 0
-
         brakes_progress = CompaniesUpgrades.objects.get(company=company, upgrade=Upgrade.objects.get(name="Brakes"))
         if brakes > 0:
             if brakes_progress.status == "f":
@@ -713,7 +719,7 @@ class PostSpendingsView(APIView):
         company_state.committed = True
         company_state.save()
 
-        checkCommitted(last_turn,company.game.name)  # checks if all companies are committed
+        checkCommitted(last_turn, company.game.name)  # checks if all companies are committed
 
         return Response(status=201)
 
