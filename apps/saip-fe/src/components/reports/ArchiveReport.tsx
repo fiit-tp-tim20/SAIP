@@ -139,6 +139,7 @@ function ArchiveReport() {
 										<th className="px-4 py-2">Predajná cena</th>
 										<th className="px-4 py-2">Investície do kapitálu</th>
 										<th className="px-4 py-2">Investície do vylepšení</th>
+										<th className="px-4 py-2">Dokoné vylepšenia</th>
 									</tr>
 									{[...Array(turn).keys()].map((turn) => (
 										<tr key={turn}>
@@ -154,6 +155,9 @@ function ArchiveReport() {
 											</td>
 											<td className="px-4 py-2 whitespace-nowrap">
 												{numberWithSpaces(data.factory.upgrades[turn])} €
+											</td>
+											<td className="px-4 py-2 whitespace-nowrap">
+												{numberWithSpaces(data.factory.upgrade_turn[turn])}
 											</td>
 										</tr>
 									))}
