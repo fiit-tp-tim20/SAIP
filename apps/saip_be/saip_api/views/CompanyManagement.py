@@ -171,19 +171,30 @@ class IndustryReport(APIView):
 
         company_states = CompaniesState.objects.filter(turn=Turn.objects.get(game=company.game, number=turn.number))
         market_state = MarketState.objects.get(turn=Turn.objects.get(game=company.game, number=turn.number))
+        companies = Company.objects.filter(game=company.game)
+        upgrades = []
+        for i in companies:
+            upgrade_names = ["Brakes", "Frame", "Battery", "Display"]
+            upgrade = 0
+            for j in upgrade_names:
+
+                upgrade_turn = CompaniesUpgrades.objects.get(company=i, upgrade=Upgrade.objects.get(name=j))
+                if upgrade_turn.status == 'f':
+                    upgrade += 1
+            upgrades.append(upgrade)
 
         industry = dict()
-        for state in company_states:
+        for state, finished_upgrade in zip(company_states, upgrades):
             company_info = dict()
             company_info['stock_price'] = round(state.stock_price, 2) if state.stock_price is not None else "N/A"
             company_info[
                 'sell_price'] = state.production.sell_price if state.production.sell_price is not None else "N/A"
-            company_info['net_profit'] = round(state.net_profit, 2) if state.stock_price is not None else "N/A"
+            company_info['net_profit'] = round(state.net_profit, 2) if state.net_profit is not None else "N/A"
             try:
                 company_info['market_share'] = round((state.orders_fulfilled / market_state.sold) * 100, 2)
             except (ZeroDivisionError, TypeError):
                 company_info['market_share'] = 0
-
+            company_info['finished_upgrades'] = finished_upgrade
             industry[state.company.name] = company_info
 
         market_state_previous = MarketState.objects.get(
@@ -324,8 +335,7 @@ class ArchiveReport(APIView):
             upgrade_turn = CompaniesUpgrades.objects.get(company=company, upgrade=Upgrade.objects.get(name=i))
             if upgrade_turn.status == 'f':
                 turn_u = upgrade_turn.turn.number
-                factory_dict['upgrade_turn'].pop(0)
-                factory_dict['upgrade_turn'].insert(turn_u-1, i)
+                factory_dict['upgrade_turn'][turn_u - 1] = i
         for i in range(1, turn.number + 1):
             company_state_new = CompaniesState.objects.get(
                 turn=Turn.objects.get(game=company.game, number=i), company=company)
@@ -453,8 +463,8 @@ class CompanyReport(APIView):
         balance['capital_investments'] = round(company_state_previous.factory.capital_investments,
                                                2) if company_state_previous.factory.capital_investments is not None else "N/A"  # "Kapitálové investície"
         balance['assets_summary'] = round((
-                                                      company_state_previous.cash + company_state_previous.inventory_money + company_state_previous.factory.capital_investments),
-                                          2) if (
+                company_state_previous.cash + company_state_previous.inventory_money + company_state_previous.factory.capital_investments),
+            2) if (
                 company_state_previous.cash is not None and company_state_previous.inventory is not None and company_state_previous.production.man_cost is not None and company_state_previous.factory.capital_investments is not None) else "N/A"  # "Súčet aktív"
 
         # pasiva
