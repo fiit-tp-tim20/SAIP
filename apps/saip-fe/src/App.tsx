@@ -91,9 +91,6 @@ function App() {
 		reconnectAttempts: 1000,
 		reconnectInterval: 3900,
 	});
-	const { reset: resetCompanyState } = useCompanyStore();
-	const { reset: resetUpgradeState } = useUpgradesStore();
-	const { reset: resetMarketingState } = useMarketingStore();
 
 	const [enableArc] = useState(true);
 
@@ -121,11 +118,6 @@ function App() {
 		document.documentElement.style.setProperty("--hover", enableArc ? "var(--arc-palette-hover)" : "");
 	}, [enableArc]);
 
-	useEffect(() => {
-		resetCompanyState();
-		resetUpgradeState();
-		resetMarketingState();
-	}, [comm, turnNum]);
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			if (isLoading) {
@@ -166,6 +158,9 @@ function App() {
 	}
 
 	if (turnNum === 0 && !isAnonym) {
+		const { reset: resetCompanyState } = useCompanyStore();
+		const { reset: resetUpgradeState } = useUpgradesStore();
+		const { reset: resetMarketingState } = useMarketingStore();
 		return (
 			<div className="flex flex-col justify-center items-center h-screen">
 				<h1 className="text-4xl font-bold pb-4">Hra sa ešte nezačala</h1>
