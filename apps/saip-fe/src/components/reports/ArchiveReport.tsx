@@ -97,29 +97,29 @@ function ArchiveReport() {
 							<table className="table-auto table-white">
 								<tbody>
 									<tr>
-										<th className="px-4 py-2">Kolo</th>
-										<th className="px-4 py-2">Virálny marketing</th>
-										<th className="px-4 py-2">OOH</th>
-										<th className="px-4 py-2">Billboardy</th>
-										<th className="px-4 py-2">Televízia</th>
-										<th className="px-4 py-2">Podcasty</th>
+										<th className="px-4 py-2 text-center">Kolo</th>
+										<th className="px-4 py-2 text-center">Virálny marketing</th>
+										<th className="px-4 py-2 text-center">OOH</th>
+										<th className="px-4 py-2 text-center">Billboardy</th>
+										<th className="px-4 py-2 text-center">Televízia</th>
+										<th className="px-4 py-2 text-center">Podcasty</th>
 									</tr>
 									{[...Array(turn).keys()].map((turn) => (
 										<tr key={turn}>
-											<td className="px-4 py-2">{turn + 1}</td>
-											<td className="px-4 py-2 whitespace-nowrap">
+											<td className="px-4 py-2 text-center">{turn + 1}</td>
+											<td className="px-4 py-2 whitespace-nowrap text-center">
 												{numberWithSpaces(data.marketing.viral[turn])} €
 											</td>
-											<td className="px-4 py-2 whitespace-nowrap">
+											<td className="px-4 py-2 whitespace-nowrap text-center">
 												{numberWithSpaces(data.marketing.ooh[turn])} €
 											</td>
-											<td className="px-4 py-2 whitespace-nowrap">
+											<td className="px-4 py-2 whitespace-nowrap text-center">
 												{numberWithSpaces(data.marketing.billboard[turn])} €
 											</td>
-											<td className="px-4 py-2 whitespace-nowrap">
+											<td className="px-4 py-2 whitespace-nowrap text-center">
 												{numberWithSpaces(data.marketing.tv[turn])} €
 											</td>
-											<td className="px-4 py-2 whitespace-nowrap">
+											<td className="px-4 py-2 whitespace-nowrap  text-center">
 												{numberWithSpaces(data.marketing.podcast[turn])} €
 											</td>
 										</tr>
@@ -134,29 +134,29 @@ function ArchiveReport() {
 							<table className="table-auto table-white">
 								<tbody>
 									<tr>
-										<th className="px-4 py-2">Kolo</th>
-										<th className="px-4 py-2">Vyrobené množstvo</th>
-										<th className="px-4 py-2">Predajná cena</th>
-										<th className="px-4 py-2">Investície do kapitálu</th>
-										<th className="px-4 py-2">Investície do vylepšení</th>
-										<th className="px-4 py-2">Dokoné vylepšenia</th>
+										<th className="px-4 py-2 text-center">Kolo</th>
+										<th className="px-4 py-2 text-center">Vyrobené množstvo</th>
+										<th className="px-4 py-2 text-center">Predajná cena</th>
+										<th className="px-4 py-2 text-center">Investície do kapitálu</th>
+										<th className="px-4 py-2 text-center">Investície do vylepšení</th>
+										<th className="px-4 py-2 text-center">Dokoné vylepšenia</th>
 									</tr>
 									{[...Array(turn).keys()].map((turn) => (
 										<tr key={turn}>
-											<td className="px-4 py-2">{turn + 1}</td>
-											<td className="px-4 py-2 whitespace-nowrap">
+											<td className="px-4 py-2 text-center">{turn + 1}</td>
+											<td className="px-4 py-2 whitespace-nowrap text-center">
 												{numberWithSpaces(data.production.volume[turn])} ks
 											</td>
-											<td className="px-4 py-2 whitespace-nowrap">
+											<td className="px-4 py-2 whitespace-nowrap text-center">
 												{numberWithSpaces(data.production.sell_price[turn])} €
 											</td>
-											<td className="px-4 py-2 whitespace-nowrap">
+											<td className="px-4 py-2 whitespace-nowrap text-center">
 												{numberWithSpaces(data.factory.capital[turn])} €
 											</td>
-											<td className="px-4 py-2 whitespace-nowrap">
+											<td className="px-4 py-2 whitespace-nowrap text-center">
 												{numberWithSpaces(data.factory.upgrades[turn])} €
 											</td>
-											<td className="px-4 py-2 whitespace-nowrap">
+											<td className="px-4 py-2 whitespace-nowrap text-center">
 												{numberWithSpaces(data.factory.upgrade_turn[turn])}
 											</td>
 										</tr>

@@ -536,7 +536,7 @@ function CompanyReport() {
 											<i>odpis z kapitálových investícií</i>
 											<br />
 											<br />
-											<h5>Dodatočné náklady na nepredané výrobky</h5>
+											<h5>Náklady na spravovanie</h5>
 											= cena za uskladnenie jednotky * počet kusov na sklade
 											<br />
 											<br />
@@ -583,7 +583,7 @@ function CompanyReport() {
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Dodatočné náklady na nepredané výrobky</td>
+									<td className="px-4 py-2">Náklady na spravovanie</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.income_statement.inventory_charge)} €
 									</td>
