@@ -5,7 +5,7 @@ import getIndustryReport, { IndustryReport as IndustryReportType } from "../../a
 import { getIndustryGraphData } from "../../api/GetIndustryGraphData";
 import IndustryGraph from "../statisticsGraph/IndustryGraph";
 import numberWithSpaces from "../../utils/numberWithSpaces";
-import { CSVLink } from 'react-csv';
+import { CSVLink } from "react-csv";
 // @ts-ignore
 import { MyContext } from "../../api/MyContext";
 
