@@ -41,11 +41,30 @@ function CompanyReport() {
 		}));
 	};
 
+	const exportToCSV = async () => {
+    try {
+        for (let i = 0; i <= turn; i++) {
+            let response = await getCompanyReport(i);
+            response = { ...response, turn: i };
+            console.log(response);
+        }
+    } catch (error) {
+        console.error('Failed to fetch data for CSV export:', error);
+    }
+};
+
+
 	return (
 		<div className="flex w-[600px] flex-col md:w-[900px] xl:w-[1280px]">
 			<div className="flex flex-row justify-between">
 				<h1 className="my-4">Správa o spoločnosti</h1>
 				<div>
+					<button
+						onClick={exportToCSV}
+						className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+					>
+						Export to CSV
+					</button>
 					<label htmlFor="turn" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-600">
 						Pre kolo
 					</label>
