@@ -5,6 +5,7 @@ import getIndustryReport, { IndustryReport as IndustryReportType } from "../../a
 import { getIndustryGraphData } from "../../api/GetIndustryGraphData";
 import IndustryGraph from "../statisticsGraph/IndustryGraph";
 import numberWithSpaces from "../../utils/numberWithSpaces";
+import { CSVLink } from "react-csv";
 // @ts-ignore
 import { MyContext } from "../../api/MyContext";
 
@@ -31,6 +32,7 @@ function IndustryReport() {
 
 	// State for managing tutorial visibility
 	const [isTutorialOpen, setTutorialOpen] = useState<boolean>(true);
+	const [csvData, setCsvData] = useState([]);
 
 	// State for managing tutorial visibility
 	const [tutorialStates, setTutorialStates] = useState({
@@ -52,6 +54,14 @@ function IndustryReport() {
 			[tutorialKey]: false,
 		}));
 	};
+
+	const exportToCSV = () => {
+        const csvData = [["Spoločnosť", "Hodnota jednej akcie", "Výsledok hospodárenia po zdanení", "Predajná cena", "Podiel na trhu"]];
+        data && Object.entries(data.industry).forEach(([company, info]) => {
+            csvData.push([company, numberWithSpaces(info.stock_price) + " €", numberWithSpaces(info.net_profit) + " €", numberWithSpaces(info.sell_price) + " €/ks", numberWithSpaces(info.market_share) + " %"]);
+        });
+        return csvData;
+    };
 
 	if (!isLoading && !data) {
 		return <p>Industry report is not available yet</p>;
@@ -98,6 +108,9 @@ function IndustryReport() {
 						<div className="flex flex-row items-center justify-between py-2">
 							<h2>Rebríček všetkých firiem (podľa akcií)</h2>
 							<div>
+								<CSVLink data={exportToCSV()} filename={"industry_report.csv"} className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline">
+									Export CSV
+								</CSVLink>
 								{/* Add a button to open the tutorial */}
 								<button
 									onClick={() => openTutorial("companies_table")}
