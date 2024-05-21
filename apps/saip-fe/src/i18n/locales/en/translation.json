@@ -24,7 +24,7 @@
 		},
 		"description": {
 			"title": "Description",
-			"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			"text": "The electric bicycle is a powerful and practical commercial product that offers a wide range of benefits for different types of users. Its electric propulsion makes it easier and faster to get around town, increasing productivity and reducing transport costs. In addition, the electric bicycle is more environmentally friendly than petrol vehicles, which means it helps reduce harmful emissions and contributes to better air quality. Its compactness and ability to negotiate hills even in busy urban environments make it suitable for deliveries and fast transfers."
 		}
 	},
 	"research": {
@@ -38,38 +38,39 @@
 		"finished": {
 			"title": "Finished Research"
 		},
+		"playerResearched": {
+			"title": "Players with completed upgrades"
+		},
 		"price": {
 			"title": "Price"
 		},
 		"progress": {
 			"title": "Progress"
 		},
+		"investment": {
+			"title": "Investment"
+		},
 		"features": {
-			"1": {
-				"title": "Better Battery",
-				"text": "This battery is better than the other one!"
+			"Battery": {
+				"title": "Battery",
+				"text": "Investing in a battery increases battery capacity, faster charging and less weight. It also extends the life of the battery itself and reduces the overall capacity of the battery at a lower rate. Once this improvement is complete, production costs increase by 30% and customer decision making is impacted with a weighting of 0.75."
 			},
-			"2": {
-				"title": "OLED Display",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			"Frame": {
+				"title": "Frame",
+				"text": "By investing in a frame, the load capacity of the bike is increased, its weight is reduced and its appearance is improved. Innovative materials are used in the new frame, contributing significantly to the quality of the product. Once in production, this investment will increase production variable costs by 20% and influence customer decisions with a weight of 0.55."
 			},
-			"3": {
-				"title": "Feature 3",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			"Brakes": {
+				"title": "Brakes",
+				"text": "Investing in brakes increases the overall safety of the product when using it on the road or in other terrain. Once in production, this investment results in a 10% increase in manufacturing variable costs and influences customer decision-making with a weighting of 0.45."
 			},
-			"4": {
-				"title": "Feature 4",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
-			},
-			"5": {
-				"title": "Feature 5",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
-			},
-			"6": {
-				"title": "Feature 6",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			"Display": {
+				"title": "Display",
+				"text": "The display on the e-bike is an essential component that contributes to better handling and a better riding experience. A more modern display will provide more detailed information about the status of the e-bike. There is no shortage of information such as current speed, distance travelled, calories burned, elevation, current GPS location and so on. The display can be paired with a smartwatch or smartphone. It is also contatible with almost all training apps. In addition to the display, the technology of the bike itself is also affected by this investment, which is more flexible and the user can personalize the individual riding characteristics of the bike. Once completed, this enhancement will increase production costs by 40% and influence customer decision making with a weight of 0.85."
 			}
-		}
+		},
+		"no_player_upgraded": {
+				"title": "No player has completed this upgrade yet"
+			}
 	},
 	"sandbox": {
 		"title": "Sandbox"

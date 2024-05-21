@@ -24,7 +24,7 @@
 		},
 		"description": {
 			"title": "Popis",
-			"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			"text": "Elektrický bicykel je výkonným a praktickým komerčným produktom, ktorý ponúka široké spektrum výhod pre rôzne typy používateľov. Jeho elektrický pohon umožňuje jednoduchšie a rýchlejšie presuny po meste, čím zvyšuje produktivitu a znižuje náklady na dopravu. Navyše, elektrický bicykel je ekologickejší ako benzínové vozidlá, čo znamená, že pomáha znižovať emisie škodlivých látok a prispieva k lepšej kvalite ovzdušia. Jeho kompaktnosť a schopnosť prekonať kopce aj v rušnom mestskom prostredí ho robia vhodným pre dodávky arýchle presuny."
 		}
 	},
 	"research": {
@@ -47,32 +47,30 @@
 		"progress": {
 			"title": "Priebeh"
 		},
+		"investment": {
+			"title": "Investícia"
+		},
 		"features": {
-			"1": {
-				"title": "Lepšia batéria",
-				"text": "Táto batéria je lepšia ako predchádzajúca! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vel nisl vel quam ultrices pretium quis eget erat."
+			"Battery": {
+				"title": "Batéria",
+				"text": "Investovaním do batérie dochádza k zvýšeniu kapacity batérie, rýchlejšiemu nabíjaniu a nižšej váhe. Takisto sa predlžuje samotná životnosť batérie a nižším tempom klesá jej celková kapacita. Po dokončení tohto vylepšenia sa zvýšia výrobné náklady o 30% a rozhodnutovanie zákazníkov ovplyvňuje s váhou 0,75."
 			},
-			"2": {
-				"title": "OLED displej",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			"Frame": {
+				"title": "Rám",
+				"text": "Investovaním do rámu dochádza k zvýšeniu nosnosti bicykla, zníženiu jeho hmotnosti a k zlepšeniu vzhľadu. V novom ráme sú použité inovatívne materiály, ktoré výrazne prispievajú ku kvalite produktu. Po zavedení do výroby táto investícia spôsobí nárast výrobných variabilných nákladov o 20% a rozhodnutovanie zákazníkov ovplyvňuje s váhou 0,55."
 			},
-			"3": {
-				"title": "Lepšie brzdy",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			"Brakes": {
+				"title": "Brzdy",
+				"text": "Investovaním do bŕzd sa zvyšuje celková bezpečnosť produktu pri jeho používaní na cestách alebo v inom teréne. Po zavedení do výroby táto investícia spôsobí nárast výrobných variabilných nákladov o 10% a rozhodnutovanie zákazníkov ovplyvňuje s váhou 0,45."
 			},
-			"4": {
-				"title": "Držiak na fľašu",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
-			},
-			"5": {
-				"title": "Tempomat",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
-			},
-			"6": {
-				"title": "Vylepšenie 6",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			"Display": {
+				"title": "Displej",
+				"text": "Displej na e-biku je neodmysliteľnou súčasťou, ktorá prispieva k lepšiemu ovládaniu a lepšiemu pocitu z jazdy. Modernejší displej poskytne podrobnejšie informácie o stave e-biku. Nechýbajú informácie ako aktuálna rýchlosť, prejdená vzdialenosť, spálené kalórie, prevýšenie, aktuálna GPS poloha a podobne. Displej je možné spárovať s inteligentnými hodinkami alebo smartfónom. Takisto je kontabilný s takmer všetkými tréningovými aplikáciami. Okrem displeja je touto investíciou ovplyvnená aj samotná technológia bicykla, ktorá je viac flexibilnejšia a užívateľ si môže jednotlivé jazdné vlastnosti bicykla personalizovať. Po dokončení tohto vylepšenia sa zvýšia výrobné náklady o 40% a rozhodnutovanie zákazníkov ovplyvňuje s váhou 0,85."
 			}
-		}
+		},
+		"no_player_upgraded": {
+				"title": "Žiaden z hráčov zatiaľ nedokončil toto vylepšenie"
+			}
 	},
 	"sandbox": {
 		"title": "Sandbox"

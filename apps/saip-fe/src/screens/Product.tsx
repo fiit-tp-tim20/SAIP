@@ -76,13 +76,7 @@ function Product() {
 						<div className="py-4 text-justify">
 							<h4>{t("product.description.title") as string}</h4>
 							<p className="pt-1">
-								Elektrický bicykel je výkonným a praktickým komerčným produktom, ktorý ponúka široké
-								spektrum výhod pre rôzne typy používateľov. Jeho elektrický pohon umožňuje jednoduchšie
-								a rýchlejšie presuny po meste, čím zvyšuje produktivitu a znižuje náklady na dopravu.
-								Navyše, elektrický bicykel je ekologickejší ako benzínové vozidlá, čo znamená, že pomáha
-								znižovať emisie škodlivých látok a prispieva k lepšej kvalite ovzdušia. Jeho kompaktnosť
-								a schopnosť prekonať kopce aj v rušnom mestskom prostredí ho robia vhodným pre dodávky a
-								rýchle presuny.
+								{t("product.description.text") as string}
 							</p>
 						</div>
 						{data && data.filter((feature) => feature.status === "finished").length ? (

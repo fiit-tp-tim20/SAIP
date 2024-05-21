@@ -23,7 +23,7 @@ function UpgradeInfo(props: Props) {
 			onClick={onClick}
 		>
 			<div className="flex flex-row align-middle justify-center">
-				<p className="font-bold my-auto min-w-[180px]">{t(`features_translation.${name}`)}</p>
+				<p className="font-bold my-auto min-w-[180px]">{t(`research.features.${name}.title`)}</p>
 				{progressMax && (
 					<div className="flex flex-row items-center justify-center text-center">
 						<div className="my-auto w-56">
