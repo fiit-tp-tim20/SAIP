@@ -40,78 +40,12 @@ function CompanyReport() {
 			[tutorialKey]: false,
 		}));
 	};
-	const downloadCsv = (csvString: BlobPart) => {
-		const blob = new Blob([csvString], { type: 'text/csv' });
-		const url = URL.createObjectURL(blob);
-		const link = document.createElement('a');
-		link.href = url;
-		link.setAttribute('download', 'data.csv');
-		document.body.appendChild(link);
-		link.click();
-		link.remove();
-	};
-	const convertJsonToCsv = (jsonArray: any[]) => {
-		if (!Array.isArray(jsonArray) || jsonArray.length === 0) {
-			return '';
-		}
-
-		const rows = [];
-
-		// Add headers from the first object in the array
-		const headers = Object.keys(jsonArray[0]).map((key) => {
-			if (typeof jsonArray[0][key] === 'object') {
-				return Object.keys(jsonArray[0][key]).map((subKey) => `${key}.${subKey}`).join(',');
-			}
-			return key;
-		}).flat().join(',');
-
-		rows.push(headers);
-
-		// Add values for each object in the array
-		jsonArray.forEach(json => {
-			const values = Object.values(json).map((value) => {
-				if (typeof value === 'object') {
-					// @ts-ignore
-					return Object.values(value).join(',');
-				}
-				return value;
-			}).flat().join(',');
-
-			rows.push(values);
-		});
-
-		return rows.join('\n');
-	};
-
-	const exportToCSV = async () => {
-		const csv_merge = []
-		try {
-			for (let i = 0; i <= turn; i++) {
-				let response = await getCompanyReport(i);
-
-				response = { ...response, turn: i };
-				csv_merge.push(response)
-			}
-			const csvString = convertJsonToCsv(csv_merge);
-			downloadCsv(csvString);
-
-		} catch (error) {
-			console.error('Failed to fetch data for CSV export:', error);
-		}
-	};
-
 
 	return (
 		<div className="flex w-[600px] flex-col md:w-[900px] xl:w-[1280px]">
 			<div className="flex flex-row justify-between">
 				<h1 className="my-4">Správa o spoločnosti</h1>
 				<div>
-					<button
-						onClick={exportToCSV}
-						className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
-					>
-						Export to CSV
-					</button>
 					<label htmlFor="turn" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-600">
 						Pre kolo
 					</label>
