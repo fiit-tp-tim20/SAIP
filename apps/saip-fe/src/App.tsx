@@ -37,6 +37,8 @@ function App() {
 	const [connect, setConnect] = useState('')
 	const dataWs = useContext(MyContext);
 	const [turnNum, setTurnNum] = useState(null);
+	const [numberShow, setNumberShow] = useState(1)
+
 	useEffect(() => {
 		if(exp){
 			const exp_date = new Date(exp)
@@ -74,10 +76,13 @@ function App() {
 					const receivedData = JSON.parse(e.data);
 					setTurnNum(receivedData.Number)
 					setComm(receivedData.Committed)
+					dataWs.setNumberShow(receivedData.Number-1)
 				} catch (error) {
 					console.error('Error parsing JSON:', error);
 				}
+				console.log(dataWs.numberShow)
 				setIsLoading(false)
+
 
 			}
 
@@ -150,7 +155,6 @@ function App() {
 		)
 	}
 
-	// kompletne dum-dum riešenie PREROBIŤ. Aj tu aj getTurn() !!!!!!!!!!!!!
 	if (connect === 'Company for this user not found' && isAnonym) {
 		return (
 			<GameSelect />
@@ -158,16 +162,13 @@ function App() {
 	}
 
 	if (turnNum === 0 && !isAnonym) {
-		const { reset: resetCompanyState } = useCompanyStore();
-		const { reset: resetUpgradeState } = useUpgradesStore();
-		const { reset: resetMarketingState } = useMarketingStore();
 		return (
 			<div className="flex flex-col justify-center items-center h-screen">
 				<h1 className="text-4xl font-bold pb-4">Hra sa ešte nezačala</h1>
 				<button
 					type="button"
 					className="button-dark font-bold py-2 px-4 m-0 rounded-lg"
-					onClick={() => logout(resetMarketingState, resetCompanyState, resetUpgradeState)}
+					onClick={() => logout}
 				>
 					Odhlásiť sa
 				</button>
@@ -177,7 +178,7 @@ function App() {
 
 	if (token && !isAnonym && !isLoading) {
 		return (
-			<MyContext.Provider value={{ turnNum, comm, isLoading, setIsLoading, setComm}}>
+			<MyContext.Provider value={{ turnNum, comm, isLoading, numberShow, setIsLoading, setComm, setNumberShow}}>
 				<Suspense>
 					<BrowserRouter>
 						<Navbar />
@@ -202,7 +203,7 @@ function App() {
 	}
 	if(isAnonym){
 		return (
-			<MyContext.Provider value={{ turnNum, comm,isLoading, setIsLoading, setComm }}>
+			<MyContext.Provider value={{ turnNum, comm,isLoading, numberShow, setIsLoading, setComm, setNumberShow}}>
 				<BrowserRouter>
 					<Routes>
 						<Route path="/register" element={<Register />} />

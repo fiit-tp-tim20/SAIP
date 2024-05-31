@@ -17,8 +17,8 @@ import numberWithSpaces from "../../utils/numberWithSpaces";
 
 export default function BottomBar() {
 	const [tooltipText, setTooltipText] = useState("");
-	const dataWs = useContext(MyContext);
 	const {setComm, comm} = useContext(MyContext)
+	const {setNumberShow} = useContext(MyContext)
 	const {turnNum} = useContext(MyContext)
 	const { isLoading, data, refetch} = useQuery("companyInfo", () => getGeneralInfo());
 	// @ts-ignore
@@ -61,6 +61,10 @@ export default function BottomBar() {
 			}
 		}
 	}, [data]);
+	useEffect(() => {
+		// @ts-ignore
+		setNumberShow(turnNum-1)
+	}, [turnNum]);
 	const handleEndTurn = async () => {
 		const gameState: GameState = {
 			upgrades,
