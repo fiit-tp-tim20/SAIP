@@ -19,6 +19,7 @@ export default function BottomBar() {
 	const [tooltipText, setTooltipText] = useState("");
 	const dataWs = useContext(MyContext);
 	const {setComm, comm} = useContext(MyContext)
+	const {turnNum} = useContext(MyContext)
 	const { isLoading, data, refetch} = useQuery("companyInfo", () => getGeneralInfo());
 	// @ts-ignore
 	const [bonusCash, setBonusCash] = useState(0);
