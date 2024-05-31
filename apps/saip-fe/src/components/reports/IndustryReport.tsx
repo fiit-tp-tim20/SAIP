@@ -84,17 +84,6 @@ function IndustryReport() {
 			) : (
 				<>
 					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
-						{isLoading2 ? (
-							<div>Loading...</div>
-						) : (
-							<IndustryGraph
-								rank={graphData?.rank}
-								stock_price={graphData?.stock_price}
-								num_players={graphData?.num_players}
-							/>
-						)}
-					</div>
-					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 						<div className="flex flex-row items-center justify-between py-2">
 							<h2>Rebríček všetkých firiem (podľa akcií)</h2>
 							<div>
@@ -169,28 +158,28 @@ function IndustryReport() {
 										.map((industry, index) => (
 											<tr key={industry[0]}>
 												<td className="px-4 py-2">{index + 1}</td>
-												<td className="px-4 py-2 text-center">{industry[0]}</td>
-												<td className="px-4 py-2 text-center">
+												<td className="px-4 py-2">{industry[0]}</td>
+												<td className="px-4 py-2">
 													{industry[1]?.stock_price &&
 														numberWithSpaces(industry[1]?.stock_price)}{" "}
 													€
 												</td>
-												<td className="px-4 py-2 text-center">
+												<td className="px-4 py-2">
 													{industry[1]?.net_profit &&
 														numberWithSpaces(industry[1]?.net_profit)}{" "}
 													€
 												</td>
-												<td className="px-4 py-2 text-center">
+												<td className="px-4 py-2">
 													{industry[1]?.sell_price &&
 														numberWithSpaces(industry[1]?.sell_price)}{" "}
 													€/ks
 												</td>
-												<td className="px-4 py-2 text-center">
+												<td className="px-4 py-2">
 													{industry[1]?.market_share &&
 														numberWithSpaces(industry[1]?.market_share)}{" "}
 													%
 												</td>
-												<td className="px-4 py-2 text-center">
+												<td className="px-4 py-2">
 													{industry[1]?.finished_upgrades &&
 														numberWithSpaces(industry[1]?.finished_upgrades)}{" "}
 
@@ -200,10 +189,10 @@ function IndustryReport() {
 								{/* Add row for average stock price */}
 								<tr>
 									<td className="px-4 py-2" />
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2">
 										<b>Priemer</b>
 									</td>
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2">
 										{/* Calculate and display average stock price */}
 										{data && (
 											<b>
@@ -220,7 +209,7 @@ function IndustryReport() {
 											</b>
 										)}
 									</td>
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2">
 										{/* Calculate and display average net profit */}
 										{data && (
 											<b>
@@ -237,7 +226,7 @@ function IndustryReport() {
 											</b>
 										)}
 									</td>
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2">
 										{/* Calculate and display average sell price */}
 										{data && (
 											<b>
@@ -265,42 +254,42 @@ function IndustryReport() {
 						<table className="table-auto table-white">
 							<thead>
 								<tr>
-									<th className="px-4 py-2 text-center table-header text-white">Kategória</th>
-									<th className="px-4 py-2 text-center table-header text-white">Hodnota</th>
-									<th className="px-4 py-2 text-center table-header text-white">Nárast / pokles</th>
+									<th className="px-4 py-2 text-left table-header text-white">Kategória</th>
+									<th className="px-4 py-2 text-left table-header text-white">Hodnota</th>
+									<th className="px-4 py-2 text-left table-header text-white">Nárast / pokles</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Celkové objednávky</td>
-									<td className="px-4 py-2 text-center">{numberWithSpaces(data?.market.demand)}</td>
-									<td className="px-4 py-2 text-center">{numberWithSpaces(data?.market.demand_difference)} %</td>
+									<td className="px-4 py-2">Celkové objednávky</td>
+									<td className="px-4 py-2">{numberWithSpaces(data?.market.demand)}</td>
+									<td className="px-4 py-2">{numberWithSpaces(data?.market.demand_difference)} %</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Celkový predaj</td>
-									<td className="px-4 py-2 text-center">{numberWithSpaces(data?.market.sold_products)}</td>
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2">Celkový predaj</td>
+									<td className="px-4 py-2">{numberWithSpaces(data?.market.sold_products)}</td>
+									<td className="px-4 py-2">
 										{numberWithSpaces(data?.market.sold_products_difference)} %
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Celková výroba</td>
-									<td className="px-4 py-2 text-center">{numberWithSpaces(data?.market.manufactured)}</td>
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2">Celková výroba</td>
+									<td className="px-4 py-2">{numberWithSpaces(data?.market.manufactured)}</td>
+									<td className="px-4 py-2">
 										{numberWithSpaces(data?.market.manufactured_difference)} %
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Celková kapacita</td>
-									<td className="px-4 py-2 text-center">{numberWithSpaces(data?.market.capacity)}</td>
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2">Celková kapacita</td>
+									<td className="px-4 py-2">{numberWithSpaces(data?.market.capacity)}</td>
+									<td className="px-4 py-2">
 										{numberWithSpaces(data?.market.capacity_difference)} %
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Celkové zásoby v odvetví</td>
-									<td className="px-4 py-2 text-center">{numberWithSpaces(data?.market.inventory)}</td>
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2">Celkové zásoby v odvetví</td>
+									<td className="px-4 py-2">{numberWithSpaces(data?.market.inventory)}</td>
+									<td className="px-4 py-2">
 										{numberWithSpaces(data?.market.inventory_difference)} %
 									</td>
 								</tr>
@@ -336,49 +325,60 @@ function IndustryReport() {
 						</div>
 						<table className="table-auto table-white">
 							<thead>
-								<th className="px-4 py-2 text-center table-header text-white">Parameter</th>
-								<th className="px-4 py-2 text-center table-header text-white">Hodnota</th>
-								<th className="px-4 py-2 text-center table-header text-white">Nárast / pokles</th>
+								<th className="px-4 py-2 text-left table-header text-white">Parameter</th>
+								<th className="px-4 py-2 text-left table-header text-white">Hodnota</th>
+								<th className="px-4 py-2 text-left table-header text-white">Nárast / pokles</th>
 							</thead>
 							<tbody>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Úroková sadzba</td>
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2">Úroková sadzba</td>
+									<td className="px-4 py-2">
 										{numberWithSpaces(data?.economic_parameters.interest_rate)} %
 									</td>
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2">
 										{numberWithSpaces(data?.economic_parameters.interest_rate_difference)} %
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Úverový limit</td>
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2">Úverový limit</td>
+									<td className="px-4 py-2">
 										{numberWithSpaces(data?.economic_parameters.loan_limit)} €
 									</td>
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2">
 										{numberWithSpaces(data?.economic_parameters.loan_limit_difference)} %
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Sadzba dane z prijmu</td>
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2">Sadzba dane z prijmu</td>
+									<td className="px-4 py-2">
 										{numberWithSpaces(data?.economic_parameters.tax_rate)} %
 									</td>
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2">
 										{numberWithSpaces(data?.economic_parameters.tax_rate_difference)} %
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Inflácia</td>
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2">Inflácia</td>
+									<td className="px-4 py-2">
 										{numberWithSpaces(data?.economic_parameters.inflation)} %
 									</td>
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2">
 										{numberWithSpaces(data?.economic_parameters.inflation_difference)} %
 									</td>
 								</tr>
 							</tbody>
 						</table>
+					</div>
+					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
+						{isLoading2 ? (
+							<div>Loading...</div>
+						) : (
+							<IndustryGraph
+								rank={graphData?.rank}
+								stock_price={graphData?.stock_price}
+								num_players={graphData?.num_players}
+							/>
+						)}
 					</div>
 				</>
 			)}

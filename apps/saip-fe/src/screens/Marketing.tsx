@@ -120,18 +120,6 @@ function Marketing() {
 							}
 						/>
 					)}
-					<button
-						onClick={() => {
-							setBillboardChecked(true)
-							setOohChecked(true)
-							setTvChecked(true)
-							setPodcastChecked(true)
-							setViralChecked(true)
-						}}
-						className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline ml-auto"
-					>
-						Potvrdiť všetky
-					</button>
 				</div>
 				<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 					<div className="flex flex-row items-center justify-between py-2">

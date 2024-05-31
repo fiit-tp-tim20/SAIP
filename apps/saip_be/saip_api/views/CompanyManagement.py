@@ -335,8 +335,7 @@ class ArchiveReport(APIView):
             upgrade_turn = CompaniesUpgrades.objects.get(company=company, upgrade=Upgrade.objects.get(name=i))
             if upgrade_turn.status == 'f':
                 turn_u = upgrade_turn.turn.number
-                if len(factory_dict['upgrade_turn']) > turn_u-1:
-                    factory_dict['upgrade_turn'][turn_u - 1] = i
+                factory_dict['upgrade_turn'][turn_u - 1] = i
         for i in range(1, turn.number + 1):
             company_state_new = CompaniesState.objects.get(
                 turn=Turn.objects.get(game=company.game, number=i), company=company)
