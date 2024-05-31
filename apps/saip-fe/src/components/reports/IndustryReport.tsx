@@ -26,8 +26,9 @@ function IndustryReport() {
 
 	// @ts-ignore
 	const [turn, setTurn] = useState<number>(_turn - 1);
+	const {numberShow, setNumberShow} = useContext(MyContext)
 
-	const { data, isLoading } = useQuery(["getIndustryReport", turn], () => getIndustryReport(turn));
+	const { data, isLoading } = useQuery(["getIndustryReport", numberShow], () => getIndustryReport(numberShow));
 	const { data: graphData, isLoading: isLoading2 } = useQuery(["getIndustryGraphData"], getIndustryGraphData);
 
 	// State for managing tutorial visibility
@@ -79,8 +80,8 @@ function IndustryReport() {
 					<select
 						id="turn"
 						className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 hover:cursor-pointer"
-						value={turn}
-						onChange={(e) => setTurn(parseInt(e.target.value, 10))}
+						value={numberShow}
+						onChange={(e) => setNumberShow(parseInt(e.target.value, 10))}
 					>
 						{[...Array(_turn).keys()].map((o) => {
 							if (o === 0) return null;
@@ -162,17 +163,17 @@ function IndustryReport() {
 						<table className="table-auto table-white">
 							<thead>
 								<tr>
-									<th className="px-4 py-2 text-left table-header" />
+									<th className="px-4 py-2 text-left table-header text-white">p</th>
 									<th className="px-4 py-2 text-left table-header text-white">Spoločnosť</th>
-									<th className="px-4 py-2 text-left table-header text-white">
+									<th className="px-4 py-2 text-center table-header text-white">
 										Hodnota jednej akcie
 									</th>
-									<th className="px-4 py-2 text-left table-header text-white">
+									<th className="px-4 py-2 text-center table-header text-white">
 										Výsledok hospodárenia po zdanení
 									</th>
-									<th className="px-4 py-2 text-left table-header text-white">Predajná cena</th>
-									<th className="px-4 py-2 text-left table-header text-white">Podiel na trhu</th>
-									<th className="px-4 py-2 text-left table-header text-white">Dokončené vylepšenia</th>
+									<th className="px-4 py-2 text-center table-header text-white">Predajná cena</th>
+									<th className="px-4 py-2 text-center table-header text-white">Podiel na trhu</th>
+									<th className="px-4 py-2 text-center table-header text-white">Dokončené vylepšenia</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -182,7 +183,7 @@ function IndustryReport() {
 										.map((industry, index) => (
 											<tr key={industry[0]}>
 												<td className="px-4 py-2">{index + 1}</td>
-												<td className="px-4 py-2 text-center">{industry[0]}</td>
+												<td className="px-4 py-2 text-left">{industry[0]}</td>
 												<td className="px-4 py-2 text-center">
 													{industry[1]?.stock_price &&
 														numberWithSpaces(industry[1]?.stock_price)}{" "}
@@ -213,7 +214,7 @@ function IndustryReport() {
 								{/* Add row for average stock price */}
 								<tr>
 									<td className="px-4 py-2" />
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2 text-left">
 										<b>Priemer</b>
 									</td>
 									<td className="px-4 py-2 text-center">
@@ -278,40 +279,40 @@ function IndustryReport() {
 						<table className="table-auto table-white">
 							<thead>
 								<tr>
-									<th className="px-4 py-2 text-center table-header text-white">Kategória</th>
+									<th className="px-4 py-2 text-left table-header text-white">Kategória</th>
 									<th className="px-4 py-2 text-center table-header text-white">Hodnota</th>
 									<th className="px-4 py-2 text-center table-header text-white">Nárast / pokles</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Celkové objednávky</td>
+									<td className="px-4 py-2 text-left">Celkové objednávky</td>
 									<td className="px-4 py-2 text-center">{numberWithSpaces(data?.market.demand)}</td>
 									<td className="px-4 py-2 text-center">{numberWithSpaces(data?.market.demand_difference)} %</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Celkový predaj</td>
+									<td className="px-4 py-2 text-left">Celkový predaj</td>
 									<td className="px-4 py-2 text-center">{numberWithSpaces(data?.market.sold_products)}</td>
 									<td className="px-4 py-2 text-center">
 										{numberWithSpaces(data?.market.sold_products_difference)} %
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Celková výroba</td>
+									<td className="px-4 py-2 text-left">Celková výroba</td>
 									<td className="px-4 py-2 text-center">{numberWithSpaces(data?.market.manufactured)}</td>
 									<td className="px-4 py-2 text-center">
 										{numberWithSpaces(data?.market.manufactured_difference)} %
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Celková kapacita</td>
+									<td className="px-4 py-2 text-left">Celková kapacita</td>
 									<td className="px-4 py-2 text-center">{numberWithSpaces(data?.market.capacity)}</td>
 									<td className="px-4 py-2 text-center">
 										{numberWithSpaces(data?.market.capacity_difference)} %
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Celkové zásoby v odvetví</td>
+									<td className="px-4 py-2 text-left">Celkové zásoby v odvetví</td>
 									<td className="px-4 py-2 text-center">{numberWithSpaces(data?.market.inventory)}</td>
 									<td className="px-4 py-2 text-center">
 										{numberWithSpaces(data?.market.inventory_difference)} %
@@ -349,13 +350,13 @@ function IndustryReport() {
 						</div>
 						<table className="table-auto table-white">
 							<thead>
-								<th className="px-4 py-2 text-center table-header text-white">Parameter</th>
+								<th className="px-4 py-2 text-left table-header text-white">Parameter</th>
 								<th className="px-4 py-2 text-center table-header text-white">Hodnota</th>
 								<th className="px-4 py-2 text-center table-header text-white">Nárast / pokles</th>
 							</thead>
 							<tbody>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Úroková sadzba</td>
+									<td className="px-4 py-2 text-left">Úroková sadzba</td>
 									<td className="px-4 py-2 text-center">
 										{numberWithSpaces(data?.economic_parameters.interest_rate)} %
 									</td>
@@ -364,7 +365,7 @@ function IndustryReport() {
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Úverový limit</td>
+									<td className="px-4 py-2 text-left">Úverový limit</td>
 									<td className="px-4 py-2 text-center">
 										{numberWithSpaces(data?.economic_parameters.loan_limit)} €
 									</td>
@@ -373,7 +374,7 @@ function IndustryReport() {
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Sadzba dane z prijmu</td>
+									<td className="px-4 py-2 text-left">Sadzba dane z prijmu</td>
 									<td className="px-4 py-2 text-center">
 										{numberWithSpaces(data?.economic_parameters.tax_rate)} %
 									</td>
@@ -382,7 +383,7 @@ function IndustryReport() {
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">Inflácia</td>
+									<td className="px-4 py-2 text-left">Inflácia</td>
 									<td className="px-4 py-2 text-center">
 										{numberWithSpaces(data?.economic_parameters.inflation)} %
 									</td>
@@ -398,5 +399,4 @@ function IndustryReport() {
 		</div>
 	);
 }
-
 export default IndustryReport;
