@@ -22,12 +22,11 @@ const useUpgradesStore = create<UpgradeState>()(
 			reset: () => set(() => ({ upgrades: {}, upgradesCheck: {} })), // Reset upgradesCheck along with upgrades
 			getSum: () => Object.values(get().upgrades).reduce((a, b) => a + b, 0),
 			getChecked: () => {
-				const upgrades_num = Object.values(get().upgrades)
-				if (upgrades_num.length == 0)return true
 				const checkedValues = Object.values(get().upgradesCheck);
 				if (checkedValues.length > 0) {
 					return checkedValues.every((value) => value);
 				}
+				// Check if all upgrades are checked
 				return false;
 			},
 		}),
