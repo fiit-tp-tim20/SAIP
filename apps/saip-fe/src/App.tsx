@@ -76,10 +76,11 @@ function App() {
 					const receivedData = JSON.parse(e.data);
 					setTurnNum(receivedData.Number)
 					setComm(receivedData.Committed)
-					dataWs.setNumberShow(receivedData.Number)
+					dataWs.setNumberShow(receivedData.Number-1)
 				} catch (error) {
 					console.error('Error parsing JSON:', error);
 				}
+				console.log(dataWs.numberShow)
 				setIsLoading(false)
 
 

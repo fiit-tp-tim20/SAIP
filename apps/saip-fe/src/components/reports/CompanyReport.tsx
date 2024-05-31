@@ -7,7 +7,7 @@ import numberWithSpaces from "../../utils/numberWithSpaces";
 import { MyContext } from "../../api/MyContext";
 
 function CompanyReport() {
-	const {numberShow, setNumberShow} = useContext(MyContext)
+	const {numberShow, setNumberShow} = useContext(MyContext);
 	const dataWs = useContext(MyContext);
 	const TURN = dataWs.turnNum;
 	const { isLoading, data } = useQuery(["companyReport", numberShow], () => getCompanyReport(numberShow));
