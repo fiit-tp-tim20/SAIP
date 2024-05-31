@@ -7,12 +7,10 @@ import numberWithSpaces from "../../utils/numberWithSpaces";
 import { MyContext } from "../../api/MyContext";
 
 function CompanyReport() {
+	const {numberShow, setNumberShow} = useContext(MyContext);
 	const dataWs = useContext(MyContext);
-	// @ts-ignore
 	const TURN = dataWs.turnNum;
-	// @ts-ignore
-	const [turn, setTurn] = useState<number>(dataWs.turnNum - 1);
-	const { isLoading, data } = useQuery(["companyReport", turn], () => getCompanyReport(turn));
+	const { isLoading, data } = useQuery(["companyReport", numberShow], () => getCompanyReport(numberShow));
 
 	// State for managing tutorial visibility
 	const [isTutorialOpen, setTutorialOpen] = useState<boolean>(true);
@@ -86,7 +84,7 @@ function CompanyReport() {
 	const exportToCSV = async () => {
 		const csv_merge = []
 		try {
-			for (let i = 0; i <= turn; i++) {
+			for (let i = 0; i <= numberShow; i++) {
 				let response = await getCompanyReport(i);
 
 				response = { ...response, turn: i };
@@ -118,12 +116,15 @@ function CompanyReport() {
 					<select
 						id="turn"
 						className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 hover:cursor-pointer"
-						value={turn}
-						onChange={(e) => setTurn(parseInt(e.target.value, 10))}
+						value={numberShow}
+						onChange={(e) => {
+							setNumberShow(parseInt(e.target.value, 10));
+						}}
 					>
-						{[...Array(TURN).keys()].map((o) => (
-							<option value={o}>{o}</option>
-						))}
+						{[...Array(TURN).keys()].map((o) => {
+							if (o === 0) return null;
+							return <option value={o}>{o}</option>;
+						})}
 					</select>
 				</div>
 			</div>
@@ -149,7 +150,7 @@ function CompanyReport() {
 									textContent={
 										<div>
 											<h5>Koeficient využitia výrobnej kapacity</h5>
-											<p>= objem produkcie / maximálna výrobná kapacita * 100</p>
+											<p>= objem produkcie / maximálna výrobná kapacita * 200</p>
 											<br />
 											<b>Príklad</b> <br />
 											<p style={{ fontSize: "14px" }}>
@@ -602,7 +603,7 @@ function CompanyReport() {
 											<i>odpis z kapitálových investícií</i>
 											<br />
 											<br />
-											<h5>Náklady na spravovanie</h5>
+											<h5>Náklady na skladovanie</h5>
 											= cena za uskladnenie jednotky * počet kusov na sklade
 											<br />
 											<br />
@@ -649,7 +650,7 @@ function CompanyReport() {
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Náklady na spravovanie</td>
+									<td className="px-4 py-2">Náklady na skladovanie</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.income_statement.inventory_charge)} €
 									</td>
