@@ -50,9 +50,12 @@ def create_company_state(company: Company, turn: Turn) -> CompaniesState:
     return cs
 
 
-def create_turn(number: int, game: Game) -> Turn:
+def create_turn(number: int, game: Game,inv_charge_per_unit=None) -> Turn:
     """Creates turn for the given game and number, copies previous teacher decisions and calls company state and market state creation"""
-    turn = Turn.objects.create(number=number, game=game)
+    if inv_charge_per_unit is not None:
+        turn = Turn.objects.create(number=number, game=game,inventory_charge_per_unit=inv_charge_per_unit)
+    else:
+        turn = Turn.objects.create(number=number, game=game)
     MarketState.objects.create(turn=turn).save()
 
     try:
@@ -279,7 +282,12 @@ def end_turn(turn: Turn) -> Turn:
                 state.save()
 
     print("Creating turn" + str(turn.number + 1))
-    new_turn = create_turn(turn.number + 1, game)
+    # update inventory_charge_per_unit value for upcoming turn
+    teacher_decisions = TeacherDecisions.objects.get(turn=turn)
+    inventory_charge_per_unit_next_turn = turn.inventory_charge_per_unit *(1 + teacher_decisions.inflation)
+
+    new_turn = create_turn(turn.number + 1, game, inventory_charge_per_unit_next_turn)
+
     calculate_man_cost(game, new_turn)
 
     # TODO
