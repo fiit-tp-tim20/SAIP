@@ -22,12 +22,12 @@ function ProductModal(props: Props) {
 		<div className="background-container rounded-2xl p-6 grid grid-cols-2 gap-6 w-[60vw] min-h-[50vh] max-h-[95vh]">
 			<div className="flex flex-col max-h-[90vh] overflow-scroll scrollbar-hide">
 				<div className="py-2">
-					<h2 className="pb-2">{t(`features_translation.${upgrade.name}`)}</h2>
-					<p className="text-justify">{upgrade.description}</p>
+					<h2 className="pb-2">{t(`research.features.${upgrade.name}.title`)}</h2>
+					<p className="text-justify">{t(`research.features.${upgrade.name}.text`)}</p>
 				</div>
 				<div className="py-2">
 					<h4>{t(`research.playerResearched.title`) as string}</h4>
-					{upgrade.players.length === 0 && <p>Žiaden z hráčov zatiaľ nedokončil toto vylepšenie</p>}
+					{upgrade.players.length === 0 && <p>{t(`research.no_player_upgraded.title`) as string}</p>}
 					{upgrade.players.map((player) => (
 						<div key={player} className="flex items-center p-3 my-1 rounded-2xl bg-green-300">
 							<div className="avatar pr-4">
@@ -73,7 +73,7 @@ function ProductModal(props: Props) {
 				)}
 				{upgrade.price >= upgrade.progress && (
 					<div className="py-2">
-						<h4>Investícia</h4>
+						<h4>{t(`research.investment.title`) as string}</h4>
 						<Slider
 							min={0}
 							max={upgrade.price - upgrade.progress > 10000 ? 10000 : upgrade.price - upgrade.progress}

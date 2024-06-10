@@ -3,10 +3,12 @@ import { useQuery } from "react-query";
 import Tutorial from "../modal/Tutorial";
 import getCompanyReport from "../../api/GetCompanyReport";
 import numberWithSpaces from "../../utils/numberWithSpaces";
+import { useTranslation } from "react-i18next";
 // @ts-ignore
 import { MyContext } from "../../api/MyContext";
 
 function CompanyReport() {
+	const { t } = useTranslation();
 	const {numberShow, setNumberShow} = useContext(MyContext);
 	const dataWs = useContext(MyContext);
 	const TURN = dataWs.turnNum;
@@ -102,7 +104,7 @@ function CompanyReport() {
 	return (
 		<div className="flex w-[600px] flex-col md:w-[900px] xl:w-[1280px]">
 			<div className="flex flex-row justify-between">
-				<h1 className="my-4">Správa o spoločnosti</h1>
+				<h1 className="my-4">{t("dashboard.company_report.title") as string}</h1>
 				<div>
 					<button
 						onClick={exportToCSV}
@@ -111,7 +113,7 @@ function CompanyReport() {
 						Export to CSV
 					</button>
 					<label htmlFor="turn" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-600">
-						Pre kolo
+						{t("dashboard.for_round") as string}
 					</label>
 					<select
 						id="turn"
@@ -134,7 +136,7 @@ function CompanyReport() {
 				<div className="grid gap-4 xl:grid-cols-2">
 					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 						<div className="flex flex-row items-center justify-between py-2">
-							<h2>Správa o výrobe</h2>
+							<h2>{t("dashboard.company_report.prod_report.title") as string}</h2>
 							{/* Add a button to open the tutorial */}
 							<button
 								onClick={() => openTutorial("production")}
@@ -146,50 +148,45 @@ function CompanyReport() {
 								<Tutorial
 									isOpen={tutorialStates.production}
 									closeModal={() => closeTutorial("production")}
-									textTitle="Správa o výrobe"
+									textTitle={`${t("dashboard.company_report.prod_report.title")}`}
 									textContent={
 										<div>
-											<h5>Koeficient využitia výrobnej kapacity</h5>
-											<p>= objem produkcie / maximálna výrobná kapacita * 200</p>
+											<h5>{t("dashboard.company_report.prod_report.coef_utilisation") as string}</h5>
+											<p>{t("dashboard.company_report.prod_report.tutorial.text1") as string}</p>
 											<br />
-											<b>Príklad</b> <br />
+											<b>{t("dashboard.company_report.prod_report.tutorial.example") as string}</b> <br />
 											<p style={{ fontSize: "14px" }}>
-												Výrobné náklady sú členené na fixné a variabilné.
+												{t("dashboard.company_report.prod_report.tutorial.text2") as string}
 												<br />
 												<br />
-												Počiatočná výška fixných nákladov je 48 500 €. Fixné náklady sa menia
-												skokovo vždy po prekročení 100 ks výrobnej kapacity. K prvému nárastu
-												dochádza pri prekročení výrobnej kapacity 200 ks o 48 500 €. Následne po
-												ďalších 100 ks rastú o 48 500 €.
+												{t("dashboard.company_report.prod_report.tutorial.text3") as string}
 												<br />
 												<br />
-												Variabilné náklady sú na začiatku simulácie 250 €/ks. Po dokončení
-												vylepšenia ich hodnota stúpne v závislosti od dokončeného výskumu.{" "}
+												{t("dashboard.company_report.prod_report.tutorial.text4") as string}{" "}
 												<br />
 												<br />
-												Na variabilné a fixné náklady vplýva inflácia.{" "}
+												{t("dashboard.company_report.prod_report.tutorial.text5") as string}{" "}
 											</p>
 											<br />
-											<h5>Výrobné náklady</h5>
+											<h5>{t("dashboard.company_report.prod_report.cost") as string}</h5>
 											<p>
-												= (počet kusov * cena materiálu za kus * suma modifikátorov vylepšení *
-												inflácia + fixné náklady) * koeficient nadmerného zaťaženia výroby{" "}
+												{t("dashboard.company_report.prod_report.tutorial.text6") as string}{" "}
 											</p>
 											<br />
-											<h5>Celkové náklady</h5>
+											<h5>{t("dashboard.company_report.prod_report.total_cost") as string}</h5>
 											<p>
-												= Výrobné náklady
+												= {t("dashboard.company_report.prod_report.cost") as string}
 												<br />
-												+ odpisy
+												+ {t("dashboard.company_report.profit_loss.deductions") as string}
 												<br />
-												+ náklady na marketing
+												+ {t("dashboard.company_report.profit_loss.cost_marketing") as string}
 												<br />
-												+ úroky z pôžičky
+												+ {t("dashboard.company_report.prod_report.tutorial.interest_loan") as string}
 												<br />
-												+ náklady za vylepšenie uskladneného produktu
+												+ {t("dashboard.company_report.profit_loss.cost_upgrade") as string}
 												<br />
-												+ poplatok za skladovanie: počet uskladnených kusov * 100
-												<br />+ náklady na výskum a vývoj
+												+ {t("dashboard.company_report.prod_report.tutorial.text7") as string}
+												<br />+ {t("dashboard.company_report.profit_loss.cost_rnd") as string}
 											</p>
 										</div>
 									}
@@ -199,39 +196,39 @@ function CompanyReport() {
 						<table className="table-auto table-white">
 							<tbody>
 								<tr>
-									<td className="px-4 py-2">Vyrobené množstvo</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.prod_report.quantity") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data?.production?.production)} ks
+										{numberWithSpaces(data?.production?.production)} {t("misc.pieces") as string}
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Výrobná kapacita (max)</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.prod_report.max_capacity") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data?.production.capacity)} ks
+										{numberWithSpaces(data?.production.capacity)} {t("misc.pieces") as string}
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Koeficient využitia výrobnej kapacity (minulé kolo)</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.prod_report.coef_utilisation") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.production.utilization)} %
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Výrobné náklady</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.prod_report.cost") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data?.production.man_cost)} €/ks
+										{numberWithSpaces(data?.production.man_cost)} €/{t("misc.pieces") as string}
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Zásoby</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.prod_report.stocks") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data?.production.new_inventory)} ks
+										{numberWithSpaces(data?.production.new_inventory)} {t("misc.pieces") as string}
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Celkové náklady</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.prod_report.total_cost") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data?.production.man_cost_all)} €/ks
+										{numberWithSpaces(data?.production.man_cost_all)} €/{t("misc.pieces") as string}
 									</td>
 								</tr>
 							</tbody>
@@ -239,7 +236,7 @@ function CompanyReport() {
 					</div>
 					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 						<div className="flex flex-row items-center justify-between py-2">
-							<h2>Správa o predaji</h2>
+							<h2>{t("dashboard.company_report.sales_report.title") as string}</h2>
 							{/* Add a button to open the tutorial */}
 							<button
 								onClick={() => openTutorial("sales")}
@@ -251,17 +248,13 @@ function CompanyReport() {
 								<Tutorial
 									isOpen={tutorialStates.sales}
 									closeModal={() => closeTutorial("sales")}
-									textTitle="Správa o predaji 💡"
+									textTitle={`${t("dashboard.company_report.sales_report.title")} 💡`}
 									textContent={
 										<div>
-											Ak máš málo objednávok, analyzuj svoju predajnú cenu a investície do
-											marketingu. Koľko je zákazníkov na trhu? Aká je štruktúra a cenové stratégie
-											konkurencie? Mysli na to, že na trhu existujú rôzne skupiny zákazníkov,
-											ktoré majú rôzne cenové, marketingové a inovačné preferencie.
+											{t("dashboard.company_report.sales_report.tip.text1") as string}
 											<br />
 											<br />
-											Ak máš veľa nesplnených objednávok, tak máš veľký dopyt po produkte a
-											vyrábaš málo kusov.
+											{t("dashboard.company_report.sales_report.tip.text2") as string}
 										</div>
 									}
 								/>
@@ -270,31 +263,31 @@ function CompanyReport() {
 						<table className="table-auto table-white">
 							<tbody>
 								<tr>
-									<td className="px-4 py-2">Prijaté objednávky</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.sales_report.orders_recieved") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.sales.orders_received)}
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Splnené objednávky</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.sales_report.orders_fulfilled") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.sales.orders_fulfilled)}
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Nesplnené objednávky</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.sales_report.orders_unfulfilled") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.sales.orders_unfulfilled)}
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Predajná cena</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.sales_report.selling_price") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data?.sales.selling_price)} €/ks
+										{numberWithSpaces(data?.sales.selling_price)} €/{t("misc.pieces") as string}
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Rentabilita tržieb (ROS)</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.sales_report.ros") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(
 											Math.round(
@@ -307,7 +300,7 @@ function CompanyReport() {
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Rentabilitu majetku (ROA)</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.sales_report.roa") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(
 											Math.round(
@@ -324,7 +317,7 @@ function CompanyReport() {
 					</div>
 					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 						<div className="flex flex-row items-center justify-between py-2">
-							<h2>Súvaha</h2>
+							<h2>{t("dashboard.company_report.balance_sheet.title") as string}</h2>
 							<div>
 								{/* Add a button to open the tutorial */}
 								<button
@@ -337,32 +330,30 @@ function CompanyReport() {
 									<Tutorial
 										isOpen={tutorialStates.balance}
 										closeModal={() => closeTutorial("balance")}
-										textTitle="Súvaha"
+										textTitle={`${t("dashboard.company_report.balance_sheet.title")}`}
 										textContent={
 											<div>
-												<h5>Finančné prostriedky</h5>
-												= finančné prostriedky v hotovosti a na bankovom účte <br />
+												<h5>{t("dashboard.company_report.balance_sheet.funds") as string}</h5>
+												= {t("dashboard.company_report.balance_sheet.tutorial.text1") as string} <br />
 												<i>
-													jeho hodnota klesá každé obdobie o výšku odpisov a stúpa o
-													investíciu do kapitálu
+													{t("dashboard.company_report.balance_sheet.tutorial.text2") as string}
 												</i>
 												<br />
 												<br />
-												<h5>Dlhodobý majetok</h5>
-												= hodnota továrne
+												<h5>{t("dashboard.company_report.balance_sheet.long_assets") as string}</h5>
+												= {t("dashboard.company_report.balance_sheet.tutorial.text3") as string}
 												<br />
-												<i>od týchto investicií závisi výrobná kapacita</i>
-												<br />
-												<br />
-												<h5>Zásoby</h5>hodnota zásob ocenená metódou FIFO <br />
-												<br />
-												<h5>Výsledok hospodárenia z predchádzajúcich období</h5>
-												suma všetkých výsledkov hospodárení za celú dobu trvania simulácie
+												<i>{t("dashboard.company_report.balance_sheet.tutorial.text4") as string}</i>
 												<br />
 												<br />
-												<h5>Základné imanie</h5>
-												počiatočný vklad vlastníkov spoločnosti, nemenný počas celej doby
-												simulácie
+												<h5>{t("dashboard.company_report.balance_sheet.stocks") as string}</h5>{t("dashboard.company_report.balance_sheet.tutorial.text5") as string} <br />
+												<br />
+												<h5>{t("dashboard.company_report.balance_sheet.previous") as string}</h5>
+												{t("dashboard.company_report.balance_sheet.tutorial.text6") as string}
+												<br />
+												<br />
+												<h5>{t("dashboard.company_report.balance_sheet.capital") as string}</h5>
+												{t("dashboard.company_report.balance_sheet.tutorial.text7") as string}
 												<br />
 											</div>
 										}
@@ -378,11 +369,10 @@ function CompanyReport() {
 									<Tutorial
 										isOpen={tutorialStates.balance_tip}
 										closeModal={() => closeTutorial("balance_tip")}
-										textTitle="Súvaha 💡"
+										textTitle={`${t("dashboard.company_report.balance_sheet.title")} 💡`}
 										textContent={
 											<div>
-												Mysli na to, že ak máš na sklade zásoby, musíš sa o ne starať, s čím sú
-												spojené zvýšené náklady.
+												{t("dashboard.company_report.balance_sheet.tip.text1") as string}
 											</div>
 										}
 									/>
@@ -392,31 +382,31 @@ function CompanyReport() {
 						<table className="table-auto table-white">
 							<thead>
 								<tr>
-									<th className="px-4 py-2 bg-white">Aktíva</th>
+									<th className="px-4 py-2 bg-white">{t("dashboard.company_report.balance_sheet.assets") as string}</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td className="px-4 py-2">Finančné prostriedky</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.balance_sheet.funds") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.balance.cash)} €
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Zásoby</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.balance_sheet.stocks") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.balance.inventory_money)} €
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Dlhodobý majetok</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.balance_sheet.long_assets") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.balance.capital_investments)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">
-										<b>Súčet aktív</b>
+										<b>{t("dashboard.company_report.balance_sheet.sum_assets") as string}</b>
 									</td>
 									<td className="px-4 py-2 whitespace-nowrap font-bold">
 										{numberWithSpaces(data?.balance.assets_summary)} €
@@ -425,31 +415,31 @@ function CompanyReport() {
 							</tbody>
 							<thead>
 								<tr>
-									<th className="px-4 py-2 bg-white">Pasíva</th>
+									<th className="px-4 py-2 bg-white">{t("dashboard.company_report.balance_sheet.liabilities") as string}</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
-									<td className="px-4 py-2">Pôžičky</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.balance_sheet.loans") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.balance.loans)} €
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Výsledok hospodárenia z predchádzajúcich období</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.balance_sheet.previous") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.balance.ret_earnings)} €
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Základné imanie</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.balance_sheet.capital") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.balance.base_capital)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">
-										<b>Súčet pasív</b>
+										<b>{t("dashboard.company_report.balance_sheet.sum_liab") as string}</b>
 									</td>
 									<td className="px-4 py-2 whitespace-nowrap font-bold">
 										{numberWithSpaces(data?.balance.liabilities_summary)} €
@@ -475,21 +465,20 @@ function CompanyReport() {
 									textTitle="Cashflow"
 									textContent={
 										<div>
-											<h5>Výdavky na zásoby</h5>
-											= výdavky na skladovanie zásob + výdavky na upgrade zásob <br />
+											<h5>{t("dashboard.company_report.cashflow.expen_stock") as string}</h5>
+											= {t("dashboard.company_report.cashflow.tutorial.text1") as string} <br />
 											<br />
-											<h5>Výdavky na rozhodnutia</h5>
-											= investície do marketingu + R&D + kapitálu <br />
+											<h5>{t("dashboard.company_report.cashflow.expen_decision") as string}</h5>
+											= {t("dashboard.company_report.cashflow.tutorial.text2") as string} <br />
 											<br />
-											<h5>Výdavky na úroky</h5>
-											= úrok z pôžičky <br />
+											<h5>{t("dashboard.company_report.cashflow.expen_interest") as string}</h5>
+											= {t("dashboard.company_report.cashflow.tutorial.text3") as string} <br />
 											<br />
-											<h5>Začiatočný stav</h5>
-											= finančné prostriedky na začiatku obdobia (sú rovnaké ako konečný stav
-											minulého obdobia) <br />
+											<h5>{t("dashboard.company_report.cashflow.initial") as string}</h5>
+											= {t("dashboard.company_report.cashflow.tutorial.text4") as string} <br />
 											<br />
-											<h5>Konečný stav</h5>
-											= finančné prostriedky na konci obdobia
+											<h5>{t("dashboard.company_report.cashflow.final") as string}</h5>
+											= {t("dashboard.company_report.cashflow.tutorial.text5") as string}
 											<br />
 										</div>
 									}
@@ -499,50 +488,50 @@ function CompanyReport() {
 						<table className="table-auto table-white">
 							<tbody>
 								<tr>
-									<td className="px-4 py-2">Počiatočný stav</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.cashflow.initial") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.cash_flow.beginning_cash)} €
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Príjmy z predaja výrobkov</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.cashflow.revenue") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.cash_flow.sales)} €
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Výdavky na vyrobené výrobky</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.cashflow.expen_products") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.cash_flow.manufactured_man_cost)} €
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Výdavky na zásoby</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.cashflow.expen_stock") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.cash_flow.inventory_charge_all)} €
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Výdavky na rozhodnutia</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.cashflow.expen_decision") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.cash_flow.expenses)} €
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2"> Výdavky na úroky</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.cashflow.expen_interest") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.cash_flow.interest)} €
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Zaplatená daň</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.cashflow.tax") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.cash_flow.tax)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">
-										<b>Výsledok finančného toku</b>
+										<b>{t("dashboard.company_report.cashflow.result_flow") as string}</b>
 									</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										<b>{numberWithSpaces(data?.cash_flow.cash_flow_result)} €</b>
@@ -550,14 +539,14 @@ function CompanyReport() {
 								</tr>
 								{data?.cash_flow.new_loans > 0 ? (
 									<tr>
-										<td className="px-4 py-2">Nové úvery</td>
+										<td className="px-4 py-2">{t("dashboard.company_report.cashflow.new_loans") as string}</td>
 										<td className="px-4 py-2 whitespace-nowrap">
 											{numberWithSpaces(data?.cash_flow.new_loans)} €
 										</td>
 									</tr>
 								) : (
 									<tr>
-										<td className="px-4 py-2">Splátka úveru</td>
+										<td className="px-4 py-2">{t("dashboard.company_report.cashflow.loan_repay") as string}</td>
 										<td className="px-4 py-2 whitespace-nowrap">
 											{numberWithSpaces(data?.cash_flow.loan_repayment)} €
 										</td>
@@ -565,7 +554,7 @@ function CompanyReport() {
 								)}
 								<tr>
 									<td className="px-4 py-2">
-										<b>Konečný stav</b>
+										<b>{t("dashboard.company_report.cashflow.final") as string}</b>
 									</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										<b>{numberWithSpaces(data?.cash_flow.cash)} €</b>
@@ -576,7 +565,7 @@ function CompanyReport() {
 					</div>
 					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 						<div className="flex flex-row items-center justify-between py-2">
-							<h2>Výkaz ziskov a strát</h2>
+							<h2>{t("dashboard.company_report.profit_loss.title") as string}</h2>
 							{/* Add a button to open the tutorial */}
 							<button
 								onClick={() => openTutorial("incomeStatement")}
@@ -588,29 +577,26 @@ function CompanyReport() {
 								<Tutorial
 									isOpen={tutorialStates.incomeStatement}
 									closeModal={() => closeTutorial("incomeStatement")}
-									textTitle="Výkaz ziskov a strát"
+									textTitle={`${t("dashboard.company_report.profit_loss.title")}`}
 									textContent={
 										<div>
-											<h5>Náklady na predaný tovar</h5>
-											= hodnota predaného tovaru. <br />
-											Ak spoločnosť mala v predchádzajúcom období zásoby, najskôr sa predajú
-											zásoby a až potom dochádza k predaju nových výrobkov. Hodnota vyskladnených
-											zásob je ocenená metódou FIFO. <br />
+											<h5>{t("dashboard.company_report.profit_loss.cost_sold") as string}</h5>
+											= {t("dashboard.company_report.profit_loss.tutorial.text1") as string} <br />
+											{t("dashboard.company_report.profit_loss.tutorial.text2") as string} <br />
 											<br />
-											<h5>Odpisy</h5>
-											= DHM * 0,0125
+											<h5>{t("dashboard.company_report.profit_loss.deductions") as string}</h5>
+											= {t("dashboard.company_report.balance_sheet.long_assets") as string} * 0,0125
 											<br />
-											<i>odpis z kapitálových investícií</i>
+											<i>{t("dashboard.company_report.profit_loss.tutorial.text3") as string}</i>
 											<br />
 											<br />
-											<h5>Náklady na skladovanie</h5>
-											= cena za uskladnenie jednotky * počet kusov na sklade
+											<h5>{t("dashboard.company_report.profit_loss.cost_management") as string}</h5>
+											= {t("dashboard.company_report.profit_loss.tutorial.text4") as string}
 											<br />
 											<br />
-											<h5>Náklady na upgrade zásob</h5>
+											<h5>{t("dashboard.company_report.profit_loss.cost_upgrade") as string}</h5>
 											<i>
-												ak je dokončené vylepšenie a podnik má na sklade zásoby, tieto zásoby sa
-												upgradnú o dokončené vylepšenie, s čím sú spojené aj náklady{" "}
+												{t("dashboard.company_report.profit_loss.tutorial.text5") as string}{" "}
 											</i>
 										</div>
 									}
@@ -620,70 +606,70 @@ function CompanyReport() {
 						<table className="table-auto table-white">
 							<tbody>
 								<tr>
-									<td className="px-4 py-2">Tržby z predaja výrobkov</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.profit_loss.sales") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.income_statement.sales)} €
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Náklady na predaný tovar</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.profit_loss.cost_sold") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.income_statement.manufactured_man_cost)} €
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Náklady na marketing</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.profit_loss.cost_marketing") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.income_statement.marketing)} €
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Náklady na výskum a vývoj</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.profit_loss.cost_rnd") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.income_statement.r_d)} €
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Odpisy</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.profit_loss.deductions") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.income_statement.depreciation)} €
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Náklady na skladovanie</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.profit_loss.cost_management") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.income_statement.inventory_charge)} €
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Náklady na upgrade zásob</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.profit_loss.cost_upgrade") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.income_statement.inventory_upgrade)} €
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Nákladové úroky</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.profit_loss.interest") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.income_statement.interest)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">
-										<b>Výsledok hospodárenia pred zdanením</b>
+										<b>{t("dashboard.company_report.profit_loss.before_tax") as string}</b>
 									</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										<b>{numberWithSpaces(data?.income_statement.profit_before_tax)} €</b>
 									</td>
 								</tr>
 								<tr>
-									<td className="px-4 py-2">Daň</td>
+									<td className="px-4 py-2">{t("dashboard.company_report.profit_loss.tax") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										{numberWithSpaces(data?.income_statement.tax)} €
 									</td>
 								</tr>
 								<tr>
 									<td className="px-4 py-2">
-										<b>Výsledok hospodárenia po zdanení</b>
+										<b>{t("dashboard.company_report.profit_loss.after_tax") as string}</b>
 									</td>
 									<td className="px-4 py-2 whitespace-nowrap">
 										<b>{numberWithSpaces(data?.income_statement.net_profit)} €</b>

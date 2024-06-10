@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import numberWithSpaces from "../../utils/numberWithSpaces";
 
 interface SliderProps {
@@ -19,16 +20,21 @@ function Slider(props: SliderProps) {
 
 	const [localValue, setLocalValue] = useState(value);
 
+	const { t } = useTranslation();
+
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		if (limitMax && parseInt(event.target.value.replace(/\s/g, ''), 10) > max) {
+		if (limitMax && parseInt(event.target.value.replace(/\s/g, ""), 10) > max) {
 			setLocalValue(max);
 			return;
 		}
-		if ((limitMin && parseInt(event.target.value.replace(/\s/g, ''), 10) < min) || event.target.value.replace(/\s/g, '') === "") {
+		if (
+			(limitMin && parseInt(event.target.value.replace(/\s/g, ""), 10) < min) ||
+			event.target.value.replace(/\s/g, "") === ""
+		) {
 			setLocalValue(min);
 			return;
 		}
-		setLocalValue(parseInt(event.target.value.replace(/\s/g, ''), 10));
+		setLocalValue(parseInt(event.target.value.replace(/\s/g, ""), 10));
 	};
 
 	const toggleState = () => {
@@ -76,7 +82,7 @@ function Slider(props: SliderProps) {
 						onClick={toggleState}
 						disabled={(!!requiredMin && localValue < requiredMin && localValue !== 0) || props.max == 0}
 					>
-						{!checked ? "Potvrdiť" : "Zmeniť"}
+						{!checked ? t("buttons.confirm") : t("buttons.change")}
 					</button>
 				)}
 			</div>
