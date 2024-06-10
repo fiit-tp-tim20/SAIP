@@ -280,7 +280,7 @@ class Bot(ABC):
         response = requests.get(url, headers=headers,params=params)
 
         if response.status_code == 200:
-            # print("Response JSON report:", response.json())
+            print("Company report:", response.json())
             self.inventory_count = response.json().get("production").get("new_inventory")
             self.production_capacity = response.json().get("production").get("capacity")
         else:
@@ -369,13 +369,16 @@ class LowPriceStrategyBot(Bot):
 
     def calculate_inventory_coef (self, **kwargs):
         inventory_count = kwargs.get("inventory_count")
-        inventory_coef = inventory_count / 10000 if inventory_count < 10000 else 1
+        inventory_coef = inventory_count / 500 if inventory_count < 500 else 1
         # print("Ahoj")
         return inventory_coef
 
     def calculate_capital_investments(self,**kwargs):
         inventory_count = kwargs.get("inventory_count")
         inventory_coef = self.calculate_inventory_coef(inventory_count=inventory_count)
+
+        if inventory_count > 800:
+            return 0
 
         return int(self.total_budget * 0.8 - self.total_budget * 0.4 * inventory_coef)
 
@@ -397,12 +400,12 @@ class LowPriceStrategyBot(Bot):
 
         # "capital investments"
         capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
-        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.85, m_coef=1, inventory_count=self.inventory_count)
-        self.decisions["factory"]["capital"] = capital_investments + capital_investments_bonus
+        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.6, m_coef=0.75, inventory_count=self.inventory_count)
+        self.decisions["factory"]["capital"] = floor(capital_investments + capital_investments_bonus)
 
         # marketing investments
         viral_investments = self.calculate_marketing_investments(other_investments=capital_investments)
-        self.decisions["marketing"]["viral"] = viral_investments
+        self.decisions["marketing"]["viral"] = floor(viral_investments)
 
         # production
         price = self.calculate_product_price()
@@ -427,7 +430,7 @@ class AveragePriceStrategyBot(Bot):
 
     def calculate_inventory_coef (self, **kwargs):
         inventory_count = kwargs.get("inventory_count")
-        inventory_coef = inventory_count / 10000 if inventory_count < 10000 else 1
+        inventory_coef = inventory_count / 250 if inventory_count < 250 else 1
 
         return inventory_coef
 
@@ -495,22 +498,21 @@ class AveragePriceStrategyBot(Bot):
         upgrades = self.calculate_upgrade_investments()
         rest = self.total_budget - upgrades
 
-        if(self.inventory_count <  1000):
+        if(self.inventory_count <  250):
             capital_value = rest/2
             marketing_value = rest/2
-
-        elif(self.inventory_count >  1000):
+        else:
             capital_value = 0
             marketing_value = rest
 
         # "capital investments"
         #capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
-        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.65, m_coef=0.9, inventory_count=self.inventory_count)
-        self.decisions["factory"]["capital"] = capital_value + capital_investments_bonus
+        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.45, m_coef=0.65, inventory_count=self.inventory_count)
+        self.decisions["factory"]["capital"] = floor(capital_value + capital_investments_bonus)
 
         # marketing investments
         #viral_investments = self.calculate_marketing_investments(other_investments=marketing_value)
-        self.decisions["marketing"]["viral"] = marketing_value
+        self.decisions["marketing"]["viral"] = floor(marketing_value)
 
         # production
         price = self.calculate_product_price()
@@ -557,18 +559,22 @@ class HighPriceStrategyBot(Bot):
 
         # upgrades
         upgrades = self.calculate_upgrade_investments()
-        capital_value = (self.total_budget - upgrades) / 3
-        marketing_value = 2 * capital_value
+        if (self.inventory_count < 200):
+            capital_value = (self.total_budget - upgrades) / 3
+            marketing_value = 2 * capital_value
+        else:
+            capital_value = 0
+            marketing_value = self.total_budget - upgrades
 
         # "capital investments"
         #capital_investments = self.calculate_capital_investments(inventory_count=self.inventory_count)
-        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.45, m_coef=0.8, inventory_count=self.inventory_count)
-        self.decisions["factory"]["capital"] = capital_value + capital_investments_bonus
+        capital_investments_bonus = self.capital_bonus_investments(v_coef=0.3, m_coef=0.6, inventory_count=self.inventory_count)
+        self.decisions["factory"]["capital"] = floor(capital_value + capital_investments_bonus)
 
 
         # marketing investments
         #viral_investments = self.calculate_marketing_investments(other_investments=marketing_value)
-        self.decisions["marketing"]["viral"] = marketing_value
+        self.decisions["marketing"]["viral"] = floor(marketing_value)
 
         # production
         price = self.calculate_product_price()

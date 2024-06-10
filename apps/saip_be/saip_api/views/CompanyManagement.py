@@ -499,7 +499,9 @@ class CompanyReport(APIView):
                                                    2) if company_state_previous.manufactured_man_cost is not None else "N/A"  # minus #"Výdavky na vyrobené výrobky"
         # vydavky na rozhodnutia - zratane vydavky na marketing r_d a capital s minusovou hodnotou
         cash_flow['inventory_charge'] = round(company_state_previous.inventory_charge,
-                                              2) if company_state_previous.inventory_charge is not None else "N/A"  # "Výdavky na zásoby"
+                                              2) if company_state_previous.inventory_charge is not None else "N/A"  # Dodatočné náklady na nepredané výrobky
+        cash_flow['inventory_charge_all'] = round(company_state_previous.inventory_charge + company_state_previous.inventory_upgrade,2) if (company_state_previous.inventory_charge is not None and company_state_previous.inventory_upgrade is not None) else "N/A"  # "Výdavky na zásoby"
+
         cash_flow['expenses'] = round(company_state_previous.r_d + marketing + company_state_previous.factory.capital,
                                       2) if (
                 company_state_previous.r_d is not None and marketing is not None and company_state_previous.factory.capital is not None) else "N/A"  # "Výdavky na rozhodnutia" #TODO: change to company.decision_costs - add it to model

@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from saip_simulation.config import (
+    FactoryPreset,
+)
 
 class GameParameters(models.Model):
     budget_cap = models.PositiveIntegerField(default=10000)
@@ -38,6 +40,7 @@ class Turn(models.Model):
     start = models.DateTimeField(null=True, auto_now_add=True)
     end = models.DateTimeField(null=True, blank=True, editable=False)
     game = models.ForeignKey(Game, models.CASCADE, null=True)
+    inventory_charge_per_unit = models.FloatField(null=False, default=FactoryPreset.INVENTORY_CHARGE_PER_UNIT)
 
     def __str__(self):
         if self.end:
