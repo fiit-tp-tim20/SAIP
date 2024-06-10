@@ -1,17 +1,18 @@
 {
 	"dashboard": {
-		"industry_report": {
+		"for_round": "For round",
+		"company_report": {
 			"title": "Company Report",
 			"prod_report": {
 				"title": "Production report",
 				"quantity": "Quantity produced",
 				"max_capacity": "Production capacity (max)",
-				"coef_utilisation": "Coefficient of utilisation of production capacity (last round)",
+				"coef_utilisation": "Coefficient of utilisation of production capacity",
 				"cost": "Cost of production",
 				"stocks": "Stocks",
 				"total_cost": "Total cost",
 				"tutorial": {
-					"text1": "= production volume / maximum production capacity * 100",
+					"text1": "= production volume / maximum production capacity * 200",
 					"example": "Example",
 					"text2": "Production costs are broken down into fixed and variable costs.",
 					"text3": "The initial fixed cost is € 48 500. Fixed costs vary in steps each time the production capacity exceeds 100 units. The first increase occurs when the production capacity of 200 units is exceeded by €48 500. Subsequently, after the next 100 units increase by €48 500.",
@@ -88,7 +89,7 @@
 				"cost_marketing": "Cost of marketing",
 				"cost_rnd": "Cost of R&D",
 				"deductions": "Deductions",
-				"cost_management": "Cost of management",
+				"cost_management": "Cost of storage",
 				"cost_upgrade": "Cost to upgrade inventory",
 				"interest": "Interest cost",
 				"before_tax": "Profit before tax",
@@ -101,6 +102,64 @@
 					"text4": "price per storage unit * number of units in stock",
 					"text5": "if an upgrade is completed and the company has inventory in stock, that inventory is upgraded with the completed upgrade, with associated costs"
 				}
+			}
+		},
+		"industry_report": {
+			"title": "Industry Report",
+			"ranking": "Ranking of all companies (by shares)",
+			"industry_graph": {
+				"share_price": "Share price",
+				"order": "Order"
+			},
+			"table": {
+				"company": "Company",
+				"value": "Value per share",
+				"after_tax": "Economic result after tax",
+				"price": "Selling price",
+				"share": "Market share",
+				"upgrades": "Completed upgrades",
+				"tutorial": {
+					"text1": "Share value",
+					"text2": "(value of DHM + financial resources * 0,2 + results of past periods * 0,3 + amount of income to marketing - Loans ) / 1 000"
+				},
+				"tip": {
+					"text1": "In a simulation, there can also be a computer-controlled company - a bot. There are three types of bots with different strategies: low-price bot, high-price bot, medium-price bot."
+				}
+			},
+			"sector_report": {
+				"title": "Sector report",
+				"category": "Category",
+				"value": "Value",
+				"in_decrese": "Increase / decrease",
+				"total_orders": "Total orders",
+				"total_sales": "Total sales",
+				"total_prod": "Total production",
+				"total_capacity": "Total capacity",
+				"total_stocks": "Total stocks in the sector"
+			},
+			"economic_params": {
+				"title": "Economic parameters of the market",
+				"interest": "Interest rate",
+				"loan": "Loan limit",
+				"tax": "Income tax rate",
+				"inflation": "Inflation",
+				"tip": {
+					"text1": "The economic parameters can be changed by the administrator during the simulation. Inflation is an important parameter that can affect the amount of costs."
+				}
+			}
+		},
+		"decision_archive": {
+			"title": "Decision archive",
+			"marketing": "Archive of marketing",
+			"prod": "Archive of production",
+			"quantity": "Quantity produced",
+			"price": "Selling price",
+			"capital": "Investments in capital",
+			"upgrades": "Investments in upgrades",
+			"done": "Completed improvements",
+			"tip": {
+				"text1": "The investment in upgrades is expressed as the sum of the investments in upgrades.",
+				"text2": "It is not possible to determine which enhancement the company developed in which round. It is necessary to keep a separate record of it."
 			}
 		}
 	},
@@ -187,17 +246,48 @@
 		"pieces_produced": {
 			"title": "Number of pieces produced",
 			"text": "The number of units produced represents the user's production decision for the next period (next quarter). The user has the possibility to select production in the interval from 0 units up to the maximum production capacity.",
-			"misc": "Number of pieces (pcs)"
+			"misc": "Number of pieces (pcs)",
+			"tip": {
+				"text1": "The optimum number of units to be produced in the next period is 90% of the maximum production capacity.",
+				"text2": "0.9 * (factory value / 500)",
+				"text3": "Every 500€ of the total value of the factory represents one piece that we can produce.",
+				"text4": "Information about the minimum production capacity can be found in the Dashboard",
+				"text5": "Keep in mind that if you produce too few products, your unit production costs will be high (high fixed cost contribution) and, conversely, if you produce too many, your production costs will also be high (production overload).",
+				"text6": "When deciding on the number of units to be produced, answer the following questions:",
+				"text7": "what is the optimal production in terms of minimizing unit costs?",
+				"text8": "what is my maximum production capacity?",
+				"text9": "how are the sales of my products going?",
+				"text10": "do I have stock of already produced pieces in my warehouse?",
+				"text11": "what is the demand for my products? Do I have any unfulfilled orders?"
+			}
 		},
 		"selling_price": {
 			"title": "Selling price",
 			"text": "The selling price is the price at which the product is sold to the customer. The selling price is a key factor in the customer's decision to buy the product and is an important part of the market decision-making for the seller. It can be influenced by many factors such as competition, market situation, marketing and advertising costs. Selling price is an important factor for both the customer and the seller as it can have a significant impact on the purchase decision and the overall success of the business.",
-			"misc": "Selling price (€/pc)"
+			"misc": "Selling price (€/pc)",
+			"tip": {
+				"text1": "The maximum selling price is € 15 000.",
+				"text2": "If you want to make a profit, your selling price must be greater than your total unit cost. Determine your strategy (low price, high price, average price). Analyse the market situation and try to take advantage of the gap in the market. Keep in mind that every customer behaves differently, with price being the biggest factor in their decision."
+			}
 		},
 		"capital_investment": {
 			"title": "Investments in capital",
 			"text": "Investments in capital are investments in fixed assets. In our simulation, they represent the cost of maintaining, upgrading and enlarging the factory. By investing in capital, the firm is able to increase its maximum productive capacity.",
-			"misc": "Investment (€)"
+			"misc": "Investment (€)",
+			"tip": {
+				"text1": "Think about the fact that fixed assets (factory) depreciate in value with time. The monetary depreciation of fixed assets is called depreciation. If you don't invest anything in capital, the value of the fixed asset in the next period will decrease by the amount of depreciation, which means you will be able to produce fewer units in the next period.",
+				"text2": "Every €500 invested in capital over and above depreciation will increase production capacity by 1 unit. If you have enough funds in your business, you can invest more in capital than your budget. This bonus is expressed in the control bar in parentheses.",
+				"text3": "When investing in capital, consider:",
+				"text4": "coefficient of utilisation of production capacity, demand for products, size of inventories, chosen pricing strategy, behaviour of competitors in the market, size of the market.",
+				"text5": "If your production capacity exceeds 200 units, your fixed costs increase by €48,500. Consequently, every time you exceed your production capacity by another 100 units, your fixed costs rise by €48,500."
+			}
+		},
+		"graph": {
+			"price": "Price",
+			"quantity": "Quantity",
+			"production": "Production",
+			"stocks": "Stocks",
+			"capacity": "Capacity"
 		}
 	},
 
@@ -228,7 +318,23 @@
 		},
 		"investment": "Investment",
 		"min_invest": "Minimum investment",
-		"marketing_modif": "Marketing modifier"
+		"marketing_modif": "Marketing modifier",
+		"tip": {
+				"text1": "Marketing is an important part of the simulation. The size of the market and customer interest in the company's product depends on marketing. The more you invest in marketing, the more interesting you will be to those categories of customers who are interested in marketing. The more you invest in marketing, the faster the market size grows.",
+				"text2": "Each of these tools has a different impact on the market and customer perception. It is possible to invest the entire budget, i.e. € 10 000, in each tool. A marketing modifier (different for each marketing tool) enters into the calculation of the marketing return (the impact of the marketing investment on the customer).",
+				"text3": "As the amount of investment in a particular marketing tool increases, so does its effectiveness (from 0.7 for a minimum investment to below 1 for an investment of €10,000). At the beginning of the simulation, there are 100 customers in the market for each company.",
+				"text4": "The composition of customers in the market is constant throughout the simulation:",
+				"text5": "customers preferring low price (40%)",
+				"text6": "customers preferring the average price on the market (25%)",
+				"text7": "customers preferring high price (20%)",
+				"text8": "innovation-oriented customers (15%)"
+			},
+		"graph": {
+			"pieces": "Pieces",
+			"enquiry": "Enquiry",
+			"volume": "Volume",
+			"orders": "Fulfilled orders"
+		}
 	},
 
 	"tutorial": {
@@ -237,7 +343,9 @@
 
 	"misc": {
 		"round": "Round",
-		"statistics": "Statistics"
+		"statistics": "Statistics",
+		"mean": "Mean",
+		"pieces": "pc"
 	},
 
 	"bottombar": {

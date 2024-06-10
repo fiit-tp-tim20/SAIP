@@ -1,17 +1,18 @@
 {
 	"dashboard": {
-		"industry_report": {
+		"for_round": "Pre kolo",
+		"company_report": {
 			"title": "Správa o spoločnosti",
 			"prod_report": {
 				"title": "Správa o výrobe",
 				"quantity": "Vyrobené množstvo",
 				"max_capacity": "Výrobná kapacita (max)",
-				"coef_utilisation": "Koeficient využitia výrobnej kapacity (minulé kolo)",
+				"coef_utilisation": "Koeficient využitia výrobnej kapacity",
 				"cost": "Výrobné náklady",
 				"stocks": "Zásoby",
 				"total_cost": "Celkové náklady",
 				"tutorial": {
-					"text1": "= objem produkcie / maximálna výrobná kapacita * 100",
+					"text1": "= objem produkcie / maximálna výrobná kapacita * 200",
 					"example": "Príklad",
 					"text2": "Výrobné náklady sú členené na fixné a variabilné.",
 					"text3": "Počiatočná výška fixných nákladov je 48 500 €. Fixné náklady sa menia skokovo vždy po prekročení 100 ks výrobnej kapacity. K prvému nárastu dochádza pri prekročení výrobnej kapacity 200 ks o 48 500 €. Následne po ďalších 100 ks rastú o 48 500 €.",
@@ -88,7 +89,7 @@
 				"cost_marketing": "Náklady na marketing",
 				"cost_rnd": "Náklady na výskum a vývoj",
 				"deductions": "Odpisy",
-				"cost_management": "Náklady na spravovanie",
+				"cost_management": "Náklady na skladovanie",
 				"cost_upgrade": "Náklady na upgrade zásob",
 				"interest": "Nákladové úroky",
 				"before_tax": "Výsledok hospodárenia pred zdanením",
@@ -102,6 +103,65 @@
 					"text5": "ak je dokončené vylepšenie a podnik má na sklade zásoby, tieto zásoby sa upgradnú o dokončené vylepšenie, s čím sú spojené aj náklady"
 				}
 			}
+		},
+		"industry_report": {
+			"title": "Správa o trhu",
+			"ranking": "Rebríček všetkých firiem (podľa akcií)",
+			"industry_graph": {
+				"share_price": "Cena akcie",
+				"order": "Poradie"
+			},
+			"table": {
+				"company": "Spoločnosť",
+				"value": "Hodnota jednej akcie",
+				"after_tax": "Výsledok hospodárenia po zdanení",
+				"price": "Predajná cena",
+				"share": "Podiel na trhu",
+				"upgrades": "Dokončené vylepšenia",
+				"tutorial": {
+					"text1": "Hodnota akcie",
+					"text2": "(hodnota DHM + finančné prostriedky * 0,2 + výsledky hospodárenia min. období *0,3 + suma výnosov do marketingu - Pôžičky ) / 1 000"
+				},
+				"tip": {
+					"text1": "V simulácií môže existovať aj spoločnosť riadená počítačom - bot. Existujú tri typy botov s rôznymi stratégiami: bot s nízkou cenou, bot s vysokou cenou, bot so strednou cenou."
+				}
+			},
+			"sector_report": {
+				"title": "Správa o odvetví",
+				"category": "Kategória",
+				"value": "Hodnota",
+				"in_decrese": "Nárast / pokles",
+				"total_orders": "Celkové objednávky",
+				"total_sales": "Celkový predaj",
+				"total_prod": "Celková výroba",
+				"total_capacity": "Celková kapacita",
+				"total_stocks": "Celkové zásoby v odvetví"
+			},
+			"economic_params": {
+				"title": "Ekonomické parametre trhu",
+				"interest": "Úroková sadzba",
+				"loan": "Úverový limit",
+				"tax": "Sadzba dane z prijmu",
+				"inflation": "Inflácia",
+				"tip": {
+					"text1": "Ekonomické parametre môžu byť počas simulácie menené administrátorom. Dôležitým parametrom, ktorý môže ovplyvniť výšku nákladov je inflácia."
+				}
+			}
+		},
+		"decision_archive": {
+			"title": "Archív rozhodnutí",
+			"marketing": "Archív marketingu",
+			"prod": "Archív produkcie",
+			"quantity": "Vyrobené množstvo=",
+			"price": "Predajná cena",
+			"capital": "Investície do kapitálu",
+			"upgrades": "Investície do vylepšení",
+			"done": "Dokončené vylepšenia",
+			"tip": {
+				"text1": "Investície do vylepšení sú vyjadrené ako súčet investícií do vylepšení.",
+				"text2": "Nie je možné určiť, ktoré vylepšenie podnik v ktorom kole vyvíjal. Je potrebné si viesť o tom evidenciu zvlášť."
+			}
+
 		}
 	},
 	"product": {
@@ -187,17 +247,48 @@
 		"pieces_produced": {
 			"title": "Počet produkovaných kusov",
 			"text": "Počet produkovaných kusov predstavuje rozhodnutie užívateľa o výrobe na nasledujúce obdobie (nasledujúci kvartál). Užívateľ má možnosť voliť výrobu v intervale od 0 ks až po maximálnu výrobnú kapacitu.",
-			"misc": "Počet kusov (ks)"
+			"misc": "Počet kusov (ks)",
+			"tip": {
+				"text1": "Optimálny počet produkovaných kusov do ďalšieho obdobia je 90% maximálnej výrobnej kapacity.",
+				"text2": "0,9 * (hodnota továrne / 500)",
+				"text3": "Každých 500€ z celkovej hodnoty továrne predstavuje jeden kus ktorý môžeme vyrobiť.",
+				"text4": "Informácie o minimálnej výrobnej kapacite môže nájsť v: Dashboard",
+				"text5": "Mysli na to, že ak vyrobíš príliš málo produktov, budú tvoje jednotkové výrobné náklady vysoké (veľký príspevok fixných nákladov) a naopak, ak vyrobíš príliš veľa, budú tvoje výrobné náklady takisto vysoké (preťaženie výroby).",
+				"text6": "Pri rozhodovaní o počte produkovaných kusov si zodpovedaj na tieto otázky:",
+				"text7": "aká je optimálna výroba z hľadiska minimalizácie jednotkových nákladov?",
+				"text8": "aká je moja maximálna výrobná kapacita?",
+				"text9": "ako sa vyvíja predaj mojich produktov?",
+				"text10": "mám na sklade zásoby už vyrobených kusov?",
+				"text11": "aký je dopyt po mojich produktoch? Mám nejaké nesplnené objednávky?"
+			}
 		},
 		"selling_price": {
 			"title": "Predajná cena",
 			"text": "Predajná cena je cena, za ktorú sa predáva produkt zákazníkovi. Predajná cena je kľúčovým faktorom pri rozhodovaní zákazníka o nákupe produktu a je dôležitou súčasťou trhového rozhodovania pre predávajúceho. Môže byť ovplyvnená mnohými faktormi, ako je napríklad konkurencia, trhová situácia, náklady na marketing a reklamu. Predajná cena je dôležitým faktorom pre zákazníka aj pre predávajúceho, pretože môže mať významný vplyv na rozhodnutie o nákupe a na celkový úspech podnikania.",
-			"misc": "Predajná cena (€/ks)"
+			"misc": "Predajná cena (€/ks)",
+			"tip": {
+				"text1": "Maximálna predajná cena je 15 000 €.",
+				"text2": "Ak chceš dosiahnuť zisk, tvoja predajná cena musí byť väčšia ako celkové jednotkové náklady. Urči si stratégiu akou chceš postupovať (nízka cena, vysoká cena, priemerná cena). Analyzuj situáciu na trhu a snaž sa využiť dieru na trhu. Mysli na to, že každý zákazník sa správa inak, pričom cena je najväčším faktorom jeho rozhodnutia."
+			}
 		},
 		"capital_investment": {
 			"title": "Investície do kapitálu",
 			"text": "Investície do kapitálu sú investíciou do dlhodobého majetku. V našej simulácií predstavujú náklady na udržiavanie, modernizáciu a zväčšovanie továrne. Pomocou investícií do kapitálu dokáže podnik zvýšiť svoju maximálnu výrobnú kapacitu.",
-			"misc": "Investícia (€)"
+			"misc": "Investícia (€)",
+			"tip": {
+				"text1": "Mysli na to, že dlhodobý majetok (továreň) sa s časom znehodnocuje. Peňažné znehodnotenie dlhodobého majetku nazývame odpisy. Ak nič neinvestuješ do kapitálu, klesne hodnota dlhodobého majetku v nasledujúcom období o výšku odpisov, čo znamená, že budeš schopný vyrobiť v ďalšom období menej kusov.",
+				"text2": "Každých 500 € investovaných do kapitálu nad rámec odpisov, zvýši výrobnú kapacitu o 1 ks. Ak máš v podniku dostatočne veľké finančné prostriedky, môžeš do kapitálu investovať aj viac ako máš rozpočet. Tento bonus je vyjadrený v kontrolnej lište v zátvorkách.",
+				"text3": "Pri investícií do kapitálu zváž:",
+				"text4": "koeficient využitia výrobnej kapacity, dopyt po produktoch, veľkosť zásob, zvolenú cenovú stratégiu, správanie konkurentov na trhu, veľkosť trhu.",
+				"text5": "Ak tvoja výrobná kapacita presiahne 200 ks, stúpnu fixné náklady o 48 500 €. Následne vždy po prekročení výrobnej kapacity oďalších 100 ks, stúpnu fixné náklady o 48 500 €."
+			}
+		},
+		"graph": {
+			"price": "Cena",
+			"quantity": "Množstvo",
+			"production": "Výroba",
+			"stocks": "Zásoby",
+			"capacity": "Kapacita"
 		}
 	},
 
@@ -232,7 +323,23 @@
 		},
 		"investment": "Investícia",
 		"min_invest": "Minimálna investícia",
-		"marketing_modif": "Marketingový modifikátor"
+		"marketing_modif": "Marketingový modifikátor",
+		"tip": {
+				"text1": "Marketing je dôležitou súčasťou simulácie. Od marketingu závisí veľkosť trhu a záujem zákazníkov o produkt spoločnosti. Čím viac investuješ do marketingu, tým budeš zaujímavejší pre tie kategórie zákazníkov, ktorých marketing zaujíma. Čím viac investuješ do marketingu, tým rýchlejšie rastie veľkosť trhu.",
+				"text2": "Každý z týchto nástrojov má iný vplyv na trh a vnímanie zákazníka. Do každého nástroja je možné investovať celý rozpočet, teda 10 000 €. Do výpočtu výnosu z marketingu (vplyvu investície marketingu na zákazníka) vstupuje marketingový modifikátor (odlišný pre každý marketingový nástroj).",
+				"text3": "S rastúcou výškou investície do konkrétneho marketingového nástroja rastie aj jeho efektivita (od 0,7 pri minimálnej výške investície až pod 1 pri výške investície 10 000 €). Na začiatku simulácie existuje na trhu 100 zákazníkov na každú spoločnosť.",
+				"text4": "Zloženie zákazníkov na trhu je počas simulácie konštantné:",
+				"text5": "zákazníci preferujúci nízku cenu (40%)",
+				"text6": "zákazníci preferujúci priemernú cenu na trhu (25%)",
+				"text7": "zákazníci preferujúci vysokú cenu (20%)",
+				"text8": "zákazníci zameraní na inovácie (15%)"
+			},
+		"graph": {
+			"pieces": "Kusy",
+			"enquiry": "Dopyt",
+			"volume": "Počet vyrobených kusov",
+			"orders": "Splnené objednávky"
+		}
 	},
 
 	"features_translation": {
@@ -248,7 +355,9 @@
 
 	"misc": {
 		"round": "Kolo",
-		"statistics": "Štatistiky"
+		"statistics": "Štatistiky",
+		"mean": "Priemer",
+		"pieces": "ks"
 	},
 
 	"bottombar": {
