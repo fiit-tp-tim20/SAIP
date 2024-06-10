@@ -3,11 +3,13 @@ import { useQuery } from "react-query";
 import Tutorial from "../modal/Tutorial";
 import getArchiveReport from "../../api/GetArchiveReport";
 import numberWithSpaces from "../../utils/numberWithSpaces";
+import { useTranslation } from "react-i18next";
 // @ts-ignore
 import { MyContext } from "../../api/MyContext";
 import getCompanyReport from "../../api/GetCompanyReport";
 
 function ArchiveReport() {
+	const { t } = useTranslation();
 	const dataWs = useContext(MyContext);
 	// @ts-ignore
 	const TURN = dataWs.turnNum;
@@ -41,7 +43,7 @@ function ArchiveReport() {
 		<div className="flex w-[600px] flex-col md:w-[900px] xl:w-[1280px]">
 			<div className="flex flex-row justify-between">
 				<div className="flex items-center">
-					<h1 className="my-4 mr-4">Archív rozhodnutí</h1>
+					<h1 className="my-4 mr-4">{t("dashboard.decision_archive.title") as string}</h1>
 					<button
 						onClick={() => openTutorial("archive_report_tip")}
 						className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
@@ -52,15 +54,14 @@ function ArchiveReport() {
 						<Tutorial
 							isOpen={tutorialStates.archive_report_tip}
 							closeModal={() => closeTutorial("archive_report_tip")}
-							textTitle="Archív rozhodnutí 💡"
+							textTitle={`${t("dashboard.decision_archive.title")} 💡`}
 							textContent={
 								<div>
-									<p>Investície do vylepšení sú vyjadrené ako súčet investícií do vylepšení.</p>
+									<p>{t("dashboard.decision_archive.tip.text1") as string}</p>
 									<br />
 									<br />
 									<p>
-										Nie je možné určiť, ktoré vylepšenie podnik v ktorom kole vyvíjal. Je potrebné
-										si viesť o tom evidenciu zvlášť.
+										{t("dashboard.decision_archive.tip.text2") as string}
 									</p>
 								</div>
 							}
@@ -69,7 +70,7 @@ function ArchiveReport() {
 				</div>
 				<div>
 					<label htmlFor="turn" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-600">
-						Pre kolo
+						{t("dashboard.for_round") as string}
 					</label>
 					<select
 						id="turn"
@@ -91,17 +92,17 @@ function ArchiveReport() {
 					<div className="grid gap-4 xl:grid-cols-2">
 						<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 							<div className="flex flex-row items-center justify-between py-2">
-								<h2>Archív marketingu</h2>
+								<h2>{t("dashboard.decision_archive.marketing") as string}</h2>
 							</div>
 							<table className="table-auto table-white">
 								<tbody>
 									<tr>
-										<th className="px-4 py-2 text-center">Kolo</th>
-										<th className="px-4 py-2 text-center">Virálny marketing</th>
+										<th className="px-4 py-2 text-center">{t("misc.round") as string}</th>
+										<th className="px-4 py-2 text-center">{t("marketing.types.viral.title") as string}</th>
 										<th className="px-4 py-2 text-center">OOH</th>
-										<th className="px-4 py-2 text-center">Billboardy</th>
-										<th className="px-4 py-2 text-center">Televízia</th>
-										<th className="px-4 py-2 text-center">Podcasty</th>
+										<th className="px-4 py-2 text-center">{t("marketing.types.billboards.title") as string}</th>
+										<th className="px-4 py-2 text-center">{t("marketing.types.tv.title") as string}</th>
+										<th className="px-4 py-2 text-center">{t("marketing.types.podcasts.title") as string}</th>
 									</tr>
 									{[...Array(numberShow).keys()].map((numberShow) => (
 										<tr key={numberShow}>
@@ -128,17 +129,17 @@ function ArchiveReport() {
 						</div>
 						<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 							<div className="flex flex-row items-center justify-between py-2">
-								<h2>Archív produkcie</h2>
+								<h2>{t("dashboard.decision_archive.prod") as string}</h2>
 							</div>
 							<table className="table-auto table-white">
 								<tbody>
 									<tr>
-										<th className="px-4 py-2 text-center">Kolo</th>
-										<th className="px-4 py-2 text-center">Vyrobené množstvo</th>
-										<th className="px-4 py-2 text-center">Predajná cena</th>
-										<th className="px-4 py-2 text-center">Investície do kapitálu</th>
-										<th className="px-4 py-2 text-center">Investície do vylepšení</th>
-										<th className="px-4 py-2 text-center">Dokončené vylepšenia</th>
+										<th className="px-4 py-2 text-center">{t("misc.round") as string}</th>
+										<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.quantity") as string}</th>
+										<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.price") as string}</th>
+										<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.capital") as string}</th>
+										<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.upgrades") as string}</th>
+										<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.done") as string}</th>
 									</tr>
 									{[...Array(numberShow).keys()].map((numberShow) => (
 										<tr key={numberShow}>
