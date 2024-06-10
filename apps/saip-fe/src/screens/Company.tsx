@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useQuery } from "react-query";
+import { useTranslation } from "react-i18next";
 import Slider from "../components/slider/Slider";
 import Tutorial from "../components/modal/Tutorial";
 import useCompanyStore from "../store/Company";
@@ -12,6 +13,7 @@ import { MyContext } from "../api/MyContext";
 import getGeneralInfo from "../api/CompanyInfo";
 
 function Company() {
+	const { t } = useTranslation();
 	const data = useContext(MyContext);
 	// @ts-ignore
 	const turn = data.turnNum;
@@ -74,7 +76,7 @@ function Company() {
 
 	return (
 		<div className="flex flex-col xl:w-[1280px] md:w-[900px] w-[600px]">
-			<h1 className="my-4">Štatistiky</h1>
+			<h1 className="my-4">{t("misc.statistics") as string}</h1>
 			<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 				{statsIsLoading ? (
 					<div>Loading...</div>
@@ -88,10 +90,10 @@ function Company() {
 				)}
 			</div>
 			<div className="flex flex-col">
-				<h1 className="my-4">Rozdelenie financií</h1>
+				<h1 className="my-4">{t("production_sales.finances_distribution") as string}</h1>
 				<div className="flex flex-col background-container p-6 rounded-2xl my-2">
 					<div className="py-2 flex flex-row items-center justify-between">
-						<h2>Počet produkovaných kusov</h2>
+						<h2>{t("production_sales.pieces_produced.title") as string}</h2>
 						{/* Add a button to open the tutorial */}
 						<button
 							onClick={() => openTutorial("production")}
@@ -148,13 +150,9 @@ function Company() {
 							/>
 						)}
 					</div>
-					<p className="pt-1">
-						Počet produkovaných kusov predstavuje rozhodnutie užívateľa o výrobe na nasledujúce obdobie
-						(nasledujúci kvartál). Užívateľ má možnosť voliť výrobu v intervale od 0 ks až po maximálnu
-						výrobnú kapacitu.
-					</p>
+					<p className="pt-1">{t("production_sales.pieces_produced.text") as string}</p>
 					<div className="py-2 flex flex-row items-center justify-between">
-						<h3>Počet kusov (ks)</h3>
+						<h3>{t("production_sales.pieces_produced.misc") as string}</h3>
 						<div>
 							<Slider
 								min={1}
@@ -172,7 +170,7 @@ function Company() {
 				</div>
 				<div className="flex flex-col background-container p-6 rounded-2xl my-2">
 					<div className="py-2 flex flex-row items-center justify-between">
-						<h2>Predajná cena</h2>
+						<h2>{t("production_sales.selling_price.title") as string}</h2>
 						{/* Add a button to open the tutorial */}
 						<button
 							onClick={() => openTutorial("price")}
@@ -201,16 +199,9 @@ function Company() {
 							/>
 						)}
 					</div>
-					<p className="pt-1">
-						Predajná cena je cena, za ktorú sa predáva produkt zákazníkovi. Predajná cena je kľúčovým
-						faktorom pri rozhodovaní zákazníka o nákupe produktu a je dôležitou súčasťou trhového
-						rozhodovania pre predávajúceho. Môže byť ovplyvnená mnohými faktormi, ako je napríklad
-						konkurencia, trhová situácia, náklady na marketing a reklamu. Predajná cena je dôležitým
-						faktorom pre zákazníka aj pre predávajúceho, pretože môže mať významný vplyv na rozhodnutie o
-						nákupe a na celkový úspech podnikania.
-					</p>
+					<p className="pt-1">{t("production_sales.selling_price.text") as string}</p>
 					<div className="py-2 flex flex-row items-center justify-between">
-						<h3>Predajná cena (€/ks)</h3>
+						<h3>{t("production_sales.selling_price.misc") as string}</h3>
 						<div>
 							<Slider
 								min={0}
@@ -226,7 +217,7 @@ function Company() {
 				</div>
 				<div className="flex flex-col background-container p-6 rounded-2xl my-2">
 					<div className="py-2 flex flex-row items-center justify-between">
-						<h2>Investície do kapitálu</h2>
+						<h2>{t("production_sales.capital_investment.title") as string}</h2>
 						{/* Add a button to open the tutorial */}
 						<button
 							onClick={() => openTutorial("invest")}
@@ -259,7 +250,7 @@ function Company() {
 											koeficient využitia výrobnej kapacity, dopyt po produktoch, veľkosť zásob,
 											zvolenú cenovú stratégiu, správanie konkurentov na trhu, veľkosť trhu.
 										</p>
-										<br/>
+										<br />
 										<p>
 											Ak tvoja výrobná kapacita presiahne 200 ks, stúpnu fixné náklady o 48 500 €.
 											Následne vždy po prekročení výrobnej kapacity oďalších 100 ks, stúpnu fixné
@@ -270,13 +261,9 @@ function Company() {
 							/>
 						)}
 					</div>
-					<p className="pt-1">
-						Investície do kapitálu sú investíciou do dlhodobého majetku. V našej simulácií predstavujú
-						náklady na udržiavanie, modernizáciu a zväčšovanie továrne. Pomocou investícií do kapitálu
-						dokáže podnik zvýšiť svoju maximálnu výrobnú kapacitu.
-					</p>
+					<p className="pt-1">{t("production_sales.capital_investment.text") as string}</p>
 					<div className="py-2 flex flex-row items-center justify-between">
-						<h3>Investícia (€)</h3>
+						<h3>{t("production_sales.capital_investment.misc") as string}</h3>
 						<div>
 							<Slider
 								min={0}

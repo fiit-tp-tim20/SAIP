@@ -2,6 +2,7 @@ import { useAtom } from "jotai";
 import React, { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
 import { totalSpentPersist } from "../../store/Atoms";
 import useCompanyStore from "../../store/Company";
 import useMarketingStore from "../../store/Marketing";
@@ -16,11 +17,13 @@ import { MyContext } from "../../api/MyContext";
 import numberWithSpaces from "../../utils/numberWithSpaces";
 
 export default function BottomBar() {
+	const { t } = useTranslation();
 	const [tooltipText, setTooltipText] = useState("");
 	const {setComm, comm} = useContext(MyContext)
 	const {setNumberShow} = useContext(MyContext)
 	const {turnNum} = useContext(MyContext)
 	const { isLoading, data, refetch} = useQuery("companyInfo", () => getGeneralInfo());
+
 	// @ts-ignore
 	const [bonusCash, setBonusCash] = useState(0);
 	const { Modal, isShowing, setIsShowing, setElement } = useModal(<div />);
@@ -48,16 +51,14 @@ export default function BottomBar() {
 
 	useEffect(() => {
 		setTotalSpent(getSumUpgrades() + capitalInvestments + getSumMarketing());
-
 	}, [getSumUpgrades(), capitalInvestments, getSumMarketing()]);
 
 	useEffect(() => {
-		if(!isLoading){
-			try{
+		if (!isLoading) {
+			try {
 				setBonusCash(data.bonus_spendable_cash);
-			}
-			catch (e) {
-				console.log(e)
+			} catch (e) {
+				console.log(e);
 			}
 		}
 	}, [data]);
@@ -88,7 +89,7 @@ export default function BottomBar() {
 	};
 
 	const handleModalSubmit = async () => {
-		setComm(true)
+		setComm(true);
 		setIsShowing(false);
 		await handleEndTurn();
 	};
@@ -114,15 +115,11 @@ export default function BottomBar() {
 				{!isLoading ? (
 					<div className="bg-white px-3 py-1 rounded-lg border-2 accent-700-border">
 						{comm ? (
-							<p className="text-center font-medium p-3">Čaká sa na ostatných hráčov</p>
+							<p className="text-center font-medium p-3">{t("bottombar.waiting") as string}</p>
 						) : (
 							<div className="flex flex-row gap-8 items-center">
 								<p
-									onMouseEnter={() =>
-										handleMouseEnter(
-											` Hodnota v zátvorke je čast finančných prostriedkov, ktoré je možné spolu s budgetom naviac investovať do kapitálu. `,
-										)
-									}
+									onMouseEnter={() => handleMouseEnter(t("bottombar.tip") as string)}
 									onMouseLeave={handleMouseLeave}
 								>
 									💡
@@ -135,12 +132,12 @@ export default function BottomBar() {
 											: ""
 									}`}
 								>
-									Rozpočet: {numberWithSpaces(totalSpent)}/{numberWithSpaces(data.budget_cap)}€ + (
+									{t("bottombar.budget") as string}: {numberWithSpaces(totalSpent)}/{numberWithSpaces(data.budget_cap)}€ + (
 									{numberWithSpaces(bonusCash)}€)
 								</p>
 								{tooltipText && <div className="custom-tooltip">{tooltipText}</div>}
 								<button type="button" onClick={() => navigate("/company")} className="button-clear">
-									Výroba: {getCheckedCompany() ? "✅" : "❌"}
+									{t("production_sales.title_short") as string}: {getCheckedCompany() ? "✅" : "❌"}
 								</button>
 								<button type="button" onClick={() => navigate("/product")} className="button-clear">
 									R&D: {getCheckedUpgrages() ? "✅" : "❌"}

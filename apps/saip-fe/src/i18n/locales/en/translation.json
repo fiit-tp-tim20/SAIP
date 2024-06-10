@@ -1,19 +1,107 @@
 {
 	"dashboard": {
-		"title": "Plan",
-		"resources": {
-			"title": "Resources",
-			"available": "Available cash",
-			"credit": "Credit"
-		},
-		"expenses": {
-			"title": "Expenses",
-			"salary": "Salaries"
-		},
-		"production": {
-			"title": "Production",
-			"cpm": "Price/Piece",
-			"utilization": "Utilization"
+		"industry_report": {
+			"title": "Company Report",
+			"prod_report": {
+				"title": "Production report",
+				"quantity": "Quantity produced",
+				"max_capacity": "Production capacity (max)",
+				"coef_utilisation": "Coefficient of utilisation of production capacity (last round)",
+				"cost": "Cost of production",
+				"stocks": "Stocks",
+				"total_cost": "Total cost",
+				"tutorial": {
+					"text1": "= production volume / maximum production capacity * 100",
+					"example": "Example",
+					"text2": "Production costs are broken down into fixed and variable costs.",
+					"text3": "The initial fixed cost is € 48 500. Fixed costs vary in steps each time the production capacity exceeds 100 units. The first increase occurs when the production capacity of 200 units is exceeded by €48 500. Subsequently, after the next 100 units increase by €48 500.",
+					"text4": "The variable cost is 250 €/pc at the beginning of the simulation. Once the enhancement is completed, their value will increase depending on the completed research.",
+					"text5": "Variable and fixed costs are affected by inflation.",
+					"text6": "= (number of pieces * material price per piece * sum of enhancement modifiers * inflation + fixed costs) * production overload factor",
+					"interest_loan": "interest on a loan",
+					"text7": "storage fee: number of units stored * 100"
+
+				}
+			},
+			"sales_report": {
+				"title": "Sales Report",
+				"orders_recieved": "Orders received",
+				"orders_fulfilled": "Orders fulfilled",
+				"orders_unfulfilled": "Orders unfulfilled",
+				"selling_price": "Selling price",
+				"ros": "Return on Sales (ROS)",
+				"roa": "Return on Assets (ROA)",
+				"tip": {
+					"text1": "If you have a low number of orders, analyze your selling price and marketing investment. How many customers are in the market? What is the structure and pricing strategies of the competition? Think about the fact that there are different groups of customers in the market who have different pricing, marketing and innovation preferences.",
+					"text2": "If you have a lot of unfulfilled orders, you have a high demand for the product and you are producing few units."
+				}
+			},
+			"balance_sheet": {
+				"title": "Balance sheet",
+				"assets": "Assets",
+				"funds": "Funds",
+				"stocks": "Stocks",
+				"long_assets": "Fixed assets",
+				"sum_assets": "Sum of assets",
+				"liabilities": "Liabilities",
+				"loans": "Loans",
+				"previous": "Economic result from previous periods",
+				"capital": "Capital",
+				"sum_liab": "Sum of liabilities",
+				"tutorial": {
+					"text1": "funds in cash and in a bank account",
+					"text2": "its value decreases each period by the amount of depreciation and increases by the investment in capital",
+					"text3": "factory value",
+					"text4": "production capacity depends on these investments",
+					"text5": "the value of inventories valued using the FIFO method",
+					"text6": "the sum of all management results for the entire duration of the simulation",
+					"text7": "the initial stake of the owners of the company, unchanged throughout the simulation period"
+				},
+				"tip": {
+					"text1": "Think about the fact that if you have stock in stock, you have to take care of it, with the associated increased costs."
+				}
+			},
+			"cashflow": {
+				"initial": "Initial state",
+				"revenue": "Revenue from the sale of products",
+				"expen_products": "Expenditure on manufactured products",
+				"expen_stock": "Expenditure on stocks",
+				"expen_decision": "Expenditure on decisions",
+				"expen_interest": "Expenditure on interest",
+				"tax": "Tax paid",
+				"result_flow": "Result of the financial flow",
+				"new_loans": "New loans",
+				"final": "Final state",
+				"loan_repay": "Loan repayment",
+				"tutorial": {
+					"text1": "expenditure on inventory storage + expenditure on inventory upgrades",
+					"text2": "investment in marketing + R&D + capital",
+					"text3": "interest on the loan",
+					"text4": "funds at the beginning of the period (equal to the closing balance of the previous period)",
+					"text5": "funds at the end of the period"
+				}
+			},
+			"profit_loss": {
+				"title": "Profit and loss statement",
+				"sales": "Revenue from the sale of products",
+				"cost_sold": "Cost of goods sold",
+				"cost_marketing": "Cost of marketing",
+				"cost_rnd": "Cost of R&D",
+				"deductions": "Deductions",
+				"cost_management": "Cost of management",
+				"cost_upgrade": "Cost to upgrade inventory",
+				"interest": "Interest cost",
+				"before_tax": "Profit before tax",
+				"tax": "Tax",
+				"after_tax": "Profit after tax",
+				"tutorial": {
+					"text1": "the value of the goods sold.",
+					"text2": "If the company had inventory in the previous period, the inventory is sold first and then the new products are sold. The value of the inventories removed is valued using the FIFO method.",
+					"text3": "depreciation on capital investments",
+					"text4": "price per storage unit * number of units in stock",
+					"text5": "if an upgrade is completed and the company has inventory in stock, that inventory is upgraded with the completed upgrade, with associated costs"
+				}
+			}
 		}
 	},
 	"product": {
@@ -24,7 +112,7 @@
 		},
 		"description": {
 			"title": "Description",
-			"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			"text": "The electric bicycle is a powerful and practical commercial product that offers a wide range of benefits for different types of users. Its electric propulsion makes it easier and faster to get around town, increasing productivity and reducing transport costs. In addition, the electric bicycle is more environmentally friendly than petrol vehicles, which means it helps reduce harmful emissions and contributes to better air quality. Its compactness and ability to negotiate hills even in busy urban environments make it suitable for deliveries and fast transfers."
 		}
 	},
 	"research": {
@@ -38,37 +126,44 @@
 		"finished": {
 			"title": "Finished Research"
 		},
+		"playerResearched": {
+			"title": "Players with completed upgrades"
+		},
 		"price": {
 			"title": "Price"
 		},
 		"progress": {
 			"title": "Progress"
 		},
+		"investment": {
+			"title": "Investment"
+		},
 		"features": {
-			"1": {
-				"title": "Better Battery",
-				"text": "This battery is better than the other one!"
+			"Battery": {
+				"title": "Battery",
+				"text": "Investing in a battery increases battery capacity, faster charging and less weight. It also extends the life of the battery itself and reduces the overall capacity of the battery at a lower rate. Once this improvement is complete, production costs increase by 30% and customer decision making is impacted with a weighting of 0.75."
 			},
-			"2": {
-				"title": "OLED Display",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			"Frame": {
+				"title": "Frame",
+				"text": "By investing in a frame, the load capacity of the bike is increased, its weight is reduced and its appearance is improved. Innovative materials are used in the new frame, contributing significantly to the quality of the product. Once in production, this investment will increase production variable costs by 20% and influence customer decisions with a weight of 0.55."
 			},
-			"3": {
-				"title": "Feature 3",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			"Brakes": {
+				"title": "Brakes",
+				"text": "Investing in brakes increases the overall safety of the product when using it on the road or in other terrain. Once in production, this investment results in a 10% increase in manufacturing variable costs and influences customer decision-making with a weighting of 0.45."
 			},
-			"4": {
-				"title": "Feature 4",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
-			},
-			"5": {
-				"title": "Feature 5",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
-			},
-			"6": {
-				"title": "Feature 6",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			"Display": {
+				"title": "Display",
+				"text": "The display on the e-bike is an essential component that contributes to better handling and a better riding experience. A more modern display will provide more detailed information about the status of the e-bike. There is no shortage of information such as current speed, distance travelled, calories burned, elevation, current GPS location and so on. The display can be paired with a smartwatch or smartphone. It is also contatible with almost all training apps. In addition to the display, the technology of the bike itself is also affected by this investment, which is more flexible and the user can personalize the individual riding characteristics of the bike. Once completed, this enhancement will increase production costs by 40% and influence customer decision making with a weight of 0.85."
 			}
+		},
+		"no_player_upgraded": {
+				"title": "No player has completed this upgrade yet"
+			},
+		"tip": {
+			"text1": "By investing in research and development, we influence the quality of the product itself. The development of new materials and functionalities results in a product that is more attractive to customers. In our simulation, you have the opportunity to invest in four improvements.",
+			"text2": "Investing in improvements is also associated with higher customer interest in innovation and improvement. As a general rule,",
+			"text3": "the effect of improvements takes effect in the period following the period in which the improvement is completed",
+			"text4": "Research and development is also associated with an increase in production costs and the cost of inventory upgrades. If you have inventory in stock and you complete an upgrade, you have to upgrade that inventory, which involves additional costs and expenses. Therefore, consider selling off your inventory before completing the upgrade. Each upgrade has a different upgrade modifier, a different research price, and a different cost growth."
 		}
 	},
 	"sandbox": {
@@ -77,5 +172,78 @@
 
 	"news": {
 		"title": "News"
+	},
+
+	"buttons": {
+		"confirm": "Confirm",
+		"change": "Change",
+		"confirm_all": "Confirm All"
+	},
+
+	"production_sales": {
+		"title": "Production and Sales",
+		"title_short": "Production",
+		"finances_distribution": "Distribution of finances",
+		"pieces_produced": {
+			"title": "Number of pieces produced",
+			"text": "The number of units produced represents the user's production decision for the next period (next quarter). The user has the possibility to select production in the interval from 0 units up to the maximum production capacity.",
+			"misc": "Number of pieces (pcs)"
+		},
+		"selling_price": {
+			"title": "Selling price",
+			"text": "The selling price is the price at which the product is sold to the customer. The selling price is a key factor in the customer's decision to buy the product and is an important part of the market decision-making for the seller. It can be influenced by many factors such as competition, market situation, marketing and advertising costs. Selling price is an important factor for both the customer and the seller as it can have a significant impact on the purchase decision and the overall success of the business.",
+			"misc": "Selling price (€/pc)"
+		},
+		"capital_investment": {
+			"title": "Investments in capital",
+			"text": "Investments in capital are investments in fixed assets. In our simulation, they represent the cost of maintaining, upgrading and enlarging the factory. By investing in capital, the firm is able to increase its maximum productive capacity.",
+			"misc": "Investment (€)"
+		}
+	},
+
+	"marketing": {
+		"title": "Marketing",
+		"types": {
+			"title": "Types of marketing",
+			"viral": {
+				"title": "Viral marketing",
+				"text": "Product information disseminated through electronic media, especially social networks, but also through viral space as part of entertainment, games or websites. It also presents catchy images and short videos (reels), which are mainly designed to attract attention.",
+				"misc": "for every invested"
+			},
+			"ooh": {
+				"text": "The combination of forced perception of billboard advertising placed in places where clients have to stay, such as public transport, bus stops, waiting rooms, combined with viral, TV or podcast marketing, where the billboard catches people's attention and informs them about the product and the advertisement forces their attention to the point that the client actively searches for more information about the product."
+			},
+			"billboards": {
+				"title": "Billboards",
+				"text": "A traditional marketing tool. It can be imagined as a printed outdoor advertisement, usually large in size, but can also take the form of a citylight."
+			},
+			"tv": {
+				"title": "TV",
+				"text": "Classic television advertising broadcast using terrestrial but streaming network television programs."
+			},
+			"podcasts": {
+				"title": "Podcasts",
+				"text": "The marketing tool \"podcasts\" is used to promote products, services or brands through audio content distributed online. Podcasts are a series of audio recordings that may include interviews, discussions, reports or lessons on various topics. At their core, podcasts are a form of content marketing that allows brands to create relevant and valuable content for their target audience."
+			}
+		},
+		"investment": "Investment",
+		"min_invest": "Minimum investment",
+		"marketing_modif": "Marketing modifier"
+	},
+
+	"tutorial": {
+		"close": "Close"
+	},
+
+	"misc": {
+		"round": "Round",
+		"statistics": "Statistics"
+	},
+
+	"bottombar": {
+		"waiting": "Waiting for other players",
+		"tip": "The value in brackets is the part of the funds that can be additionally invested in capital together with the budget.",
+		"budget": "Budget"
+
 	}
 }

@@ -1,19 +1,107 @@
 {
 	"dashboard": {
-		"title": "Dashboard",
-		"resources": {
-			"title": "Zdroje",
-			"available": "Dostupné zdroje",
-			"credit": "Kredit"
-		},
-		"expenses": {
-			"title": "Výdavky",
-			"salary": "Mzdy"
-		},
-		"production": {
-			"title": "Produkcia",
-			"cpm": "Cena/Výrobok",
-			"utilization": "Utilizácia"
+		"industry_report": {
+			"title": "Správa o spoločnosti",
+			"prod_report": {
+				"title": "Správa o výrobe",
+				"quantity": "Vyrobené množstvo",
+				"max_capacity": "Výrobná kapacita (max)",
+				"coef_utilisation": "Koeficient využitia výrobnej kapacity (minulé kolo)",
+				"cost": "Výrobné náklady",
+				"stocks": "Zásoby",
+				"total_cost": "Celkové náklady",
+				"tutorial": {
+					"text1": "= objem produkcie / maximálna výrobná kapacita * 100",
+					"example": "Príklad",
+					"text2": "Výrobné náklady sú členené na fixné a variabilné.",
+					"text3": "Počiatočná výška fixných nákladov je 48 500 €. Fixné náklady sa menia skokovo vždy po prekročení 100 ks výrobnej kapacity. K prvému nárastu dochádza pri prekročení výrobnej kapacity 200 ks o 48 500 €. Následne po ďalších 100 ks rastú o 48 500 €.",
+					"text4": "Variabilné náklady sú na začiatku simulácie 250 €/ks. Po dokončení vylepšenia ich hodnota stúpne v závislosti od dokončeného výskumu.",
+					"text5": "Na variabilné a fixné náklady vplýva inflácia.",
+					"text6": "= (počet kusov * cena materiálu za kus * suma modifikátorov vylepšení * inflácia + fixné náklady) * koeficient nadmerného zaťaženia výroby",
+					"interest_loan": "úroky z pôžičky",
+					"text7": "poplatok za skladovanie: počet uskladnených kusov * 100"
+
+				}
+			},
+			"sales_report": {
+				"title": "Správa o predaji",
+				"orders_recieved": "Prijaté objednávky",
+				"orders_fulfilled": "Splnené objednávky",
+				"orders_unfulfilled": "Nesplnené objednávky",
+				"selling_price": "Predajná cena",
+				"ros": "Rentabilita tržieb (ROS)",
+				"roa": "Rentabilitu majetku (ROA)",
+				"tip": {
+					"text1": "Ak máš málo objednávok, analyzuj svoju predajnú cenu a investície do marketingu. Koľko je zákazníkov na trhu? Aká je štruktúra a cenové stratégie konkurencie? Mysli na to, že na trhu existujú rôzne skupiny zákazníkov, ktoré majú rôzne cenové, marketingové a inovačné preferencie.",
+					"text2": "Ak máš veľa nesplnených objednávok, tak máš veľký dopyt po produkte a vyrábaš málo kusov."
+				}
+			},
+			"balance_sheet": {
+				"title": "Súvaha",
+				"assets": "Aktíva",
+				"funds": "Finančné prostriedky",
+				"stocks": "Zásoby",
+				"long_assets": "Dlhodobý majetok",
+				"sum_assets": "Súčet aktív",
+				"liabilities": "Pasíva",
+				"loans": "Pôžičky",
+				"previous": "Výsledok hospodárenia z predchádzajúcich období",
+				"capital": "Základné imanie",
+				"sum_liab": "Súčet pasív",
+				"tutorial": {
+					"text1": "finančné prostriedky v hotovosti a na bankovom účte",
+					"text2": "jeho hodnota klesá každé obdobie o výšku odpisov a stúpa o investíciu do kapitálu",
+					"text3": "hodnota továrne",
+					"text4": "od týchto investicií závisi výrobná kapacita",
+					"text5": "hodnota zásob ocenená metódou FIFO",
+					"text6": "suma všetkých výsledkov hospodárení za celú dobu trvania simulácie",
+					"text7": "počiatočný vklad vlastníkov spoločnosti, nemenný počas celej doby simulácie"
+				},
+				"tip": {
+					"text1": "Mysli na to, že ak máš na sklade zásoby, musíš sa o ne starať, s čím sú spojené zvýšené náklady."
+				}
+			},
+			"cashflow": {
+				"initial": "Počiatočný stav",
+				"revenue": "Príjmy z predaja výrobkov",
+				"expen_products": "Výdavky na vyrobené výrobky",
+				"expen_stock": "Výdavky na zásoby",
+				"expen_decision": "Výdavky na rozhodnutia",
+				"expen_interest": "Výdavky na úroky",
+				"tax": "Zaplatená daň",
+				"result_flow": "Výsledok finančného toku",
+				"new_loans": "Nové úvery",
+				"final": "Konečný stav",
+				"loan_repay": "Splátka úveru",
+				"tutorial": {
+					"text1": "výdavky na skladovanie zásob + výdavky na upgrade zásob",
+					"text2": "investície do marketingu + R&D + kapitálu",
+					"text3": "úrok z pôžičky",
+					"text4": "finančné prostriedky na začiatku obdobia (sú rovnaké ako konečný stav minulého obdobia)",
+					"text5": "finančné prostriedky na konci obdobia"
+				}
+			},
+			"profit_loss": {
+				"title": "Výkaz ziskov a strát",
+				"sales": "Tržby z predaja výrobkov",
+				"cost_sold": "Náklady na predaný tovar",
+				"cost_marketing": "Náklady na marketing",
+				"cost_rnd": "Náklady na výskum a vývoj",
+				"deductions": "Odpisy",
+				"cost_management": "Náklady na spravovanie",
+				"cost_upgrade": "Náklady na upgrade zásob",
+				"interest": "Nákladové úroky",
+				"before_tax": "Výsledok hospodárenia pred zdanením",
+				"tax": "Daň",
+				"after_tax": "Výsledok hospodárenia po zdanení",
+				"tutorial": {
+					"text1": "hodnota predaného tovaru.",
+					"text2": "Ak spoločnosť mala v predchádzajúcom období zásoby, najskôr sa predajú zásoby a až potom dochádza k predaju nových výrobkov. Hodnota vyskladnených zásob je ocenená metódou FIFO.",
+					"text3": "odpis z kapitálových investícií",
+					"text4": "cena za uskladnenie jednotky * počet kusov na sklade",
+					"text5": "ak je dokončené vylepšenie a podnik má na sklade zásoby, tieto zásoby sa upgradnú o dokončené vylepšenie, s čím sú spojené aj náklady"
+				}
+			}
 		}
 	},
 	"product": {
@@ -24,7 +112,7 @@
 		},
 		"description": {
 			"title": "Popis",
-			"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			"text": "Elektrický bicykel je výkonným a praktickým komerčným produktom, ktorý ponúka široké spektrum výhod pre rôzne typy používateľov. Jeho elektrický pohon umožňuje jednoduchšie a rýchlejšie presuny po meste, čím zvyšuje produktivitu a znižuje náklady na dopravu. Navyše, elektrický bicykel je ekologickejší ako benzínové vozidlá, čo znamená, že pomáha znižovať emisie škodlivých látok a prispieva k lepšej kvalite ovzdušia. Jeho kompaktnosť a schopnosť prekonať kopce aj v rušnom mestskom prostredí ho robia vhodným pre dodávky arýchle presuny."
 		}
 	},
 	"research": {
@@ -47,31 +135,35 @@
 		"progress": {
 			"title": "Priebeh"
 		},
+		"investment": {
+			"title": "Investícia"
+		},
 		"features": {
-			"1": {
-				"title": "Lepšia batéria",
-				"text": "Táto batéria je lepšia ako predchádzajúca! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vel nisl vel quam ultrices pretium quis eget erat."
+			"Battery": {
+				"title": "Batéria",
+				"text": "Investovaním do batérie dochádza k zvýšeniu kapacity batérie, rýchlejšiemu nabíjaniu a nižšej váhe. Takisto sa predlžuje samotná životnosť batérie a nižším tempom klesá jej celková kapacita. Po dokončení tohto vylepšenia sa zvýšia výrobné náklady o 30% a rozhodnutovanie zákazníkov ovplyvňuje s váhou 0,75."
 			},
-			"2": {
-				"title": "OLED displej",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			"Frame": {
+				"title": "Rám",
+				"text": "Investovaním do rámu dochádza k zvýšeniu nosnosti bicykla, zníženiu jeho hmotnosti a k zlepšeniu vzhľadu. V novom ráme sú použité inovatívne materiály, ktoré výrazne prispievajú ku kvalite produktu. Po zavedení do výroby táto investícia spôsobí nárast výrobných variabilných nákladov o 20% a rozhodnutovanie zákazníkov ovplyvňuje s váhou 0,55."
 			},
-			"3": {
-				"title": "Lepšie brzdy",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			"Brakes": {
+				"title": "Brzdy",
+				"text": "Investovaním do bŕzd sa zvyšuje celková bezpečnosť produktu pri jeho používaní na cestách alebo v inom teréne. Po zavedení do výroby táto investícia spôsobí nárast výrobných variabilných nákladov o 10% a rozhodnutovanie zákazníkov ovplyvňuje s váhou 0,45."
 			},
-			"4": {
-				"title": "Držiak na fľašu",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
-			},
-			"5": {
-				"title": "Tempomat",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
-			},
-			"6": {
-				"title": "Vylepšenie 6",
-				"text": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut suscipit autem magnam temporibus at esse blanditiis, facere sapiente sunt. Impedit?"
+			"Display": {
+				"title": "Displej",
+				"text": "Displej na e-biku je neodmysliteľnou súčasťou, ktorá prispieva k lepšiemu ovládaniu a lepšiemu pocitu z jazdy. Modernejší displej poskytne podrobnejšie informácie o stave e-biku. Nechýbajú informácie ako aktuálna rýchlosť, prejdená vzdialenosť, spálené kalórie, prevýšenie, aktuálna GPS poloha a podobne. Displej je možné spárovať s inteligentnými hodinkami alebo smartfónom. Takisto je kontabilný s takmer všetkými tréningovými aplikáciami. Okrem displeja je touto investíciou ovplyvnená aj samotná technológia bicykla, ktorá je viac flexibilnejšia a užívateľ si môže jednotlivé jazdné vlastnosti bicykla personalizovať. Po dokončení tohto vylepšenia sa zvýšia výrobné náklady o 40% a rozhodnutovanie zákazníkov ovplyvňuje s váhou 0,85."
 			}
+		},
+		"no_player_upgraded": {
+				"title": "Žiaden z hráčov zatiaľ nedokončil toto vylepšenie"
+			},
+		"tip": {
+			"text1": "Investovaním do výskumu a vývoju ovplyvňujeme samotnú kvalitu produktu.\n\t\t\t\t\t\t\t\t\t\t\tVývojom nových materiálov a funkcionalít získavame produkt, ktorý je pre\n\t\t\t\t\t\t\t\t\t\t\tzákazníkov atraktívnejší. V našej simulácii máte možnosť investovať do\n\t\t\t\t\t\t\t\t\t\t\tštyroch vylepšení.",
+			"text2": "S investíciou do vylepšení je spojený aj vyšší záujem zákazníkov zameraných\n\t\t\t\t\t\t\t\t\t\t\tna inovácie a vylepšenia. Vo všeobecnosti platí pravidlo, že",
+			"text3": "efekt vylepšení vstupuje do platnosti nasledujúce obdobie po období, v\n\t\t\t\t\t\t\t\t\t\t\t\tktorom bolo vylepšenie dokončené",
+			"text4": "S výskumom a vývojom je spojený aj rast výrobných nákladov a nákladov na\n\t\t\t\t\t\t\t\t\t\t\tupgrade zásob. Ak máš na sklade zásoby a dokončíš vylepšenie, musíš tieto\n\t\t\t\t\t\t\t\t\t\t\tzásoby upgradnúť s čím sú spojené ďalšie náklady a výdavky. Zváž preto\n\t\t\t\t\t\t\t\t\t\t\tvypredanie zásob pred dokončením vylepšenia. Každé vylepšenie má iný\n\t\t\t\t\t\t\t\t\t\t\tmodifikátor vylepšenia, inú cenu výskumu a iný rast nákladov."
 		}
 	},
 	"sandbox": {
@@ -82,11 +174,65 @@
 		"title": "Novinky"
 	},
 
+	"buttons": {
+		"confirm": "Potvrdiť",
+		"change": "Zmeniť",
+		"confirm_all": "Potvrdiť všetky"
+	},
+
+	"production_sales": {
+		"title": "Výroba a predaj",
+		"title_short": "Výroba",
+		"finances_distribution": "Rozdelenie financií",
+		"pieces_produced": {
+			"title": "Počet produkovaných kusov",
+			"text": "Počet produkovaných kusov predstavuje rozhodnutie užívateľa o výrobe na nasledujúce obdobie (nasledujúci kvartál). Užívateľ má možnosť voliť výrobu v intervale od 0 ks až po maximálnu výrobnú kapacitu.",
+			"misc": "Počet kusov (ks)"
+		},
+		"selling_price": {
+			"title": "Predajná cena",
+			"text": "Predajná cena je cena, za ktorú sa predáva produkt zákazníkovi. Predajná cena je kľúčovým faktorom pri rozhodovaní zákazníka o nákupe produktu a je dôležitou súčasťou trhového rozhodovania pre predávajúceho. Môže byť ovplyvnená mnohými faktormi, ako je napríklad konkurencia, trhová situácia, náklady na marketing a reklamu. Predajná cena je dôležitým faktorom pre zákazníka aj pre predávajúceho, pretože môže mať významný vplyv na rozhodnutie o nákupe a na celkový úspech podnikania.",
+			"misc": "Predajná cena (€/ks)"
+		},
+		"capital_investment": {
+			"title": "Investície do kapitálu",
+			"text": "Investície do kapitálu sú investíciou do dlhodobého majetku. V našej simulácií predstavujú náklady na udržiavanie, modernizáciu a zväčšovanie továrne. Pomocou investícií do kapitálu dokáže podnik zvýšiť svoju maximálnu výrobnú kapacitu.",
+			"misc": "Investícia (€)"
+		}
+	},
+
 	"company": {
 		"title": "Spoločnosť"
 	},
+
 	"marketing": {
-		"title": "Marketing"
+		"title": "Marketing",
+		"types": {
+			"title": "Typy marketingu",
+			"viral": {
+				"title": "Virálny marketing",
+				"text": "Informácie o produktoch šírené pomocou elektronických médií, najmä sociálnych sietí, ale aj pomocou virálneho priestoru ako súčasť zábavy, hier, či web stránok. Predstavuje taktiež chytľavé obrázky a krátke videá (reels), ktorých úlohou je najmä zaujať.",
+				"misc": "za každých investovaných"
+			},
+			"ooh": {
+				"text": "Kombinácia vynúteného vnímania bilbordovej reklamy umiestňovanej na miestach, kde sa musia zdržiavať klienti ako je napr MHD, zastávky, čakárne v kombinácii s virálnym, televíznym alebo podcastovým marketingom, kde bilbord človeka upúta a základné informuje a nálendá reklama vynúti pozornosť až natoľko, že klient aktívne hľadá bližšie informácie o produkte."
+			},
+			"billboards": {
+				"title": "Billboardy",
+				"text": "Tradičný marketingový nástroj. Možno si ho predstaviť ako tlačenú vonkajšiu reklamu obyčajne veľký rozmer, ale môže mať aj podobu citylightu."
+			},
+			"tv": {
+				"title": "Televízia",
+				"text": "Klasická televízna reklama vysielaná pomocou v terestriálnej ale streamovacej siete televíznych programov."
+			},
+			"podcasts": {
+				"title": "Podcasty",
+				"text": "Marketingový nástroj \"podcasty\" sa využíva k propagácii produktov, služieb nebo značky prostredníctvom audio obsahu distribuovaného online. Podcasty sú séria zvukových nahrávok, ktoré môžu zahrnovať rozhovory, diskusie, reportáže nebo lekcie na rôzne témy. Vo svojom jadre sú podcasty forma obsahového marketingu, ktorá umožňuje značkám vytvárať relevantný a hodnotný obsah pro svoje cieľové publikum."
+			}
+		},
+		"investment": "Investícia",
+		"min_invest": "Minimálna investícia",
+		"marketing_modif": "Marketingový modifikátor"
 	},
 
 	"features_translation": {
@@ -98,5 +244,16 @@
 
 	"tutorial": {
 		"close": "Zatvoriť"
+	},
+
+	"misc": {
+		"round": "Kolo",
+		"statistics": "Štatistiky"
+	},
+
+	"bottombar": {
+		"waiting": "Čaká sa na ostatných hráčov",
+		"tip": "Hodnota v zátvorke je čast finančných prostriedkov, ktoré je možné spolu s budgetom naviac investovať do kapitálu.",
+		"budget": "Rozpočet"
 	}
 }
