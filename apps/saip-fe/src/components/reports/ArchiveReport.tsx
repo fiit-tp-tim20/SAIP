@@ -13,9 +13,8 @@ function ArchiveReport() {
 	const dataWs = useContext(MyContext);
 	// @ts-ignore
 	const TURN = dataWs.turnNum;
-	// @ts-ignore
-	const [turn, setTurn] = useState<number>(dataWs.turnNum - 1);
-	const { isLoading, data } = useQuery(["archiveReport", turn], () => getArchiveReport(turn));
+	const {numberShow, setNumberShow} = useContext(MyContext)
+	const { isLoading, data } = useQuery(["archiveReport", numberShow], () => getArchiveReport(numberShow));
 
 	// State for managing tutorial visibility
 	const [isTutorialOpen, setTutorialOpen] = useState<boolean>(true);
@@ -76,8 +75,8 @@ function ArchiveReport() {
 					<select
 						id="turn"
 						className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500, hover:cursor-pointer"
-						value={turn}
-						onChange={(e) => setTurn(parseInt(e.target.value, 10))}
+						value={numberShow}
+						onChange={(e) => setNumberShow(parseInt(e.target.value, 10))}
 					>
 						{[...Array(TURN).keys()].map((o) => {
 							if (o === 0) return null;
@@ -105,23 +104,23 @@ function ArchiveReport() {
 										<th className="px-4 py-2 text-center">{t("marketing.types.tv.title") as string}</th>
 										<th className="px-4 py-2 text-center">{t("marketing.types.podcasts.title") as string}</th>
 									</tr>
-									{[...Array(turn).keys()].map((turn) => (
-										<tr key={turn}>
-											<td className="px-4 py-2 text-center">{turn + 1}</td>
+									{[...Array(numberShow).keys()].map((numberShow) => (
+										<tr key={numberShow}>
+											<td className="px-4 py-2 text-center">{numberShow + 1}</td>
 											<td className="px-4 py-2 whitespace-nowrap text-center">
-												{numberWithSpaces(data.marketing.viral[turn])} €
+												{numberWithSpaces(data.marketing.viral[numberShow])} €
 											</td>
 											<td className="px-4 py-2 whitespace-nowrap text-center">
-												{numberWithSpaces(data.marketing.ooh[turn])} €
+												{numberWithSpaces(data.marketing.ooh[numberShow])} €
 											</td>
 											<td className="px-4 py-2 whitespace-nowrap text-center">
-												{numberWithSpaces(data.marketing.billboard[turn])} €
+												{numberWithSpaces(data.marketing.billboard[numberShow])} €
 											</td>
 											<td className="px-4 py-2 whitespace-nowrap text-center">
-												{numberWithSpaces(data.marketing.tv[turn])} €
+												{numberWithSpaces(data.marketing.tv[numberShow])} €
 											</td>
 											<td className="px-4 py-2 whitespace-nowrap  text-center">
-												{numberWithSpaces(data.marketing.podcast[turn])} €
+												{numberWithSpaces(data.marketing.podcast[numberShow])} €
 											</td>
 										</tr>
 									))}
@@ -142,23 +141,23 @@ function ArchiveReport() {
 										<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.upgrades") as string}</th>
 										<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.done") as string}</th>
 									</tr>
-									{[...Array(turn).keys()].map((turn) => (
-										<tr key={turn}>
-											<td className="px-4 py-2 text-center">{turn + 1}</td>
+									{[...Array(numberShow).keys()].map((numberShow) => (
+										<tr key={numberShow}>
+											<td className="px-4 py-2 text-center">{numberShow + 1}</td>
 											<td className="px-4 py-2 whitespace-nowrap text-center">
-												{numberWithSpaces(data.production.volume[turn])} ks
+												{numberWithSpaces(data.production.volume[numberShow])} ks
 											</td>
 											<td className="px-4 py-2 whitespace-nowrap text-center">
-												{numberWithSpaces(data.production.sell_price[turn])} €
+												{numberWithSpaces(data.production.sell_price[numberShow])} €
 											</td>
 											<td className="px-4 py-2 whitespace-nowrap text-center">
-												{numberWithSpaces(data.factory.capital[turn])} €
+												{numberWithSpaces(data.factory.capital[numberShow])} €
 											</td>
 											<td className="px-4 py-2 whitespace-nowrap text-center">
-												{numberWithSpaces(data.factory.upgrades[turn])} €
+												{numberWithSpaces(data.factory.upgrades[numberShow])} €
 											</td>
 											<td className="px-4 py-2 whitespace-nowrap text-center">
-												{numberWithSpaces(data.factory.upgrade_turn[turn])}
+												{numberWithSpaces(data.factory.upgrade_turn[numberShow])}
 											</td>
 										</tr>
 									))}

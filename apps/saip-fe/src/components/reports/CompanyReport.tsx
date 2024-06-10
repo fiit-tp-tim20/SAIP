@@ -9,12 +9,10 @@ import { MyContext } from "../../api/MyContext";
 
 function CompanyReport() {
 	const { t } = useTranslation();
+	const {numberShow, setNumberShow} = useContext(MyContext);
 	const dataWs = useContext(MyContext);
-	// @ts-ignore
 	const TURN = dataWs.turnNum;
-	// @ts-ignore
-	const [turn, setTurn] = useState<number>(dataWs.turnNum - 1);
-	const { isLoading, data } = useQuery(["companyReport", turn], () => getCompanyReport(turn));
+	const { isLoading, data } = useQuery(["companyReport", numberShow], () => getCompanyReport(numberShow));
 
 	// State for managing tutorial visibility
 	const [isTutorialOpen, setTutorialOpen] = useState<boolean>(true);
@@ -42,24 +40,93 @@ function CompanyReport() {
 			[tutorialKey]: false,
 		}));
 	};
+	const downloadCsv = (csvString: BlobPart) => {
+		const blob = new Blob([csvString], { type: 'text/csv' });
+		const url = URL.createObjectURL(blob);
+		const link = document.createElement('a');
+		link.href = url;
+		link.setAttribute('download', 'data.csv');
+		document.body.appendChild(link);
+		link.click();
+		link.remove();
+	};
+	const convertJsonToCsv = (jsonArray: any[]) => {
+		if (!Array.isArray(jsonArray) || jsonArray.length === 0) {
+			return '';
+		}
+
+		const rows = [];
+
+		// Add headers from the first object in the array
+		const headers = Object.keys(jsonArray[0]).map((key) => {
+			if (typeof jsonArray[0][key] === 'object') {
+				return Object.keys(jsonArray[0][key]).map((subKey) => `${key}.${subKey}`).join(',');
+			}
+			return key;
+		}).flat().join(',');
+
+		rows.push(headers);
+
+		// Add values for each object in the array
+		jsonArray.forEach(json => {
+			const values = Object.values(json).map((value) => {
+				if (typeof value === 'object') {
+					// @ts-ignore
+					return Object.values(value).join(',');
+				}
+				return value;
+			}).flat().join(',');
+
+			rows.push(values);
+		});
+
+		return rows.join('\n');
+	};
+
+	const exportToCSV = async () => {
+		const csv_merge = []
+		try {
+			for (let i = 0; i <= numberShow; i++) {
+				let response = await getCompanyReport(i);
+
+				response = { ...response, turn: i };
+				csv_merge.push(response)
+			}
+			const csvString = convertJsonToCsv(csv_merge);
+			downloadCsv(csvString);
+
+		} catch (error) {
+			console.error('Failed to fetch data for CSV export:', error);
+		}
+	};
+
 
 	return (
 		<div className="flex w-[600px] flex-col md:w-[900px] xl:w-[1280px]">
 			<div className="flex flex-row justify-between">
 				<h1 className="my-4">{t("dashboard.company_report.title") as string}</h1>
 				<div>
+					<button
+						onClick={exportToCSV}
+						className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
+					>
+						Export to CSV
+					</button>
 					<label htmlFor="turn" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-600">
 						{t("dashboard.for_round") as string}
 					</label>
 					<select
 						id="turn"
 						className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 hover:cursor-pointer"
-						value={turn}
-						onChange={(e) => setTurn(parseInt(e.target.value, 10))}
+						value={numberShow}
+						onChange={(e) => {
+							setNumberShow(parseInt(e.target.value, 10));
+						}}
 					>
-						{[...Array(TURN).keys()].map((o) => (
-							<option value={o}>{o}</option>
-						))}
+						{[...Array(TURN).keys()].map((o) => {
+							if (o === 0) return null;
+							return <option value={o}>{o}</option>;
+						})}
 					</select>
 				</div>
 			</div>
@@ -441,7 +508,7 @@ function CompanyReport() {
 								<tr>
 									<td className="px-4 py-2">{t("dashboard.company_report.cashflow.expen_stock") as string}</td>
 									<td className="px-4 py-2 whitespace-nowrap">
-										{numberWithSpaces(data?.cash_flow.inventory_charge)} €
+										{numberWithSpaces(data?.cash_flow.inventory_charge_all)} €
 									</td>
 								</tr>
 								<tr>

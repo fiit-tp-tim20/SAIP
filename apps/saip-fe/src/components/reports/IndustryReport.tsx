@@ -6,6 +6,7 @@ import getIndustryReport, { IndustryReport as IndustryReportType } from "../../a
 import { getIndustryGraphData } from "../../api/GetIndustryGraphData";
 import IndustryGraph from "../statisticsGraph/IndustryGraph";
 import numberWithSpaces from "../../utils/numberWithSpaces";
+import { CSVLink } from "react-csv";
 // @ts-ignore
 import { MyContext } from "../../api/MyContext";
 
@@ -27,12 +28,14 @@ function IndustryReport() {
 
 	// @ts-ignore
 	const [turn, setTurn] = useState<number>(_turn - 1);
+	const {numberShow, setNumberShow} = useContext(MyContext)
 
-	const { data, isLoading } = useQuery(["getIndustryReport", turn], () => getIndustryReport(turn));
+	const { data, isLoading } = useQuery(["getIndustryReport", numberShow], () => getIndustryReport(numberShow));
 	const { data: graphData, isLoading: isLoading2 } = useQuery(["getIndustryGraphData"], getIndustryGraphData);
 
 	// State for managing tutorial visibility
 	const [isTutorialOpen, setTutorialOpen] = useState<boolean>(true);
+	const [csvData, setCsvData] = useState([]);
 
 	// State for managing tutorial visibility
 	const [tutorialStates, setTutorialStates] = useState({
@@ -55,6 +58,14 @@ function IndustryReport() {
 		}));
 	};
 
+	const exportToCSV = () => {
+        const csvData = [["Spoločnosť", "Hodnota jednej akcie", "Výsledok hospodárenia po zdanení", "Predajná cena", "Podiel na trhu"]];
+        data && Object.entries(data.industry).forEach(([company, info]) => {
+            csvData.push([company, numberWithSpaces(info.stock_price) + " €", numberWithSpaces(info.net_profit) + " €", numberWithSpaces(info.sell_price) + " €/ks", numberWithSpaces(info.market_share) + " %"]);
+        });
+        return csvData;
+    };
+
 	if (!isLoading && !data) {
 		return <p>Industry report is not available yet</p>;
 	}
@@ -71,8 +82,8 @@ function IndustryReport() {
 					<select
 						id="turn"
 						className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 hover:cursor-pointer"
-						value={turn}
-						onChange={(e) => setTurn(parseInt(e.target.value, 10))}
+						value={numberShow}
+						onChange={(e) => setNumberShow(parseInt(e.target.value, 10))}
 					>
 						{[...Array(_turn).keys()].map((o) => {
 							if (o === 0) return null;
@@ -100,6 +111,9 @@ function IndustryReport() {
 						<div className="flex flex-row items-center justify-between py-2">
 							<h2>{t("dashboard.industry_report.ranking") as string}</h2>
 							<div>
+								<CSVLink data={exportToCSV()} filename={"industry_report.csv"} className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline">
+									Export CSV
+								</CSVLink>
 								{/* Add a button to open the tutorial */}
 								<button
 									onClick={() => openTutorial("companies_table")}
@@ -178,7 +192,7 @@ function IndustryReport() {
 										.map((industry, index) => (
 											<tr key={industry[0]}>
 												<td className="px-4 py-2">{index + 1}</td>
-												<td className="px-4 py-2 text-center">{industry[0]}</td>
+												<td className="px-4 py-2 text-left">{industry[0]}</td>
 												<td className="px-4 py-2 text-center">
 													{industry[1]?.stock_price &&
 														numberWithSpaces(industry[1]?.stock_price)}{" "}
@@ -208,7 +222,7 @@ function IndustryReport() {
 								{/* Add row for average stock price */}
 								<tr>
 									<td className="px-4 py-2" />
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2 text-left"
 										<b>{t("misc.mean") as string}</b>
 									</td>
 									<td className="px-4 py-2 text-center">
@@ -274,7 +288,7 @@ function IndustryReport() {
 						<table className="table-auto table-white">
 							<thead>
 								<tr>
-									<th className="px-4 py-2 text-center table-header text-white">
+									<th className="px-4 py-2 text-left table-header text-white">
 										{t("dashboard.industry_report.sector_report.category") as string}
 									</th>
 									<th className="px-4 py-2 text-center table-header text-white">
@@ -287,7 +301,7 @@ function IndustryReport() {
 							</thead>
 							<tbody>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2 text-left">
 										{t("dashboard.industry_report.sector_report.total_orders") as string}
 									</td>
 									<td className="px-4 py-2 text-center">{numberWithSpaces(data?.market.demand)}</td>
@@ -296,7 +310,7 @@ function IndustryReport() {
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2 text-left">
 										{t("dashboard.industry_report.sector_report.total_sales") as string}
 									</td>
 									<td className="px-4 py-2 text-center">
@@ -307,7 +321,7 @@ function IndustryReport() {
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2 text-left">
 										{t("dashboard.industry_report.sector_report.total_prod") as string}
 									</td>
 									<td className="px-4 py-2 text-center">
@@ -318,7 +332,7 @@ function IndustryReport() {
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2 text-left">
 										{t("dashboard.industry_report.sector_report.total_capacity") as string}
 									</td>
 									<td className="px-4 py-2 text-center">{numberWithSpaces(data?.market.capacity)}</td>
@@ -327,7 +341,7 @@ function IndustryReport() {
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2 text-left">
 										{t("dashboard.industry_report.sector_report.total_stocks") as string}
 									</td>
 									<td className="px-4 py-2 text-center">
@@ -368,7 +382,7 @@ function IndustryReport() {
 						</div>
 						<table className="table-auto table-white">
 							<thead>
-								<th className="px-4 py-2 text-center table-header text-white">Parameter</th>
+								<th className="px-4 py-2 text-left table-header text-white">Parameter</th>
 								<th className="px-4 py-2 text-center table-header text-white">
 									{t("dashboard.industry_report.sector_report.value") as string}
 								</th>
@@ -378,7 +392,7 @@ function IndustryReport() {
 							</thead>
 							<tbody>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2 text-left">
 										{t("dashboard.industry_report.economic_params.interest") as string}
 									</td>
 									<td className="px-4 py-2 text-center">
@@ -389,7 +403,7 @@ function IndustryReport() {
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2 text-left">
 										{t("dashboard.industry_report.economic_params.loan") as string}
 									</td>
 									<td className="px-4 py-2 text-center">
@@ -400,7 +414,7 @@ function IndustryReport() {
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2 text-left">
 										{t("dashboard.industry_report.economic_params.tax") as string}
 									</td>
 									<td className="px-4 py-2 text-center">
@@ -411,7 +425,7 @@ function IndustryReport() {
 									</td>
 								</tr>
 								<tr className="hover:bg-stone-100">
-									<td className="px-4 py-2 text-center">
+									<td className="px-4 py-2 text-left">
 										{t("dashboard.industry_report.economic_params.inflation") as string}
 									</td>
 									<td className="px-4 py-2 text-center">

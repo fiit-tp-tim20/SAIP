@@ -19,10 +19,11 @@ import numberWithSpaces from "../../utils/numberWithSpaces";
 export default function BottomBar() {
 	const { t } = useTranslation();
 	const [tooltipText, setTooltipText] = useState("");
-	const dataWs = useContext(MyContext);
-	const { setComm, comm } = useContext(MyContext);
-	const { turnNum } = useContext(MyContext);
-	const { isLoading, data, refetch } = useQuery("companyInfo", () => getGeneralInfo());
+	const {setComm, comm} = useContext(MyContext)
+	const {setNumberShow} = useContext(MyContext)
+	const {turnNum} = useContext(MyContext)
+	const { isLoading, data, refetch} = useQuery("companyInfo", () => getGeneralInfo());
+
 	// @ts-ignore
 	const [bonusCash, setBonusCash] = useState(0);
 	const { Modal, isShowing, setIsShowing, setElement } = useModal(<div />);
@@ -61,6 +62,10 @@ export default function BottomBar() {
 			}
 		}
 	}, [data]);
+	useEffect(() => {
+		// @ts-ignore
+		setNumberShow(turnNum-1)
+	}, [turnNum]);
 	const handleEndTurn = async () => {
 		const gameState: GameState = {
 			upgrades,
