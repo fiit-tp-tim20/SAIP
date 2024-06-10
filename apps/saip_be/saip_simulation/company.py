@@ -237,6 +237,7 @@ class Company:
     price_diff_stored_products: float = field(init=False)
     value_paid_in_stored_product_upgrades: float = field(init=False)
     value_paid_in_inventory_charge: float = 0  # field(init=False)
+    inventory_charge_per_unit: float = FactoryPreset.INVENTORY_CHARGE_PER_UNIT
 
     income_per_turn: float = 0  # field(init=False)
     prod_costs_per_turn: float = 0  # field(init=False)
@@ -388,7 +389,7 @@ class Company:
         # self.price_diff_stored_products = self.__price_diff_stored_products()
         self.value_paid_in_stored_product_upgrades = self.__upgrade_stored_products()
         self.value_paid_in_inventory_charge = (
-            self.prev_turn_inventory * FactoryPreset.INVENTORY_CHARGE_PER_UNIT
+            self.prev_turn_inventory * self.inventory_charge_per_unit
         )
 
         self.additional_costs = (
