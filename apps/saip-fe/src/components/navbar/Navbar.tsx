@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import i18n from "i18next";
+import { useTranslation } from "react-i18next";
 import LinkTab from "./LinkTab";
 import Profile from "./Profile";
 
@@ -9,10 +10,11 @@ import Profile from "./Profile";
 import { MyContext } from "../../api/MyContext";
 
 function Navbar() {
+	const { t } = useTranslation();
 	const location = useLocation();
 	const dataWs = useContext(MyContext);
 	// @ts-ignore
-	const data = dataWs.turnNum
+	const data = dataWs.turnNum;
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 
 	const tabs = [
@@ -21,11 +23,11 @@ function Navbar() {
 			path: "/",
 		},
 		{
-			title: "Výroba a predaj",
+			title: t("production_sales.title"),
 			path: "/company",
 		},
 		{
-			title: "Výskum a vývoj",
+			title: t("research.title"),
 			path: "/product",
 		},
 		{
@@ -91,7 +93,10 @@ function Navbar() {
 							</div>
 						)}
 					</div>
-					<p className="m-auto">Kolo {data}</p>
+					<p className="m-auto">
+						{" "}
+						{t("misc.round") as string} {data}
+					</p>
 					<Profile />
 				</div>
 			</div>

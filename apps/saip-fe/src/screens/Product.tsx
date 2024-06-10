@@ -121,30 +121,21 @@ function Product() {
 							<Tutorial
 								isOpen={tutorialStates.upgrades_tutorial}
 								closeModal={() => closeTutorial("upgrades_tutorial")}
-								textTitle="Výskum a vývoj 💡"
+								textTitle={`${t("research.title")} 💡`}
 								textContent={
 									<div>
 										<p>
-											Investovaním do výskumu a vývoju ovplyvňujeme samotnú kvalitu produktu.
-											Vývojom nových materiálov a funkcionalít získavame produkt, ktorý je pre
-											zákazníkov atraktívnejší. V našej simulácii máte možnosť investovať do
-											štyroch vylepšení.
+											{t("research.tip.text1") as string}
 										</p>
 										<p>
-											S investíciou do vylepšení je spojený aj vyšší záujem zákazníkov zameraných
-											na inovácie a vylepšenia. Vo všeobecnosti platí pravidlo, že{" "}
+											{t("research.tip.text2") as string}{" "}
 											<b>
-												efekt vylepšení vstupuje do platnosti nasledujúce obdobie po období, v
-												ktorom bolo vylepšenie dokončené
+												{t("research.tip.text3") as string}
 											</b>
 											.
 										</p>
 										<p>
-											S výskumom a vývojom je spojený aj rast výrobných nákladov a nákladov na
-											upgrade zásob. Ak máš na sklade zásoby a dokončíš vylepšenie, musíš tieto
-											zásoby upgradnúť s čím sú spojené ďalšie náklady a výdavky. Zváž preto
-											vypredanie zásob pred dokončením vylepšenia. Každé vylepšenie má iný
-											modifikátor vylepšenia, inú cenu výskumu a iný rast nákladov.
+											{t("research.tip.text4") as string}
 										</p>
 									</div>
 								}
@@ -161,7 +152,7 @@ function Product() {
 						}}
 						className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline mr-12"
 					>
-						Potvrdiť všetky
+						{t("buttons.confirm_all") as string}
 					</button>
 				</div>
 				<div className="flex flex-col background-container p-6 rounded-2xl mx-6 max-w-7xl">

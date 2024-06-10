@@ -5,9 +5,11 @@ import IndustryReport from "../components/reports/IndustryReport";
 import ArchiveReport from "../components/reports/ArchiveReport";
 // @ts-ignore
 import  {MyContext}  from "../api/MyContext";
+import { useTranslation } from "react-i18next";
 import {func} from "three/examples/jsm/nodes/shadernode/ShaderNodeBaseElements";
 
 function Plan() {
+	const { t } = useTranslation();
 	const [showCompanyReport, setShowCompanyReport] = useState(true);
 	const [showIndustryReport, setShowIndustryReport] = useState(false);
 	const [showArchiveReport, setShowArchiveReport] = useState(false);
@@ -36,7 +38,7 @@ function Plan() {
 						setShowCompanyReport(true);
 					}}
 				>
-					Správa o spoločnosti
+					{t("dashboard.industry_report.title") as string}
 				</button>
 				<button
 					type="button"
