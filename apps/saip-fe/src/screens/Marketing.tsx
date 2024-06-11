@@ -88,35 +88,26 @@ function Marketing() {
 							textContent={
 								<div>
 									<p>
-										Marketing je dôležitou súčasťou simulácie. Od marketingu závisí veľkosť trhu a
-										záujem zákazníkov o produkt spoločnosti. Čím viac investuješ do marketingu, tým
-										budeš zaujímavejší pre tie kategórie zákazníkov, ktorých marketing zaujíma. Čím
-										viac investuješ do marketingu, tým rýchlejšie rastie veľkosť trhu.
+										{t("marketing.tip.text1") as string}
 									</p>
 									<br />
 									<br />
 									<p>
-										Každý z týchto nástrojov má iný vplyv na trh a vnímanie zákazníka. Do každého
-										nástroja je možné investovať celý rozpočet, teda 10 000 €. Do výpočtu výnosu z
-										marketingu (vplyvu investície marketingu na zákazníka) vstupuje marketingový
-										modifikátor (odlišný pre každý marketingový nástroj).
+										{t("marketing.tip.text2") as string}
 									</p>
 									<br />
 									<br />
 									<p>
-										S rastúcou výškou investície do konkrétneho marketingového nástroja rastie aj
-										jeho efektivita (od 0,7 pri minimálnej výške investície až pod 1 pri výške
-										investície 10 000 €). Na začiatku simulácie existuje na trhu 100 zákazníkov na
-										každú spoločnosť.
+										{t("marketing.tip.text3") as string}
 									</p>
 									<br />
 									<br />
-									Zloženie zákazníkov na trhu je počas simulácie konštantné:
+									{t("marketing.tip.text4") as string}
 									<ul style={{ listStyleType: "disc", marginLeft: "20px" }}>
-										<li>zákazníci preferujúci nízku cenu (40%)</li>
-										<li>zákazníci preferujúci priemernú cenu na trhu (25%)</li>
-										<li> zákazníci preferujúci vysokú cenu (20%)</li>
-										<li>zákazníci zameraní na inovácie (15%)</li>
+										<li>{t("marketing.tip.text5") as string}</li>
+										<li>{t("marketing.tip.text6") as string}</li>
+										<li>{t("marketing.tip.text7") as string}</li>
+										<li>{t("marketing.tip.text8") as string}</li>
 									</ul>
 								</div>
 							}

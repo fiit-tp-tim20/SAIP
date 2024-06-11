@@ -38,7 +38,7 @@ function Plan() {
 						setShowCompanyReport(true);
 					}}
 				>
-					{t("dashboard.industry_report.title") as string}
+					{t("dashboard.company_report.title") as string}
 				</button>
 				<button
 					type="button"
@@ -53,7 +53,7 @@ function Plan() {
 					}}
 					disabled={currentTurn === 1}
 				>
-					Správa o trhu
+					{t("dashboard.industry_report.title") as string}
 				</button>
 				<button
 					type="button"
@@ -68,7 +68,7 @@ function Plan() {
 					}}
 					disabled={currentTurn === 1}
 				>
-					Archív rozhodnutí
+					{t("dashboard.decision_archive.title") as string}
 				</button>
 			</div>
 
