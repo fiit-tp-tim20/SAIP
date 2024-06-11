@@ -45,7 +45,7 @@ function CompanyReport() {
 		const url = URL.createObjectURL(blob);
 		const link = document.createElement('a');
 		link.href = url;
-		link.setAttribute('download', 'data.csv');
+		link.setAttribute('download', 'company_report.csv');
 		document.body.appendChild(link);
 		link.click();
 		link.remove();
@@ -58,12 +58,15 @@ function CompanyReport() {
 		const rows = [];
 
 		// Add headers from the first object in the array
-		const headers = Object.keys(jsonArray[0]).map((key) => {
-			if (typeof jsonArray[0][key] === 'object') {
-				return Object.keys(jsonArray[0][key]).map((subKey) => `${key}.${subKey}`).join(',');
-			}
-			return key;
-		}).flat().join(',');
+		// const headers = Object.keys(jsonArray[0]).map((key) => {
+		// 	if (typeof jsonArray[0][key] === 'object') {
+		// 		return Object.keys(jsonArray[0][key]).map((subKey) => `${key}.${subKey}`).join(',');
+		// 	}
+		// 	return key;
+		// }).flat().join(',');
+
+		// Set headers using translations
+		const headers = t("dashboard.industry_report.prod_report.quantity") + "," + t("dashboard.industry_report.prod_report.max_capacity") + "," + t("dashboard.industry_report.prod_report.coef_utilisation") + "," + t("dashboard.industry_report.prod_report.cost") + "," + t("dashboard.industry_report.prod_report.stocks") + "," + t("dashboard.industry_report.prod_report.total_cost") + "," + t("dashboard.industry_report.sales_report.orders_recieved") + "," + t("dashboard.industry_report.sales_report.orders_fulfilled") + "," + t("dashboard.industry_report.sales_report.orders_unfulfilled") + "," + t("dashboard.industry_report.sales_report.selling_price") + "," + t("dashboard.industry_report.balance_sheet.funds") + "," + t("dashboard.industry_report.balance_sheet.stocks") + "," + t("dashboard.industry_report.balance_sheet.long_assets") + "," + t("dashboard.industry_report.balance_sheet.sum_assets") + "," + t("dashboard.industry_report.balance_sheet.loans") + "," + t("dashboard.industry_report.balance_sheet.previous") + "," + t("dashboard.industry_report.balance_sheet.capital") + "," + t("dashboard.industry_report.balance_sheet.sum_liab") + "," + t("dashboard.industry_report.cashflow.initial") + "," + t("dashboard.industry_report.cashflow.revenue") + "," + t("dashboard.industry_report.cashflow.expen_products") + "," + t("dashboard.industry_report.cashflow.expen_stock_additional") + "," + t("dashboard.industry_report.cashflow.expen_stock") + "," + t("dashboard.industry_report.cashflow.expen_decision") + "," + t("dashboard.industry_report.cashflow.expen_interest") + "," + t("dashboard.industry_report.cashflow.tax") + "," + t("dashboard.industry_report.cashflow.result_flow") + "," + t("dashboard.industry_report.cashflow.new_loans") + "," + t("dashboard.industry_report.cashflow.loan_repay") + "," + t("dashboard.industry_report.cashflow.final") + "," + t("dashboard.industry_report.profit_loss.sales") + "," + t("dashboard.industry_report.profit_loss.cost_sold") + "," + t("dashboard.industry_report.profit_loss.cost_marketing") + "," + t("dashboard.industry_report.profit_loss.cost_rnd") + "," + t("dashboard.industry_report.profit_loss.deductions") + "," + t("dashboard.industry_report.profit_loss.cost_management") + "," + t("dashboard.industry_report.profit_loss.cost_upgrade") + "," + t("dashboard.industry_report.profit_loss.overcharge_upgrade") + "," + t("dashboard.industry_report.profit_loss.interest") + "," + t("dashboard.industry_report.profit_loss.before_tax") + "," + t("dashboard.industry_report.profit_loss.tax") + "," + t("dashboard.industry_report.profit_loss.after_tax") + "," + t("misc.round")
 
 		rows.push(headers);
 
