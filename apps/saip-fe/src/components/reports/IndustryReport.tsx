@@ -59,9 +59,9 @@ function IndustryReport() {
 	};
 
 	const exportToCSV = () => {
-        const csvData = [["Spoločnosť", "Hodnota jednej akcie", "Výsledok hospodárenia po zdanení", "Predajná cena", "Podiel na trhu"]];
+        const csvData = [[t("dashboard.industry_report.table.company"), t("dashboard.industry_report.table.value"), t("dashboard.industry_report.table.after_tax"), t("dashboard.industry_report.table.price"), t("dashboard.industry_report.table.share"), t("dashboard.industry_report.table.upgrades")]];
         data && Object.entries(data.industry).forEach(([company, info]) => {
-            csvData.push([company, numberWithSpaces(info.stock_price) + " €", numberWithSpaces(info.net_profit) + " €", numberWithSpaces(info.sell_price) + " €/ks", numberWithSpaces(info.market_share) + " %"]);
+            csvData.push([company, info.stock_price, info.net_profit, info.sell_price, info.market_share, info.finished_upgrades]);
         });
         return csvData;
     };
@@ -112,7 +112,7 @@ function IndustryReport() {
 							<h2>{t("dashboard.industry_report.ranking") as string}</h2>
 							<div>
 								<CSVLink data={exportToCSV()} filename={"industry_report.csv"} className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline">
-									Export CSV
+									{t("dashboard.decision_archive.export_to_csv") as string}
 								</CSVLink>
 								{/* Add a button to open the tutorial */}
 								<button
