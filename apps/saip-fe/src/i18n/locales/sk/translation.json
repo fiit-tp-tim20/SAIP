@@ -162,8 +162,8 @@
 			"tip": {
 				"text1": "Investície do vylepšení sú vyjadrené ako súčet investícií do vylepšení.",
 				"text2": "Nie je možné určiť, ktoré vylepšenie podnik v ktorom kole vyvíjal. Je potrebné si viesť o tom evidenciu zvlášť."
-			}
-
+			},
+			"export_to_csv": "Exportovať do CSV"
 		}
 	},
 	"product": {

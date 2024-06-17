@@ -112,7 +112,7 @@ function IndustryReport() {
 							<h2>{t("dashboard.industry_report.ranking") as string}</h2>
 							<div>
 								<CSVLink data={exportToCSV()} filename={"industry_report.csv"} className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline">
-									Export CSV
+									{t("dashboard.decision_archive.export_to_csv") as string}
 								</CSVLink>
 								{/* Add a button to open the tutorial */}
 								<button
