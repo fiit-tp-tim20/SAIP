@@ -95,7 +95,7 @@ function IndustryReport() {
 			{isLoading ? (
 				<p>a</p>
 			) : (
-				<>
+				<div>
 					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 						{isLoading2 ? (
 							<div>Loading...</div>
@@ -222,7 +222,7 @@ function IndustryReport() {
 								{/* Add row for average stock price */}
 								<tr>
 									<td className="px-4 py-2" />
-									<td className="px-4 py-2 text-left"
+									<td className="px-4 py-2 text-left">
 										<b>{t("misc.mean") as string}</b>
 									</td>
 									<td className="px-4 py-2 text-center">
@@ -438,7 +438,7 @@ function IndustryReport() {
 							</tbody>
 						</table>
 					</div>
-				</>
+				</div>
 			)}
 		</div>
 	);
