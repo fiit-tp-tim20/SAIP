@@ -162,7 +162,8 @@
 			"tip": {
 				"text1": "The investment in upgrades is expressed as the sum of the investments in upgrades.",
 				"text2": "It is not possible to determine which enhancement the company developed in which round. It is necessary to keep a separate record of it."
-			}
+			},
+			"export_to_csv": "Export to CSV"
 		}
 	},
 	"product": {
