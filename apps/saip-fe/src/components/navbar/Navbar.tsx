@@ -36,7 +36,7 @@ function Navbar() {
 		},
 	];
 
-	const changeLanguage = (lng) => {
+	const changeLanguage = (lng: string) => {
 		i18n.changeLanguage(lng);
 		setDropdownOpen(false); // Close the dropdown after selecting a language
 	};

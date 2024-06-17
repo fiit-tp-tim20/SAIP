@@ -59,9 +59,11 @@ function IndustryReport() {
 	};
 
 	const exportToCSV = () => {
+		// eslint-disable-next-line @typescript-eslint/no-shadow
         const csvData = [[t("dashboard.industry_report.table.company"), t("dashboard.industry_report.table.value"), t("dashboard.industry_report.table.after_tax"), t("dashboard.industry_report.table.price"), t("dashboard.industry_report.table.share"), t("dashboard.industry_report.table.upgrades")]];
         data && Object.entries(data.industry).forEach(([company, info]) => {
-            csvData.push([company, info.stock_price, info.net_profit, info.sell_price, info.market_share, info.finished_upgrades]);
+            // @ts-ignore
+			csvData.push([company, info.stock_price, info.net_profit, info.sell_price, info.market_share, info.finished_upgrades]);
         });
         return csvData;
     };

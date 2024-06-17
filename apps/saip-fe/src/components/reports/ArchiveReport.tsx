@@ -49,6 +49,7 @@ function ArchiveReport() {
 			for (const key of keys) {
 				row.push(data.marketing[key][i]);
 			}
+			// @ts-ignore
 			csvData.push(row);
 		}
 
@@ -67,6 +68,7 @@ function ArchiveReport() {
 			row.push(data.factory.upgrades[i]);
 			row.push(data.factory.upgrade_turn[i]);
 
+			// @ts-ignore
 			csvData.push(row);
 		}
 
