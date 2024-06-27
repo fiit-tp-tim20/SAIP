@@ -158,7 +158,7 @@ export default function BottomBar() {
 										comm
 									}
 								>
-									Ukončiť kolo
+									{t("bottombar.confirm") as string}
 								</button>
 							</div>
 						)}

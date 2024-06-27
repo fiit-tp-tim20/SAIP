@@ -158,6 +158,7 @@
 			"price": "Predajná cena",
 			"capital": "Investície do kapitálu",
 			"upgrades": "Investície do vylepšení",
+			"total_cost": "Celkové jednotkové náklady",
 			"done": "Dokončené vylepšenia",
 			"tip": {
 				"text1": "Investície do vylepšení sú vyjadrené ako súčet investícií do vylepšení.",
@@ -239,6 +240,7 @@
 	"buttons": {
 		"confirm": "Potvrdiť",
 		"change": "Zmeniť",
+		"cancel": "Zrušiť",
 		"confirm_all": "Potvrdiť všetky"
 	},
 
@@ -365,6 +367,11 @@
 	"bottombar": {
 		"waiting": "Čaká sa na ostatných hráčov",
 		"tip": "Hodnota v zátvorke je čast finančných prostriedkov, ktoré je možné spolu s budgetom naviac investovať do kapitálu.",
-		"budget": "Rozpočet"
+		"budget": "Rozpočet",
+		"confirm": "Ukončiť kolo"
+	},
+	"bottombar_modal": {
+		"check": "Naozaj chcete ukončiť aktuálne kolo? Táto akcia je nezvratná."
+
 	}
 }
