@@ -4,7 +4,7 @@
 		"company_report": {
 			"title": "Company Report",
 			"prod_report": {
-				"title": "Production report",
+				"title": "Production Report",
 				"quantity": "Quantity produced",
 				"max_capacity": "Production capacity (max)",
 				"coef_utilisation": "Coefficient of utilisation of production capacity",
@@ -38,7 +38,7 @@
 				}
 			},
 			"balance_sheet": {
-				"title": "Balance sheet",
+				"title": "Balance Sheet",
 				"assets": "Assets",
 				"funds": "Funds",
 				"stocks": "Stocks",
@@ -129,7 +129,7 @@
 				}
 			},
 			"sector_report": {
-				"title": "Sector report",
+				"title": "Sector Report",
 				"category": "Category",
 				"value": "Value",
 				"in_decrese": "Increase / decrease",
@@ -140,7 +140,7 @@
 				"total_stocks": "Total stocks in the sector"
 			},
 			"economic_params": {
-				"title": "Economic parameters of the market",
+				"title": "Economic parameters of the Market",
 				"interest": "Interest rate",
 				"loan": "Loan limit",
 				"tax": "Income tax rate",
@@ -151,13 +151,14 @@
 			}
 		},
 		"decision_archive": {
-			"title": "Decision archive",
-			"marketing": "Archive of marketing",
-			"prod": "Archive of production",
+			"title": "Decision Archive",
+			"marketing": "Archive of Marketing",
+			"prod": "Archive of Production",
 			"quantity": "Quantity produced",
 			"price": "Selling price",
 			"capital": "Investments in capital",
 			"upgrades": "Investments in upgrades",
+			"total_cost": "Total unit cost",
 			"done": "Completed improvements",
 			"tip": {
 				"text1": "The investment in upgrades is expressed as the sum of the investments in upgrades.",
@@ -189,7 +190,7 @@
 			"title": "Finished Research"
 		},
 		"playerResearched": {
-			"title": "Players with completed upgrades"
+			"title": "Players with completed Upgrades"
 		},
 		"price": {
 			"title": "Price"
@@ -239,6 +240,7 @@
 	"buttons": {
 		"confirm": "Confirm",
 		"change": "Change",
+		"cancel": "Cancel",
 		"confirm_all": "Confirm All"
 	},
 
@@ -265,7 +267,7 @@
 			}
 		},
 		"selling_price": {
-			"title": "Selling price",
+			"title": "Selling Price",
 			"text": "The selling price is the price at which the product is sold to the customer. The selling price is a key factor in the customer's decision to buy the product and is an important part of the market decision-making for the seller. It can be influenced by many factors such as competition, market situation, marketing and advertising costs. Selling price is an important factor for both the customer and the seller as it can have a significant impact on the purchase decision and the overall success of the business.",
 			"misc": "Selling price (€/pc)",
 			"tip": {
@@ -274,7 +276,7 @@
 			}
 		},
 		"capital_investment": {
-			"title": "Investments in capital",
+			"title": "Investments in Capital",
 			"text": "Investments in capital are investments in fixed assets. In our simulation, they represent the cost of maintaining, upgrading and enlarging the factory. By investing in capital, the firm is able to increase its maximum productive capacity.",
 			"misc": "Investment (€)",
 			"tip": {
@@ -297,9 +299,9 @@
 	"marketing": {
 		"title": "Marketing",
 		"types": {
-			"title": "Types of marketing",
+			"title": "Types of Marketing",
 			"viral": {
-				"title": "Viral marketing",
+				"title": "Viral Marketing",
 				"text": "Product information disseminated through electronic media, especially social networks, but also through viral space as part of entertainment, games or websites. It also presents catchy images and short videos (reels), which are mainly designed to attract attention.",
 				"misc": "for every invested"
 			},
@@ -354,7 +356,12 @@
 	"bottombar": {
 		"waiting": "Waiting for other players",
 		"tip": "The value in brackets is the part of the funds that can be additionally invested in capital together with the budget.",
-		"budget": "Budget"
+		"budget": "Budget",
+		"confirm": "End turn"
+
+	},
+	"bottombar_modal": {
+		"check": "Are you sure you want to end the current turn? This action is irreversible."
 
 	}
 }

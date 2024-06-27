@@ -126,6 +126,50 @@ function ArchiveReport() {
 				<p>Loading...</p>
 			) : (
 				<div>
+					<div className="background-container my-2 flex flex-col rounded-2xl p-6">
+						<div className="flex flex-row items-center justify-between py-2">
+							<h2>{t("dashboard.decision_archive.prod") as string}</h2>
+							<CSVLink data={exportProductionToCSV()} filename={"production_report.csv"} className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline">
+								{t("dashboard.decision_archive.export_to_csv") as string}
+							</CSVLink>
+						</div>
+						<table className="table-auto table-white">
+							<tbody>
+							<tr>
+								<th className="px-4 py-2 text-center">{t("misc.round") as string}</th>
+								<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.quantity") as string}</th>
+								<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.price") as string}</th>
+								<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.capital") as string}</th>
+								<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.upgrades") as string}</th>
+								<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.total_cost") as string}</th>
+								<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.done") as string}</th>
+							</tr>
+							{[...Array(numberShow).keys()].map((numberShow) => (
+								<tr key={numberShow}>
+									<td className="px-4 py-2 text-center">{numberShow + 1}</td>
+									<td className="px-4 py-2 whitespace-nowrap text-center">
+										{numberWithSpaces(data.production.volume[numberShow])} ks
+									</td>
+									<td className="px-4 py-2 whitespace-nowrap text-center">
+										{numberWithSpaces(data.production.sell_price[numberShow])} €
+									</td>
+									<td className="px-4 py-2 whitespace-nowrap text-center">
+										{numberWithSpaces(data.factory.capital[numberShow])} €
+									</td>
+									<td className="px-4 py-2 whitespace-nowrap text-center">
+										{numberWithSpaces(data.factory.upgrades[numberShow])} €
+									</td>
+									<td className="px-4 py-2 whitespace-nowrap text-center">
+										{numberWithSpaces(data.production.man_cost_all[numberShow])} €
+									</td>
+									<td className="px-4 py-2 whitespace-nowrap text-center">
+										{numberWithSpaces(data.factory.upgrade_turn[numberShow])}
+									</td>
+								</tr>
+							))}
+							</tbody>
+						</table>
+					</div>
 					<div className="grid gap-4 xl:grid-cols-2">
 						<div className="background-container my-2 flex flex-col rounded-2xl p-6">
 							<div className="flex flex-row items-center justify-between py-2">
@@ -161,46 +205,6 @@ function ArchiveReport() {
 											</td>
 											<td className="px-4 py-2 whitespace-nowrap  text-center">
 												{numberWithSpaces(data.marketing.podcast[numberShow])} €
-											</td>
-										</tr>
-									))}
-								</tbody>
-							</table>
-						</div>
-						<div className="background-container my-2 flex flex-col rounded-2xl p-6">
-							<div className="flex flex-row items-center justify-between py-2">
-								<h2>{t("dashboard.decision_archive.prod") as string}</h2>
-								<CSVLink data={exportProductionToCSV()} filename={"production_report.csv"} className="button-light font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline">
-									{t("dashboard.decision_archive.export_to_csv") as string}
-								</CSVLink>
-							</div>
-							<table className="table-auto table-white">
-								<tbody>
-									<tr>
-										<th className="px-4 py-2 text-center">{t("misc.round") as string}</th>
-										<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.quantity") as string}</th>
-										<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.price") as string}</th>
-										<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.capital") as string}</th>
-										<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.upgrades") as string}</th>
-										<th className="px-4 py-2 text-center">{t("dashboard.decision_archive.done") as string}</th>
-									</tr>
-									{[...Array(numberShow).keys()].map((numberShow) => (
-										<tr key={numberShow}>
-											<td className="px-4 py-2 text-center">{numberShow + 1}</td>
-											<td className="px-4 py-2 whitespace-nowrap text-center">
-												{numberWithSpaces(data.production.volume[numberShow])} ks
-											</td>
-											<td className="px-4 py-2 whitespace-nowrap text-center">
-												{numberWithSpaces(data.production.sell_price[numberShow])} €
-											</td>
-											<td className="px-4 py-2 whitespace-nowrap text-center">
-												{numberWithSpaces(data.factory.capital[numberShow])} €
-											</td>
-											<td className="px-4 py-2 whitespace-nowrap text-center">
-												{numberWithSpaces(data.factory.upgrades[numberShow])} €
-											</td>
-											<td className="px-4 py-2 whitespace-nowrap text-center">
-												{numberWithSpaces(data.factory.upgrade_turn[numberShow])}
 											</td>
 										</tr>
 									))}

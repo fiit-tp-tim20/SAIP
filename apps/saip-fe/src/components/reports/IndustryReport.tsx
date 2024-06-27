@@ -267,10 +267,12 @@ function IndustryReport() {
 											<b>
 												{data.industry &&
 													numberWithSpaces(
-														Object.values(data.industry).reduce(
-															(acc, curr) => acc + (curr?.sell_price || 0),
-															0,
-														) / Object.keys(data.industry).length,
+														(
+															Object.values(data.industry).reduce(
+																(acc, curr) => acc + (curr?.sell_price || 0),
+																0,
+															) / Object.keys(data.industry).length
+														).toFixed(2),
 													)}{" "}
 												€/{t("misc.pieces") as string}
 											</b>
