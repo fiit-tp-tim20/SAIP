@@ -377,7 +377,7 @@ class LowPriceStrategyBot(Bot):
         inventory_count = kwargs.get("inventory_count")
         inventory_coef = self.calculate_inventory_coef(inventory_count=inventory_count)
 
-        if inventory_count > 800:
+        if inventory_count > 500:
             return 0
 
         return int(self.total_budget * 0.8 - self.total_budget * 0.4 * inventory_coef)
